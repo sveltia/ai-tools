@@ -1,0 +1,25 @@
+{
+  "name": "sveltia",
+  "description": "Official Claude Code plugins for Sveltia CMS, the Git-based headless CMS.",
+  "owner": {
+    "name": "Kohei Yoshino",
+    "url": "https://github.com/sveltia"
+  },
+  "plugins": [
+    {
+      "name": "sveltia-cms",
+      "source": "./plugins/sveltia-cms",
+      "displayName": "Sveltia CMS",
+      "description": "Set up, configure and debug Sveltia CMS. Bundles the official documentation as on-demand reference files and a validator that checks a config against the CMS release's own JSON schema.",
+      "category": "documentation",
+      "tags": ["cms", "jamstack", "static-site", "decap-cms", "netlify-cms"],
+      "homepage": "https://sveltiacms.app",
+      "repository": "https://github.com/sveltia/ai-tools",
+      "license": "MIT",
+      "author": {
+        "name": "Kohei Yoshino",
+        "url": "https://github.com/kyoshino"
+      }
+    }
+  ]
+}

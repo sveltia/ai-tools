@@ -1,0 +1,22 @@
+{
+  "name": "sveltia-cms",
+  "displayName": "Sveltia CMS",
+  "description": "Official Agent Skill for Sveltia CMS: setup, configuration, migration and troubleshooting, generated from the documentation at sveltiacms.app.",
+  "author": {
+    "name": "Kohei Yoshino",
+    "url": "https://github.com/kyoshino"
+  },
+  "homepage": "https://sveltiacms.app",
+  "repository": "https://github.com/sveltia/ai-tools",
+  "license": "MIT",
+  "keywords": [
+    "cms",
+    "headless-cms",
+    "git-based-cms",
+    "sveltia",
+    "decap-cms",
+    "netlify-cms",
+    "static-site-generator",
+    "jamstack"
+  ]
+}
