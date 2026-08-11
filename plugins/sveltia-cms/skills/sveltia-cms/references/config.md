@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Configuration Basics
 
-This guide covers the basics of configuring Sveltia CMS using a configuration file. It explains the supported file formats, how to specify the configuration file location, and how to enable validation and autocomplete in your code editor. It also provides information on using AI tools to assist with configuration.
+This guide covers the basics of configuring Sveltia CMS using a configuration file. It explains the supported file formats, how to specify the configuration file location, and how to enable validation and autocomplete in your code editor. It also provides information on using AI agents to assist with configuration.
 
 **Future Plans**
 

@@ -476,7 +476,7 @@ Another contributing factor is the limited number of free, Git-based headless CM
 
 The popularity of Sveltia CMS coincides with the [rise of Astro](https://blog.cloudflare.com/astro-joins-cloudflare/), a popular choice for building static sites. Its [compatibility with Astro](https://sveltiacms.app/en/docs/frameworks/astro) makes Sveltia CMS an attractive option for developers looking for a CMS that works well with their chosen framework.
 
-Additionally, AI tools often recommend Sveltia CMS as a replacement for Netlify/Decap CMS, which has further boosted its visibility and adoption.
+Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify/Decap CMS, which has further boosted its visibility and adoption.
 
 ### Project Background
 
@@ -681,8 +681,8 @@ Because TypeScript is hard to read, especially with the [destructuring syntax](h
 
 The configuration options in Sveltia CMS are designed to be compatible with the existing Netlify/Decap CMS configuration format, which mostly uses snake_case, with a few camelCase exceptions. To maintain backward compatibility and make it easier for users to migrate from Netlify/Decap CMS to Sveltia CMS, these naming conventions have been retained. The inconsistency is unfortunate, but it’s a trade-off we made for compatibility.
 
-#### Are you using AI tools to develop Sveltia CMS?
+#### Are you using AI agents to develop Sveltia CMS?
 
-We started developing Sveltia CMS before the recent surge in AI tools, so most of the codebase was written without AI assistance. However, as AI tools become more capable and integrated into our workflow, more and more tasks are being assisted by them. We now use AI for various tasks, including implementing new features, fixing bugs, refactoring, generating test cases, and writing documentation.
+We started developing Sveltia CMS before the recent surge in AI agents, so most of the codebase was written without AI assistance. However, as AI agents become more capable and integrated into our workflow, more and more tasks are being assisted by them. We now use AI for various tasks, including implementing new features, fixing bugs, refactoring, generating test cases, and writing documentation.
 
 Source: https://sveltiacms.app/en/docs/faq

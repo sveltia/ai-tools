@@ -414,6 +414,7 @@ Currently, the following languages are supported:
 - English (UK)
 - English (US)
 - Finnish
+- French
 - Greek
 - Japanese
 - Korean
