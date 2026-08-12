@@ -148,10 +148,10 @@ The following advanced features in Netlify/Decap CMS are not yet added to Svelti
 - [Open authoring](https://sveltiacms.app/en/docs/workflows/open)
 - [Nested collections](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures)
 
-The following features are incomplete:
+Other things to know:
 
-- Comprehensive CMS config validation
-- [UI localization](https://sveltiacms.app/en/docs/ui#localization): Sveltia CMS currently offers a limited selection of languages, while Decap CMS has [35+ languages](https://github.com/decaporg/decap-cms/tree/main/packages/decap-cms-locales/src) available. If you want to contribute, check out the [localization guide](https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md).
+- Comprehensive CMS config validation is missing.
+- [UI localization](https://sveltiacms.app/en/docs/ui#localization): Sveltia CMS does not support all the languages available in Decap CMS.
 
 #### Features Not To Be Implemented
 

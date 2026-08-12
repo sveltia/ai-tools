@@ -407,8 +407,9 @@ Currently, the following languages are supported:
 - Arabic
 - Bulgarian
 - Catalan
-- Chinese (Simplified)
+- Chinese (China)
 - Croatian
+- Czech
 - Dutch
 - English (Canada)
 - English (UK)
@@ -427,6 +428,32 @@ Currently, the following languages are supported:
 
 When the user’s language becomes available, the CMS will prompt them to switch to it. If the user dismisses the prompt, they can still change the language in the application settings.
 
+**Compatibility Note**
+
+Unlike Netlify CMS and Decap CMS, Sveltia CMS does not require you to configure the app UI locale. The CMS automatically detects and applies your preferred language based on your browser settings. The `CMS.registerLocale` API method is a noop and the `locale` configuration option is ignored in Sveltia CMS.
+
+The following languages are supported in Decap CMS but not yet available in Sveltia CMS:
+
+- Chinese (Taiwan)
+- Danish
+- [German](https://github.com/sveltia/sveltia-cms/issues/263)
+- [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
+- [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)
+- [Italian](https://github.com/sveltia/sveltia-cms/issues/70)
+- Lithuanian
+- Macedonian
+- Norwegian Bokmål
+- Norwegian Nynorsk
+- [Persian](https://github.com/sveltia/sveltia-cms/issues/531)
+- [Romanian](https://github.com/sveltia/sveltia-cms/issues/711)
+- Serbian (Cyrillic)
+- Slovak
+- Slovenian
+- [Spanish](https://github.com/sveltia/sveltia-cms/issues/281)
+- [Swedish](https://github.com/sveltia/sveltia-cms/issues/421)
+- Thai
+- Vietnamese
+
 **CSP Consideration**
 
 If you’re using a strict Content Security Policy (CSP), you may need to add the `connect-src` directive with the value `https://unpkg.com` to your CSP header to allow the CMS to retrieve locale files for the admin interface other than English (US). See the [Setting up Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) section for more details.
@@ -434,10 +461,6 @@ If you’re using a strict Content Security Policy (CSP), you may need to add th
 **Localizers Wanted**
 
 Interested in contributing to Sveltia CMS localization? We welcome contributions from the community! You can help translate the CMS interface into your preferred language. Check out the [localization guide](https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md) for instructions on how to get started.
-
-**Note for Netlify/Decap CMS users**
-
-Unlike Netlify CMS and Decap CMS, Sveltia CMS does not require you to configure the app UI locale. The CMS automatically detects and applies your preferred language based on your browser settings. The `CMS.registerLocale` API method is a noop and the `locale` configuration option is ignored in Sveltia CMS.
 
 #### Keyboard Shortcuts
 
