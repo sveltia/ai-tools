@@ -416,7 +416,7 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 - Download the CMS script bundle
 - Check for the latest version of the CMS
 - Retrieve locale files for the admin interface other than English (US)
-- Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js) and [Prism](https://prismjs.com/) language definitions
+- Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js) and [Shiki](https://shiki.style/) language definitions
 
 Source: https://sveltiacms.app/en/docs/security
 
@@ -458,7 +458,7 @@ However, breaking changes may occur during the beta phase. We recommend keeping 
 
 #### When will Sveltia CMS reach version 1.0 (GA)?
 
-As outlined in the [roadmap](https://sveltiacms.app/en/docs/roadmap), the tentative timeline for the 1.0 release is late 2026. However, this date may change depending on various factors such as development progress, user feedback, and unforeseen challenges. One external factor is GitHub’s implementation of PKCE support, originally [due in Q4 2025](https://github.com/github/roadmap/issues/1153).
+As outlined in the [roadmap](https://sveltiacms.app/en/docs/roadmap), the tentative timeline for the 1.0 release is late 2026. However, this date may change depending on various factors such as development progress, user feedback, and unforeseen challenges.
 
 We are committed to delivering a high-quality product, so we won’t rush the release just to meet a deadline. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
 

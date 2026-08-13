@@ -2662,7 +2662,7 @@ A [Lexical](https://lexical.dev/)-based code editor with syntax highlighting and
 
 **Breaking change from Netlify/Decap CMS**
 
-Sveltia CMS does not support the theme and keymap inline settings, along with support for some languages, as we have moved away from CodeMirror to Lexical. We may add user settings for themes in the future, after migrating from Prism to Shiki for syntax highlighting.
+Sveltia CMS does not support the theme and keymap inline settings, along with support for some languages, as we have moved away from CodeMirror to Lexical. We may add user settings for themes in the future.
 
 #### Preview
 
@@ -2702,7 +2702,7 @@ Must be set to `code`.
 
 **Breaking change from Netlify/Decap CMS**
 
-Sveltia CMS uses [Prism](https://prismjs.com/) for syntax highlighting. Therefore, the list of supported languages may differ from that of Netlify/Decap CMS, which uses [CodeMirror](https://codemirror.net/). We’ll also migrate from Prism to [Shiki](https://shiki.style/) in the future to follow Lexical’s migration. The list of supported languages may change again after the migration.
+Sveltia CMS uses [Shiki](https://shiki.style/) for syntax highlighting. Therefore, the list of supported languages differ from that of Netlify/Decap CMS, which uses [CodeMirror](https://codemirror.net/).
 
 This affects the `default_language` option and the language used in the `default` option, along with the language selection dropdown in the UI.
 
@@ -2711,7 +2711,7 @@ This affects the `default_language` option and the language used in the `default
 - **Type**: `object` or `string`
 - **Default**: `{ code: "", lang: "" }`
 
-The default value for the field, where `code` is a code snippet and `lang` is any valid programming language supported by [Prism](https://prismjs.com/#supported-languages).
+The default value for the field, where `code` is a code snippet and `lang` is any valid programming language supported by [Shiki](https://shiki.style/languages).
 
 If `output_code_only` is `true`, this should be a string containing the default code.
 
@@ -2747,7 +2747,7 @@ The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Code) says t
 - **Type**: `string`
 - **Default**: `""`
 
-The default programming language for the code editor. See the [list of supported languages](https://prismjs.com/#supported-languages) on the Prism website for valid values.
+The default programming language for the code editor. See the [list of supported languages](https://shiki.style/languages) on the Shiki website for valid values.
 
 ### Examples
 
