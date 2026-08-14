@@ -404,6 +404,8 @@ The CMS interface is available in multiple languages. By default, it uses the la
 
 Currently, the following languages are supported:
 
+<div class="lang-list">
+
 - Arabic
 - Bulgarian
 - Catalan
@@ -423,8 +425,11 @@ Currently, the following languages are supported:
 - Portuguese (Brazil)
 - Portuguese (Portugal)
 - Russian
+- Spanish (Colombia)
 - Turkish
 - Ukrainian
+
+</div>
 
 When the user’s language becomes available, the CMS will prompt them to switch to it. If the user dismisses the prompt, they can still change the language in the application settings.
 
@@ -433,6 +438,8 @@ When the user’s language becomes available, the CMS will prompt them to switch
 Unlike Netlify CMS and Decap CMS, Sveltia CMS does not require you to configure the app UI locale. The CMS automatically detects and applies your preferred language based on your browser settings. The `CMS.registerLocale` API method is a noop and the `locale` configuration option is ignored in Sveltia CMS.
 
 The following languages are supported in Decap CMS but not yet available in Sveltia CMS:
+
+<div class="lang-list">
 
 - Chinese (Taiwan)
 - Danish
@@ -453,6 +460,8 @@ The following languages are supported in Decap CMS but not yet available in Svel
 - [Swedish](https://github.com/sveltia/sveltia-cms/issues/421)
 - Thai
 - Vietnamese
+
+</div>
 
 **CSP Consideration**
 
