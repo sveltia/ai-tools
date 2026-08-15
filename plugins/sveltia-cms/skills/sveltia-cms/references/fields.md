@@ -380,6 +380,8 @@ Additional text can be displayed before or after the input field using the `befo
 
 A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements.
 
+Emoji autocomplete is enabled by default, unless the `type` option is `url` or `email`. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
+
 #### Preview
 
 A read-only view of the entered string. If the `prefix` or `suffix` options are set, they will be displayed along with the string in the preview.
@@ -470,6 +472,13 @@ Text to display before the input field.
 - **Default**: `""`
 
 Text to display after the input field.
+
+##### `use_emoji_autocomplete`
+
+- **Type**: `boolean`
+- **Default**: `true`, unless the `type` option is `url` or `email`
+
+Whether to enable emoji autocomplete in the text input. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field. The colon must be at the beginning of the input or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
 
 ### Examples
 
@@ -780,6 +789,8 @@ Multi-line text area for entering longer strings of text. It supports standard t
 
 A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements.
 
+Emoji autocomplete is enabled by default. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
+
 #### Preview
 
 A read-only view of the entered text.
@@ -829,6 +840,13 @@ Minimum length of the string. This enables character counter in the UI and valid
 - **Default**: `Infinity`
 
 Maximum length of the string. This enables character counter in the UI and validation.
+
+##### `use_emoji_autocomplete`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+Whether to enable emoji autocomplete in the text area. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field. The colon must be at the beginning of a line or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
 
 ### Examples
 

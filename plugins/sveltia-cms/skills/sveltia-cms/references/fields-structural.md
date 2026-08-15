@@ -2160,6 +2160,8 @@ The built-in toolbar includes buttons for common formatting options, which can b
 
 Local/remote images can be pasted or dropped into the editor to insert them. Note: pasting multiple images is [not supported in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=864052).
 
+Emoji autocomplete is enabled by default. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
+
 **Breaking change from Netlify/Decap CMS**
 
 Remark plugins are not supported because Sveltia CMS uses the Lexical framework instead of Slate. The `CMS.registerRemarkPlugin` API method is a noop in Sveltia CMS.
@@ -2321,6 +2323,13 @@ When nesting a component inside itself (enabled with `allow_nested_components: t
 
 Whether to allow linking images in the editor. When set to `true`, users can add links to images. When set to `false`, images will be inserted without links.
 
+##### `use_emoji_autocomplete`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+Whether to enable emoji autocomplete in the editor. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the content. The colon must be at the beginning of a line or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions. This works in both the rich text and raw Markdown editing modes.
+
 ##### `use_markdown_shortcuts`
 
 - **Type**: `boolean`
@@ -2354,6 +2363,7 @@ The following options can be defined globally:
 - `editor_components`
 - `allow_nested_components`
 - `linked_images`
+- `use_emoji_autocomplete`
 - `use_markdown_shortcuts`
 - `sanitize_preview`
 
