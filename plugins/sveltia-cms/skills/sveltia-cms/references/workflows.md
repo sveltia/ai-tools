@@ -35,11 +35,7 @@ Source: https://sveltiacms.app/en/docs/workflows
 
 ## Editorial Workflow
 
-This is an advanced remote workflow designed for teams that require a review process before changes are merged into the default branch. Editors can submit changes for review, and designated reviewers can approve or request modifications.
-
-**Unimplemented**
-
-This feature from Netlify/Decap CMS is not yet supported in Sveltia CMS. It will be added before the [1.0 release](https://sveltiacms.app/en/docs/roadmap#v1-0). Check our [release notes](https://sveltiacms.app/en/docs/releases#release-information) for updates.
+This is an advanced remote workflow designed for teams that require a review process before changes are merged into the [configured branch](https://sveltiacms.app/en/docs/backends#branch-selection). Editors can submit changes for review, and designated reviewers can approve or request modifications.
 
 ### Use Cases
 
@@ -80,7 +76,82 @@ publish_mode = "editorial_workflow"
 }
 ```
 
-Additionally, you can enable squash merging for pull/merge requests by adding the `squash_merges` option to the `backend` section of your configuration file. If this options is enabled, all commits in a pull/merge request will be squashed into a single commit when merged. Otherwise, a merge commit will be created.
+### How It Works
+
+Nothing an editor does in the CMS touches your configured branch until the change is published. Each entry with unsaved work lives on its own branch with an open pull request, so making a change and releasing it are two separate steps.
+
+| Editor action | What happens in Git |
+| --- | --- |
+| Save a new entry | A branch named `cms/[COLLECTION_NAME]/[SLUG]` is created off the configured branch, the entry files are committed to it, and a pull request is opened |
+| Save an existing draft | Another commit is added to the same branch |
+| Change the status | The pull request’s label is updated |
+| Delete a published entry | A pull request is opened that removes the entry files |
+| Publish | The pull request is merged and its branch is deleted |
+| Discard | The pull request is closed without merging and its branch is deleted |
+
+On GitLab the same applies, with merge requests in place of pull requests.
+
+#### Statuses
+
+An unpublished entry moves through three stages, shown as columns on the Editorial Workflow page and as a status button in the entry editor:
+
+| Status    | Label                         | Meaning                         |
+| --------- | ----------------------------- | ------------------------------- |
+| Draft     | `sveltia-cms/draft`           | Work in progress                |
+| In Review | `sveltia-cms/pending_review`  | Ready for someone to look at    |
+| Ready     | `sveltia-cms/pending_publish` | Approved and ready to be merged |
+
+A pending deletion carries a fourth label, `sveltia-cms/pending_deletion`. It isn’t a stage — there’s no review to move it through, only the deletion itself to carry out or call off — so it doesn’t appear as a column. See [Deleting Entries](#deleting-entries).
+
+An entry in the Draft status is kept as a [draft pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request) or [draft merge request](https://docs.gitlab.com/user/project/merge_requests/drafts/), so it can’t be merged by accident. Moving the entry to In Review or Ready marks it ready for review.
+
+GitHub and GitLab record this differently: GitHub has a dedicated draft flag, while GitLab marks a draft with a `Draft:` prefix on the merge request title. Sveltia CMS adds and removes that prefix for you, so if you edit a merge request title by hand, keep the prefix intact while the entry is in the Draft status.
+
+#### Custom Label Prefix
+
+Labels are written with the `sveltia-cms/` prefix by default. You can change it with the `cms_label_prefix` option in the `backend` section:
+
+```yaml [YAML]
+backend:
+  name: github
+  repo: user/repo
+  cms_label_prefix: my-cms/
+```
+
+```toml [TOML]
+[backend]
+name = "github"
+repo = "user/repo"
+cms_label_prefix = "my-cms/"
+```
+
+```json [JSON]
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "cms_label_prefix": "my-cms/"
+  }
+}
+```
+
+```js [JavaScript]
+{
+  backend: {
+    name: 'github',
+    repo: 'user/repo',
+    cms_label_prefix: 'my-cms/',
+  },
+}
+```
+
+**Migrating from Netlify/Decap CMS**
+
+Sveltia CMS reads the `netlify-cms/` and `decap-cms/` prefixes as well as your configured one, so pull requests created by Netlify CMS or Decap CMS show up straight away. Labels are always written with your configured prefix, so an imported pull request is migrated the first time its status changes.
+
+#### Squash Merges
+
+You can squash all the commits in a pull/merge request into a single commit when it’s merged by adding the `squash_merges` option to the `backend` section. Otherwise, a merge commit is created. This is supported with both the GitHub and GitLab backends.
 
 ```yaml [YAML]
 backend:
@@ -117,6 +188,103 @@ squash_merges = true
 ```
 
 See the [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squash-and-merge-your-commits) or [GitLab](https://docs.gitlab.com/user/project/merge_requests/squash_and_merge/) documentation for more information about squash merging.
+
+### Editorial Workflow Page
+
+A board with a column for each status is available from the top navigation. Drag a card from one column to another to change an entry’s status, or use the status button in the entry editor. Each card also offers the actions available at that stage, and clicking the card opens the entry in the editor.
+
+### Entry List
+
+Unpublished entries appear in the entry list alongside published ones, each with a badge showing its status:
+
+- An entry that updates a published one **replaces** it in the list, so you see the pending version rather than what’s currently live.
+- An entry that has never been published is listed separately under an **Unpublished Entries** heading, above the published entries.
+
+### Deleting Entries
+
+Deletion goes through review like any other change, so removing an entry from the configured branch is a two-step process. What the Delete button does depends on whether the entry has ever been published.
+
+#### Deleting a Published Entry
+
+Deleting a published entry opens a pull request that removes its files. **The entry stays in the configured branch until that pull request is published.** Until then it appears in the entry list and on the Editorial Workflow page with a **Pending Deletion** badge.
+
+Because there’s nothing to review or edit, a pending deletion doesn’t move through the three stages. It carries the `sveltia-cms/pending_deletion` label rather than one of the stage labels, so it’s never mistaken for content waiting to go live — including by another CMS reading the same repository. It’s listed in its own section below the board, and its card offers two actions:
+
+- **Cancel** closes the pull request and leaves the entry in place.
+- **Delete** merges the pull request, which removes the entry.
+
+Opening a pending deletion in the entry editor shows its content for reference only. The fields are read-only and there’s no Save button, because the only things left to do are carrying the deletion out or calling it off.
+
+**Different from Decap CMS**
+
+Decap CMS has a separate Unpublish action, and its Delete button removes the entry from the configured branch immediately. Sveltia CMS has no Unpublish action: deleting a published entry _is_ the unpublish process, so making the change and releasing it stay separate, the same as with any edit. See [issue #770](https://github.com/sveltia/sveltia-cms/issues/770).
+
+#### Deleting an Unpublished Entry
+
+- If the entry has **never been published**, deleting it closes its pull request. Nothing is left behind, because nothing was ever merged into the configured branch.
+- If the entry **updates a published one**, the button is labelled **Discard** instead. Discarding closes the pull request and restores the published version, which stays in the configured branch. The entry itself isn’t deleted.
+
+### Restricting Publishing and Deletion
+
+Two collection options let you limit what editors can do. Both are set on the collection, not on the backend:
+
+- `publish: false` hides the publishing controls, so editors can move an entry through the review stages but someone else has to publish it.
+- `delete: false` prevents entries from being deleted. Discarding unpublished changes is still allowed, because that leaves the published version untouched.
+
+```yaml [YAML]
+collections:
+  - name: posts
+    folder: content/posts
+    publish: false
+    delete: false
+```
+
+```toml [TOML]
+[[collections]]
+name = "posts"
+folder = "content/posts"
+publish = false
+delete = false
+```
+
+```json [JSON]
+{
+  "collections": [
+    {
+      "name": "posts",
+      "folder": "content/posts",
+      "publish": false,
+      "delete": false
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  collections: [
+    {
+      name: 'posts',
+      folder: 'content/posts',
+      publish: false,
+      delete: false,
+    },
+  ],
+}
+```
+
+### Event Hooks
+
+Editorial Workflow adds four [event types](https://sveltiacms.app/en/docs/api/events) on top of `preSave` and `postSave`:
+
+| Event           | When it fires                                                       |
+| --------------- | ------------------------------------------------------------------- |
+| `prePublish`    | Before a pull request is merged                                     |
+| `postPublish`   | After a pull request has been merged                                |
+| `preUnpublish`  | Before a published entry is removed from the configured branch      |
+| `postUnpublish` | After a published entry has been removed from the configured branch |
+
+The `preUnpublish` and `postUnpublish` hooks fire when a deletion is **published**, not when it’s requested — that’s the point at which the entry actually leaves the configured branch. Publishing a deletion fires these instead of `prePublish` and `postPublish`, because nothing is being published.
 
 Source: https://sveltiacms.app/en/docs/workflows/editorial
 
@@ -372,6 +540,7 @@ The Sveltia CMS UI consists of several main pages:
 - [Content Library](https://sveltiacms.app/en/docs/ui/content-library): Manage and organize your content entries.
 - [Content Editor](https://sveltiacms.app/en/docs/ui/content-editor): Create and edit content entries.
 - [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library): Manage and upload media assets.
+- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page): Manage entries before they are published or deleted. This page only appears when the advanced workflow is enabled.
 
 #### Account Menu
 
@@ -412,6 +581,7 @@ Currently, the following languages are supported:
 - Chinese (China)
 - Croatian
 - Czech
+- Danish
 - Dutch
 - English (Canada)
 - English (UK)
@@ -442,7 +612,6 @@ The following languages are supported in Decap CMS but not yet available in Svel
 <div class="lang-list">
 
 - Chinese (Taiwan)
-- Danish
 - [German](https://github.com/sveltia/sveltia-cms/issues/263)
 - [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
 - [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)

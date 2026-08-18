@@ -1320,6 +1320,7 @@ The field from the related collection to use as the value for the relation. This
 - `{{slug}}`: Use the slug of the related entry.
 - A field name from the related collection, e.g., `id` or `title`.
 - A template string that references fields in the related collection using the syntax `{{field_name}}`. For example, `{{fields.id}}` or `{{fields.title}}`.
+- `translationKey`, or any other key configured with the `i18n.canonical_slug.key` option: Use the canonical slug of the related entry, which is shared across locales. See [below](#referencing-entries-across-locales).
 
 The `{{locale}}` template tag can be used to include the current locale in the value field, e.g. `{{locale}}/{{slug}}`, which is useful for [i18n support](https://sveltiacms.app/en/docs/i18n).
 
@@ -1913,6 +1914,70 @@ favorite_cities = ["San Francisco", "Tokyo", "Paris"]
   "favorite_cities": ["San Francisco", "Tokyo", "Paris"]
 }
 ```
+
+#### Referencing Entries Across Locales
+
+When [entry slugs are localized](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs), each localized entry stores the default locale’s slug in an extra `translationKey` property. Unlike `{{slug}}`, that property holds the same value in every locale, so it can be used as the value field to reference an entry regardless of the locale being edited:
+
+```yaml [YAML]
+fields:
+  - name: parent
+    label: Parent Page
+    widget: relation
+    i18n: true
+    collection: pages
+    value_field: translationKey
+    display_fields: [title]
+    search_fields: [title]
+```
+
+```toml [TOML]
+[[fields]]
+name = "parent"
+label = "Parent Page"
+widget = "relation"
+i18n = true
+collection = "pages"
+value_field = "translationKey"
+display_fields = ["title"]
+search_fields = ["title"]
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "parent",
+      "label": "Parent Page",
+      "widget": "relation",
+      "i18n": true,
+      "collection": "pages",
+      "value_field": "translationKey",
+      "display_fields": ["title"],
+      "search_fields": ["title"]
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  fields: [
+    {
+      name: 'parent',
+      label: 'Parent Page',
+      widget: 'relation',
+      i18n: true,
+      collection: 'pages',
+      value_field: 'translationKey',
+      display_fields: ['title'],
+      search_fields: ['title'],
+    },
+  ],
+}
+```
+
+The `translationKey` property is not defined as a field, but it’s still a valid value field. If you have renamed the property with the [`i18n.canonical_slug.key`](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs) option, such as `ref` for Jekyll, use that key instead.
 
 Source: https://sveltiacms.app/en/docs/fields/relation
 

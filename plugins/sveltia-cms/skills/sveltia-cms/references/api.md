@@ -274,10 +274,10 @@ The following events are supported for event hooks:
 
 Additionally, the following events are available when using [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial):
 
-- `prePublish`: Triggered before an entry is published. You can modify the entry data before it is persisted.
+- `prePublish`: Triggered before an entry is published. Unlike `preSave`, the handler can’t modify the entry: the content is already committed to the pull/merge request by this point, so a returned value is ignored.
 - `postPublish`: Triggered after an entry has been published.
-- `preUnpublish`: Triggered before an entry is unpublished.
-- `postUnpublish`: Triggered after an entry has been unpublished.
+- `preUnpublish`: Triggered before a published entry is removed from the configured branch, which happens when a deletion is published rather than when it’s requested.
+- `postUnpublish`: Triggered after a published entry has been removed from the configured branch.
 
 ### Event Handler
 
@@ -303,7 +303,7 @@ The handler function receives an object with the following properties:
 
 <!-- any other properties? -->
 
-For the `preSave` and `prePublish` events, the handler can return a modified entry object in Immutable Map format to change the data before it is saved. The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`.
+For the `preSave` event, the handler can return a modified entry object in Immutable Map format to change the data before it is saved. The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`.
 
 For other events, the return value is ignored.
 

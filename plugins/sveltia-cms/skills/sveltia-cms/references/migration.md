@@ -125,7 +125,7 @@ Sveltia CMS is still in beta. Although it’s already being used in production b
 
 **Limited Feature Parity**
 
-Some features from Netlify/Decap CMS, including **Editorial Workflow** and **Git Gateway**, are not yet implemented or will not be implemented in Sveltia CMS. Please check the compatibility section below to see if your use case is supported.
+Some features from Netlify/Decap CMS, including **Open Authoring** and **Git Gateway**, are not yet implemented or will not be implemented in Sveltia CMS. Please check the compatibility section below to see if your use case is supported.
 
 ### Examples
 
@@ -144,7 +144,7 @@ However, 100% feature parity is never planned, and some features are still missi
 
 The following advanced features in Netlify/Decap CMS are not yet added to Sveltia CMS. We are working hard to implement them before the [1.0 release](https://sveltiacms.app/en/docs/roadmap#v1-0). Check our [release notes](https://sveltiacms.app/en/docs/releases#release-information) for updates.
 
-- [Editorial workflow](https://sveltiacms.app/en/docs/workflows/editorial)
+- [Deploy Preview Links](https://decapcms.org/docs/deploy-preview-links/)
 - [Open authoring](https://sveltiacms.app/en/docs/workflows/open)
 - [Nested collections](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures)
 

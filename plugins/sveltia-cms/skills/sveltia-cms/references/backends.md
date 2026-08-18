@@ -1187,9 +1187,6 @@ If you want to test the CMS with a local Git repository, you can use the [Local 
 
 ### Workflows
 
-The following [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the Test backend:
-
-- [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
-- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
+Only the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) is supported with the Test backend.
 
 Source: https://sveltiacms.app/en/docs/backends/test

@@ -418,7 +418,6 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 - Retrieve locale files for the admin interface other than English (US)
 - Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js), [Leaflet](https://github.com/Leaflet/Leaflet), and [SVGO](https://github.com/SVG/svgo)
 - Retrieve [Shiki](https://shiki.style/) language definitions and themes for syntax highlighting in code editors
-- Retrieve the emoji data used by [emoji autocomplete](https://sveltiacms.app/en/docs/fields/richtext#use-emoji-autocomplete), which is fetched the first time a shortcode is typed and then cached locally
 
 Source: https://sveltiacms.app/en/docs/security
 
