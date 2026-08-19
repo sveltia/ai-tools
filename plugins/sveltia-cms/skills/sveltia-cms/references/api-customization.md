@@ -396,7 +396,7 @@ CMS.registerEditorComponent({
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=editor-components).
+Real-world examples of editor components can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=editor-components).
 
 Source: https://sveltiacms.app/en/docs/api/editor-components
 
@@ -879,7 +879,7 @@ CMS.registerPreviewTemplate('products', ProductPreview);
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-templates).
+Real-world examples of custom preview templates can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-templates).
 
 Source: https://sveltiacms.app/en/docs/api/preview-templates
 
@@ -947,7 +947,7 @@ This allows you to layer styles and create complex customizations for the Svelti
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-styles).
+Real-world examples of custom preview styles can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-styles).
 
 Source: https://sveltiacms.app/en/docs/api/preview-styles
 

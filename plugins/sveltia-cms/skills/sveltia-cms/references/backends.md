@@ -684,9 +684,9 @@ You can [disable token authentication](https://sveltiacms.app/en/docs/backends#t
 
 **Unimplemented**
 
-This method becomes available once GitHub releases [client-side PKCE support](https://github.com/github/roadmap/issues/1153). It was planned for Q4 2025 but there’s no official release date yet. Check back later for updates. Until then, please use a different authentication method described in this document.
+We’re waiting for GitHub to support client-side PKCE authentication for single-page apps. It was [planned for Q4 2025](https://github.com/github/roadmap/issues/1153), but GitHub has [put the project on hold](https://github.com/orgs/community/discussions/15752). We can’t release this feature until GitHub provides this support. In the meantime, please use the other authentication methods described in this document.
 
-Note that some AI agents, namely Claude, say PKCE support is already available, but that’s not the case. [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) supports PKCE, so some may have confused GitHub with GitLab. We will update this section with detailed instructions once the feature is officially released by GitHub.
+Note that some AI agents, namely Claude, claim that PKCE support is already available, but that’s not the case. Since [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) supports PKCE, some may have confused GitHub with GitLab. We will update this section with detailed instructions once the feature is available.
 
 <!--
 

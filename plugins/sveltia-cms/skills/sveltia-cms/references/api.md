@@ -236,7 +236,7 @@ CMS.init({
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=initialization).
+Real-world examples of manual initialization can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=initialization).
 
 Source: https://sveltiacms.app/en/docs/api/initialization
 
@@ -362,7 +362,7 @@ The [`toJS`](<https://immutable-js.com/docs/v5/Map/#toJS()>) method from Immutab
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=events).
+Real-world examples of event hooks can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=events).
 
 Source: https://sveltiacms.app/en/docs/api/events
 
@@ -745,7 +745,7 @@ widget = "richtext"
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=file-formats).
+Real-world examples of custom file formats can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=file-formats).
 
 Source: https://sveltiacms.app/en/docs/api/file-formats
 
@@ -1368,6 +1368,6 @@ CMS.registerFieldType('imageMeta', ImageMetaControl, ImageMetaPreview);
 
 ### Showcase
 
-Real-world examples can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=field-types).
+Real-world examples of custom field types can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=field-types).
 
 Source: https://sveltiacms.app/en/docs/api/field-types

@@ -625,10 +625,10 @@ The following languages are supported in Decap CMS but not yet available in Svel
 - Serbian (Cyrillic)
 - Slovak
 - Slovenian
-- [Spanish](https://github.com/sveltia/sveltia-cms/issues/281)
+- [Spanish (Spain)](https://github.com/sveltia/sveltia-cms/issues/281)
 - [Swedish](https://github.com/sveltia/sveltia-cms/issues/421)
 - Thai
-- Vietnamese
+- [Vietnamese](https://github.com/sveltia/sveltia-cms/issues/916)
 
 </div>
 
