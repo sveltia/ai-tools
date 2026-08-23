@@ -123,10 +123,6 @@ Sveltia CMS is designed as a modern [successor to Netlify CMS](https://sveltiacm
 
 Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
 
-**Limited Feature Parity**
-
-Some features from Netlify/Decap CMS, including **Open Authoring** and **Git Gateway**, are not yet implemented or will not be implemented in Sveltia CMS. Please check the compatibility section below to see if your use case is supported.
-
 ### Examples
 
 Still not sure if Sveltia CMS is the right choice for you? Check out the following examples of sites that have been migrated from Netlify CMS and Decap CMS to see how other users have successfully transitioned to Sveltia CMS.
@@ -142,16 +138,10 @@ However, 100% feature parity is never planned, and some features are still missi
 
 #### Current Limitations
 
-The following advanced features in Netlify/Decap CMS are not yet added to Sveltia CMS. We are working hard to implement them before the [1.0 release](https://sveltiacms.app/en/docs/roadmap#v1-0). Check our [release notes](https://sveltiacms.app/en/docs/releases#release-information) for updates.
-
-- [Deploy Preview Links](https://decapcms.org/docs/deploy-preview-links/)
-- [Open authoring](https://sveltiacms.app/en/docs/workflows/open)
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures)
-
-Other things to know:
-
-- Comprehensive CMS config validation is missing.
-- [UI localization](https://sveltiacms.app/en/docs/ui#localization): Sveltia CMS does not support all the languages available in Decap CMS.
+- [Nested collections](https://decapcms.org/docs/collection-nested/) are not implemented yet.
+- [Deploy preview links](https://decapcms.org/docs/deploy-preview-links/) are not implemented yet.
+- Type validation for CMS configuration is missing.
+- Some [UI languages](https://sveltiacms.app/en/docs/ui#localization) are not yet available.
 
 #### Features Not To Be Implemented
 

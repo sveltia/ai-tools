@@ -87,7 +87,7 @@ Currently, the following methods are available on the `CMS` object:
 - [Custom Preview Styles](https://sveltiacms.app/en/docs/api/preview-styles): `registerPreviewStyle`
 - [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates): `registerPreviewTemplate`
 - [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components): `registerEditorComponent`
-- [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types): `registerFieldType` (alias: `registerWidget`)
+- [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types): `registerFieldType` (alias: `registerWidget`), `getFieldType` (alias: `getWidget`)
 - [Custom File Formats](https://sveltiacms.app/en/docs/api/file-formats): `registerCustomFormat`
 - [Event Hooks](https://sveltiacms.app/en/docs/api/events): `registerEventListener`
 
@@ -112,6 +112,8 @@ Sveltia CMS exposes two constructs globally to allow you to create React compone
 - `createClass` — Used to define React class components when not using JSX syntax
 
 These are available on the `window` object when Sveltia CMS is loaded. No additional imports are necessary to use them.
+
+Define the methods you pass to `createClass`, such as `render`, as function expressions rather than arrow functions. `createClass` binds each method to the component instance, which an arrow function doesn’t allow, so `this.props` would be undefined within it. Any other function, including a callback within a method, can be an arrow function.
 
 See [React Without JSX](https://legacy.reactjs.org/docs/react-without-jsx.html) for more information on how to use React without JSX.
 
@@ -757,7 +759,7 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include any undocumented component props, and the `schema` parameter is unimplemented. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components, and the `schema` parameter is unimplemented. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 **Naming Convention**
 
@@ -765,7 +767,7 @@ In Sveltia CMS, what was previously referred to as a **widget** in Netlify/Decap
 
 The `registerWidget` method from Netlify/Decap CMS has been renamed to `registerFieldType` in Sveltia CMS to reflect this terminology change, but the old name remains available as an alias for backward compatibility. The signature and behavior are identical.
 
-### Overview
+### Registering a Custom Field Type
 
 To register a custom field type, use the `registerFieldType` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
 
@@ -784,7 +786,7 @@ For backward compatibility with Netlify/Decap CMS, the `registerWidget` method i
 
 You can use either JSX or non-JSX syntax to define the component — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
 
-### Control Component Props
+#### Control Component Props
 
 The control component receives the following props:
 
@@ -792,9 +794,10 @@ The control component receives the following props:
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration from the CMS config. Contains all field properties including `name`, `label`, `widget`, and any custom properties you define in your schema. Access properties using methods like `field.get('name')` or `field.getIn(['custom', 'property'])`.
 - `forID` (string): The HTML `id` attribute that should be used for the main input element. This enables proper label association and accessibility.
 - `classNameWrapper` (string): A CSS class name that can be applied to your input element for consistent styling with built-in field controls.
+- `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited. Read the content with `entry.getIn(['data', 'fieldName'])`. This lets your control display values derived from other fields in the same entry, such as dynamically generated select options. The prop is updated whenever any field in the entry is modified, so your control always sees the latest content. See the [Dependent Select](#dependent-select) example below.
 - `onChange` (function): A callback function that must be called with the new value whenever the user modifies the field. This updates the entry draft in the CMS.
 
-#### Custom Validation
+##### Custom Validation
 
 Control components may optionally implement an `isValid` instance method for custom validation. The method should return:
 
@@ -802,7 +805,7 @@ Control components may optionally implement an `isValid` instance method for cus
 - `false` or `{ error: { message: "text" } }` when the value is invalid.
 - A Promise that resolves to any of the above formats for async validation.
 
-### Preview Component Props
+#### Preview Component Props
 
 The preview component receives the following props:
 
@@ -810,12 +813,12 @@ The preview component receives the following props:
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
 - `metadata` (Immutable Map): Any available metadata for the current field. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
 
-### Field Schema
+#### Field Schema
 
 The `schema` parameter is a [JSON schema](https://json-schema.org/) object that defines the configuration options for your field type. When users include your custom field type in their collection config, they can set these configuration options. For example:
 
 ```js
-var schema = {
+const schema = {
   properties: {
     separator: { type: 'string' },
     maxItems: { type: 'integer' },
@@ -834,6 +837,45 @@ fields:
     maxItems: 10 # custom configuration option
 ```
 
+### Getting a Field Type
+
+To get the definition of a registered field type, use the `getFieldType` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+
+```js
+CMS.getFieldType(name);
+```
+
+For backward compatibility with Netlify/Decap CMS, the `getWidget` method is available as an alias with the same signature.
+
+The method returns an object with the following properties, or `undefined` if the field type is unavailable:
+
+- `control` (React component): The control component of the field type.
+- `preview` (React component): The preview component of the field type, if any.
+- `schema` (object): The field schema, if any. Built-in field types don’t provide a schema.
+
+This is mainly useful for building a custom field type on top of an existing one, so you don’t have to reimplement a control from scratch. For example, you can reuse the built-in [Select](https://sveltiacms.app/en/docs/fields/select) control while providing your own dynamically generated options. See the [Dependent Select](#dependent-select) example below.
+
+#### Reusing a Built-In Field Type
+
+Sveltia CMS is built with Svelte rather than React, so built-in field controls and previews are Svelte components. The components returned from `getFieldType` are React wrappers that render those Svelte components for you, which means you can compose them into your own React components as usual.
+
+Only the built-in field types that work outside the entry editor can be reused this way:
+
+`boolean`, `color`, `datetime`, `map`, `number`, `select`, `string`, `text`, `uuid`
+
+For any other built-in field type, such as `list` or `object`, the method returns `undefined` and logs a warning to the browser console, because those editors read from and write to the entry draft directly and can’t be rendered on their own.
+
+The returned components accept the same `value`, `field`, `forID` and `onChange` props as a custom control, with two differences:
+
+- The `field` prop can be an [Immutable Map](https://immutable-js.com/docs/v5/Map/), a plain object, or any object exposing an Immutable Map-like `get` method. A plain object is the simplest way to pass an ad hoc field configuration, while the other shapes let you reuse a control wrapper ported from Netlify/Decap CMS as is.
+- The `classNameWrapper` prop is ignored, given that built-in components come with their own styles.
+
+You can also pass the optional `locale`, `keyPath`, `required`, `readonly` and `invalid` props. When they are omitted, they are inherited from the field being edited, so a reused control behaves consistently with the rest of the CMS: it’s marked required, read-only and invalid exactly when your custom field is. This inheritance takes precedence over the ad hoc field configuration, given that the configuration typically describes how to render the input rather than the field itself. For example, a `required: false` option there won’t make a required field optional, which would otherwise let the user select an empty value that the CMS then rejects.
+
+**Compatibility Note**
+
+In Netlify/Decap CMS, the undocumented `getWidget` method returns any built-in or custom widget. In Sveltia CMS, the method is limited to the field types listed above for the reason described. The returned object also omits the Netlify/Decap CMS-specific `globalStyles` and `allowMapValue` properties, which have no equivalent in Sveltia CMS.
+
 ### Examples
 
 **With or without JSX**
@@ -845,7 +887,7 @@ The following JSX examples assume you have a build step to transpile JSX to Java
 A custom field type that converts a comma-separated string to an array and back:
 
 ```js [Without JSX]
-var ArrayControl = createClass({
+const ArrayControl = createClass({
   handleChange: function (e) {
     const separator = this.props.field.get('separator', ', ');
     this.props.onChange(e.target.value.split(separator).map((item) => item.trim()));
@@ -864,21 +906,18 @@ var ArrayControl = createClass({
   },
 });
 
-var ArrayPreview = createClass({
+const ArrayPreview = createClass({
   render: function () {
     const value = this.props.value;
     return h(
       'ul',
       { style: { margin: '0', paddingLeft: '20px' } },
-      Array.isArray(value) &&
-        value.map(function (item, index) {
-          return h('li', { key: index }, item);
-        }),
+      Array.isArray(value) && value.map((item, index) => h('li', { key: index }, item)),
     );
   },
 });
 
-var schema = {
+const schema = {
   properties: {
     separator: { type: 'string' },
   },
@@ -936,7 +975,7 @@ CMS.registerFieldType('array', ArrayControl, ArrayPreview, schema);
 A custom field type with a color input and preview:
 
 ```js [Without JSX]
-var ColorControl = createClass({
+const ColorControl = createClass({
   render: function () {
     return h('input', {
       id: this.props.forID,
@@ -948,7 +987,7 @@ var ColorControl = createClass({
   },
 });
 
-var ColorPreview = createClass({
+const ColorPreview = createClass({
   render: function () {
     return h('div', {
       style: {
@@ -1006,7 +1045,7 @@ CMS.registerFieldType('color', ColorControl, ColorPreview);
 A field type for numbers with custom validation and constraints:
 
 ```js [Without JSX]
-var NumberControl = createClass({
+const NumberControl = createClass({
   isValid: function (value) {
     const min = this.props.field.get('min');
     const max = this.props.field.get('max');
@@ -1042,13 +1081,13 @@ var NumberControl = createClass({
   },
 });
 
-var NumberPreview = createClass({
+const NumberPreview = createClass({
   render: function () {
     return h('span', {}, String(this.props.value ?? ''));
   },
 });
 
-var schema = {
+const schema = {
   properties: {
     min: { type: 'number' },
     max: { type: 'number' },
@@ -1118,7 +1157,7 @@ CMS.registerFieldType('number', NumberControl, NumberPreview, schema);
 A field type for editing JSON data with validation:
 
 ```js [Without JSX]
-var JsonControl = createClass({
+const JsonControl = createClass({
   isValid: function (value) {
     if (typeof value !== 'string') {
       return true; // Allow null/undefined
@@ -1150,7 +1189,7 @@ var JsonControl = createClass({
   },
 });
 
-var JsonPreview = createClass({
+const JsonPreview = createClass({
   render: function () {
     const value = this.props.value;
 
@@ -1250,7 +1289,7 @@ CMS.registerFieldType('json', JsonControl, JsonPreview);
 A field type that stores both image path and alt text:
 
 ```js [Without JSX]
-var ImageMetaControl = createClass({
+const ImageMetaControl = createClass({
   handleChange: function (field, value) {
     const current = this.props.value || {};
     this.props.onChange({
@@ -1292,7 +1331,7 @@ var ImageMetaControl = createClass({
   },
 });
 
-var ImageMetaPreview = createClass({
+const ImageMetaPreview = createClass({
   render: function () {
     const value = this.props.value || {};
 
@@ -1365,6 +1404,87 @@ class ImageMetaPreview extends React.Component {
 
 CMS.registerFieldType('imageMeta', ImageMetaControl, ImageMetaPreview);
 ```
+
+#### Dependent Select
+
+A field type that reuses the built-in [Select](https://sveltiacms.app/en/docs/fields/select) control, with options generated from another field in the same entry. This solves a common need that a static `options` list or a [Relation](https://sveltiacms.app/en/docs/fields/relation) field can’t cover: the choices are defined by the user in the entry they are editing.
+
+Given a collection where a `groups` list field defines named items, and each item of a `content` list field has to reference one of those groups:
+
+```yaml
+fields:
+  - name: groups
+    label: Groups
+    widget: list
+    fields:
+      - name: name
+        label: Name
+        widget: string
+      - name: text
+        label: Text
+        widget: markdown
+  - name: content
+    label: Content
+    widget: list
+    fields:
+      - name: group
+        label: Referenced Group
+        widget: group-select # custom field type name
+```
+
+The `group-select` control reads the group names from the `entry` prop and passes them to the built-in Select control as options. Because the `entry` prop is updated whenever any field in the entry is modified, the options reflect the group names as they are typed, with no need to save and reload:
+
+```js [Without JSX]
+const SelectControl = CMS.getFieldType('select').control;
+
+const GroupSelectControl = createClass({
+  render: function () {
+    const groups = this.props.entry.getIn(['data', 'groups']);
+
+    const options = (groups?.toJS() ?? [])
+      .filter((group) => !!group.name)
+      .map((group) => ({ label: group.name, value: group.name }));
+
+    return h(SelectControl, {
+      field: { name: this.props.field.get('name'), options },
+      value: this.props.value,
+      forID: this.props.forID,
+      onChange: this.props.onChange,
+    });
+  },
+});
+
+CMS.registerFieldType('group-select', GroupSelectControl);
+```
+
+```jsx [With JSX]
+const SelectControl = CMS.getFieldType('select').control;
+
+class GroupSelectControl extends React.Component {
+  render() {
+    const groups = this.props.entry.getIn(['data', 'groups']);
+
+    const options = (groups?.toJS() ?? [])
+      .filter((group) => !!group.name)
+      .map((group) => ({ label: group.name, value: group.name }));
+
+    return (
+      <SelectControl
+        field={{ name: this.props.field.get('name'), options }}
+        value={this.props.value}
+        forID={this.props.forID}
+        onChange={this.props.onChange}
+      />
+    );
+  }
+}
+
+CMS.registerFieldType('group-select', GroupSelectControl);
+```
+
+**Tip**
+
+The field configuration passed to a built-in control doesn’t have to come from your CMS config, as shown above. Any option supported by the field type can be set, such as [`multiple`](https://sveltiacms.app/en/docs/fields/select#multiple) or [`dropdown_threshold`](https://sveltiacms.app/en/docs/fields/select#dropdown-threshold) for the Select field type.
 
 ### Showcase
 

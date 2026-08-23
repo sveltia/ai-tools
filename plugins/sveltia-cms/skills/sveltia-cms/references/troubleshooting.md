@@ -684,6 +684,8 @@ The configuration options in Sveltia CMS are designed to be compatible with the 
 
 #### Are you using AI agents to develop Sveltia CMS?
 
-We started developing Sveltia CMS before the recent surge in AI agents, so most of the codebase was written without AI assistance. However, as AI agents become more capable and integrated into our workflow, more and more tasks are being assisted by them. We now use AI for various tasks, including implementing new features, fixing bugs, refactoring, generating test cases, and writing documentation.
+We started developing Sveltia CMS before the recent surge in AI agents, so many parts of the codebase were written without AI assistance. We couldn’t use AI agents anyway because they were unfamiliar with Svelte.
+
+However, as AI agents become more capable and integrated into our workflow, more and more tasks are being assisted by them. We now use AI for various tasks, including implementing new features, fixing bugs, refactoring, generating test cases, and writing documentation. We rely on Claude Opus to implement advanced features, such as Editorial Workflow.
 
 Source: https://sveltiacms.app/en/docs/faq
