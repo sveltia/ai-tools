@@ -19,17 +19,25 @@ The List field type has four different UI modes, depending on the configuration:
   - With the `fields` option: A group of subfield editors is shown for each item in the list.
   - With the `types` option: A type selector is shown for each item, along with the corresponding subfield editors. This configuration is called a **variable type** list. It’s useful for creating flexible content structures like page builders.
 - Simple list field:
-  - Without the `field`, `fields` or `types` option: A simple multiline text area is shown for editing string values. This allows users to enter list items separated by new lines, where spaces and commas are treated as part of the item values instead of delimiters.
+  - Without the `field`, `fields` or `types` option: Each item is shown as a row with a single-line text input. Spaces and commas are treated as part of the item values instead of delimiters.
 
-With a complex list field:
+##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
 - Each item comes with a menu that allows users to duplicate the item, insert a new item above/below it, or remove it.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
+- Each item can be reordered using the drag handle in the middle of its header:
+  - Dragging the handle moves the item.
+  - With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list.
+  - On a touch screen, Move Up and Move Down buttons are shown in place of the handle, because drag and drop requires a mouse.
 
-**Future Plans**
+##### Simple list field
 
-The UI will be improved in the future to support additional features like drag-and-drop reordering, inline editing, and better handling of large lists.
+- Pressing Enter in an item’s input adds a new item below it. The Add button below the list appends one to the end.
+- Each item comes with a Remove button.
+- Each item can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as a complex list field.
+- The list always keeps one row, so that an empty list still offers somewhere to type. The Remove and reorder controls are disabled when a single item is left.
+- Blank rows are ignored. The stored value is the list of the remaining items, each trimmed of surrounding spaces.
 
 #### Preview
 
@@ -63,6 +71,27 @@ Must be set to `list` to use the List field type.
 #### General Options
 
 ##### `default`
+
+##### `label_singular`
+
+- **Type**: `string`
+- **Default**: The value of the `label` option
+
+A label used for singular items in the list, e.g., “Member” for a list labeled “Members”. It will be displayed on the Add button and in other relevant places in the UI.
+
+##### `min`
+
+- **Type**: `integer`
+- **Default**: `0`
+
+The minimum number of items required in the list. If the number of items is below this value, a validation error will be shown.
+
+##### `max`
+
+- **Type**: `integer`
+- **Default**: `Infinity`
+
+The maximum number of items allowed in the list. If the number of items exceeds this value, a validation error will be shown.
 
 #### Subfield Definition
 
@@ -104,13 +133,6 @@ The `root` option is ignored in the following cases:
 - The file format is TOML, because TOML doesn’t support top-level arrays.
 
 See the [Top-Level List](#top-level-list) example below for details.
-
-##### `label_singular`
-
-- **Type**: `string`
-- **Default**: The value of the `label` option
-
-A label used for singular items in the list, e.g., “Member” for a list labeled “Members”. It will be displayed on the Add button and in other relevant places in the UI.
 
 ##### `summary`
 
@@ -170,21 +192,7 @@ Whether to allow duplicating items in the list. If set to `false`, the Duplicate
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow reordering of items in the list with an arrow handle or drag-and-drop. If set to `false`, the reorder handles will be hidden.
-
-##### `min`
-
-- **Type**: `integer`
-- **Default**: `0`
-
-The minimum number of items required in the list. If the number of items is below this value, a validation error will be shown.
-
-##### `max`
-
-- **Type**: `integer`
-- **Default**: `Infinity`
-
-The maximum number of items allowed in the list. If the number of items exceeds this value, a validation error will be shown.
+Whether to allow reordering of items in the list by dragging the handle in each item’s header, by using the keyboard while the handle is focused, or by using the Move Up and Move Down buttons shown on a touch screen. If set to `false`, the reorder controls will be hidden.
 
 ##### `add_to_top`
 

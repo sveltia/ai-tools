@@ -230,6 +230,8 @@ A large upload button is displayed for the File field. When it’s is clicked, a
 
 If the `multiple` option is enabled, users can select multiple files at once. Uploaded files are displayed as a list with options to remove or replace each file.
 
+Files in a multiple File or Image field can be reordered using the drag handle to the left of each one. With the handle focused, the Up and Down arrow keys move a file one position, while Home and End send it to the start or end of the list. On a touch screen, Move Up and Move Down buttons are shown in place of the handle, because drag and drop requires a mouse.
+
 Users can paste an image from the clipboard directly into a File or Image field by clicking the Paste button or using the keyboard shortcut (Ctrl+V or Cmd+V). This works on both desktop and mobile devices.
 
 On desktop, users can drag and drop file(s) directly onto the field to attach them without opening the file selection dialog.

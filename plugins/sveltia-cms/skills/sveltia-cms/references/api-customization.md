@@ -467,6 +467,26 @@ registerEditorComponent({
 });
 ```
 
+```svelte [Svelte]
+<script>
+  let { html } = $props();
+</script>
+
+<div class="bg-red-100">
+  {@html html}
+</div>
+```
+
+```vue [Vue]
+<script setup>
+defineProps(['html']);
+</script>
+
+<template>
+  <div class="bg-red-100" v-html="html"></div>
+</template>
+```
+
 Note that this approach requires a build step, so the CMS has to be [installed as an npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package) and imported into your admin page, rather than loaded from a CDN.
 
 `marked` and `DOMPurify` are always on the `window` object, so there’s no need to install either library yourself. Sanitizing is not optional here: as noted in [Preview Output](#preview-output) above, the `sanitize_preview` option applies to string previews only, and Markdown allows raw HTML.

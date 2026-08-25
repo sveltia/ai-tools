@@ -1190,6 +1190,8 @@ aliases_field = false
 }
 ```
 
+The same applies if you define a field with the same name as the redirect property in the `fields` option. The CMS assumes that you want to manage the redirects yourself in the Content Editor, so it won’t write to the property on its own. This is the way to go if you’d rather curate the list by hand while still being able to see and edit it in the CMS.
+
 ### Controlling Entry Creation
 
 Sveltia CMS provides options to control entry creation and deletion, limit the number of entries, and hide collections from the Sveltia CMS interface.
