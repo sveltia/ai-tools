@@ -37,7 +37,7 @@ The component `definition` object includes the following properties:
 - `label` (string): The text label displayed on the toolbar button. Defaults to the `id` value.
 - `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name to display on the toolbar button.
 - `trigger` (string): The trigger UI of the component, either `menuitem` (default) or `button`. A menu item is placed under the Insert menu, while a button is placed directly on the toolbar.
-- `toPreview` (function): A function that takes an object mapping field names to their values and returns a string or React element representing the HTML preview of the component in the editor. If omitted, no preview is shown.
+- `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, no preview is shown.
 - `mode` (string): Editing mode for the component. `block` (default) renders the component within the rich text editor as an expandable field list. `dialog` renders a compact placeholder that opens a dialog when clicked.
 - `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Falls back to the first string field value, then to the component label.
 - `collapsed` (boolean): If true, the component's fields panel is collapsed by default when inserted (`block` mode only).
@@ -45,6 +45,22 @@ The component `definition` object includes the following properties:
 **Breaking change from Netlify/Decap CMS**
 
 Netlify/Decap CMS implements the `getAsset` and `fields` parameters for the `toPreview` function, which can be used to [replace image file paths with blob URLs](https://github.com/decaporg/decap-cms/blob/6effc912e13fe7d7f4c590b69ca8784a4fd5490f/packages/decap-cms-editor-component-image/src/index.js#L15-L19) in the preview. Sveltia CMS does not support these undocumented parameters because it automatically replaces image paths with blob URLs. See the [Image with Caption example](#image-with-caption) for details.
+
+#### Preview Output
+
+The optional `toPreview` function can return any of the following:
+
+- **A string**: Parsed as Markdown and HTML, then sanitized with [DOMPurify](https://github.com/cure53/DOMPurify) unless the field’s [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) option is disabled. Most of the [examples](#examples) below use this.
+- **A DOM element**: Inserted as is, which allows you to mount a component built with Svelte, Vue or any other framework. See [Using a Framework Component for Preview](#using-a-framework-component-for-preview).
+- **A React element**: Rendered with React as is. See [Using React for Preview](#using-react-for-preview).
+
+“As is” means that neither Markdown parsing nor sanitization is applied, so the value of a nested RichText or Markdown field is displayed verbatim, such as `**bold**`, unless you convert it to HTML yourself. The CMS exposes its own Markdown parser and HTML sanitizer for exactly that purpose — see [Rendering Markdown](https://sveltiacms.app/en/docs/api#rendering-markdown).
+
+The function may also be called with an empty object while the editor is being initialized, so make sure that it works without any field values, as the examples below do by using default values.
+
+**Security Risk**
+
+The `sanitize_preview` option applies to string previews only, so any HTML you write into a DOM element or React element, for example with `innerHTML` or `dangerouslySetInnerHTML`, is rendered as is. This can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody. Insert field values as text, or sanitize them yourself, unless you’re the sole user of your CMS.
 
 ### Using Components
 
@@ -393,6 +409,69 @@ CMS.registerEditorComponent({
   },
 });
 ```
+
+#### Using a Framework Component for Preview
+
+The `toPreview` function can also return a DOM element, which is inserted into the preview as is. This allows you to reuse a component written with Svelte, Vue or any other framework that can be mounted on an element, so the preview matches what your site actually renders.
+
+Because the CMS cannot destroy a component that it didn’t create, it dispatches a custom `Unmount` event on the returned element once the preview is replaced or the entry is closed. Listen for that event to tear down your component and avoid memory leaks.
+
+The following example renders a “Warning” component that wraps some body text. Because the body is a nested [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, its value arrives as a Markdown string, and the element you return is inserted as is — so `**bold**` would show up with the asterisks intact unless you convert it. The example does that with the [globally available](https://sveltiacms.app/en/docs/api#rendering-markdown) `marked` parser and `DOMPurify` sanitizer, then lets the component insert the HTML with Svelte’s `{@html html}` tag or Vue’s `v-html` directive:
+
+```js [Svelte]
+import { registerEditorComponent } from '@sveltia/cms';
+import { mount, unmount } from 'svelte';
+import Warning from '$lib/components/Warning.svelte';
+
+registerEditorComponent({
+  id: 'warning',
+  label: 'Warning',
+  icon: 'warning',
+  fields: [{ name: 'body', label: 'Body', widget: 'richtext' }],
+  pattern: /<Warning>\s*(?<body>[\s\S]*?)\s*<\/Warning>/,
+  toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
+  toPreview: ({ body = '' }) => {
+    const element = document.createElement('div');
+    const html = DOMPurify.sanitize(marked.parse(body, { breaks: true }));
+    const component = mount(Warning, { target: element, props: { html } });
+
+    element.addEventListener('Unmount', () => unmount(component), { once: true });
+
+    return element;
+  },
+});
+```
+
+```js [Vue]
+import { registerEditorComponent } from '@sveltia/cms';
+import { createApp } from 'vue';
+import Warning from './components/Warning.vue';
+
+registerEditorComponent({
+  id: 'warning',
+  label: 'Warning',
+  icon: 'warning',
+  fields: [{ name: 'body', label: 'Body', widget: 'richtext' }],
+  pattern: /<Warning>\s*(?<body>[\s\S]*?)\s*<\/Warning>/,
+  toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
+  toPreview: ({ body = '' }) => {
+    const element = document.createElement('div');
+    const html = DOMPurify.sanitize(marked.parse(body, { breaks: true }));
+    const app = createApp(Warning, { html });
+
+    app.mount(element);
+    element.addEventListener('Unmount', () => app.unmount(), { once: true });
+
+    return element;
+  },
+});
+```
+
+Note that this approach requires a build step, so the CMS has to be [installed as an npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package) and imported into your admin page, rather than loaded from a CDN.
+
+`marked` and `DOMPurify` are always on the `window` object, so there’s no need to install either library yourself. Sanitizing is not optional here: as noted in [Preview Output](#preview-output) above, the `sanitize_preview` option applies to string previews only, and Markdown allows raw HTML.
+
+Any image in the nested value keeps working, too. The CMS replaces internal image paths with blob URLs anywhere in the preview, including inside an element you return.
 
 ### Showcase
 

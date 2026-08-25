@@ -784,13 +784,17 @@ Additionally, the following unique identifier tags are available. These tags gen
 
 #### Making Slugs Editable
 
-By default, entry slugs are automatically generated based on the `title` field or the template defined in the `slug` option. However, you can allow users to edit the slug directly in the entry editor by including a special slug field in the `slug` option.
+By default, an entry’s slug is generated from the `title` field or the template defined in the `slug` option, and users never see it while writing. To have users choose the slug themselves instead, set the `slug` option to the special `{{fields._slug}}` tag.
 
-To make the slug editable, set the `slug` option to `{{fields._slug}}`. This will display a special slug editor UI that looks like a standard string field, but the value will be used as the entry slug.
+With that option in place, a required Slug field appears above the other fields in the Edit Pane. It looks like a standard string field, but its value becomes the entry slug. The field starts out empty, so the entry can’t be saved until a slug has been entered, and slashes and whitespace are rejected.
 
-Once the entry is created, the `_slug` field will be populated with the generated slug. Users can then modify it as needed using the slug editor, which can be accessed via the 3-dot menu in the entry editor.
+**Only while creating an entry**
 
-To make the slug editable for each locale in an [i18n](https://sveltiacms.app/en/docs/i18n)-enabled collection, use set the `slug` option to `{{fields._slug | localize}}`.
+The Slug field is shown only while an entry is being created, including when an existing entry is duplicated. Once the entry has been saved, the field disappears.
+
+A saved entry can still be renamed, but only with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor) in the 3-dot menu of the Content Editor. Renaming moves the entry’s file and rewrites every reference to it, so it’s deliberately kept out of the Edit Pane, where it could otherwise be changed by accident in the middle of routine editing.
+
+In an [i18n](https://sveltiacms.app/en/docs/i18n)-enabled collection, `{{fields._slug}}` makes the slug editable in the default locale only, and the remaining locales show the same value as read-only. To let users enter a different slug for each locale, set the `slug` option to `{{fields._slug | localize}}` instead.
 
 ### Managing File Paths
 
@@ -1059,6 +1063,132 @@ widget = "richtext"
 ```
 
 With the above configuration, a blog post created on June 15, 2025, with the title “My First Post” will have a preview URL of `/blog/2025/06/my-first-post`.
+
+Setting the `preview_path` option also lets the CMS keep links working when an entry is renamed. See [Managing Redirects](#managing-redirects) below for details.
+
+### Managing Redirects
+
+Changing an entry’s slug usually changes its URL, which breaks existing links to it, including internal links, external links and search engine results. To prevent this, Sveltia CMS can record the entry’s previous path in its data, so your framework can redirect visitors from the old URL to the new one.
+
+This requires the [`preview_path` option](#managing-preview-paths), because that option is what tells the CMS where an entry lives on your live site. Once it’s set, saving an entry with a modified slug adds the previous path to the entry’s `aliases` property:
+
+- If the property doesn’t exist yet, it’s created as a list with a single item.
+- If the property already exists as a list, the previous path is appended to it, so redirects accumulate as an entry is renamed over time.
+
+Entry slugs can be changed with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor), which can be accessed via the 3-dot menu in the Content Editor.
+
+With the `preview_path` configuration shown above, renaming a June 2025 blog post from `my-first-post` to `hello-world` results in the following front matter:
+
+```yaml
+---
+aliases:
+  - /blog/2025/06/my-first-post
+title: Hello World
+created_at: 2025-06-15T09:00:00.000Z
+---
+```
+
+The `aliases` property is supported out of the box by [Hugo](https://gohugo.io/content-management/urls/#aliases) and [Zola](https://www.getzola.org/documentation/content/page/#front-matter), which generate the redirects for you. Other frameworks may expect a different property name or require a plugin.
+
+#### Customizing the Redirect Property
+
+You can store the previous paths in a property other than `aliases` using the `aliases_field` option. For example, [Jekyll](https://jekyllrb.com/) sites using the [`jekyll-redirect-from`](https://github.com/jekyll/jekyll-redirect-from) plugin expect a `redirect_from` property:
+
+```yaml [YAML]{6}
+collections:
+  - name: posts
+    label: Blog Posts
+    folder: /content/posts
+    preview_path: '/blog/{{year}}/{{month}}/{{slug}}'
+    aliases_field: redirect_from
+```
+
+```toml [TOML]{6}
+[[collections]]
+name = "posts"
+label = "Blog Posts"
+folder = "/content/posts"
+preview_path = "/blog/{{year}}/{{month}}/{{slug}}"
+aliases_field = "redirect_from"
+```
+
+```json [JSON]{8}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog Posts",
+      "folder": "/content/posts",
+      "preview_path": "/blog/{{year}}/{{month}}/{{slug}}",
+      "aliases_field": "redirect_from"
+    }
+  ]
+}
+```
+
+```js [JavaScript]{8}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog Posts",
+      folder: "/content/posts",
+      preview_path: "/blog/{{year}}/{{month}}/{{slug}}",
+      aliases_field: "redirect_from",
+    },
+  ],
+}
+```
+
+#### Disabling Redirects
+
+If your framework doesn’t support redirects defined in entry data, set the `aliases_field` option to `false`. The CMS will then leave the property untouched when an entry is renamed, and no redirects will be generated.
+
+```yaml [YAML]{6}
+collections:
+  - name: posts
+    label: Blog Posts
+    folder: /content/posts
+    preview_path: '/blog/{{year}}/{{month}}/{{slug}}'
+    aliases_field: false
+```
+
+```toml [TOML]{6}
+[[collections]]
+name = "posts"
+label = "Blog Posts"
+folder = "/content/posts"
+preview_path = "/blog/{{year}}/{{month}}/{{slug}}"
+aliases_field = false
+```
+
+```json [JSON]{8}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog Posts",
+      "folder": "/content/posts",
+      "preview_path": "/blog/{{year}}/{{month}}/{{slug}}",
+      "aliases_field": false
+    }
+  ]
+}
+```
+
+```js [JavaScript]{8}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog Posts",
+      folder: "/content/posts",
+      preview_path: "/blog/{{year}}/{{month}}/{{slug}}",
+      aliases_field: false,
+    },
+  ],
+}
+```
 
 ### Controlling Entry Creation
 

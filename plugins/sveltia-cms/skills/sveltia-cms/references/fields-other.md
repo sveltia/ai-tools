@@ -1266,9 +1266,15 @@ In some cases, it can also be a number or an array of numbers if the `value_fiel
 
 If the `required` option is set to `false` and no related entries are selected, the value will be `null` for single select or an empty array for multi select.
 
-**Cascading unimplemented**
+#### Cascading Updates
 
-Cascade updates and deletions like relational databases are not yet supported. If a related entry is updated or deleted, the Relation field will not automatically reflect those changes. Users must manually update the Relation field values to maintain data integrity. We plan to add cascading support in the near future.
+Like a relational database that cascades an update of a referenced key, Sveltia CMS keeps Relation field values pointing at the right entry when the entry they reference is renamed. Renaming a related entry with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor) rewrites every entry referencing it, in the same commit as the rename, so no references are left dangling.
+
+This applies whenever the stored value is derived from the related entry’s identity, which covers the default `{{slug}}`, any template containing `{{slug}}`, such as `{{locale}}/{{slug}}`, and the canonical slug key. It does not apply to a `value_field` pointing at an ordinary content field, such as `{{title}}`, because such a value doesn’t change when the entry is renamed — but it does break if somebody edits that field. It’s one more reason to prefer the default `{{slug}}`, as noted under [`value_field`](#value-field).
+
+**Cascading deletions unimplemented**
+
+Deletions are not cascaded yet. If a related entry is deleted, entries referencing it keep the stale value, and you’ll have to clear those Relation fields yourself. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so it’s worth checking before you delete one. We plan to add cascading deletions in a future release.
 
 ### Data Validation
 

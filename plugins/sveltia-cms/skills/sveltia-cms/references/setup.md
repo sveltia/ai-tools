@@ -551,6 +551,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries#managing-entry-order): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
+- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries#managing-redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
 
 ### Development Guide
 
@@ -736,6 +737,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
 - The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries#managing-entry-order): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
+- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries#managing-redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.
 
 ### Development Guide
 

@@ -125,6 +125,35 @@ We plan to add support for [Preact+HTM](https://preactjs.com/guide/v10/getting-s
 
 Sveltia CMS does not provide a built-in JSX transpiler. To use JSX syntax, you need a build step to transpile it to JavaScript, such as [Vite](https://vitejs.dev/).
 
+### Rendering Markdown
+
+The value of a [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field is a Markdown string. When you render such a value yourself — in a [Custom Preview Template](https://sveltiacms.app/en/docs/api/preview-templates), the [preview output](https://sveltiacms.app/en/docs/api/editor-components#preview-output) of a [Custom Editor Component](https://sveltiacms.app/en/docs/api/editor-components), or a [Custom Field Type](https://sveltiacms.app/en/docs/api/field-types) — the string is used as is, so text like `**bold**` appears verbatim unless you convert it to HTML.
+
+To make that possible without adding a dependency of your own, Sveltia CMS exposes the two libraries it uses internally:
+
+- `marked` — The [Marked](https://marked.js.org/) parser, which converts a Markdown string to an HTML string
+- `DOMPurify` — The [DOMPurify](https://github.com/cure53/DOMPurify) sanitizer, which strips scripts and other dangerous markup from an HTML string
+
+These are available on the `window` object when Sveltia CMS is loaded, whether you use the CDN build or the npm package. No additional imports are necessary to use them.
+
+```js
+const html = DOMPurify.sanitize(marked.parse(markdown));
+```
+
+The CMS renders the preview pane with the `breaks` option enabled, meaning a single line break becomes a `<br>`. Pass the same option if you want your output to match:
+
+```js
+const html = DOMPurify.sanitize(marked.parse(markdown, { breaks: true }));
+```
+
+**Security Risk**
+
+Always sanitize the HTML before inserting it into the DOM, as the examples above do. Markdown allows raw HTML, so skipping the sanitizer can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody.
+
+**Shared parser instance**
+
+`marked` is the very parser the CMS uses to render the preview pane, so any extension you add with [`marked.use()`](https://marked.js.org/using_pro) also changes how the CMS itself renders Markdown. Prefer passing [options](https://marked.js.org/using_advanced) to `marked.parse()` for one-off customization.
+
 Source: https://sveltiacms.app/en/docs/api
 
 ---
