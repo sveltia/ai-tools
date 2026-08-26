@@ -978,10 +978,12 @@ This feature from Netlify/Decap CMS is not yet supported in Sveltia CMS. It will
 
 The `preview_path` option allows you to define a custom URL path for previewing entries on your live site. This option accepts a string with template tags that will be replaced with entry-specific values when generating the preview URL. The CMS provides links to preview the entries based on this URL structure.
 
+The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for how those are found.
+
 The [slug template tags](#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
 
 - `{{slug}}`: the entire slug of the entry, not just the slugified entry identifier.
-- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different date field. If no DateTime field is found, the `preview_path` option will be ignored.
+- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different date field. If no DateTime field is found, the `preview_path` option will be ignored, and a configuration warning is shown so the missing link doesn’t go unexplained. A field that exists but is left empty on an entry has the same effect on that entry.
 - `{{dirname}}`: the directory name of the entry file relative to the collection `folder`. This is useful when using the `path` option to create subfolders.
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.
@@ -1064,7 +1066,10 @@ widget = "richtext"
 
 With the above configuration, a blog post created on June 15, 2025, with the title “My First Post” will have a preview URL of `/blog/2025/06/my-first-post`.
 
-Setting the `preview_path` option also lets the CMS keep links working when an entry is renamed. See [Managing Redirects](#managing-redirects) below for details.
+Setting the `preview_path` option does two more things:
+
+- It lets the CMS keep links working when an entry is renamed. See [Managing Redirects](#managing-redirects) below.
+- It’s what [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) need in order to point at an entry. Without it there’s nothing to append to the site or preview address, so no preview link is shown.
 
 ### Managing Redirects
 

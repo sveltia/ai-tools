@@ -496,17 +496,17 @@ A string representing the date and/or time in ISO 8601 format by default, or in 
 
 - Date-only: `YYYY-MM-DD` (e.g., `2025-08-15`)
 - Time-only:
-  - With `picker_utc`: `HH:mm:ss.SSSZ` (e.g., `14:30:00.000Z`).
+  - With `picker_utc`: `HH:mm:ssZ` (e.g., `14:30:00Z`).
   - Without `picker_utc`: `HH:mm:ss` (e.g., `14:30:00`).
 - Date and time:
-  - With `picker_utc`: `YYYY-MM-DDTHH:mm:ss.SSSZ` (e.g., `2025-08-15T14:30:00.000Z`).
+  - With `picker_utc`: `YYYY-MM-DDTHH:mm:ssZ` (e.g., `2025-08-15T14:30:00Z`).
   - Without `picker_utc`: `YYYY-MM-DDTHH:mm:ss` (e.g., `2025-08-15T14:30:00`).
 
 If the `format`, `date_format` or `time_format` option is specified, the string will follow the custom Day.js format defined.
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string.
 
-If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value, or date-time value, depending on the configuration, unless a custom `format` is specified.
+If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value, or date-time value, depending on the configuration, unless a custom `format` is specified. TOML output always carries millisecond precision, so the examples above are written as `2025-08-15T14:30:00.000` and `14:30:00.000`. Note also that TOML has no offset-time type, so a UTC time-only value loses its `Z` suffix and is written as a local time (e.g., `14:30:00.000`).
 
 ### Data Validation
 
@@ -630,6 +630,10 @@ If `true`, the input value is converted to UTC for storage. When no custom `form
 
 Note that `input_timezone: utc` already implies UTC semantics, so `output_utc` has no additional effect in that case.
 
+**Limited Timezone Support for Time-only Fields**
+
+For time-only fields (`type: time` or `date_format: false`), the only timezone setting that affects the stored value is `input_timezone: utc`, which appends a `Z` suffix (e.g., `14:30:00Z`). A custom `input_timezone` and `output_utc` are ignored, and the time is stored as entered (e.g., `14:30:00`), because converting a wall-clock time to another timezone requires a reference date. Use a date/time field if you need the value converted.
+
 ##### `format`
 
 - **Type**: `string`
@@ -705,7 +709,7 @@ eventDateTime: 2025-08-15T14:30:00
 ```
 
 ```toml [TOML]
-eventDateTime = 2025-08-15T14:30:00
+eventDateTime = 2025-08-15T14:30:00.000
 ```
 
 ```json [JSON]
@@ -811,7 +815,7 @@ startTime: 14:30:00
 ```
 
 ```toml [TOML]
-startTime = 14:30:00
+startTime = 14:30:00.000
 ```
 
 ```json [JSON]
@@ -864,7 +868,7 @@ default = "{{now}}"
 Output example:
 
 ```yaml [YAML]
-eventDateTimeUtc: 2025-08-15T14:30:00.000Z
+eventDateTimeUtc: 2025-08-15T14:30:00Z
 ```
 
 ```toml [TOML]
@@ -873,7 +877,7 @@ eventDateTimeUtc = 2025-08-15T14:30:00.000Z
 
 ```json [JSON]
 {
-  "eventDateTimeUtc": "2025-08-15T14:30:00.000Z"
+  "eventDateTimeUtc": "2025-08-15T14:30:00Z"
 }
 ```
 
@@ -1051,7 +1055,7 @@ appointmentTime: 10:15:00
 ```
 
 ```toml [TOML]
-appointmentTime = 10:15:00
+appointmentTime = 10:15:00.000
 ```
 
 ```json [JSON]
@@ -1104,7 +1108,7 @@ eventTime: 2025-08-15T14:30:00-04:00
 ```
 
 ```toml [TOML]
-eventTime = 2025-08-15T14:30:00-04:00
+eventTime = 2025-08-15T14:30:00.000-04:00
 ```
 
 ```json [JSON]
@@ -1254,7 +1258,7 @@ For multi-select options with many entries, a tag input UI will be used instead 
 
 **Future Plans**
 
-Currently, it’s not possible to create new related entries directly from the Relation field UI. We plan to add this feature in future releases.
+Currently, it’s not possible to create new related entries directly from the Relation field UI. We plan to add this feature in future releases. ([Issue #493](https://github.com/sveltia/sveltia-cms/issues/493))
 
 #### Preview
 

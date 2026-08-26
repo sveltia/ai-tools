@@ -19,17 +19,190 @@ There are two main workflows for production use:
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple): no review process, editors can directly commit changes to the main branch.
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial): includes a review and approval process before changes are merged into the main branch.
 
-Additionally, the following feature enhances the content management experience:
+Additionally, the following features enhance the content management experience:
 
 - [Open Authoring](https://sveltiacms.app/en/docs/workflows/open): allows external contributors to submit changes via pull requests.
+- [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews): links each entry to the build made for it, and shows whether that build has finished.
 
 These production workflows can be used locally or remotely. Not all workflows are supported by every backend; refer to the specific workflow documentation for details.
 
 **Future Plans**
 
-We’re planning to introduce **Preview Workflow** in the future, which will allow editors to preview their changes before publishing them live. It would be a simplified version of Editorial Workflow, enabling content previews by creating a preview branch (pull/merge request) without a formal review process. Major hosting services like [Netlify](https://docs.netlify.com/deploy/deploy-types/deploy-previews/) and [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/preview-deployments/) support preview deployments from pull/merge requests, making this workflow feasible.
+We’re planning to introduce **Preview Workflow** in the future, which will allow editors to preview their changes before publishing them live. It would be a simplified version of Editorial Workflow, enabling content previews by creating a preview branch (pull/merge request) without a formal review process. Major hosting services like [Vercel](https://vercel.com/docs/deployments/environments#preview-environment-pre-production) and [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/preview-deployments/) support preview deployments from pull/merge requests, making this workflow feasible.
 
 Source: https://sveltiacms.app/en/docs/workflows
+
+---
+
+## Deploy Previews
+
+Most hosting services build your site again whenever a commit lands, and many build a separate copy for each pull request. Sveltia CMS asks your Git backend where those builds ended up, so an editor can open the page they just worked on without hunting for the URL — and can tell whether the build has finished yet.
+
+This works in both production workflows, with a different meaning in each:
+
+- In [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the **deploy preview** built for its pull request, so you can see a draft before it goes live.
+- In [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), where changes are committed straight to the [configured branch](https://sveltiacms.app/en/docs/backends#branch-selection), an entry links to the **live site**, and the CMS reports whether the build for your latest change has finished.
+
+### Requirements
+
+- A [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend.
+- A CI/CD provider connected to your repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
+- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) on each collection you want links for. Without it there’s nothing to point at, so no link is shown.
+
+**Date tags need a date field**
+
+When `preview_path` uses `{{year}}`, `{{month}}` or another date tag, the CMS reads it from the collection’s DateTime field — or the one named by `preview_path_date_field`. If no such field exists, a configuration warning says so, because the preview link would otherwise go missing with no explanation. A field that exists but is left empty on an entry has the same effect, and can only be spotted on the entry itself.
+
+**Future Plans**
+
+Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend may be added in the future. Until then, entries on that backend link to the live site as before, with no build state reported.
+
+### Configuration
+
+There’s nothing to turn on. As long as the requirements above are met, deploy preview links appear on their own.
+
+The options below shape what the links do:
+
+| Option | Where | What it does |
+| --- | --- | --- |
+| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) | Collection | Path template appended to the site or preview URL. **Required.** |
+| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) | Collection | Which date field the `{{year}}`, `{{month}}` and similar tags read |
+| [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of your live site |
+| `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
+| [`preview_context`](#specifying-a-status-context) | `backend` | Names the exact commit status or environment that carries the preview URL |
+
+If `site_url` isn’t set, the CMS falls back to the URL reported by your production deployment, so links can still work without it. When `site_url` _is_ set, it always wins.
+
+### How It Works
+
+Every entry belongs to a commit: the head of its pull request in Editorial Workflow, or the head of the configured branch otherwise. The CMS asks the backend what your CI/CD provider reported for that commit, takes the URL from the answer, and appends the collection’s `preview_path`.
+
+So an entry whose `preview_path` is `/blog/{{slug}}` links to `https://example.com/blog/my-post` on the live site, and to `https://cms-posts-hello.example.pages.dev/blog/my-post` on a deploy preview built by Cloudflare Pages.
+
+#### Where the URL Comes From
+
+Providers report a deployment in one of three ways, and Sveltia CMS reads all of them:
+
+| Source | Known to use it |
+| --- | --- |
+| **Deployments** (GitHub) and **environments** (GitLab) | Vercel, GitHub Pages, GitLab Review Apps |
+| **Commit statuses** | Vercel, and CI services that post a build status |
+| **Check runs** (GitHub only) | Cloudflare Pages, AWS Amplify |
+
+All three are read whichever provider you use, so one that isn’t listed still works as long as it reports through any of them. Equally, a provider that reports nowhere the Git host can see — several publish only to their own dashboard, or to a pull request comment — can’t be detected at all. If you’re unsure which applies, open a recent commit on your Git host and see whether anything is attached to it.
+
+When more than one reports on the same commit, the CMS prefers a finished build with a page to open, then the source whose URL is most reliable — a deployment’s environment URL is always the site, while a commit status URL is sometimes a build log. It then prefers an environment whose name matches what it’s looking for, so a `production` environment isn’t passed over for a `preview` one on your live branch. Ties go to the newest.
+
+An address is only taken from a finished build. Several providers hand out a placeholder while they work — Cloudflare Pages reports its own dashboard until the build succeeds, then replaces it with the preview address — so nothing is offered until there’s a page behind it. A URL leading back to your Git host is ignored for the same reason: that’s a job log, which every GitLab CI job reports.
+
+A build that was canceled or skipped is ignored, even when the provider reports it as successful. This happens in a monorepo, where a site that the commit didn’t touch still reports a result, and its URL leads to the build log rather than a page.
+
+**How check runs are read**
+
+A check run’s own link usually leads to a build log rather than a site, so it takes more care than the other two sources.
+
+Every run reports its build state, so a provider these rules have never heard of still tells you that a build on the commit is running or has failed. Offering an address is another matter: only a run whose name suggests a deployment does that, and one that doesn’t is ranked below every one that does — so a green test suite can’t stand in for a build that hasn’t finished. For a run that does look like a deployment, the address is taken in this order:
+
+1. **A URL published in the run’s output.** Cloudflare Pages writes a table of preview URLs into its check summary while linking the check itself at the Cloudflare dashboard, so that table is read and dashboard links in it are passed over.
+2. **The run’s own link, but only if the name says “preview”.** AWS Amplify reports “AWS Amplify Console Web Preview” and links straight to the site.
+3. **Neither.** The build state is still reported — so you see that a build is running or has failed — but no address is offered.
+
+If your provider’s naming defeats this, name the check explicitly with [`preview_context`](#specifying-a-status-context).
+
+#### Build States
+
+What the control does depends on whether a preview is still on its way.
+
+**While a preview is being built for an unpublished entry**, the button reads **Checking for Preview**, is disabled, and shows a turning icon. The live site isn’t where that entry can be seen — it holds the published version, or nothing at all when the entry is new — so offering that link would send you somewhere else.
+
+**Otherwise the button is a link**, reading **View Preview** when it points at a deploy preview and **View on Live Site** when it points at the live site. A build that’s still running or has failed is described on the control for screen readers, and shown as a badge on the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page):
+
+| Build state                                  | Badge on the workflow card |
+| -------------------------------------------- | -------------------------- |
+| Building                                     | **Building…**              |
+| Failed                                       | **Build Failed**           |
+| Being queried, finished, or nothing reported | none                       |
+
+A published entry is never made to wait, whatever its build is doing: the live site genuinely holds that page, so the link stays available.
+
+When no CI/CD provider reports anything — because none is connected, or because it reports in a way the backend doesn’t expose — nothing is lost. You get the same live-site link you always had.
+
+While a build is running, the CMS checks again every 5 seconds, so a preview is offered as soon as it exists. On GitHub each check is a single request; on GitLab it costs one shared call plus one per commit being watched. It gives up after 10 minutes: the icon stops turning, the link comes back, and a **Check for Preview** action appears in the entry editor’s options menu. Reopening the entry starts a fresh round of checks, so a build longer than that isn’t lost.
+
+#### Checking Whether the Page Is Live
+
+A finished build isn’t quite the same as a page you can open: a CDN may not have caught up, and a brand-new entry can 404 for a moment after publishing. Where it can, the CMS requests the page itself and keeps treating the build as unfinished until it answers.
+
+This check only runs when the page is on the same origin as the CMS — the usual case where the CMS is served from `/admin` on the site it edits. A browser can’t read a cross-origin response without permission from that server, and no major static host grants it, so the request is skipped rather than sent to learn nothing. Deploy previews are almost always on another origin, so their state comes from the provider alone.
+
+#### Where Links Appear
+
+- In the entry editor toolbar, for the default locale.
+- In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/en/docs/i18n#managing-preview-paths-with-i18n).
+- On the cards of the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
+
+### Specifying a Status Context
+
+If several providers report on the same commit, or the CMS picks the wrong one, name the one you want with `preview_context` in the `backend` section. Only that commit status, check run or environment is then considered.
+
+```yaml [YAML]
+backend:
+  name: github
+  repo: user/repo
+  preview_context: Cloudflare Pages
+```
+
+```toml [TOML]
+[backend]
+name = "github"
+repo = "user/repo"
+preview_context = "Cloudflare Pages"
+```
+
+```json [JSON]
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "preview_context": "Cloudflare Pages"
+  }
+}
+```
+
+```js [JavaScript]
+{
+  backend: {
+    name: 'github',
+    repo: 'user/repo',
+    preview_context: 'Cloudflare Pages',
+  },
+}
+```
+
+The name is matched exactly first, and as a partial match if nothing matches exactly — so `cloudflare` finds `Cloudflare Pages` too. Matching is case-insensitive.
+
+Setting this option narrows the search deliberately, so if nothing matches, the CMS reports no preview rather than falling back to a provider you didn’t ask for. Check the name against the status or environment as it appears on your repository if a link stops showing up.
+
+### Limitations
+
+- On GitHub, a workflow that deploys your site but reports no deployment, no commit status and no check run can’t be detected. Publishing to GitHub Pages with the official actions creates a deployment, so it works; a hand-rolled workflow that only uploads files may not.
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) publishes its preview URL in a pull request comment, which no API surfaces alongside the commit. Its check run still reports whether the build succeeded, so you get the build state without a preview link. Cloudflare Pages, which writes the address into its check output, works fully.
+- Reading a preview URL out of a check run’s output means reading what that provider chose to write. If the format changes, the address is no longer found and the entry falls back to its live-site link — degraded rather than broken.
+- On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to your branch. A project that deploys more often than that may push a Review App out of range, in which case its commit status still covers it.
+- A preview behind access control, such as Vercel’s Deployment Protection, answers the liveness check with an authentication error rather than a page. The CMS treats that as “can’t tell” and leaves the link alone, since it works for anyone signed in.
+
+### Differences from Netlify/Decap CMS
+
+- In Simple Workflow, Netlify/Decap CMS builds the link from `site_url` and `preview_path` without asking the backend anything, and always presents it as ready. Sveltia CMS looks up the deploy for the commit your change landed in, so the link reflects whether the build has finished.
+- Netlify/Decap CMS reads commit statuses alone, taking the first whose context contains the word `deploy`. Sveltia CMS reads deployments, environments and check runs as well — including the URLs a check run publishes in its output — so providers that report through anything but the oldest API are detected.
+- Netlify/Decap CMS takes the first matching status, so a canceled build in a monorepo can win over the preview that was actually built. Sveltia CMS ignores canceled and skipped builds.
+- Netlify/Decap CMS shows a **Check for Preview** button that never resolves when a build fails. Sveltia CMS reports the failure, and shows a running build as still building.
+- Netlify/Decap CMS polls every five seconds for about two minutes, then stops with the Check for Preview button still showing. Sveltia CMS keeps checking at that rate for ten minutes, then says it has stopped and offers an explicit re-check.
+- Netlify/Decap CMS links only the default locale of a multilingual entry. Sveltia CMS offers a link for each locale.
+
+See [Better Workflows](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-workflows) for the full list.
+
+Source: https://sveltiacms.app/en/docs/workflows/deploy-previews
 
 ---
 
@@ -809,13 +982,13 @@ Content editing in Sveltia CMS is designed to be intuitive and efficient. Key fe
 
 #### Themes
 
-You can switch between light and dark themes in the CMS interface. The theme can be changed in the application settings. By default, it follows your system preference.
+You can switch between light and dark themes in the CMS interface. The theme setting is **Automatic** by default, meaning the CMS follows your system’s light or dark appearance and switches with it right away. You can pick Dark or Light at any time in the application settings.
 
 More appearance options will be added in future releases. Stay tuned!
 
 #### Localization
 
-The CMS interface is available in various languages. By default, it uses the language set in your browser, if supported. You can change the language at any time in the application settings. The CMS will remember your preference for future sessions.
+The CMS interface is available in various languages. The language setting is **Automatic** by default, meaning the CMS follows the language set in your browser — and switches as soon as you change it, without a page reload. You can pick a specific language at any time in the application settings, and the CMS will remember your choice for future sessions.
 
 Currently, the following languages are supported:
 
@@ -850,7 +1023,7 @@ Currently, the following languages are supported:
 
 </div>
 
-When the user’s language becomes available, the CMS will prompt them to switch to it. If the user dismisses the prompt, they can still change the language in the application settings.
+If you have picked a specific language and your browser’s language later becomes available, the CMS will prompt you to switch to it. The prompt doesn’t appear on the Automatic setting, which already follows your browser. If you dismiss it, you can still change the language in the application settings.
 
 **Compatibility Note**
 

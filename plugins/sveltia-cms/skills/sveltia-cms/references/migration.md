@@ -139,7 +139,6 @@ However, 100% feature parity is never planned, and some features are still missi
 #### Current Limitations
 
 - [Nested collections](https://decapcms.org/docs/collection-nested/) are not implemented yet.
-- [Deploy preview links](https://decapcms.org/docs/deploy-preview-links/) are not implemented yet.
 - Type validation for CMS configuration is missing.
 - Some [UI languages](https://sveltiacms.app/en/docs/ui#localization) are not yet available.
 
