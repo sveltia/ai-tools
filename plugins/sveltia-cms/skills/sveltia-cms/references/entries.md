@@ -712,7 +712,7 @@ slug = "{{year}}-{{month}}-{{slug}}"
 
 Any field name defined in the collection’s `fields` option can be used as a template tag in the `slug` option. For example, if you have a `date` field in the collection, you can use `{{date}}` in the `slug` option to include the date in the slug. For nested fields, use dot notation, e.g. `{{author.name}}`.
 
-To use a field named `slug`, you need to prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the `slug` template tag itself.
+If a field’s name matches one of the [predefined template tags](#slug-template-tags), such as `slug`, `year` or `uuid`, you need to prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the tag itself.
 
 You can use [string transformations](https://sveltiacms.app/en/docs/string-transformations) with these template tags as well. For example, to create slugs that include the full date in `YYYY-MM-DD` format along with a custom `slug` field, you can use the following configuration:
 
@@ -988,6 +988,8 @@ The [slug template tags](#slug-template-tags) can be used in the `preview_path` 
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.
 - `{{locale}}`: the locale code of the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n). This is useful when you want to include the locale in the preview URL.
+
+Just like the `slug` and `path` options, any field name defined in the collection’s `fields` option can also be used as a template tag in `preview_path`. If a field’s name matches one of the predefined tags listed above or in the [slug template tags](#slug-template-tags), such as `slug`, `year` or `uuid`, you need to prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the tag itself.
 
 You can use [string transformations](https://sveltiacms.app/en/docs/string-transformations) with these template tags.
 

@@ -240,6 +240,42 @@ CMS.registerEditorComponent({
 
 The `fromBlock` function extracts the image sources from the matched HTML and returns them as an array, along with the caption. The `toBlock` and `toPreview` functions, which are identical for demo purposes, generate the appropriate HTML structure for the gallery component based on the provided images and caption.
 
+#### Code Sample (Object Value)
+
+Most field types hold a primitive value, but some hold an object. The [Code](https://sveltiacms.app/en/docs/fields/code) field is one of them: unless the [`output_code_only`](https://sveltiacms.app/en/docs/fields/code#output-code-only) option is enabled, its value is an object with `code` and `lang` keys. The [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) and [Object](https://sveltiacms.app/en/docs/fields/object) fields behave the same way, as does any field with `multiple: true` — like the [gallery](#multiple-images-with-caption) above, which holds an array.
+
+The rule is the same for all of them: `fromBlock` must return the value nested under the field name, and `toBlock` and `toPreview` receive it nested.
+
+```js
+CMS.registerEditorComponent({
+  id: 'code-sample',
+  label: 'Code Sample',
+  icon: 'code_blocks',
+  fields: [
+    { name: 'title', label: 'Title' },
+    { name: 'snippet', label: 'Snippet', widget: 'code' },
+  ],
+  pattern:
+    /{{< code-sample title="(?<title>.*?)" lang="(?<lang>.*?)" >}}\n(?<code>[\s\S]*?)\n{{< \/code-sample >}}/,
+  fromBlock: ({ groups: { title, lang, code } = {} }) => ({
+    title,
+    snippet: { code, lang },
+  }),
+  toBlock: ({ title = '', snippet: { code = '', lang = 'plain' } = {} }) =>
+    `{{< code-sample title="${title}" lang="${lang}" >}}\n${code}\n{{< /code-sample >}}`,
+  toPreview: ({ title = '', snippet: { code = '', lang = 'plain' } = {} }) =>
+    `**${title}**\n\n\`\`\`${lang}\n${code}\n\`\`\``,
+});
+```
+
+The shortcode is flat — `lang` and `code` are separate attributes — so `fromBlock` reassembles them into the `snippet` object the Code field expects, and `toBlock` takes them apart again.
+
+Destructuring with a `= {}` default matters here. As noted in [Preview Output](#preview-output) above, these functions may be called with an empty object while the editor is being initialized, and destructuring `snippet` from it would otherwise throw.
+
+The `toPreview` function returns a fenced code block rather than `<pre><code>` markup. Because a string preview is parsed as Markdown, the fence gives you syntax highlighting for free and the code is escaped for you, so a snippet containing `<` or `&` is displayed rather than interpreted.
+
+If you customize the Code field’s [`keys`](https://sveltiacms.app/en/docs/fields/code#keys) option, use those key names in place of `code` and `lang`.
+
 #### Styled Separator
 
 This is an [Eleventy shortcode](https://www.11ty.dev/docs/shortcodes/) example for a styled separator component:
