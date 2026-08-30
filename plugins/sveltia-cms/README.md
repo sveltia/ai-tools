@@ -17,9 +17,8 @@ For any other skills-compatible agent, copy `skills/sveltia-cms` into the direct
 
 ```
 skills/sveltia-cms/
-├── SKILL.md                    Hand-written. Loaded when the skill activates.
-├── references/                 Generated. Loaded individually, on demand.
-└── scripts/validate-config.mjs Validates a config against the release's JSON schema.
+├── SKILL.md      Hand-written. Loaded when the skill activates.
+└── references/   Generated. Loaded individually, on demand.
 ```
 
 ## Regenerating the references

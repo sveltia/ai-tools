@@ -2,7 +2,7 @@
 name: sveltia-cms
 description: Set up, configure and debug Sveltia CMS, the Git-based headless CMS that replaces Netlify CMS and Decap CMS. Use when adding a CMS to a static site (Astro, Eleventy, Hugo, Jekyll, Next.js, Nuxt, SvelteKit, VitePress, Zola or any other), writing or reviewing an admin config file (config.yml, config.toml, config.json) with backend, collections, fields or i18n options, migrating from Netlify/Decap/Static CMS, or troubleshooting a CMS admin page that shows a blank screen, fails to authenticate, or reports config validation errors on the login screen. Also use whenever a project contains a config file with a `backend` and `collections` structure, or an admin page loading sveltia-cms.js.
 license: MIT
-compatibility: Reference material works anywhere. The bundled validator needs Node.js 18+, npm and network access on first run.
+compatibility: Works anywhere. No tools, dependencies or network access are required.
 metadata:
   authority: Generated from the official documentation at https://sveltiacms.app
   documentation: https://sveltiacms.app
@@ -19,8 +19,8 @@ Sveltia CMS is pre-1.0 and ships several times a week. Never state a version num
 
 ## Ground rules
 
-1. **Validate every config you write or change.** Run the bundled script before telling the user the configuration is correct. See [Validate the configuration](#validate-the-configuration).
-2. **Read the reference file for the area you are working in** before writing options. The table in [Where to look things up](#where-to-look-things-up) maps areas to files. Do not guess option names — the CMS reports unknown options as validation errors on the login screen.
+1. **Validate every config you write or change.** Add the schema reference so the editor checks it as you type, then load the admin page and read the sign-in screen before telling the user the configuration is correct. See [Validate the configuration](#validate-the-configuration).
+2. **Read the reference file for the area you are working in** before writing options. The table in [Where to look things up](#where-to-look-things-up) maps areas to files. Do not guess option names — the CMS ignores an option it does not recognize, so a misspelled one fails silently and only the editor's schema validation catches it.
 3. **Never invent options.** If an option is not in the reference files or the JSON schema, it does not exist.
 
 ## Minimal setup
@@ -99,17 +99,17 @@ Check the framework's own documentation if it is not listed. Some frameworks nee
 
 ## Validate the configuration
 
-```bash
-node scripts/validate-config.mjs public/admin/config.yml
-```
+Two checks cover a configuration between them, and each catches what the other cannot.
 
-The script path is relative to this skill's own directory, and the config path is relative to the user's project. With no config path the script searches the usual locations. It validates against the JSON schema published with the current CMS release, and additionally checks for problems the schema cannot express: names containing spaces, dots or asterisks, and the admin page mistakes listed above.
+**The editor, as you type.** The schema reference above makes any editor with JSON schema support validate the file live. This is the only check that catches a _misspelled option name_: the published schema rejects properties it doesn't know, so `requird: true` is flagged where you wrote it.
 
-Options: `--version <cms-version>` pins the schema to a release, `--offline` uses the cached schema. The first run installs its dependencies into `~/.cache/sveltia-cms-skill` and needs npm and network access; nothing is added to the user's project.
+**The CMS, when the admin page loads.** Sveltia CMS validates the whole configuration against the schema published for the version it is running, on every load, and lists what it finds on the sign-in screen — each message naming the collection, file and field it belongs to. It reports wrong value types, values outside an allowed set and missing required options, plus the rules a schema cannot express: a `name` containing a space, dot or asterisk, a duplicate name, a Relation field pointing at a collection that doesn't exist, an option Sveltia CMS doesn't support. Unrecognized options are deliberately ignored here, so a configuration still carrying Netlify/Decap leftovers loads rather than being rejected.
 
-Exit code 0 means valid, 1 means problems were found, 2 means the check could not run.
+Load `/admin/` after writing a configuration and read the sign-in screen. To do that without deploying, use the local development workflow or the `test-repo` backend — see [Testing a setup](#testing-a-setup).
 
-A config split across several files with `<link rel="cms-config-url">` can only be validated as a whole, so validate the merged result or each complete file.
+Neither check helps if the admin page itself is wrong. A `sveltia-cms.css` link or `type="module"` on the script tag stops the CMS loading at all, so nothing is validated and the page stays blank. Check `admin/index.html` against [Minimal setup](#minimal-setup) first.
+
+A configuration split across several files with `<link rel="cms-config-url">` is validated as the merged whole, so a fragment cannot be checked on its own.
 
 ## Where to look things up
 
@@ -172,7 +172,7 @@ Match the symptom, then read the linked section of `references/troubleshooting.m
 | Blank admin page on Cloudflare | Rocket Loader interferes with the bundle. Add `data-cfasync="false"` to the script tag. |
 | Blank page, or a stylesheet 404 | A `sveltia-cms.css` link or `type="module"` on the script tag. Remove both. |
 | "Authentication Aborted" on sign-in | A `Cross-Origin-Opener-Policy` header breaks the OAuth popup. Use `same-origin-allow-popups`; for GitLab remove the header entirely. |
-| Config validation errors on the login screen | Unknown options, or a `name` with a space, dot or asterisk. Run the validator. |
+| Config validation errors on the login screen | A wrong value type, an unsupported option, or a `name` with a space, dot or asterisk. Each message names the collection, file and field. |
 | Broken or unstyled CMS UI | The admin page uses a framework layout. Apply a blank layout; Tailwind in particular conflicts. |
 | Astro build fails on content schema validation | Set `omit_empty_optional_fields: true` so empty optional fields are dropped from the output. |
 | Build fails on special characters in image paths | Set `encode_file_path: true`. |
