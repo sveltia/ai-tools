@@ -238,19 +238,30 @@ The type definitions are generated from the JSDoc comments in the source code, e
 
 #### Runtime Validation
 
-Sveltia CMS performs runtime validation of the configuration file when the CMS initializes. If there are any errors in the configuration, they will be displayed on the login screen.
+Sveltia CMS validates your configuration every time it loads, and lists anything it finds on the login screen. You can’t sign in until the problems are fixed, so a broken configuration never reaches the content editor.
 
-This helps catch issues early and ensures that the CMS operates with a valid configuration, preventing potential runtime errors. The runtime validation includes checks for:
+Each message names the collection, file and field it applies to, so you can go straight to the line that needs changing:
+
+> Blog collection, `seo.score` field: The `min` option must be a number.
+
+Two sets of checks run. The first validates the whole configuration against the same [JSON schema](#json-schema) your editor uses, published alongside the CMS version you’re running. It catches wrong value types, values outside an allowed set, and missing required options. A [custom field type](https://sveltiacms.app/en/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
+
+The second covers the rules a schema can’t express:
 
 - Common backend misconfigurations
 - File format and extension mismatches
 - Invalid or duplicate collection or field names
 - Mutually exclusive config options
 - Invalid references in Relation fields
+- Options that Sveltia CMS doesn’t support
 
-**Unfinished feature**
+**Editor validation is still worth setting up**
 
-Comprehensive runtime validation is still under development and may not cover all configuration options yet. We recommend using JSON schema validation in your code editor for the most reliable feedback while editing the configuration file.
+An option name the CMS doesn’t recognize is ignored at runtime rather than reported, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. A misspelled option name therefore fails silently: the option simply has no effect. [JSON schema validation in your editor](#json-schema) is what catches that, as you type.
+
+**Offline and CSP**
+
+The schema is downloaded from the [UNPKG](https://unpkg.com/) CDN. If it can’t be retrieved — you’re offline, or a strict [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) blocks the request — schema validation is skipped, a notice is logged to the browser console, and the CMS loads with the remaining checks. A network problem never keeps you out of the CMS.
 
 Source: https://sveltiacms.app/en/docs/config-basics
 

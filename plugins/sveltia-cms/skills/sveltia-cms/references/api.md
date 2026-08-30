@@ -788,7 +788,7 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components, and the `schema` parameter is unimplemented. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 **Naming Convention**
 
@@ -865,6 +865,16 @@ fields:
     separator: ', ' # custom configuration option
     maxItems: 10 # custom configuration option
 ```
+
+The schema is applied to the whole field object whenever a field uses your field type, as part of the [runtime validation](https://sveltiacms.app/en/docs/config-basics#runtime-validation) that runs each time the CMS loads. A configuration that doesn’t match is reported on the login screen, alongside the built-in checks:
+
+> Posts collection, `tags` field: The `maxItems` option must be an integer.
+
+Only the options your schema describes are checked. Anything else stays valid, so a schema that lists `separator` doesn’t stop a user from setting the common field options such as `label` and `required`.
+
+**Keep the schema valid**
+
+If the schema itself can’t be compiled — a misspelled `type` such as `int` instead of `integer`, for example — it is ignored, and a warning naming your field type is logged to the browser console. The rest of the configuration is still validated.
 
 ### Getting a Field Type
 
