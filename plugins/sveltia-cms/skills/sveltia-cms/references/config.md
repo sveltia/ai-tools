@@ -259,12 +259,6 @@ The second covers the rules a schema can’t express:
 
 An option name the CMS doesn’t recognize is ignored at runtime rather than reported, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. A misspelled option name therefore fails silently: the option simply has no effect. [JSON schema validation in your editor](#json-schema) is what catches that, as you type.
 
-**No network or CSP exceptions needed**
-
-The schema is bundled with the CMS, so validation runs on every load whether or not you’re online. The validator interprets the schema rather than generating code from it, so no [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) exception is needed either — in particular, `unsafe-eval` is never required.
-
-Should validation fail to run for an unexpected reason, it’s skipped with a notice in the browser console while the remaining checks still apply, so it never keeps you out of the CMS.
-
 Source: https://sveltiacms.app/en/docs/config-basics
 
 ---
