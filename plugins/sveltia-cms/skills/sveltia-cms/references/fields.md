@@ -128,6 +128,8 @@ A boolean indicating whether **data input** is required for the field. Unless ex
 
 If [i18n](https://sveltiacms.app/en/docs/i18n) is enabled, the option accepts an array of locale codes to specify which locales require input. For example, `required: [en, fr]` means that input is required for English and French locales only.
 
+With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) enabled, an entry in draft can be saved with its required fields left empty, so unfinished work isn’t held up. They’re enforced again once the entry moves on from the drafting stage. See [Required Fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields).
+
 If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) is enabled, this option affects **data output** as well. The default value is `true`, meaning optional fields left empty will be omitted from the output. If set to `false`, optional fields left empty will be included in the output with a value of `null`, empty string, or empty array/object, depending on the field type.
 
 ##### `pattern`
@@ -191,9 +193,10 @@ All visible fields support various validation options to ensure data integrity. 
 - By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/en/docs/i18n#field-level-configuration).
 - String-type and some other simple array-type fields support the `pattern` option, which allows you to define a regular expression that the field’s value must match. This is useful for enforcing specific formats.
 - Some fields support minimum and maximum values/items/lengths or value types, depending on the field type. For example:
-  - The [String](https://sveltiacms.app/en/docs/fields/string) field supports `minLength` and `maxLength` options as well as the `type` option that can enforce formats like `email` or `url`.
+  - The [String](https://sveltiacms.app/en/docs/fields/string) field supports `minlength` and `maxlength` options as well as the `type` option that can enforce formats like `email` or `url`.
   - The [Number](https://sveltiacms.app/en/docs/fields/number) field supports `min`, `max` and `value_type` options.
   - Other multi-value fields like [List](https://sveltiacms.app/en/docs/fields/list) and [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) support `min` and `max` options.
+- Validation options other than `required` describe a value, so they only apply to a field that has one. An optional field left empty is valid even when a `pattern`, `minlength`, `min` or similar option is set on it — those rules take effect as soon as something is entered.
 
 If more complicated validation logic is needed, consider creating a [custom field type](https://sveltiacms.app/en/docs/api/field-types) that implements the desired validation behavior.
 

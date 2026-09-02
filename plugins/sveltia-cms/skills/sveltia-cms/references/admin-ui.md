@@ -87,6 +87,7 @@ Currently, the following languages are supported:
 - Greek
 - Japanese
 - Korean
+- Persian
 - Polish
 - Portuguese (Brazil)
 - Portuguese (Portugal)
@@ -115,7 +116,6 @@ The following languages are supported in Decap CMS but not yet available in Svel
 - Macedonian
 - Norwegian Bokmål
 - Norwegian Nynorsk
-- [Persian](https://github.com/sveltia/sveltia-cms/issues/531)
 - [Romanian](https://github.com/sveltia/sveltia-cms/issues/711)
 - Serbian (Cyrillic)
 - Slovak
@@ -300,7 +300,7 @@ The two-pane interface includes the following features:
 
 The Content Editor includes a sidebar that provides additional information and tools related to the content you are editing. It’s currently only available on desktop and has three panels:
 
-- **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When you click on an error, the corresponding field in the editor will be highlighted.
+- **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When you click on an error, the corresponding field in the editor will be highlighted. Results appear when you save an entry, and the Validate button in the panel header checks it at any time — against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without, so you can see what’s still missing before the entry can be published.
 - **History**: Shows the commit history of the current content file. When you click on a commit, you’ll see a diff view of the changes made in that commit on your Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
 - **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). When you click on a backlink, you can open the referenced content file in the editor. For example, you can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
 

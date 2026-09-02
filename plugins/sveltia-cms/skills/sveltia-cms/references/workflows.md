@@ -260,7 +260,21 @@ Saving an entry doesn’t hand it to anyone — it stays a draft until someone m
 - **Send for Review** moves the entry to In Review straight away, ready for someone to look at.
 - **Later** leaves it as a draft. You can send it whenever you like, using the status button in the entry editor or by dragging its card between columns on the Editorial Workflow page.
 
-The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone.
+The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone, and it’s withheld while the entry still has required fields to fill in, because there’s nothing worth handing over yet.
+
+#### Required Fields
+
+A draft is work in progress, so an entry in the Draft status can be saved with its [required fields](https://sveltiacms.app/en/docs/fields#required) left empty. Nothing is marked as an error, and the entry keeps its pull request like any other draft.
+
+Required fields are enforced as soon as the entry leaves the drafting stage. Moving it to In Review or Ready and publishing it are all refused while a required field is empty, in the entry editor and on the Editorial Workflow page alike, and the fields that need attention are marked so you can find them.
+
+Every other validation rule applies to a draft save as it always has: a value that breaks a `pattern`, `minlength`, `min` or `max` option is still rejected. Only being empty is excused, and only while the entry is a draft.
+
+**A draft can break your build**
+
+Saving a draft commits it to the workflow branch, so whatever builds that branch has to cope with the missing values. A framework that validates content against a schema — [Astro content collections](https://docs.astro.build/en/guides/content-collections/) with Zod, for example — will fail on a field its schema requires, and the deploy preview for the pull request goes red until the entry is filled in. Nothing reaches your configured branch until the entry is published, so the production build is unaffected.
+
+If that gets in the way, make the schema tolerant of drafts — `.optional()` or `.nullable()` on the fields in question — or keep those fields required in the CMS and fill them in before saving.
 
 #### Statuses
 

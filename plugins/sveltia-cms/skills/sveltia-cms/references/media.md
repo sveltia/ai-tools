@@ -20,13 +20,13 @@ The [internal media storage](https://sveltiacms.app/en/docs/media/internal) allo
 
 Sveltia CMS supports integrations with popular cloud-based media storage providers for enhanced capabilities such as automatic image transformations, CDN delivery, and more. Sveltia CMS currently supports the following external media storage providers:
 
-- [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3)
-- S3-compatible providers:
+- [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and S3-compatible providers:
   - [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2)
   - [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2)
   - [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces)
   - [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage)
   - [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage)
+- [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage)
 - [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary)
 - [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare)
 

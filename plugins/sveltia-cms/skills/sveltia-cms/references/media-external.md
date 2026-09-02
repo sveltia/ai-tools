@@ -208,6 +208,209 @@ Source: https://sveltiacms.app/en/docs/media/amazon-s3
 
 ---
 
+## Azure Blob Storage Integration
+
+[Azure Blob Storage](https://azure.microsoft.com/products/storage/blobs/) is Microsoft’s object storage service for unstructured data. Unlike most of the other object storage services Sveltia CMS supports, Blob Storage does not offer an S3-compatible API, so the CMS talks to the [Blob Service REST API](https://learn.microsoft.com/en-us/rest/api/storageservices/blob-service-rest-api) directly. Requests are authorized with a [shared access signature (SAS)](https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview) token, and files are uploaded straight from the browser to Azure — no backend proxy is required.
+
+### Requirements
+
+- An Azure storage account with a blob container created.
+- A SAS token with the Read, Write, Create and List permissions on that container (see [Credentials](#credentials) below).
+- A CORS rule on the storage account’s Blob service (see [CORS](#cors) below).
+- A `public_url` configured, unless the container allows anonymous read access (see [Public Read Access](#public-read-access) below).
+
+#### CSP
+
+If your site uses a Content Security Policy (CSP), you need to allow the Blob service endpoint and your public URL. See [Content Security Policy](#content-security-policy) below for details.
+
+### Setup
+
+#### Credentials
+
+Azure storage account keys can’t be scoped to a single container — they grant full control over the entire storage account — so Sveltia CMS uses a SAS token instead. A SAS is limited to the permissions and expiry you choose, and it’s the only credential the CMS needs.
+
+Create a **service SAS** for the container via **Azure Portal > Storage account > Data storage > Containers > [container] > Shared access tokens**:
+
+- **Signing method**: Account key (or User delegation key; see the note below)
+- **Permissions**: Read, Create, Write, List
+- **Expiry**: as far out as your security policy allows (see [Token Expiry](#token-expiry) below)
+- **Allowed protocols**: HTTPS only
+
+Click **Generate SAS token and URL** and copy the **Blob SAS token** — the query string that starts with `sv=`, not the full URL below it.
+
+An **account SAS**, created under **Storage account > Security + networking > Shared access signature**, works as well. It needs **Allowed services**: Blob, **Allowed resource types**: Container and Object, and the same permissions as above.
+
+The token is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config. See [Accessing the Storage](#accessing-the-storage) below.
+
+**Accounts that disallow Shared Key**
+
+If your storage account has **Allow storage account key access** disabled, neither a service SAS nor an account SAS signed with the account key will be accepted. Generate a [user delegation SAS](https://learn.microsoft.com/en-us/rest/api/storageservices/create-user-delegation-sas), which is signed with Microsoft Entra ID credentials instead:
+
+```sh
+az storage container generate-sas \
+  --account-name mystorageaccount \
+  --name my-container \
+  --permissions rcwl \
+  --expiry 2026-12-31T00:00Z \
+  --auth-mode login --as-user \
+  --https-only --output tsv
+```
+
+A user delegation SAS is valid for a maximum of seven days.
+
+#### Token Expiry
+
+Every SAS token has an expiry date. Once it passes, the media library stops loading with an authorization error, and users need to generate a new token and enter it again in the CMS. Choose an expiry that balances your security policy against how often your editors want to repeat that step.
+
+#### Public Read Access
+
+Blob containers are private by default, and new storage accounts have anonymous access disabled at the account level. This matters because the URL Sveltia CMS writes into your entries can’t contain the SAS token — the token expires, and the URL would break with it.
+
+Two options are available:
+
+**Option A — Anonymous read access on the container:**
+
+1. In **Storage account > Settings > Configuration**, set **Allow blob anonymous access** to **Enabled**.
+2. In **Containers > [container] > Change access level**, choose **Blob (anonymous read access for blobs only)**.
+
+Asset URLs are then the blob endpoint URLs, and `public_url` is optional.
+
+**Option B — CDN or custom domain (recommended for production):**
+
+Put [Azure CDN](https://learn.microsoft.com/en-us/azure/cdn/) or [Azure Front Door](https://learn.microsoft.com/en-us/azure/frontdoor/) in front of the container, then set that hostname as `public_url` in your config:
+
+```yaml
+public_url: 'https://media.example.com'
+```
+
+Asset URLs are constructed as `{public_url}/{blob name}`, using the full blob name, including any `prefix`.
+
+**Previews vs. stored URLs**
+
+When `public_url` is omitted, previews within the CMS still work against a private container, because the SAS token is appended to the preview URL. The URL saved into your entries is the plain blob URL without the token, so it only resolves for your site’s visitors if the container allows anonymous read access.
+
+#### CORS
+
+Configure cross-origin resource sharing under **Storage account > Settings > Resource sharing (CORS) > Blob service**. CORS is required because Sveltia CMS reads and writes blobs directly from the browser, and the `x-ms-blob-type` header it sends on uploads triggers a preflight request.
+
+| Setting | Value |
+| --- | --- |
+| Allowed origins | `https://your-cms-domain.com` |
+| Allowed methods | `GET`, `HEAD`, `OPTIONS`, `PUT` |
+| Allowed headers | `*` (or `x-ms-blob-type,content-type`) |
+| Exposed headers | `*` |
+| Max age | `3600` |
+
+The equivalent Azure CLI command:
+
+```sh
+az storage cors add \
+  --services b \
+  --methods GET HEAD OPTIONS PUT \
+  --origins https://your-cms-domain.com \
+  --allowed-headers '*' \
+  --exposed-headers '*' \
+  --max-age 3600 \
+  --account-name mystorageaccount
+```
+
+CORS rules are set per storage account, not per container, and they apply to the Blob service as a whole.
+
+### Configuration
+
+Here’s an example configuration for Azure Blob Storage:
+
+```yaml [YAML]
+media_libraries:
+  azure_blob_storage:
+    account_name: mystorageaccount
+    container: my-container
+    public_url: https://media.example.com # Optional
+    prefix: cms-uploads/ # Optional
+```
+
+```toml [TOML]
+[media_libraries.azure_blob_storage]
+account_name = "mystorageaccount"
+container = "my-container"
+public_url = "https://media.example.com" # Optional
+prefix = "cms-uploads/" # Optional
+```
+
+```json [JSON]
+{
+  "media_libraries": {
+    "azure_blob_storage": {
+      "account_name": "mystorageaccount",
+      "container": "my-container",
+      "public_url": "https://media.example.com",
+      "prefix": "cms-uploads/"
+    }
+  }
+}
+```
+
+```js [JavaScript]
+{
+  media_libraries: {
+    azure_blob_storage: {
+      account_name: 'mystorageaccount',
+      container: 'my-container',
+      public_url: 'https://media.example.com', // Optional
+      prefix: 'cms-uploads/', // Optional
+    },
+  },
+}
+```
+
+**Warning**
+
+Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage first time, which will be stored securely in the browser’s local storage.
+
+#### Configuration Properties
+
+| Property | Required | Description |
+| --- | --- | --- |
+| `account_name` | Yes | The storage account name. Used to construct the Blob service endpoint, `https://{account_name}.blob.core.windows.net`. Not required if `endpoint` is given. |
+| `container` | Yes | The blob container name. |
+| `public_url` | No | Public URL for asset downloads. Required unless the container allows anonymous read access, because the URL stored in your entries can’t contain the SAS token. |
+| `prefix` | No | Path prefix within the container, e.g. `uploads/`. |
+| `endpoint` | No | Custom Blob service endpoint, including the account path where applicable, e.g. the [Azurite emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) URL `http://127.0.0.1:10000/devstoreaccount1`. Overrides `account_name`. |
+
+### Content Security Policy
+
+Allow the Blob service endpoint for your storage account:
+
+```
+connect-src https://mystorageaccount.blob.core.windows.net;
+img-src     https://mystorageaccount.blob.core.windows.net;
+```
+
+If you serve assets through a CDN or custom domain via `public_url`, use that host for `img-src` instead:
+
+```
+connect-src https://mystorageaccount.blob.core.windows.net;
+img-src     https://media.example.com;
+```
+
+Replace `mystorageaccount` with your actual storage account name.
+
+See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+
+### Accessing the Storage
+
+The Azure Blob Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your SAS token in the CMS UI when prompted — or at any time under **Settings > Media > Cloud Storage Service API Keys** — and you’ll be able to upload new media directly to Azure or select existing media from your container.
+
+When uploading media, files are stored in your container as block blobs, and you can take advantage of Azure’s capabilities directly from the CMS. You can also select existing media from your Blob Storage.
+
+**Future Plans**
+
+You’ll be able to manage your Azure Blob Storage files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+
+Source: https://sveltiacms.app/en/docs/media/azure-blob-storage
+
+---
+
 ## Backblaze B2 Integration
 
 [Backblaze B2](https://www.backblaze.com/cloud-storage) is an S3-compatible object storage service with zero egress fees and low-cost storage. Sveltia CMS supports B2 as a media storage backend with direct browser-to-B2 uploads using AWS Signature Version 4 — no backend proxy is required.

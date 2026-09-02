@@ -28,6 +28,7 @@ Our [Showcase](https://sveltiacms.app/en/showcase) also features various sites t
 Static CMS was a community fork of Netlify CMS that introduced several unique features. While we don’t have a full migration guide for Static CMS, many of the concepts and configurations are similar to those in Netlify CMS. We have documented some of the key differences and considerations when migrating from Static CMS to Sveltia CMS.
 
 - [Migrating from Static CMS](https://sveltiacms.app/en/docs/migration/static-cms)
+- [Examples of sites migrated from Static CMS](https://sveltiacms.app/en/showcase?migrated-from=static-cms)
 
 #### Pages CMS
 

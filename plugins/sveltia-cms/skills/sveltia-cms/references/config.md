@@ -859,7 +859,7 @@ Here are some key aspects of data output in Sveltia CMS:
 #### General Conventions
 
 - **Field Ordering**: Fields are always saved in the order they are defined in the configuration, with key-value pairs, making Git commits clean and consistent. Some [exceptions](#understanding-exceptions) apply.
-- **Time Formatting**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility.
+- **Time Formatting**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility, including Hugo.
 - **File Formatting**: Line breaks are LF (`\n`) across all formats. A newline is added at the end of the file to prevent unnecessary changes.
 - **Text Processing**: Leading and trailing whitespaces in text-type field values are automatically removed when you save an entry. No configuration option is required for this behavior.
 - **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array, or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
