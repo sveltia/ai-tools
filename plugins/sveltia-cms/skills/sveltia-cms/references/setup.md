@@ -36,9 +36,8 @@ While we don’t have official starter templates yet, the community has created 
 
 - [Eleventy starter template](https://github.com/danurbanowicz/eleventy-sveltia-cms-starter) by [danurbanowicz](https://github.com/danurbanowicz)
 - [ZeroPoint](https://getzeropoint.com/) by [MWDelaney](https://github.com/MWDelaney)
-- [Build Awesome Starter](https://github.com/anyblades/buildawesome-starters) by [anyblades](https://github.com/anyblades)
 - [Huwindty](https://github.com/aloxe/huwindty) by [aloxe](https://github.com/aloxe)
-- [Subtle](https://github.com/anyblades/subtle) by [anyblades](https://github.com/anyblades)
+- [One Starter](https://github.com/buildawesome-one/starter) by [buildawesome-one](https://github.com/buildawesome-one)
 
 ##### HonoX
 
@@ -504,9 +503,8 @@ Here are some starter templates built by the community using Eleventy:
 
 - [Eleventy starter template](https://github.com/danurbanowicz/eleventy-sveltia-cms-starter) by [danurbanowicz](https://github.com/danurbanowicz)
 - [ZeroPoint](https://getzeropoint.com/) by [MWDelaney](https://github.com/MWDelaney)
-- [Build Awesome Starter](https://github.com/anyblades/buildawesome-starters) by [anyblades](https://github.com/anyblades)
 - [Huwindty](https://github.com/aloxe/huwindty) by [aloxe](https://github.com/aloxe)
-- [Subtle](https://github.com/anyblades/subtle) by [anyblades](https://github.com/anyblades)
+- [One Starter](https://github.com/buildawesome-one/starter) by [buildawesome-one](https://github.com/buildawesome-one)
 
 **Disclaimer**
 

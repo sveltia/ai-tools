@@ -32,9 +32,9 @@ Static CMS was a community fork of Netlify CMS that introduced several unique fe
 
 #### Pages CMS
 
-Pages CMS is also inspired by Netlify CMS and shares similar concepts and configurations. Sveltia CMS has more features and flexibility, while Pages CMS offers a hosted solution with a more limited feature set.
+Pages CMS was also inspired by Netlify CMS and shares similar concepts and configurations. Sveltia CMS offers more features, flexibility, and frequent releases than Pages CMS, but a hosted solution is not yet available.
 
-We don’t have a dedicated migration guide for Pages CMS yet, but you can ask your AI assistant to convert your Pages CMS configuration to Sveltia CMS format. Check out the [Start Guide](https://sveltiacms.app/en/docs/start) for more information on how to get started with Sveltia CMS.
+While we don’t have a dedicated migration guide for Pages CMS yet, you can ask your AI assistant to convert your Pages CMS configuration to Sveltia CMS format. Check out the [Start Guide](https://sveltiacms.app/en/docs/start) for more information on how to get started with Sveltia CMS.
 
 - [Examples of sites migrated from Pages CMS](https://sveltiacms.app/en/showcase?migrated-from=pages-cms)
 
