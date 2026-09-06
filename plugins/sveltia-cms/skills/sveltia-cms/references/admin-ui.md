@@ -52,6 +52,8 @@ The account menu is accessible from the user avatar in the navigation bar. It pr
 
 Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled, which enables certain features and displays the CMS version number.
 
+The Advanced tab also has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in your browser, including unsaved drafts, settings and your sign-in state. Neither affects anything already saved to your repository.
+
 ### General Features
 
 Content editing in Sveltia CMS is designed to be intuitive and efficient. Key features include:
@@ -74,6 +76,7 @@ Currently, the following languages are supported:
 - Bulgarian
 - Catalan
 - Chinese (China)
+- Chinese (Taiwan)
 - Croatian
 - Czech
 - Danish
@@ -108,7 +111,6 @@ The following languages are supported in Decap CMS but not yet available in Svel
 
 <div class="lang-list">
 
-- Chinese (Taiwan)
 - [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
 - [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)
 - [Italian](https://github.com/sveltia/sveltia-cms/issues/70)
