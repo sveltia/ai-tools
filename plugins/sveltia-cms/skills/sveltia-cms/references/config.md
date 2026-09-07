@@ -238,7 +238,7 @@ The type definitions are generated from the JSDoc comments in the source code, e
 
 #### Runtime Validation
 
-Sveltia CMS validates your configuration every time it loads, and lists anything it finds on the login screen. You can’t sign in until the problems are fixed, so a broken configuration never reaches the content editor.
+Sveltia CMS validates your configuration every time it loads. Anything that would break the CMS is listed on the login screen, and you can’t sign in until it’s fixed, so a broken configuration never reaches the content editor. Everything the CMS can safely work around is logged to the browser console as a warning instead.
 
 Each message names the collection, file and field it applies to, so you can go straight to the line that needs changing:
 
@@ -255,9 +255,22 @@ The second covers the rules a schema can’t express:
 - Invalid references in Relation fields
 - Options that Sveltia CMS doesn’t support
 
+An option name the schema doesn’t define is a warning rather than an error, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. The option has no effect, and the console says so:
+
+> Blog collection: The `filter.Tutorial` option is not defined in the Sveltia CMS configuration schema. It will be ignored. Check for a typo or a syntax mistake.
+
+A misspelled name is the obvious way to get one of these, but not the only one, which is why the console is worth a look whenever an option seems to do nothing. A YAML flow mapping quietly turns a comma-separated list into extra keys:
+
+```yaml
+# `Tutorial` becomes an option of its own, and only `News` is matched
+filter: { field: category, value: News, Tutorial }
+# What was meant, with `value` holding both values
+filter: { field: category, value: [News, Tutorial] }
+```
+
 **Editor validation is still worth setting up**
 
-An option name the CMS doesn’t recognize is ignored at runtime rather than reported, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. A misspelled option name therefore fails silently: the option simply has no effect. [JSON schema validation in your editor](#json-schema) is what catches that, as you type.
+[JSON schema validation in your editor](#json-schema) reports an unknown option as you type, before the CMS ever loads the file.
 
 Source: https://sveltiacms.app/en/docs/config-basics
 
