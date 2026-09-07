@@ -68,7 +68,7 @@ More appearance options will be added in future releases. Stay tuned!
 
 The CMS interface is available in various languages. The language setting is **Automatic** by default, meaning the CMS follows the language set in your browser — and switches as soon as you change it, without a page reload. You can pick a specific language at any time in the application settings, and the CMS will remember your choice for future sessions.
 
-Currently, the following languages are supported:
+Currently, the following languages are available:
 
 <div class="lang-list">
 
@@ -88,6 +88,7 @@ Currently, the following languages are supported:
 - French
 - German
 - Greek
+- Italian
 - Japanese
 - Korean
 - Persian
@@ -107,13 +108,12 @@ If you have picked a specific language and your browser’s language later becom
 
 **Compatibility Note**
 
-The following languages are supported in Decap CMS but not yet available in Sveltia CMS:
+The following languages are available in Decap CMS but not yet available in Sveltia CMS:
 
 <div class="lang-list">
 
 - [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
 - [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)
-- [Italian](https://github.com/sveltia/sveltia-cms/issues/70)
 - Lithuanian
 - Macedonian
 - Norwegian Bokmål
