@@ -133,14 +133,13 @@ Still not sure if Sveltia CMS is the right choice for you? Check out the followi
 
 ### Compatibility
 
-We are making Sveltia CMS compatible with Netlify/Decap CMS wherever possible so that more users can seamlessly switch to our modern successor. In some casual use cases, Sveltia CMS can be used as a drop-in replacement for Netlify/Decap CMS with just a one-line code update.
+We have made Sveltia CMS highly compatible with Netlify/Decap CMS, allowing more users to seamlessly switch to our modern successor. In most cases, Sveltia CMS can be used as a drop-in replacement for Netlify/Decap CMS with just a one-line code update.
 
-However, 100% feature parity is never planned, and some features are still missing or will not be added due to deprecation and other factors. Look at the compatibility info below to see if you can migrate now or in the near future.
+However, we never planned to achieve 100% feature parity, so some features will not be added due to deprecation and other factors. See the compatibility information below to learn how your site may be affected by the migration.
 
 #### Current Limitations
 
-- [Nested collections](https://decapcms.org/docs/collection-nested/) are not implemented yet.
-- Some [UI languages](https://sveltiacms.app/en/docs/ui#localization) are not yet available.
+We no longer have any known limitations in Sveltia CMS, except for some [UI languages](https://sveltiacms.app/en/docs/ui#localization) that are not yet available.
 
 #### Features Not To Be Implemented
 
@@ -176,6 +175,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
   - Backend: [`use_graphql`](https://decapcms.org/reference/config/backends/github/#graphql-api)
   - Relation field: `options_length`
 - An absolute URL in the [`public_folder`](https://decapcms.org/docs/configuration-options/#public-folder) option: Such configuration is not recommended, as stated in the Netlify/Decap CMS document.
+- The [`media_processing`](https://decapcms.org/docs/configuration-options/#media-processing) option: Sveltia CMS has already implemented a [built-in image optimizer](https://sveltiacms.app/en/docs/media#image-optimization) that supports both raster and SVG images and will be further enhanced. Use that feature instead.
 - The theme and keymap inline settings for the Code field, along with support for some languages. Instead of [CodeMirror](https://codemirror.net/), we use Lexical’s code block functionality powered by [Shiki](https://shiki.style/).
 - The `allow_multiple` option for the File and Image fields: It’s a confusing option that defaults to `true`, and there is a separate option called `media_library.config.multiple`. We have added the new [`multiple`](https://sveltiacms.app/en/docs/fields/file#multiple) option instead, which is more intuitive and works with all media storage providers.
 - Remark plugins for the Markdown field: Not compatible with our Lexical-based rich text editor. The `CMS.registerRemarkPlugin` method is a noop in Sveltia CMS.
@@ -191,7 +191,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
 There are some differences in behavior between Sveltia CMS and Netlify/Decap CMS that may affect your existing configuration or content.
 
 - [Decap CMS 3.1.1](https://github.com/decaporg/decap-cms/releases/tag/decap-cms%403.1.1) replaced Moment.js with Day.js for date handling, and In Sveltia CMS followed suit. Since [Day.js tokens](https://day.js.org/docs/en/display/format) are not 100% compatible with [Moment.js tokens](https://momentjs.com/docs/#/displaying/format/), this could be a breaking change in certain cases. Check your `format`, `date_format` and `time_format` options for DateTime fields, as well as any date formatting in [string transformations](https://sveltiacms.app/en/docs/string-transformations#date).
-- By default, Sveltia CMS does not slugify uploaded filenames, as mentioned in the [asset management](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-asset-management) section. If your site generator expects hyphenated filenames, you can enable the `slugify_filename` [internal media storage option](https://sveltiacms.app/en/docs/media/internal#slugification-of-filenames).
+- By default, Sveltia CMS does not slugify uploaded filenames, as mentioned in the [asset management](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-asset-management) section. If your site generator expects hyphenated filenames, you can enable the `slugify_filename` [internal media storage option](https://sveltiacms.app/en/docs/media#slugification-of-filenames).
 - In some cases, the [data output](https://sveltiacms.app/en/docs/data-output) of Sveltia CMS may differ from that of Netlify/Decap CMS. Notably, Sveltia CMS does not omit empty optional fields by default. If you have data validation in your site generator, this could cause issues. Use the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) if needed.
 - Sveltia CMS requires a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), meaning it only works with HTTPS, `localhost` or `127.0.0.1` URLs. If you’re running your own remote server and serving content over HTTP, the CMS will not work. We recommend obtaining a TLS certificate from [Let’s Encrypt](https://letsencrypt.org/).
 - In Sveltia CMS, the `sanitize_preview` option for the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type is set to `true` by default to prevent potential XSS attacks via entry previews. We recommend keeping this option enabled unless disabling it fixes a broken preview and you fully trust all users of your CMS.
@@ -215,8 +215,6 @@ Check the [compatibility info](https://sveltiacms.app/en/docs/migration/netlify-
 Make necessary changes if needed, such as updating your configuration file.
 
 ##### Dealing with Unsupported Features
-
-If you’re using any features listed in the [current limitations](#current-limitations) section, you’ll need to wait until they are implemented in Sveltia CMS. We’re working hard to add these features in the coming months.
 
 If you’re using any [features that are not going to be implemented](#features-not-to-be-implemented), you’ll need to find a workaround. For example, if you’re on Azure DevOps or Bitbucket, consider migrating to GitHub, GitLab, Gitea or Forgejo. See the next section if you’re a Git Gateway user.
 
@@ -354,6 +352,20 @@ Some features have different names in Sveltia CMS compared to Netlify/Decap CMS.
 Sveltia CMS marks required fields for efficient data entry. This is the opposite of Netlify/Decap CMS, which marks optional fields. This change aims to reduce visual clutter and help users focus on the essential fields that must be filled out.
 
 When [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, Sveltia CMS requires all locales to have values for required fields. In contrast, Netlify/Decap CMS only enforces this for the default locale. This change ensures that content is complete across all locales. If you rely on the previous behavior, you can set the `required` [field-level configuration](https://sveltiacms.app/en/docs/i18n#field-level-configuration) to include only specific locales.
+
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
+
+```yaml
+# Netlify/Decap CMS: path "products/hardware"
+content/pages/products/hardware/_index.md
+
+# Sveltia CMS: parent folder "products", slug "hardware"
+content/pages/products/hardware/_index.md
+```
+
+The result is the same, but you choose the parent rather than typing the entry’s own folder. Moving an existing entry works the same way in both.
+
+Both sides of that example assume the `meta.path.index_file` option, which gives every entry the same file name. Without it, Netlify/Decap CMS names a new entry’s file from the `title` field — ignoring the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries#defining-entry-slugs) template and `identifier_field`, so a collection with no `title` field saves every entry as `untitled`. Sveltia CMS names the file from the slug, as it does in any other collection.
 
 #### Data Output
 

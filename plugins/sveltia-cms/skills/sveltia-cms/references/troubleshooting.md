@@ -559,7 +559,7 @@ Please note that the Showcase page only features a small fraction of our users b
 
 #### How is the Showcase curated?
 
-We constantly [search GitHub](https://github.com/search?q=sveltia&type=commits&s=committer-date&o=desc) for new Sveltia CMS users and add them to our Showcase page if they meet our criteria. We currently monitor over 200 repositories that have installed the CMS, adding new ones as sites are launched. It’s a lot of work for such a small project, but we want to recognize our users and demonstrate the growing popularity of Sveltia CMS.
+We constantly [search GitHub](https://github.com/search?q=sveltia&type=commits&s=committer-date&o=desc) for new Sveltia CMS users and add them to our Showcase page if they meet our criteria. We monitor hundreds of repositories that have installed the CMS, adding new ones as sites are launched. It’s a lot of work for such a small project, but we want to recognize our users and demonstrate the growing popularity of Sveltia CMS.
 
 [Let us know](https://github.com/sveltia/sveltia-cms/discussions/593) if you want to be featured on the Showcase page!
 

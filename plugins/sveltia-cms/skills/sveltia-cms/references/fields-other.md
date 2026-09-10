@@ -1336,6 +1336,8 @@ The field from the related collection to use as the value for the relation. This
 
 The `{{locale}}` template tag can be used to include the current locale in the value field, e.g. `{{locale}}/{{slug}}`, which is useful for [i18n support](https://sveltiacms.app/en/docs/i18n).
 
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared file name is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths): an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
+
 When using template strings, keep the following in mind:
 
 - A field named `slug` must be prefixed with `fields.` like `{{fields.slug}}` to avoid ambiguity with the special `{{slug}}` variable.
@@ -1442,7 +1444,7 @@ The maximum number of related entries allowed. This enables validation to preven
 
 An array of filter objects to limit the related entries shown in the Relation field UI. Each filter object has the following properties:
 
-- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`).
+- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`). A `slug` filter matches the same form the value takes, so in a nested collection it’s the entry’s path without the shared index file name.
 - `values`: An array of strings or numbers representing the values to match. String values may contain the following template tags that are resolved from the **current** entry being edited:
   - `{{slug}}`: Resolved to the current entry's slug.
   - `{{fields.fieldName}}`: Resolved to the value of a field named `fieldName` in the current entry.

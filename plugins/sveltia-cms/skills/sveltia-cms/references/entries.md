@@ -854,7 +854,7 @@ With the above configuration, a blog post created on June 15, 2025, with the tit
 
 ##### Creating Page Bundles
 
-You can create nested structures like Hugo’s [page bundles](https://gohugo.io/content-management/page-bundles/) using the `path`, [`media_folder` and `public_folder` options](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) together. For example, to create a leaf bundle for each blog post, you can use the following configuration:
+You can create nested structures like Hugo’s [page bundles](https://gohugo.io/content-management/page-bundles/), or Zola’s [asset colocation](https://www.getzola.org/documentation/content/overview/#asset-colocation), which uses the same `index.md` convention, using the `path`, [`media_folder` and `public_folder` options](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) together. For example, to create a leaf bundle for each blog post, you can use the following configuration:
 
 ```yaml [YAML]{5-7}
 collections:
@@ -907,6 +907,8 @@ public_folder = ""
 ```
 
 With the above configuration, a blog post with the title “My First Post” will be saved at `content/posts/my-first-post/index.md`, and its media files will be stored in the same folder.
+
+The same options can be combined with the `nested` option to build a tree of page bundles, where each entry has both its own media folder and its own child entries. See [Nesting Page Bundles](#nesting-page-bundles).
 
 #### Constructing File Paths
 
@@ -968,11 +970,331 @@ Looking at the above options, the entry file path can be constructed as follows:
 
 #### Creating Editable Nested Structures
 
-With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily. This feature is called [nested collections](https://decapcms.org/docs/collection-nested/) in Netlify/Decap CMS.
+With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily. This feature is called **nested collections** in Netlify/Decap CMS.
 
-**Unimplemented**
+**Note for Netlify/Decap CMS users**
 
-This feature from Netlify/Decap CMS is not yet supported in Sveltia CMS. It will be added before the [1.0 release](https://sveltiacms.app/en/docs/roadmap#v1-0). Check our [release notes](https://sveltiacms.app/en/docs/releases#release-information) for updates.
+Sveltia CMS fixes a number of long-standing problems with this feature, which remains in beta in Netlify/Decap CMS. These include entry paths, preview paths, media folders, folder labels and i18n support. See [Nested collection enhancements](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-collections) for the details.
+
+The `nested` option turns the collection into a folder tree in the sidebar and lets entries live in subfolders of any depth. The `meta.path` option adds a Path field to the Content Editor, so editors can choose where a new entry goes and move an existing one later.
+
+```yaml [YAML]{6-10}
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: /content/pages
+    nested:
+      depth: 100
+      summary: '{{title}}'
+      subfolders: true
+    meta: { path: { index_file: _index } }
+    fields:
+      - { name: title, label: Title }
+      - { name: body, label: Body, widget: markdown }
+```
+
+```toml [TOML]{6-17}
+[[collections]]
+name = "pages"
+label = "Pages"
+label_singular = "Page"
+folder = "/content/pages"
+
+[collections.nested]
+depth = 100
+summary = "{{title}}"
+subfolders = true
+
+[collections.meta.path]
+index_file = "_index"
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "markdown"
+```
+
+```json [JSON]{8-17}
+{
+  "collections": [
+    {
+      "name": "pages",
+      "label": "Pages",
+      "label_singular": "Page",
+      "folder": "/content/pages",
+      "nested": {
+        "depth": 100,
+        "summary": "{{title}}",
+        "subfolders": true
+      },
+      "meta": {
+        "path": {
+          "index_file": "_index"
+        }
+      },
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "body", "label": "Body", "widget": "markdown" }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{8-17}
+{
+  collections: [
+    {
+      name: "pages",
+      label: "Pages",
+      label_singular: "Page",
+      folder: "/content/pages",
+      nested: {
+        depth: 100,
+        summary: "{{title}}",
+        subfolders: true,
+      },
+      meta: {
+        path: {
+          index_file: "_index",
+        },
+      },
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "body", label: "Body", widget: "markdown" },
+      ],
+    },
+  ],
+}
+```
+
+##### Nested Collection Options
+
+The `nested` option accepts the following properties:
+
+- `depth`: The maximum number of path segments below the collection `folder`, counting the file name itself. A file stored deeper than this is not part of the collection. The default is unlimited.
+  - In the default `subfolders` mode, where the last segment is always the index file, `depth: 3` allows up to two folder levels, such as `products/hardware/_index.md`.
+  - The segments of a [`path`](#using-subfolders) template are part of the count, too.
+- `summary`: A [summary template](#summaries) used to label the folders in the tree. It overrides the collection’s own `summary` option, which continues to be used in the entry list. The default is the collection’s `summary` option value.
+- `subfolders`: Whether each entry is stored as an index file in its own folder. The default is `true`. See below for what changes when it’s `false`.
+
+##### Storing Nested Entries
+
+In the default `subfolders` mode, a folder _is_ an entry: each entry is stored as an index file, and the folders below it are its children. This suits [Hugo](https://sveltiacms.app/en/docs/frameworks/hugo) and [Zola](https://sveltiacms.app/en/docs/frameworks/zola), which both make a folder a section by putting an `_index.md` file in it, and any other generator that gives a folder a page of its own:
+
+```
+.
+└─ content/
+   └─ pages/
+      ├─ _index.md              # Home
+      └─ products/
+         ├─ _index.md           # Products
+         ├─ hardware/
+         │  └─ _index.md        # Hardware
+         └─ software/
+            └─ _index.md        # Software
+```
+
+With `subfolders: false`, entries are regular files that keep their own names, and folders are just folders. This suits [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus), [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress), [Starlight](https://starlight.astro.build/guides/project-structure/), [MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/) and similar setups, where every file becomes a page at its own path:
+
+```
+.
+└─ content/
+   └─ pages/
+      ├─ overview.md            # Overview
+      └─ products/
+         ├─ hardware.md         # Hardware
+         └─ software.md         # Software
+```
+
+The mode determines which entries are listed when a folder is selected. In the `subfolders` mode, the list shows the entries in the immediate subfolders, plus the collection’s own index file at the root — `Products` in the tree above lists `Hardware` and `Software`, and the collection root lists `Home` and `Products`. Otherwise, the list shows the files stored directly in the selected folder, so `products` lists `Hardware` and `Software` while the root lists `Overview`.
+
+An entry in a nested collection is identified by where it sits rather than by a name of its own, so its [slug](#managing-entry-slugs) is its path below the collection folder — `products/hardware` for the tree above. Wherever that slug is used to refer to the entry, the file name shared by every entry is left out: in a [preview path](#managing-preview-paths), and in the value a [Relation field](https://sveltiacms.app/en/docs/fields/relation#value-field) stores. The collection’s own index file keeps its name, because there would be nothing left of it.
+
+The root index file is only picked up when it fits the collection’s file paths. With a [`path`](#using-subfolders) option such as `{{slug}}/_index`, a bare `content/pages/_index.md` has no slug folder in front of it and is therefore not part of the collection; use the [`index_file`](#managing-hugo-s-special-index-file) collection option to bring it in, which also lets it have fields of its own.
+
+The mode also decides what happens when an entry is filed elsewhere with the [path editor](#choosing-a-parent-folder): in the `subfolders` mode the entry’s whole folder moves, taking its children along, while otherwise only the entry’s own file moves and it keeps its name.
+
+##### Nesting Page Bundles
+
+Because the `subfolders` mode gives each entry a folder of its own, a relative [`media_folder`](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) is enough to turn the collection into a tree of [page bundles](#creating-page-bundles), where each entry keeps its media beside its index file. Adding the `path` option on top restricts the collection to those index files, so that other files stored in the same folders are left alone:
+
+```yaml [YAML]{6-8}
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: /content/pages
+    path: '{{slug}}/_index'
+    media_folder: ''
+    public_folder: ''
+    nested:
+      depth: 100
+      summary: '{{title}}'
+      subfolders: true
+    meta: { path: { index_file: _index } }
+    fields:
+      - { name: title, label: Title }
+      - { name: body, label: Body, widget: markdown }
+      - { name: image, label: Image, widget: image }
+```
+
+```toml [TOML]{6-8}
+[[collections]]
+name = "pages"
+label = "Pages"
+label_singular = "Page"
+folder = "/content/pages"
+path = "{{slug}}/_index"
+media_folder = ""
+public_folder = ""
+
+[collections.nested]
+depth = 100
+summary = "{{title}}"
+subfolders = true
+
+[collections.meta.path]
+index_file = "_index"
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "markdown"
+
+[[collections.fields]]
+name = "image"
+label = "Image"
+widget = "image"
+```
+
+```json [JSON]{8-10}
+{
+  "collections": [
+    {
+      "name": "pages",
+      "label": "Pages",
+      "label_singular": "Page",
+      "folder": "/content/pages",
+      "path": "{{slug}}/_index",
+      "media_folder": "",
+      "public_folder": "",
+      "nested": {
+        "depth": 100,
+        "summary": "{{title}}",
+        "subfolders": true
+      },
+      "meta": {
+        "path": {
+          "index_file": "_index"
+        }
+      },
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "body", "label": "Body", "widget": "markdown" },
+        { "name": "image", "label": "Image", "widget": "image" }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{8-10}
+{
+  collections: [
+    {
+      name: "pages",
+      label: "Pages",
+      label_singular: "Page",
+      folder: "/content/pages",
+      path: "{{slug}}/_index",
+      media_folder: "",
+      public_folder: "",
+      nested: {
+        depth: 100,
+        summary: "{{title}}",
+        subfolders: true,
+      },
+      meta: {
+        path: {
+          index_file: "_index",
+        },
+      },
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "body", label: "Body", widget: "markdown" },
+        { name: "image", label: "Image", widget: "image" },
+      ],
+    },
+  ],
+}
+```
+
+The `path` option is optional here. In a nested collection it says where an entry sits within the folder holding it, rather than within the collection folder, so it takes the same form as in a flat collection, and its last segment — the file name — has to match `meta.path.index_file`. Leave it out and the collection takes in every file below its folder; set it and only the index files are entries, which is what you want if the same folders hold other Markdown that isn’t a page.
+
+Either way, entries can be nested to any depth, each with media of its own:
+
+```
+.
+└─ content/
+   └─ pages/
+      └─ about/
+         ├─ _index.md           # About
+         ├─ portrait.jpg
+         └─ team/
+            ├─ _index.md        # Team
+            └─ group-photo.jpg
+```
+
+The `depth` option counts path segments the same way as it does without `path`, with the template’s own segments included in the count. Because `{{slug}}/_index` takes two of them, `depth: 3` allows one more folder level, such as `about/team/_index.md`.
+
+##### Browsing Nested Entries
+
+The collection appears in the sidebar as a tree. Selecting a folder lists its entries in the main area, and the URL reflects the folder you’re browsing, so a link to a specific folder can be shared:
+
+```
+https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/filter/FOLDER_PATH
+```
+
+Such a link keeps working for as long as the folder does. A folder exists while it holds an entry, directly or further down, so one that has been emptied — or that never existed — shows a Not Found page rather than an empty list, and so does a folder path on a collection without the `nested` option. A folder that still holds an entry but has nothing to list, such as a page with no children, shows an empty list as usual.
+
+In the `subfolders` mode, a folder that has no subfolder of its own is left out of the tree, because such a folder is an entry rather than a container — it’s already listed in its parent folder’s entry list. Set `subfolders: false` if you want every folder to appear in the tree.
+
+Each folder in the tree is labelled with the summary of its index file, falling back to the folder name. With `subfolders: false`, the folder name is always used.
+
+##### Choosing a Parent Folder
+
+The `meta.path` option adds a Parent Folder field above the other fields in the Content Editor. It shows the folder the entry is filed in and opens a folder tree for choosing a different one. The option accepts the following properties:
+
+- `index_file`: The file name, without an extension, that every entry in the collection is saved as, such as `_index` or `index`. The `subfolders` mode needs it, because a folder’s own entry has to have a fixed name; without it, each entry is named after its slug and stored as a regular file in the chosen folder. It has no effect with `subfolders: false`, where entries always keep their own names.
+- `widget` and `label`: Accepted for compatibility with Netlify/Decap CMS but ignored. The field is always a folder picker.
+
+**Note for Netlify/Decap CMS users**
+
+Netlify offered an [experimental `parent` widget](https://github.com/netlify-labs/netlify-cms-widget-parent) that allowed users to select a parent folder from a dropdown list rather than a string field. However, this feature was never integrated into Netlify CMS itself and is not compatible with Decap CMS. Sveltia CMS has its own built-in folder picker to improve the user experience, so the `widget` option is ignored. The `label` option is also ignored because the field is always labeled “Parent Folder”.
+
+The option has no effect on its own: it needs `nested`, because without a hierarchy there is no folder to choose.
+
+When an editor creates an entry while browsing a folder, the field starts on that folder, so the new entry is filed alongside the ones already listed. The tree lists every folder in the collection, and the folder an entry occupies is left out of its own picker so it can’t be filed within itself.
+
+In the `subfolders` mode, a new entry gets a folder of its own within the chosen one, named after its [slug](#managing-entry-slugs). Creating “Release Notes” while browsing `docs/guides` therefore stores it at `docs/guides/release-notes/_index.md`. Elsewhere, the entry is a regular file named after its slug, so the same page becomes `docs/guides/release-notes.md`.
+
+With `subfolders: false`, creating an entry never creates a folder, so the tree could otherwise only ever show the folders that already hold a file. A New Folder button below the tree fills that gap: pick the folder to create it in, give it a name, and the new folder becomes the entry’s parent. The name is normalized like an [entry slug](#managing-entry-slugs) — “User Guides” becomes `user-guides` — and is rejected if it contains a slash, starts with a dot, which would hide the folder, keeps no letter or number once normalized, or is already used by a folder in the same parent. The folder itself reaches the repository when the entry is saved into it, because Git tracks files rather than folders and so has no way to commit an empty folder. The button isn’t shown in the `subfolders` mode, where creating an entry already creates the folder that holds it.
+
+Choosing a different folder for an existing entry moves its file, keeping the name it already has. To change that name instead of the folder it sits in, use the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor), which renames the entry’s own folder and takes everything below it along the same way. The Save button is enabled by the folder alone, so an entry can be moved without touching its content. In the `subfolders` mode, everything below the entry’s folder moves with it in the same commit — its child entries as well as any [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) stored alongside them — so a whole section can be reorganized in one save. The CMS rejects a folder that is already taken by another entry.
+
+**`index_file` vs `meta.path.index_file`**
+
+These two options look similar but do different things. The [`index_file`](#managing-hugo-s-special-index-file) collection option includes _one_ special file, Hugo’s `_index.md`, in a regular entry collection and lets it have its own set of fields. The `meta.path.index_file` option names _every_ entry in a nested collection. You can use both in the same collection if the root index file needs different fields than the section pages.
 
 ### Managing Preview Paths
 
