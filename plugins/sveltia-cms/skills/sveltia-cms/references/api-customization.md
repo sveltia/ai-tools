@@ -54,7 +54,7 @@ The optional `toPreview` function can return any of the following:
 - **A DOM element**: Inserted as is, which allows you to mount a component built with Svelte, Vue or any other framework. See [Using a Framework Component for Preview](#using-a-framework-component-for-preview).
 - **A React element**: Rendered with React as is. See [Using React for Preview](#using-react-for-preview).
 
-“As is” means that neither Markdown parsing nor sanitization is applied, so the value of a nested RichText or Markdown field is displayed verbatim, such as `**bold**`, unless you convert it to HTML yourself. The CMS exposes its own Markdown parser and HTML sanitizer for exactly that purpose — see [Rendering Markdown](https://sveltiacms.app/en/docs/api#rendering-markdown).
+“As is” means that neither Markdown parsing nor sanitization is applied, so the value of a nested RichText or Markdown field is displayed verbatim, such as `**bold**`, unless you render it yourself. The CMS provides the `renderRichText` method for exactly that purpose, which renders the value into an element of your choice just like the preview pane, nested components included — see [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown).
 
 The function may also be called with an empty object while the editor is being initialized, so make sure that it works without any field values, as the examples below do by using default values.
 
@@ -452,7 +452,7 @@ The `toPreview` function can also return a DOM element, which is inserted into t
 
 Because the CMS cannot destroy a component that it didn’t create, it dispatches a custom `Unmount` event on the returned element once the preview is replaced or the entry is closed. Listen for that event to tear down your component and avoid memory leaks.
 
-The following example renders a “Warning” component that wraps some body text. Because the body is a nested [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, its value arrives as a Markdown string, and the element you return is inserted as is — so `**bold**` would show up with the asterisks intact unless you convert it. The example does that with the [globally available](https://sveltiacms.app/en/docs/api#rendering-markdown) `marked` parser and `DOMPurify` sanitizer, then lets the component insert the HTML with Svelte’s `{@html html}` tag or Vue’s `v-html` directive:
+The following example renders a “Warning” component that wraps some body text. Because the body is a nested [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, its value arrives as a Markdown string, and the element you return is inserted as is — so `**bold**` would show up with the asterisks intact unless you render it. The example passes the value to the component, which renders it with the [`renderRichText`](https://sveltiacms.app/en/docs/api/rendering-markdown) method once its element is available — with an attachment in Svelte, or in the `onMounted` hook in Vue:
 
 ```js [Svelte]
 import { registerEditorComponent } from '@sveltia/cms';
@@ -468,8 +468,7 @@ registerEditorComponent({
   toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
   toPreview: ({ body = '' }) => {
     const element = document.createElement('div');
-    const html = DOMPurify.sanitize(marked.parse(body, { breaks: true }));
-    const component = mount(Warning, { target: element, props: { html } });
+    const component = mount(Warning, { target: element, props: { body } });
 
     element.addEventListener('Unmount', () => unmount(component), { once: true });
 
@@ -492,8 +491,7 @@ registerEditorComponent({
   toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
   toPreview: ({ body = '' }) => {
     const element = document.createElement('div');
-    const html = DOMPurify.sanitize(marked.parse(body, { breaks: true }));
-    const app = createApp(Warning, { html });
+    const app = createApp(Warning, { body });
 
     app.mount(element);
     element.addEventListener('Unmount', () => app.unmount(), { once: true });
@@ -505,35 +503,177 @@ registerEditorComponent({
 
 ```svelte [Svelte]
 <script>
-  let { html } = $props();
+  import { renderRichText } from '@sveltia/cms';
+
+  let { body } = $props();
 </script>
 
-<div class="bg-red-100">
-  {@html html}
-</div>
+<div class="bg-red-100" {@attach (element) => renderRichText(element, body)}></div>
 ```
 
 ```vue [Vue]
 <script setup>
-defineProps(['html']);
+import { renderRichText } from '@sveltia/cms';
+import { onMounted, onUnmounted, ref } from 'vue';
+
+const props = defineProps(['body']);
+const element = ref(null);
+let destroy;
+
+onMounted(() => {
+  destroy = renderRichText(element.value, props.body);
+});
+
+onUnmounted(() => {
+  destroy?.();
+});
 </script>
 
 <template>
-  <div class="bg-red-100" v-html="html"></div>
+  <div class="bg-red-100" ref="element"></div>
 </template>
 ```
 
 Note that this approach requires a build step, so the CMS has to be [installed as an npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package) and imported into your admin page, rather than loaded from a CDN.
 
-`marked` and `DOMPurify` are always on the `window` object, so there’s no need to install either library yourself. Sanitizing is not optional here: as noted in [Preview Output](#preview-output) above, the `sanitize_preview` option applies to string previews only, and Markdown allows raw HTML.
+`renderRichText` returns a function that destroys the rendered content, which the examples call when the component is unmounted: automatically in Svelte, as an attachment’s return value is its cleanup function, and in the `onUnmounted` hook in Vue. This matters because the nested value may contain other editor components, which are rendered with their own previews and need to be destroyed along with yours.
 
-Any image in the nested value keeps working, too. The CMS replaces internal image paths with blob URLs anywhere in the preview, including inside an element you return.
+The output is sanitized regardless of the field’s `sanitize_preview` option, so the nested value is safe to render even when the CMS has untrusted users. Any image in the nested value keeps working, too, as the method replaces internal image paths with blob URLs just like the preview pane does. If you need an HTML string instead, for example to insert with Svelte’s `{@html}` tag or Vue’s `v-html` directive, see [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown#using-marked-and-dompurify) for the lower-level `marked` and `DOMPurify` libraries and the sanitization caveats that apply.
 
 ### Showcase
 
 Real-world examples of editor components can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=editor-components).
 
 Source: https://sveltiacms.app/en/docs/api/editor-components
+
+---
+
+## Rendering Markdown
+
+The value of a [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field is a Markdown string. When you render such a value yourself — in a [Custom Preview Template](https://sveltiacms.app/en/docs/api/preview-templates), the [preview output](https://sveltiacms.app/en/docs/api/editor-components#preview-output) of a [Custom Editor Component](https://sveltiacms.app/en/docs/api/editor-components), or a [Custom Field Type](https://sveltiacms.app/en/docs/api/field-types) — the string is used as is, so text like `**bold**` appears verbatim unless you convert it to HTML.
+
+### Overview
+
+Sveltia CMS offers two ways to do that. Both are available as soon as the CMS is loaded, whether you use the CDN build or the npm package, so no additional dependency is necessary:
+
+- `CMS.renderRichText()` renders the value into a DOM element you provide, exactly like the built-in preview pane — custom editor components, images and sanitization included. Use it whenever you have an element to render into.
+- `marked` and `DOMPurify` are the parser and sanitizer the CMS uses internally, exposed on the `window` object. Use them when you need an HTML string, such as for a React component.
+
+### Using `renderRichText`
+
+The `CMS.renderRichText()` method renders a Markdown string into a DOM element you provide, using the same pipeline as the preview pane of a RichText field:
+
+- Custom editor components are rendered with their own `toPreview` output, including components nested in the value, recursively
+- Markdown is parsed into HTML, with a single line break becoming a `<br>`
+- Code blocks are syntax-highlighted
+- Internal image paths are replaced with blob URLs, so uploaded images appear in the preview
+- The resulting HTML is sanitized
+
+It takes the target element, the Markdown string and an optional options object, and returns a function that removes the rendered content and destroys any component previews within it:
+
+```js
+const destroy = CMS.renderRichText(element, markdown, options);
+```
+
+The content is rendered asynchronously, so the target element can still be detached from the document when you call the method — for example, an element created in `toPreview` that the CMS inserts into the preview pane afterwards.
+
+The `options` object accepts the following property:
+
+- `fieldConfig` — [RichText field](https://sveltiacms.app/en/docs/fields/richtext) options to be applied, such as [`editor_components`](https://sveltiacms.app/en/docs/fields/richtext#editor-components) to restrict the available components and [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) to disable sanitization. The output is sanitized by default, regardless of the [`field_defaults`](https://sveltiacms.app/en/docs/fields/richtext#global-field-defaults) configuration.
+
+The method is designed for an editor component whose `toPreview` returns a DOM element, where the value of a nested RichText field would otherwise be displayed verbatim. Call the returned `destroy` function once the CMS dispatches the `Unmount` event on the element, so that the nested previews are destroyed along with your component:
+
+```js [Svelte]
+import { registerEditorComponent } from '@sveltia/cms';
+import { mount, unmount } from 'svelte';
+import Warning from '$lib/components/Warning.svelte';
+
+registerEditorComponent({
+  id: 'warning',
+  label: 'Warning',
+  icon: 'warning',
+  fields: [{ name: 'body', label: 'Body', widget: 'richtext' }],
+  pattern: /<Warning>\s*(?<body>[\s\S]*?)\s*<\/Warning>/,
+  toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
+  toPreview: ({ body = '' }) => {
+    const element = document.createElement('div');
+    const component = mount(Warning, { target: element, props: { body } });
+
+    element.addEventListener('Unmount', () => unmount(component), { once: true });
+
+    return element;
+  },
+});
+```
+
+```js [Vanilla JS]
+CMS.registerEditorComponent({
+  id: 'warning',
+  label: 'Warning',
+  icon: 'warning',
+  fields: [{ name: 'body', label: 'Body', widget: 'richtext' }],
+  pattern: /<Warning>\s*(?<body>[\s\S]*?)\s*<\/Warning>/,
+  toBlock: ({ body = '' }) => `<Warning>\n\n${body}\n\n</Warning>`,
+  toPreview: ({ body = '' }) => {
+    const element = document.createElement('div');
+    const destroy = CMS.renderRichText(element, body);
+
+    element.className = 'bg-red-100';
+    element.addEventListener('Unmount', destroy, { once: true });
+
+    return element;
+  },
+});
+```
+
+In the Svelte example, the component itself calls the method with an [attachment](https://svelte.dev/docs/svelte/@attach), which runs the returned `destroy` function automatically when the component is unmounted:
+
+```svelte
+<script>
+  import { renderRichText } from '@sveltia/cms';
+
+  let { body } = $props();
+</script>
+
+<div class="bg-red-100" {@attach (element) => renderRichText(element, body)}></div>
+```
+
+Because the nested value goes through the same component matching as the field itself, a component can contain other components, or even another instance of itself, as long as the [`pattern`](https://sveltiacms.app/en/docs/api/editor-components#required-properties) of each component can match its own block within the parent’s. Any nested component preview is rendered in place, whether it returns a string, a DOM element or a React element.
+
+**Raw values for nested fields**
+
+The value of a nested RichText field is passed to `toPreview` as is, including the syntax of any component within it. It’s never partially rendered, regardless of the order in which components are registered, so you can always pass it to `renderRichText` or process it yourself.
+
+### Using `marked` and `DOMPurify`
+
+If you need an HTML string rather than a rendered element — for example, to pass it to a React component’s `dangerouslySetInnerHTML` prop — Sveltia CMS exposes the two libraries it uses internally, so you don’t need to add a dependency of your own:
+
+- `marked` — The [Marked](https://marked.js.org/) parser, which converts a Markdown string to an HTML string
+- `DOMPurify` — The [DOMPurify](https://github.com/cure53/DOMPurify) sanitizer, which strips scripts and other dangerous markup from an HTML string
+
+These are available on the `window` object when Sveltia CMS is loaded, whether you use the CDN build or the npm package. No additional imports are necessary to use them.
+
+```js
+const html = DOMPurify.sanitize(marked.parse(markdown));
+```
+
+The CMS renders the preview pane with the `breaks` option enabled, meaning a single line break becomes a `<br>`. Pass the same option if you want your output to match:
+
+```js
+const html = DOMPurify.sanitize(marked.parse(markdown, { breaks: true }));
+```
+
+Note that, unlike `renderRichText`, this approach doesn’t render custom editor components or resolve internal image paths; the value is converted as plain Markdown.
+
+**Security Risk**
+
+Always sanitize the HTML before inserting it into the DOM, as the examples above do. Markdown allows raw HTML, so skipping the sanitizer can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody.
+
+**Shared parser instance**
+
+`marked` is the very parser the CMS uses to render the preview pane, so any extension you add with [`marked.use()`](https://marked.js.org/using_pro) also changes how the CMS itself renders Markdown. Prefer passing [options](https://marked.js.org/using_advanced) to `marked.parse()` for one-off customization.
+
+Source: https://sveltiacms.app/en/docs/api/rendering-markdown
 
 ---
 

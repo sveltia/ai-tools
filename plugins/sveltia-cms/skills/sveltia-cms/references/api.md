@@ -90,6 +90,7 @@ Currently, the following methods are available on the `CMS` object:
 - [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types): `registerFieldType` (alias: `registerWidget`), `getFieldType` (alias: `getWidget`)
 - [Custom File Formats](https://sveltiacms.app/en/docs/api/file-formats): `registerCustomFormat`
 - [Event Hooks](https://sveltiacms.app/en/docs/api/events): `registerEventListener`
+- [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown): `renderRichText`
 
 **Breaking changes from Netlify/Decap CMS**
 
@@ -124,35 +125,6 @@ We plan to add support for [Preact+HTM](https://preactjs.com/guide/v10/getting-s
 #### With JSX
 
 Sveltia CMS does not provide a built-in JSX transpiler. To use JSX syntax, you need a build step to transpile it to JavaScript, such as [Vite](https://vitejs.dev/).
-
-### Rendering Markdown
-
-The value of a [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field is a Markdown string. When you render such a value yourself — in a [Custom Preview Template](https://sveltiacms.app/en/docs/api/preview-templates), the [preview output](https://sveltiacms.app/en/docs/api/editor-components#preview-output) of a [Custom Editor Component](https://sveltiacms.app/en/docs/api/editor-components), or a [Custom Field Type](https://sveltiacms.app/en/docs/api/field-types) — the string is used as is, so text like `**bold**` appears verbatim unless you convert it to HTML.
-
-To make that possible without adding a dependency of your own, Sveltia CMS exposes the two libraries it uses internally:
-
-- `marked` — The [Marked](https://marked.js.org/) parser, which converts a Markdown string to an HTML string
-- `DOMPurify` — The [DOMPurify](https://github.com/cure53/DOMPurify) sanitizer, which strips scripts and other dangerous markup from an HTML string
-
-These are available on the `window` object when Sveltia CMS is loaded, whether you use the CDN build or the npm package. No additional imports are necessary to use them.
-
-```js
-const html = DOMPurify.sanitize(marked.parse(markdown));
-```
-
-The CMS renders the preview pane with the `breaks` option enabled, meaning a single line break becomes a `<br>`. Pass the same option if you want your output to match:
-
-```js
-const html = DOMPurify.sanitize(marked.parse(markdown, { breaks: true }));
-```
-
-**Security Risk**
-
-Always sanitize the HTML before inserting it into the DOM, as the examples above do. Markdown allows raw HTML, so skipping the sanitizer can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody.
-
-**Shared parser instance**
-
-`marked` is the very parser the CMS uses to render the preview pane, so any extension you add with [`marked.use()`](https://marked.js.org/using_pro) also changes how the CMS itself renders Markdown. Prefer passing [options](https://marked.js.org/using_advanced) to `marked.parse()` for one-off customization.
 
 Source: https://sveltiacms.app/en/docs/api
 
@@ -788,7 +760,7 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 **Naming Convention**
 
@@ -825,6 +797,33 @@ The control component receives the following props:
 - `classNameWrapper` (string): A CSS class name that can be applied to your input element for consistent styling with built-in field controls.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited. Read the content with `entry.getIn(['data', 'fieldName'])`. This lets your control display values derived from other fields in the same entry, such as dynamically generated select options. The prop is updated whenever any field in the entry is modified, so your control always sees the latest content. See the [Dependent Select](#dependent-select) example below.
 - `onChange` (function): A callback function that must be called with the new value whenever the user modifies the field. This updates the entry draft in the CMS.
+- `addFile` (function): A function that adds a file to the entry draft, so that the file is uploaded along with the entry when it’s saved. It returns a Promise that resolves to a temporary URL to be stored in the field value. See [Uploading Files](#uploading-files) below.
+
+##### Uploading Files
+
+A control that produces files — an image editor, a control that downloads a remote image, or one that derives a thumbnail from an upload, for example — can hand them to the CMS with the `addFile` prop:
+
+```js
+const url = await this.props.addFile(file, options);
+```
+
+- `file` (`File` or `Blob`, required): The file to be added.
+- `options.name` (string): The file name, including the extension. It’s required when a `Blob` is given, given that a `Blob` has no name of its own. When a `File` is given, the option overrides its name.
+
+The function resolves to a temporary `blob:` URL. Store it in the field value with `onChange`, either as the value itself or anywhere within an object or array value, just like the [Image with Derived Files](#image-with-derived-files) example below does. The URL can also be used to display the file in the control and the preview pane while the entry is being edited.
+
+When the entry is saved, the CMS replaces each URL in the value with the public path of the uploaded file, and commits the file along with the entry. Everything works the same way as a file selected in a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field:
+
+- The file is saved to the field’s own `media_folder` if the option is defined on the field, otherwise to the collection-level or top-level folder. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). The file name is sanitized and, if another file in the folder already has the same name, made unique.
+- The [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features), such as `max_file_size` and `transformations`, are applied. If the file exceeds the size limit or cannot be decoded, the Promise is rejected with an error, so wrap the call in `try`/`catch` to show a message to the user.
+- A file identical to one already uploaded, or already added to the draft, is not uploaded twice; the existing path or URL is returned instead.
+- The file is included in the same commit as the entry, so the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) and [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) work as usual. A file that is no longer referenced in the value when the entry is saved is simply discarded.
+
+The function is only available while an entry is being edited; it rejects otherwise.
+
+**Keep the URL intact**
+
+The CMS finds the files to be uploaded by looking for the temporary URLs in the field value. If your control transforms the URL before storing it — by encoding it or embedding it in a string that is later serialized differently, for example — the file won’t be uploaded and the value will end up with a dangling `blob:` URL.
 
 ##### Custom Validation
 
@@ -1442,6 +1441,183 @@ class ImageMetaPreview extends React.Component {
 }
 
 CMS.registerFieldType('imageMeta', ImageMetaControl, ImageMetaPreview);
+```
+
+#### Image with Derived Files
+
+A field type that takes an image upload, generates a small WebP thumbnail in the browser, and stores the paths of both files along with the aspect ratio. The files are added to the entry draft with the [`addFile` prop](#uploading-files) and uploaded when the entry is saved.
+
+Given the following field configuration, the files are saved to the `static/photos` folder and referenced as `/photos/...` in the entry:
+
+```yaml
+fields:
+  - name: photo
+    label: Photo
+    widget: photo # custom field type name
+    media_folder: /static/photos
+    public_folder: /photos
+```
+
+```js [Without JSX]
+/**
+ * Resize an image file to the given width and return it as a WebP `Blob`.
+ */
+const createThumbnail = async (file, width) => {
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement('canvas');
+  const scale = width / bitmap.width;
+
+  canvas.width = width;
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+  return {
+    blob: await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp')),
+    aspectRatio: bitmap.width / bitmap.height,
+  };
+};
+
+const PhotoControl = createClass({
+  getInitialState: function () {
+    return { error: null };
+  },
+
+  handleFile: async function (e) {
+    const file = e.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const { blob, aspectRatio } = await createThumbnail(file, 50);
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+
+      // Both calls resolve to temporary URLs, which are replaced with the public paths of the
+      // uploaded files when the entry is saved
+      const original = await this.props.addFile(file);
+      const thumbnail = await this.props.addFile(blob, { name: `${baseName}-thumb.webp` });
+
+      this.setState({ error: null });
+      this.props.onChange({ original, thumbnail, aspectRatio });
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  },
+
+  render: function () {
+    const value = this.props.value || {};
+
+    return h(
+      'div',
+      { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+      h('input', {
+        id: this.props.forID,
+        type: 'file',
+        accept: 'image/*',
+        onChange: this.handleFile,
+      }),
+      value.thumbnail && h('img', { src: value.thumbnail, alt: '', width: 50 }),
+      this.state.error && h('p', { style: { color: 'red' } }, this.state.error),
+    );
+  },
+});
+
+const PhotoPreview = createClass({
+  render: function () {
+    const value = this.props.value || {};
+
+    if (!value.original) {
+      return null;
+    }
+
+    return h('img', { src: value.original, alt: '', style: { maxWidth: '300px' } });
+  },
+});
+
+CMS.registerFieldType('photo', PhotoControl, PhotoPreview);
+```
+
+```jsx [With JSX]
+/**
+ * Resize an image file to the given width and return it as a WebP `Blob`.
+ */
+const createThumbnail = async (file, width) => {
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement('canvas');
+  const scale = width / bitmap.width;
+
+  canvas.width = width;
+  canvas.height = Math.round(bitmap.height * scale);
+  canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+  return {
+    blob: await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp')),
+    aspectRatio: bitmap.width / bitmap.height,
+  };
+};
+
+class PhotoControl extends React.Component {
+  state = { error: null };
+
+  handleFile = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const { blob, aspectRatio } = await createThumbnail(file, 50);
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+
+      // Both calls resolve to temporary URLs, which are replaced with the public paths of the
+      // uploaded files when the entry is saved
+      const original = await this.props.addFile(file);
+      const thumbnail = await this.props.addFile(blob, { name: `${baseName}-thumb.webp` });
+
+      this.setState({ error: null });
+      this.props.onChange({ original, thumbnail, aspectRatio });
+    } catch (error) {
+      this.setState({ error: error.message });
+    }
+  };
+
+  render() {
+    const value = this.props.value || {};
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <input id={this.props.forID} type="file" accept="image/*" onChange={this.handleFile} />
+        {value.thumbnail && <img src={value.thumbnail} alt="" width={50} />}
+        {this.state.error && <p style={{ color: 'red' }}>{this.state.error}</p>}
+      </div>
+    );
+  }
+}
+
+class PhotoPreview extends React.Component {
+  render() {
+    const value = this.props.value || {};
+
+    if (!value.original) {
+      return null;
+    }
+
+    return <img src={value.original} alt="" style={{ maxWidth: '300px' }} />;
+  }
+}
+
+CMS.registerFieldType('photo', PhotoControl, PhotoPreview);
+```
+
+Once saved, the entry holds the public paths, which your site can use for a blurred placeholder, a `srcset`, or a fixed-ratio box that avoids layout shift:
+
+```yaml
+photo:
+  original: /photos/sunset.jpg
+  thumbnail: /photos/sunset-thumb.webp
+  aspectRatio: 1.5
 ```
 
 #### Dependent Select

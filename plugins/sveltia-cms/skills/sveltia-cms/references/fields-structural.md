@@ -2030,6 +2030,18 @@ If set to `true`, the key-value pairs will be stored at the root level of the en
 
 See the [Top-Level key-value pairs](#top-level-key-value-pairs) example below for details.
 
+##### `i18n`
+
+- **Type**: `boolean`, `duplicate` or `duplicate_keys`
+- **Default**: `false`
+
+In addition to the [common `i18n` option values](https://sveltiacms.app/en/docs/i18n#field-level-configuration), the KeyValue field accepts the `duplicate_keys` value, which is useful for dictionaries whose keys are shared across locales while their values are translated:
+
+- The keys are copied from the default locale to the other locales, where they are read-only. Keys can only be added, renamed or removed in the default locale, and any such change is immediately reflected in the other locales.
+- The values can be edited separately for each locale. When a key is renamed in the default locale, the other locales keep the value they had under the old name; a newly added key starts with an empty value in the other locales.
+
+See the [Translated Values with Shared Keys](#translated-values-with-shared-keys) example below for details.
+
 ### Examples
 
 #### Basic Key-Value Field
@@ -2084,6 +2096,83 @@ notifications = "enabled"
   "settings": {
     "theme": "dark",
     "notifications": "enabled"
+  }
+}
+```
+
+#### Translated Values with Shared Keys
+
+This example demonstrates how to use the `duplicate_keys` i18n strategy so that the same keys are used in all locales while the values are translated. This requires i18n to be [enabled](https://sveltiacms.app/en/docs/i18n) for the collection:
+
+```yaml [YAML]
+- name: labels
+  label: Labels
+  widget: keyvalue
+  i18n: duplicate_keys
+```
+
+```toml [TOML]
+[[fields]]
+name = "labels"
+label = "Labels"
+widget = "keyvalue"
+i18n = "duplicate_keys"
+```
+
+```json [JSON]
+{
+  "name": "labels",
+  "label": "Labels",
+  "widget": "keyvalue",
+  "i18n": "duplicate_keys"
+}
+```
+
+```js [JavaScript]
+{
+  name: 'labels',
+  label: 'Labels',
+  widget: 'keyvalue',
+  i18n: 'duplicate_keys',
+}
+```
+
+Output example, with English as the default locale and the `single_file` i18n structure:
+
+```yaml [YAML]
+en:
+  labels:
+    submit: Submit
+    cancel: Cancel
+ja:
+  labels:
+    submit: 送信
+    cancel: キャンセル
+```
+
+```toml [TOML]
+[en.labels]
+submit = "Submit"
+cancel = "Cancel"
+
+[ja.labels]
+submit = "送信"
+cancel = "キャンセル"
+```
+
+```json [JSON]
+{
+  "en": {
+    "labels": {
+      "submit": "Submit",
+      "cancel": "Cancel"
+    }
+  },
+  "ja": {
+    "labels": {
+      "submit": "送信",
+      "cancel": "キャンセル"
+    }
   }
 }
 ```
