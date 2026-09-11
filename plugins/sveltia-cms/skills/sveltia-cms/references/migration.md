@@ -162,12 +162,12 @@ Other than the recently deprecated [`logo_url` option](https://sveltiacms.app/en
 - The deprecated Date widget: It was removed from Decap CMS 3.0 and Sveltia CMS 0.10. Use the DateTime field type with the [`type: date` option](https://sveltiacms.app/en/docs/fields/datetime#date-only) instead.
 - The deprecated [Uploadcare jQuery File Uploader](https://uploadcare.com/docs/uploads/file-uploader/): Sveltia CMS uses the API for [Uploadcare integration](https://sveltiacms.app/en/docs/media/uploadcare) to solve some issues. Users are prompted to enter their secret key to use the integration. This means the features found in the pre-built widget are currently unavailable. We plan to support some third-party upload sources, camera access and image editing in the future.
 
-##### Other Features
+##### Miscellaneous Features
 
 The following features will not be implemented in Sveltia CMS due to various reasons:
 
 - **Netlify Identity Widget**: It’s not useful without Git Gateway. We plan to develop an alternative solution with role support [in the future](https://sveltiacms.app/en/docs/roadmap).
-  - [Netlify Identity](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) was [deprecated](https://github.com/sveltia/sveltia-cms/discussions/284) in February 2025, but it has since been revived by Netlify. However, we still don’t plan to support it in Sveltia CMS.
+  - [Netlify Identity](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) was [deprecated](https://github.com/sveltia/sveltia-cms/discussions/284) in February 2025, but it has since been revived by Netlify. However, we still don’t plan to support it in Sveltia CMS due to the lack of Git Gateway support.
 - **Azure DevOps and Bitbucket backends**: For performance reasons. We’ll support these platforms if their APIs improve to allow the CMS to fetch multiple entries at once. Consider migrating to GitHub, GitLab, Gitea or Forgejo if you’d like to use Sveltia CMS now.
 - [Gatsby plugin](https://github.com/decaporg/gatsby-plugin-decap-cms): In light of Gatsby’s [uncertainty](https://github.com/gatsbyjs/gatsby/discussions/39062), we won’t be investing time in developing a plugin for it. Gatsby users can still create `index.html` themselves. Note: We don’t support Netlify Identity Widget; the favicon can be specified with the `logo.src` option.
 - Performance-related options: Sveltia CMS has [drastically improved performance](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-performance) with GraphQL enabled by default, so these are no longer relevant:
@@ -175,15 +175,20 @@ The following features will not be implemented in Sveltia CMS due to various rea
   - Backend: [`use_graphql`](https://decapcms.org/reference/config/backends/github/#graphql-api)
   - Relation field: `options_length`
 - An absolute URL in the [`public_folder`](https://decapcms.org/docs/configuration-options/#public-folder) option: Such configuration is not recommended, as stated in the Netlify/Decap CMS document.
-- The [`media_processing`](https://decapcms.org/docs/configuration-options/#media-processing) option: Sveltia CMS has already implemented a [built-in image optimizer](https://sveltiacms.app/en/docs/media#image-optimization) that supports both raster and SVG images and will be further enhanced. Use that feature instead.
+- The new [`media_processing`](https://decapcms.org/docs/configuration-options/#media-processing) option: Sveltia CMS has already implemented a [built-in image optimizer](https://sveltiacms.app/en/docs/media#image-optimization) that supports both raster and SVG images and will be further enhanced. Use that feature instead.
 - The theme and keymap inline settings for the Code field, along with support for some languages. Instead of [CodeMirror](https://codemirror.net/), we use Lexical’s code block functionality powered by [Shiki](https://shiki.style/).
 - The `allow_multiple` option for the File and Image fields: It’s a confusing option that defaults to `true`, and there is a separate option called `media_library.config.multiple`. We have added the new [`multiple`](https://sveltiacms.app/en/docs/fields/file#multiple) option instead, which is more intuitive and works with all media storage providers.
 - Remark plugins for the Markdown field: Not compatible with our Lexical-based rich text editor. The `CMS.registerRemarkPlugin` method is a noop in Sveltia CMS.
 - The `use_secure_url` option for the [Cloudinary media storage](https://sveltiacms.app/en/docs/media/cloudinary): Insecure URLs should never be used.
 - Local proxy server: Our [local development workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates the need for a proxy server. For security and performance reasons, we don’t support `netlify-cms-proxy-server` or `decap-server`. The `local_backend` option is ignored.
 - The global [`locale`](https://decapcms.org/docs/configuration-options/#locale) option and `CMS.registerLocale` method: Sveltia CMS automatically detects the user’s preferred language and changes the [UI locale](https://sveltiacms.app/en/docs/ui#localization).
+
+##### Undocumented Features
+
+We don’t implement features not described in the Netlify/Decap CMS documentation.
+
 - The undocumented `getAsset` and `fields` parameters for the `toPreview` function of [custom editor components](https://sveltiacms.app/en/docs/api/editor-components): Sveltia CMS does not support these parameters because it automatically replaces image paths with blob URLs in the preview.
-- [Undocumented methods](https://github.com/sveltia/sveltia-cms/blob/caf4a7e3030241ed1c964620af0f64b6e8606cab/src/lib/main.js#L41-L61) exposed on the `CMS` object: This includes custom backends and custom media storage providers, if any. We may support these features in the future, but our implementation would likely be incompatible with Netlify/Decap CMS.
+- [Undocumented methods](https://github.com/sveltia/sveltia-cms/blob/57562472e29c4090506000f7767df5179a450adb/src/lib/services/api/compatibility.js#L15-L35) exposed on the `CMS` object: This includes custom backends and custom media storage providers, if any. We may support these features in the future, but our implementation would likely be incompatible with Netlify/Decap CMS.
 - Any other undocumented features and options. Exceptions apply.
 
 #### Other Breaking Changes
