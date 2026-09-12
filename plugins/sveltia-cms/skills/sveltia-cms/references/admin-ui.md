@@ -227,9 +227,17 @@ The Asset Library includes the following features:
 
 #### Folder List
 
+The sidebar displays a list of all folders in the repository’s global media folder, as well as any collection-specific media folders. If you have configured any [cloud storage services](https://sveltiacms.app/en/docs/media), they are also listed in the sidebar under **External Locations**.
+
+##### Internal Locations
+
 Navigate between the global media folder and collection-specific media folders. This allows you to organize assets at both the global level and within individual collections for more granular asset management.
 
-#### External Locations
+##### External Locations
+
+Assets in external locations are listed under **External Locations** in the sidebar. This includes any cloud storage services you have configured, as well as a special location for linked files.
+
+###### Cloud Storage Services
 
 Every [cloud storage service](https://sveltiacms.app/en/docs/media) configured with the `media_libraries` option is listed under **External Locations** in the sidebar, at `#/assets/-/{service}` — for example `#/assets/-/uploadcare`. Select a service to browse the files stored there, using the same grid or list views, sorting, type filter and Info pane as a repository folder. A search box lets you narrow the list down by file name.
 
@@ -248,7 +256,7 @@ The controls for operations a service doesn’t support are hidden. Renaming a f
 
 Files on external services are previewed straight from the service’s URL, so the details view can show a text or Markdown file only if the service allows cross-origin requests. The Info pane shows the file size, the dimensions and duration of media files, the public URL, the file path on the service and the entries using the file, but not the Exif metadata, which can’t be read without downloading the file. The Copy menu offers the public URL, the file path relative to the configured prefix, the service’s file ID (an object key or a UUID) and the file data. These files are not included in the global search.
 
-#### Linked Files
+###### Linked Files
 
 The last item under External Locations, **Linked Files** at `#/assets/-/linked`, gathers every file that a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field links to by URL — a picture hosted on another site, a document on a shared drive, an avatar served by a third-party API — so that you can see all of them in one place and check where each one is used. The list is built from the entries themselves, so it needs no configuration and stays in sync as entries are saved. A URL used by several entries is listed once.
 
