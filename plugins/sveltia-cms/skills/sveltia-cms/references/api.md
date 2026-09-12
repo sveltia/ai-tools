@@ -760,7 +760,7 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 **Naming Convention**
 
@@ -798,6 +798,7 @@ The control component receives the following props:
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited. Read the content with `entry.getIn(['data', 'fieldName'])`. This lets your control display values derived from other fields in the same entry, such as dynamically generated select options. The prop is updated whenever any field in the entry is modified, so your control always sees the latest content. See the [Dependent Select](#dependent-select) example below.
 - `onChange` (function): A callback function that must be called with the new value whenever the user modifies the field. This updates the entry draft in the CMS.
 - `addFile` (function): A function that adds a file to the entry draft, so that the file is uploaded along with the entry when it’s saved. It returns a Promise that resolves to a temporary URL to be stored in the field value. See [Uploading Files](#uploading-files) below.
+- `pickFile` (function): A function that opens the same file selection dialog as a built-in File or Image field, so the user can pick an existing file, upload a new one, enter a URL or choose a stock photo. It returns a Promise that resolves to the picked file, with the value to be stored in the field. See [Picking Files](#picking-files) below.
 
 ##### Uploading Files
 
@@ -824,6 +825,41 @@ The function is only available while an entry is being edited; it rejects otherw
 **Keep the URL intact**
 
 The CMS finds the files to be uploaded by looking for the temporary URLs in the field value. If your control transforms the URL before storing it — by encoding it or embedding it in a string that is later serialized differently, for example — the file won’t be uploaded and the value will end up with a dangling `blob:` URL.
+
+##### Picking Files
+
+A control that stores a file reference in a shape of its own — an image with alt text and a focal point, a gallery with per-item captions, a download with a label — shouldn’t have to reimplement file browsing. The `pickFile` prop opens the same dialog as a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field, complete with the folder list, search, uploads, URL input and [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos) integrations:
+
+```js
+const picked = await this.props.pickFile(options);
+```
+
+All the options are optional:
+
+- `options.kind` (`image` or `file`): The kind of file to pick. With `image`, the dialog is limited to images, just like an Image field. If omitted, the dialog is limited to images when `accept` only lists image types, and offers any file otherwise.
+- `options.accept` (string): A comma-separated list of accepted file types, such as `image/*` or `.pdf,.docx`, applied to files uploaded through the dialog. Same as the [`accept` option](https://sveltiacms.app/en/docs/fields/file#options) of a File field.
+- `options.multiple` (boolean): Whether to let the user pick several files at once. Default: `false`.
+- `options.allowURL` (boolean): Whether to let the user enter a URL instead of picking a file. Same as the [`choose_url` option](https://sveltiacms.app/en/docs/fields/file#options) of a File field. Default: `true`.
+
+The function resolves once the dialog is closed with the Insert button, to an object with the following properties, or to an array of such objects when `multiple` is enabled:
+
+- `value` (string): The value to be stored in the field, exactly what a built-in File or Image field would store for the same pick: the public path of an existing file, a temporary `blob:` URL for a file uploaded through the dialog, or an external URL. Store it with `onChange`, either as the value itself or anywhere within an object or array value. A temporary URL is handled like one returned from `addFile`, so the file is uploaded when the entry is saved and the URL is replaced with the public path.
+- `file` (`Blob`): The contents of the file, for a control that needs the bytes, such as one deriving a thumbnail like the [Image with Derived Files](#image-with-derived-files) example below. It’s `undefined` for an external URL.
+- `credit` (string): Attribution HTML for a stock photo, including the photographer and service links. It’s `undefined` otherwise.
+
+It resolves to `null` when the dialog is dismissed, or when none of the picked files can be used, so a control can simply return early:
+
+```js
+const picked = await this.props.pickFile({ accept: 'image/*' });
+
+if (picked) {
+  this.props.onChange({ src: picked.value, alt: '' });
+}
+```
+
+The dialog lists the folders a File or Image field in the same place would offer: the field’s own `media_folder` if the option is defined on the field, otherwise the collection-level and top-level folders. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). Files uploaded through the dialog are handled exactly like files given to `addFile`, including naming, deduplication and the [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features). A file that exceeds the size limit or cannot be decoded is reported to the user in a dialog, the way a built-in field does, rather than rejecting the Promise; the Promise is only rejected if the contents of a picked file cannot be retrieved.
+
+The function is only available while an entry is being edited; it rejects otherwise.
 
 ##### Custom Validation
 
@@ -1445,7 +1481,7 @@ CMS.registerFieldType('imageMeta', ImageMetaControl, ImageMetaPreview);
 
 #### Image with Derived Files
 
-A field type that takes an image upload, generates a small WebP thumbnail in the browser, and stores the paths of both files along with the aspect ratio. The files are added to the entry draft with the [`addFile` prop](#uploading-files) and uploaded when the entry is saved.
+A field type that lets the user pick an image with the [`pickFile` prop](#picking-files), generates a small WebP thumbnail in the browser, and stores the paths of both files along with the aspect ratio. The user can either upload a new image or choose one already in the repository. The thumbnail is added to the entry draft with the [`addFile` prop](#uploading-files), and any new file is uploaded when the entry is saved.
 
 Given the following field configuration, the files are saved to the `static/photos` folder and referenced as `/photos/...` in the entry:
 
@@ -1482,20 +1518,23 @@ const PhotoControl = createClass({
     return { error: null };
   },
 
-  handleFile: async function (e) {
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
+  handlePick: async function () {
     try {
-      const { blob, aspectRatio } = await createThumbnail(file, 50);
-      const baseName = file.name.replace(/\.[^.]+$/, '');
+      // The URL option is disabled because the thumbnail can only be derived from the file contents
+      const picked = await this.props.pickFile({ accept: 'image/*', allowURL: false });
 
-      // Both calls resolve to temporary URLs, which are replaced with the public paths of the
-      // uploaded files when the entry is saved
-      const original = await this.props.addFile(file);
+      if (!picked) {
+        return;
+      }
+
+      const { blob, aspectRatio } = await createThumbnail(picked.file, 50);
+      const fileName = picked.file.name || picked.value.split('/').pop();
+      const baseName = fileName.replace(/\.[^.]+$/, '');
+
+      // `original` is either the public path of an existing image or a temporary URL of a new
+      // upload; `thumbnail` is always a temporary URL. Temporary URLs are replaced with the public
+      // paths of the uploaded files when the entry is saved
+      const original = picked.value;
       const thumbnail = await this.props.addFile(blob, { name: `${baseName}-thumb.webp` });
 
       this.setState({ error: null });
@@ -1511,12 +1550,11 @@ const PhotoControl = createClass({
     return h(
       'div',
       { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
-      h('input', {
-        id: this.props.forID,
-        type: 'file',
-        accept: 'image/*',
-        onChange: this.handleFile,
-      }),
+      h(
+        'button',
+        { id: this.props.forID, type: 'button', onClick: this.handlePick },
+        'Choose Image',
+      ),
       value.thumbnail && h('img', { src: value.thumbnail, alt: '', width: 50 }),
       this.state.error && h('p', { style: { color: 'red' } }, this.state.error),
     );
@@ -1560,20 +1598,23 @@ const createThumbnail = async (file, width) => {
 class PhotoControl extends React.Component {
   state = { error: null };
 
-  handleFile = async (e) => {
-    const file = e.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
+  handlePick = async () => {
     try {
-      const { blob, aspectRatio } = await createThumbnail(file, 50);
-      const baseName = file.name.replace(/\.[^.]+$/, '');
+      // The URL option is disabled because the thumbnail can only be derived from the file contents
+      const picked = await this.props.pickFile({ accept: 'image/*', allowURL: false });
 
-      // Both calls resolve to temporary URLs, which are replaced with the public paths of the
-      // uploaded files when the entry is saved
-      const original = await this.props.addFile(file);
+      if (!picked) {
+        return;
+      }
+
+      const { blob, aspectRatio } = await createThumbnail(picked.file, 50);
+      const fileName = picked.file.name || picked.value.split('/').pop();
+      const baseName = fileName.replace(/\.[^.]+$/, '');
+
+      // `original` is either the public path of an existing image or a temporary URL of a new
+      // upload; `thumbnail` is always a temporary URL. Temporary URLs are replaced with the public
+      // paths of the uploaded files when the entry is saved
+      const original = picked.value;
       const thumbnail = await this.props.addFile(blob, { name: `${baseName}-thumb.webp` });
 
       this.setState({ error: null });
@@ -1588,7 +1629,9 @@ class PhotoControl extends React.Component {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input id={this.props.forID} type="file" accept="image/*" onChange={this.handleFile} />
+        <button id={this.props.forID} type="button" onClick={this.handlePick}>
+          Choose Image
+        </button>
         {value.thumbnail && <img src={value.thumbnail} alt="" width={50} />}
         {this.state.error && <p style={{ color: 'red' }}>{this.state.error}</p>}
       </div>

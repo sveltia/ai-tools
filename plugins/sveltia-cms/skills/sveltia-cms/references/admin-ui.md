@@ -219,11 +219,7 @@ Source: https://sveltiacms.app/en/docs/ui
 
 ## Asset Library
 
-Sveltia CMS’s Asset Library allows you to efficiently manage and organize your media files, including images, videos, and documents. It serves as a centralized hub for all your digital assets, making it easy to upload, categorize, and retrieve files as needed.
-
-**Future Plans**
-
-Currently, the Asset Library only supports the [internal media storage](https://sveltiacms.app/en/docs/media/internal). Support for external media storage providers, such as Amazon S3 and Uploadcare, will be added in future releases.
+Sveltia CMS’s Asset Library allows you to efficiently manage and organize your media files, including images, videos, and documents. It serves as a centralized hub for all your digital assets, making it easy to upload, categorize, and retrieve files as needed — whether they are stored in your Git repository with the [internal media storage](https://sveltiacms.app/en/docs/media/internal) or on an [external media storage provider](https://sveltiacms.app/en/docs/media) such as Amazon S3, Cloudflare R2 or Uploadcare.
 
 ### Features
 
@@ -232,6 +228,33 @@ The Asset Library includes the following features:
 #### Folder List
 
 Navigate between the global media folder and collection-specific media folders. This allows you to organize assets at both the global level and within individual collections for more granular asset management.
+
+#### External Locations
+
+Every [cloud storage service](https://sveltiacms.app/en/docs/media) configured with the `media_libraries` option is listed under **External Locations** in the sidebar, at `#/assets/-/{service}` — for example `#/assets/-/uploadcare`. Select a service to browse the files stored there, using the same grid or list views, sorting, type filter and Info pane as a repository folder. A search box lets you narrow the list down by file name.
+
+You’ll be prompted for the service’s secret key or SAS token the first time, just like in the [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) field picker; the credential is stored in your browser only and can be changed later under **Settings > Media**. Files can be uploaded, downloaded, renamed, replaced and deleted directly on the service, subject to what its API allows:
+
+| Service | Upload | Delete | Rename | Replace |
+| --- | --- | --- | --- | --- |
+| [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3), [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2), [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2), [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces), [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage), [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage) | Yes | Yes | Yes | Yes |
+| [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage) | Yes | Yes | Yes | Yes |
+| [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) | Yes | Yes | No | No |
+| [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) | Cloudinary’s own Media Library widget is opened instead |  |  |  |
+
+The controls for operations a service doesn’t support are hidden. Renaming a file on an S3-compatible service or Azure Blob Storage copies it to the new name and then deletes the original. Make sure the bucket’s CORS policy allows the `DELETE` method and all request headers, and that the credential has the delete permission — see the setup instructions of each service for details. Unlike repository assets, entries referencing a renamed or deleted external file are not updated, because the file URL is stored as is.
+
+**Info**
+
+Files on external services are previewed straight from the service’s URL, so the details view can show a text or Markdown file only if the service allows cross-origin requests. The Info pane shows the file size, the dimensions and duration of media files, the public URL, the file path on the service and the entries using the file, but not the Exif metadata, which can’t be read without downloading the file. The Copy menu offers the public URL, the file path relative to the configured prefix, the service’s file ID (an object key or a UUID) and the file data. These files are not included in the global search.
+
+#### Linked Files
+
+The last item under External Locations, **Linked Files** at `#/assets/-/linked`, gathers every file that a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field links to by URL — a picture hosted on another site, a document on a shared drive, an avatar served by a third-party API — so that you can see all of them in one place and check where each one is used. The list is built from the entries themselves, so it needs no configuration and stays in sync as entries are saved. A URL used by several entries is listed once.
+
+Files that live in your repository or on a configured cloud storage service have their own locations, so they aren’t listed here, even when an entry stores them as an absolute URL. Images embedded in Markdown or rich text bodies aren’t scanned either.
+
+Since these files are hosted elsewhere, they can only be browsed: there is no upload, rename, replace or delete. The Info pane shows the kind, the dimensions or duration of a media file, the URL and the entries using the file, and the Copy menu offers the URL and, where the host allows cross-origin requests, the file data. The file size isn’t available. A URL without a file extension, such as an avatar endpoint, is treated as an image when it comes from an Image field.
 
 #### Asset List
 
@@ -247,7 +270,7 @@ The CMS prevents the same file from being uploaded twice by comparing file hashe
 
 #### Asset Search
 
-Use the search functionality to quickly find specific assets. You can also filter assets by name or file type to narrow down results.
+Use the search functionality to quickly find specific assets. You can also filter assets by name or file type to narrow down results. Files on [external locations](#external-locations) are searched with the search box in the location’s own toolbar instead.
 
 #### Asset Details
 

@@ -29,12 +29,14 @@ Create an IAM user with programmatic access and attach a policy granting the min
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": ["s3:ListBucket", "s3:GetObject", "s3:PutObject"],
+      "Action": ["s3:ListBucket", "s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
       "Resource": ["arn:aws:s3:::my-bucket", "arn:aws:s3:::my-bucket/*"]
     }
   ]
 }
 ```
+
+The `s3:DeleteObject` action is only needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original.
 
 The resulting **Access Key ID** goes in `access_key_id` in your config. The **Secret Access Key** is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
 
@@ -68,13 +70,15 @@ Configure cross-origin resource sharing in the S3 console under **Bucket > Permi
 [
   {
     "AllowedHeaders": ["*"],
-    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedMethods": ["GET", "PUT", "DELETE", "HEAD"],
     "AllowedOrigins": ["https://your-cms-domain.com"],
     "ExposeHeaders": ["ETag"],
     "MaxAgeSeconds": 3000
   }
 ]
 ```
+
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
 
 #### Bucket Naming
 
@@ -200,9 +204,9 @@ The Amazon S3 media storage can be accessed through the File and Image fields in
 
 When uploading media, files will be stored in your S3 bucket, and you can take advantage of S3’s capabilities directly from the CMS. You can also select existing media from your S3 storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your S3 files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/amazon-s3
 
@@ -215,7 +219,7 @@ Source: https://sveltiacms.app/en/docs/media/amazon-s3
 ### Requirements
 
 - An Azure storage account with a blob container created.
-- A SAS token with the Read, Write, Create and List permissions on that container (see [Credentials](#credentials) below).
+- A SAS token with the Read, Write, Create, List and Delete permissions on that container (see [Credentials](#credentials) below).
 - A CORS rule on the storage account’s Blob service (see [CORS](#cors) below).
 - A `public_url` configured, unless the container allows anonymous read access (see [Public Read Access](#public-read-access) below).
 
@@ -232,7 +236,7 @@ Azure storage account keys can’t be scoped to a single container — they gran
 Create a **service SAS** for the container via **Azure Portal > Storage account > Data storage > Containers > [container] > Shared access tokens**:
 
 - **Signing method**: Account key (or User delegation key; see the note below)
-- **Permissions**: Read, Create, Write, List
+- **Permissions**: Read, Create, Write, List, Delete. The Delete permission is only needed to delete and rename blobs from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); leave it out if you don’t want editors to remove files
 - **Expiry**: as far out as your security policy allows (see [Token Expiry](#token-expiry) below)
 - **Allowed protocols**: HTTPS only
 
@@ -250,7 +254,7 @@ If your storage account has **Allow storage account key access** disabled, neith
 az storage container generate-sas \
   --account-name mystorageaccount \
   --name my-container \
-  --permissions rcwl \
+  --permissions rcwld \
   --expiry 2026-12-31T00:00Z \
   --auth-mode login --as-user \
   --https-only --output tsv
@@ -296,8 +300,8 @@ Configure cross-origin resource sharing under **Storage account > Settings > Res
 | Setting | Value |
 | --- | --- |
 | Allowed origins | `https://your-cms-domain.com` |
-| Allowed methods | `GET`, `HEAD`, `OPTIONS`, `PUT` |
-| Allowed headers | `*` (or `x-ms-blob-type,content-type`) |
+| Allowed methods | `GET`, `HEAD`, `OPTIONS`, `PUT`, `DELETE` |
+| Allowed headers | `*` (or `x-ms-blob-type,x-ms-copy-source,content-type`) |
 | Exposed headers | `*` |
 | Max age | `3600` |
 
@@ -306,7 +310,7 @@ The equivalent Azure CLI command:
 ```sh
 az storage cors add \
   --services b \
-  --methods GET HEAD OPTIONS PUT \
+  --methods GET HEAD OPTIONS PUT DELETE \
   --origins https://your-cms-domain.com \
   --allowed-headers '*' \
   --exposed-headers '*' \
@@ -315,6 +319,8 @@ az storage cors add \
 ```
 
 CORS rules are set per storage account, not per container, and they apply to the Blob service as a whole.
+
+The `DELETE` method and the `x-ms-copy-source` header are needed to delete and rename blobs from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule, otherwise the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -403,9 +409,9 @@ The Azure Blob Storage media storage can be accessed through the File and Image 
 
 When uploading media, files are stored in your container as block blobs, and you can take advantage of Azure’s capabilities directly from the CMS. You can also select existing media from your Blob Storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your Azure Blob Storage files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original.
 
 Source: https://sveltiacms.app/en/docs/media/azure-blob-storage
 
@@ -513,9 +519,11 @@ The S3 operations Sveltia CMS requires are:
 
 - `s3_get` — for `ListObjectsV2` (listing) and `GetObject` (preview/download)
 - `s3_head` — for `HeadObject` (metadata checks)
-- `s3_put` — for `PutObject` (uploads)
-- `s3_delete` — for `DeleteObject` (deletions)
+- `s3_put` — for `PutObject` (uploads and replacements) and `CopyObject` (renames)
+- `s3_delete` — for `DeleteObject` (deletions and renames)
 - `s3_post` — for multipart uploads
+
+Deleting and renaming files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`; if your existing rule lacks them, update it, otherwise the browser will block those requests during the preflight check.
 
 B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, `PUT`, `DELETE`, `POST`).
 
@@ -648,9 +656,9 @@ The Backblaze B2 media storage can be accessed through the File and Image fields
 
 When uploading media, files will be stored in your B2 bucket with zero egress fees for downloads. You can also select existing media from your B2 storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your B2 files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/backblaze-b2
 
@@ -717,13 +725,15 @@ Configure via **R2 Dashboard > Bucket > Settings > CORS Policy**. CORS is requir
 [
   {
     "AllowedHeaders": ["*"],
-    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedMethods": ["GET", "PUT", "DELETE", "HEAD"],
     "AllowedOrigins": ["https://your-cms-domain.com"],
     "ExposeHeaders": ["ETag"],
     "MaxAgeSeconds": 3000
   }
 ]
 ```
+
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -851,9 +861,9 @@ The Cloudflare R2 media storage can be accessed through the File and Image field
 
 When uploading media, files will be stored in your R2 bucket, and you can take advantage of R2’s capabilities directly from the CMS. You can also select existing media from your R2 storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your R2 files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/cloudflare-r2
 
@@ -1172,6 +1182,10 @@ The Cloudinary media storage can be accessed through the File and Image fields i
 
 Users are required to authenticate with Cloudinary using their username and password when accessing the media storage provider. The authentication process is handled automatically by Sveltia CMS using the provided API key.
 
+#### Asset Library
+
+Cloudinary also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). Because the Cloudinary API can’t be called directly from the browser, the CMS opens the Cloudinary Media Library widget instead, where you can browse and manage your files using Cloudinary’s own interface.
+
 ### Using Transformations in Page Templates
 
 When the `output_filename_only` option is set to `true`, only the filename is stored in your entry data files. To generate the full URL with transformations in your site’s page templates, you can use the [JavaScript SDK](https://cloudinary.com/documentation/javascript_integration) or hardcode [transformed URLs](https://cloudinary.com/documentation/image_transformations) based on your Cloudinary account details. Check the Cloudinary documentation for more information on how to construct URLs with transformations.
@@ -1215,13 +1229,15 @@ Configure via **DigitalOcean Control Panel > Spaces > Select bucket > Settings >
 [
   {
     "AllowedHeaders": ["*"],
-    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedMethods": ["GET", "PUT", "DELETE", "HEAD"],
     "AllowedOrigins": ["https://your-cms-domain.com"],
     "ExposeHeaders": ["ETag"],
     "MaxAgeSeconds": 3000
   }
 ]
 ```
+
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -1334,9 +1350,9 @@ The DigitalOcean Spaces media storage can be accessed through the File and Image
 
 When uploading media, files will be stored in your Spaces bucket, and you can take advantage of Spaces’ capabilities directly from the CMS. You can also select existing media from your Spaces storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your Spaces files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/digitalocean-spaces
 
@@ -1369,7 +1385,7 @@ Asset preview and download URLs are unsigned direct storage URLs, so objects mus
 
 #### CORS
 
-Configure CORS via AWS CLI. See the [documentation](https://www.scaleway.com/en/docs/object-storage/api-cli/setting-cors-rules/) for details. CORS is required because Sveltia CMS sends custom AWS Signature v4 headers that trigger a preflight request. Make sure to allow the necessary HTTP methods (e.g. GET, PUT) and headers (e.g. Authorization).
+Configure CORS via AWS CLI. See the [documentation](https://www.scaleway.com/en/docs/object-storage/api-cli/setting-cors-rules/) for details. CORS is required because Sveltia CMS sends custom AWS Signature v4 headers that trigger a preflight request. Make sure to allow the necessary HTTP methods (`GET`, `PUT` and `DELETE`) and all headers (`*`), as Sveltia CMS sends the `Authorization`, `x-amz-*` and `Content-Type` headers. The `DELETE` method and the `x-amz-copy-source` header are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); if you configured CORS before these operations became available, add them to your existing rule.
 
 ### Configuration
 
@@ -1476,9 +1492,9 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 The Scaleway Object Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your Scaleway Object Storage files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/scaleway-object-storage
 
@@ -1627,9 +1643,9 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 The Supabase Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your Supabase Storage files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
 Source: https://sveltiacms.app/en/docs/media/supabase-storage
 
@@ -1853,9 +1869,9 @@ To enhance security, Uploadcare supports [signed uploads](https://uploadcare.com
 
 The Uploadcare media storage can be accessed through the File and Image fields in Sveltia CMS. When uploading media, files will be stored in your Uploadcare account, and you can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
 
-**Future Plans**
+#### Asset Library
 
-You’ll be able to manage your Uploadcare files directly from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) in future releases.
+Uploadcare also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter your files, and upload, download or delete them without leaving the CMS. Files can’t be renamed or replaced, because the Uploadcare REST API doesn’t support renaming, and a re-uploaded file gets a new UUID and therefore a new URL.
 
 Source: https://sveltiacms.app/en/docs/media/uploadcare
 
