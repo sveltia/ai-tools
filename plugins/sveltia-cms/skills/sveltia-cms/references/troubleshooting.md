@@ -656,7 +656,7 @@ See the [Support](https://sveltiacms.app/en/support) page for information on how
 
 #### Where can I report bugs for Sveltia CMS?
 
-See the [Feedback](https://sveltiacms.app/en/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 24 hours, depending on the complexity of the issue.
+See the [Feedback](https://sveltiacms.app/en/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 12 hours, depending on the complexity of the issue.
 
 #### Do you offer paid support for Sveltia CMS?
 

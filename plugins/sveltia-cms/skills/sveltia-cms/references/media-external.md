@@ -664,6 +664,169 @@ Source: https://sveltiacms.app/en/docs/media/backblaze-b2
 
 ---
 
+## Bunny Storage Integration
+
+[Bunny Storage](https://bunny.net/storage/) is a low-cost object storage service from bunny.net with built-in replication and delivery through the Bunny CDN. Sveltia CMS supports Bunny Storage as a media storage backend through its [S3-compatible API](https://bunny.net/docs/storage/s3), with direct browser-to-storage uploads using AWS Signature Version 4 — no backend proxy is required.
+
+### Requirements
+
+- A bunny.net account with a storage zone created in a region that supports the S3 API (see [Regions](#regions) below).
+- The storage zone password (see [Credentials](#credentials) below).
+- A pull zone connected to the storage zone, set as `public_url` for asset previews (see [Public Read Access](#public-read-access) below).
+
+#### CSP
+
+If your site uses a Content Security Policy (CSP), you need to allow the Bunny Storage S3 endpoint and your pull zone hostname. See [Content Security Policy](#content-security-policy) below for details.
+
+### Setup
+
+#### Credentials
+
+Bunny Storage doesn’t use separate access keys. Instead, the S3 API authenticates with the storage zone itself:
+
+- The **Access Key ID** is the **storage zone name**, which is also the bucket name. Sveltia CMS fills this in automatically from `bucket`, so you don’t need to set `access_key_id`.
+- The **Secret Access Key** is the **storage zone password**. Find it under **bunny.net Dashboard > Storage > [zone] > FTP & API Access**. The password is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
+
+**Tip**
+
+Use the zone’s read-write password, not a read-only password, so that uploads, renames and deletions work.
+
+#### Regions
+
+The S3 API is available at a region-specific endpoint, `https://{region}-s3.storage.bunnycdn.com`, where `{region}` is the two-letter code of your storage zone’s main region:
+
+| Region code | Location     |
+| ----------- | ------------ |
+| `de`        | Frankfurt    |
+| `uk`        | London       |
+| `se`        | Stockholm    |
+| `ny`        | New York     |
+| `la`        | Los Angeles  |
+| `sg`        | Singapore    |
+| `syd`       | Sydney       |
+| `jh`        | Johannesburg |
+
+Set the code as `region` in your config. Regions that don’t yet support the S3 API have no such endpoint; see the [official documentation](https://bunny.net/docs/storage/s3) for the current list.
+
+#### Public Read Access
+
+The Bunny Storage endpoint always requires authentication, so a separate `public_url` must be configured for asset previews and downloads in the CMS. Without it, preview images will fail to load.
+
+1. In **bunny.net Dashboard > Storage > [zone] > Connected Pull Zones**, add a pull zone (or connect an existing one) with the storage zone as its origin.
+2. Set the pull zone’s hostname as `public_url` in your config, either the default `b-cdn.net` hostname or a custom hostname you’ve linked to the pull zone:
+
+   ```yaml
+   public_url: 'https://my-zone.b-cdn.net'
+   ```
+
+Asset URLs are constructed as `{public_url}/{key}` (using the full object key, including any `prefix`).
+
+#### CORS
+
+No CORS configuration is needed. The Bunny Storage S3 endpoint always responds with `Access-Control-Allow-Origin: *`, so listing, uploading, renaming and deleting from the browser work out of the box. To restrict cross-origin access to the delivered files, configure CORS on the pull zone at the CDN level.
+
+### Configuration
+
+Here’s an example configuration for Bunny Storage:
+
+```yaml [YAML]
+media_libraries:
+  bunny_storage:
+    bucket: my-zone
+    region: de
+    public_url: https://my-zone.b-cdn.net
+    prefix: cms-uploads/ # Optional
+```
+
+```toml [TOML]
+[media_libraries.bunny_storage]
+bucket = "my-zone"
+region = "de"
+public_url = "https://my-zone.b-cdn.net"
+prefix = "cms-uploads/" # Optional
+```
+
+```json [JSON]
+{
+  "media_libraries": {
+    "bunny_storage": {
+      "bucket": "my-zone",
+      "region": "de",
+      "public_url": "https://my-zone.b-cdn.net",
+      "prefix": "cms-uploads/"
+    }
+  }
+}
+```
+
+```js [JavaScript]
+{
+  media_libraries: {
+    bunny_storage: {
+      bucket: 'my-zone',
+      region: 'de',
+      public_url: 'https://my-zone.b-cdn.net',
+      prefix: 'cms-uploads/', // Optional
+    },
+  },
+}
+```
+
+**Warning**
+
+Do not write your storage zone password in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the password when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+
+#### Configuration Properties
+
+| Property | Required | Description |
+| --- | --- | --- |
+| `bucket` | Yes | The storage zone name. |
+| `region` | Yes | Two-letter [region code](#regions) of the storage zone’s main region, e.g. `de`. Used to construct the S3 API endpoint. |
+| `public_url` | Yes | Pull zone hostname for asset previews and downloads, e.g. `https://my-zone.b-cdn.net`. Required because the storage endpoint always requires authentication. |
+| `access_key_id` | No | Defaults to `bucket`, as the storage zone name serves as the access key ID. There is normally no reason to set it. |
+| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. |
+
+### Content Security Policy
+
+API calls (list, upload, rename, delete) go to the regional S3 endpoint, and asset URLs use your pull zone hostname:
+
+```
+connect-src https://de-s3.storage.bunnycdn.com;
+img-src     https://my-zone.b-cdn.net;
+```
+
+Replace `de` and `my-zone.b-cdn.net` with your actual region code and pull zone hostname.
+
+See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+
+### Bunny Storage-Specific Notes
+
+#### No Per-Object ACLs
+
+Bunny Storage does not support the `x-amz-acl` header for per-object access control. Access to the files is controlled through the pull zone. Sveltia CMS automatically omits the `x-amz-acl: public-read` header when uploading to Bunny Storage.
+
+#### Single-Object Operations
+
+Bunny Storage doesn’t implement the batch `DeleteObjects` API or custom object metadata. Sveltia CMS deletes and copies objects one at a time and doesn’t rely on custom metadata, so all Asset Library operations work as expected.
+
+#### CDN Cache
+
+Files are served through the pull zone’s cache. If you replace a file with a new version under the same name, the old version may keep being served until the cache expires; purge the pull zone cache from the bunny.net dashboard if you need the change to appear immediately.
+
+### Accessing the Storage
+
+The Bunny Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your storage zone password in the CMS UI when prompted, and you’ll be able to upload new media directly to your storage zone or select existing media.
+
+When uploading media, files will be stored in your storage zone and delivered through the Bunny CDN. You can also select existing media from your storage zone.
+
+#### Asset Library
+
+Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS.
+
+Source: https://sveltiacms.app/en/docs/media/bunny-storage
+
+---
+
 ## Cloudflare R2 Integration
 
 [Cloudflare R2](https://www.cloudflare.com/products/r2/) is an S3-compatible object storage service with zero egress fees. Sveltia CMS supports R2 as a media storage backend with direct browser-to-R2 uploads using AWS Signature Version 4 — no backend proxy is required.

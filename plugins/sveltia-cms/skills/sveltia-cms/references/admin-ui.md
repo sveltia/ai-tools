@@ -245,7 +245,7 @@ You’ll be prompted for the service’s secret key or SAS token the first time,
 
 | Service | Upload | Delete | Rename | Replace |
 | --- | --- | --- | --- | --- |
-| [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3), [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2), [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2), [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces), [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage), [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage) | Yes | Yes | Yes | Yes |
+| [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3), [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2), [Bunny Storage](https://sveltiacms.app/en/docs/media/bunny-storage), [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2), [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces), [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage), [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage) | Yes | Yes | Yes | Yes |
 | [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage) | Yes | Yes | Yes | Yes |
 | [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) | Yes | Yes | No | No |
 | [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) | Cloudinary’s own Media Library widget is opened instead |  |  |  |

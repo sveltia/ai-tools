@@ -22,6 +22,7 @@ Sveltia CMS supports integrations with popular cloud-based media storage provide
 
 - [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and S3-compatible providers:
   - [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2)
+  - [Bunny Storage](https://sveltiacms.app/en/docs/media/bunny-storage)
   - [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2)
   - [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces)
   - [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage)
