@@ -555,7 +555,7 @@ The following [content management workflows](https://sveltiacms.app/en/docs/work
 
 **Future Plans**
 
-Support for the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) may be added in the future.
+Support for the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) will be added in the near future.
 
 ### Deployment
 

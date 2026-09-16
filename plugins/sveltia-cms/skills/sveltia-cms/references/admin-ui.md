@@ -176,9 +176,7 @@ Developer Mode can be enabled from the Settings panel. When enabled, it provides
 
 Sveltia CMS is built with accessibility as a core principle, ensuring all users can effectively navigate and use the application.
 
-**WCAG Compliance**
-
-We’ll conduct an accessibility self-audit and address any issues before the 1.0 release to make sure Sveltia CMS meets the [WCAG 2.2 standard](https://w3c.github.io/wcag/guidelines/22/). If you encounter any accessibility issues, please report them by [creating an issue](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) on our GitHub repository.
+We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/22/) self-audit. We’ll continue to test and improve the application for accessibility, and we welcome feedback from users. If you encounter any accessibility issues, please report them by [creating an issue](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) on our GitHub repository.
 
 #### Keyboard Navigation
 
@@ -200,8 +198,7 @@ We’ll conduct an accessibility self-audit and address any issues before the 1.
 
 #### System Preferences
 
-- Honors your operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) and [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) settings.
-- Support for [high contrast mode](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) will be added in a future release.
+- Honors your operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) and [high contrast](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) settings.
 
 ### Supported Browsers
 
@@ -263,6 +260,10 @@ The last item under External Locations, **Linked Files** at `#/assets/-/linked`,
 Files that live in your repository or on a configured cloud storage service have their own locations, so they aren’t listed here, even when an entry stores them as an absolute URL. Images embedded in Markdown or rich text bodies aren’t scanned either.
 
 Since these files are hosted elsewhere, they can only be browsed: there is no upload, rename, replace or delete. The Info pane shows the kind, the dimensions or duration of a media file, the URL and the entries using the file, and the Copy menu offers the URL and, where the host allows cross-origin requests, the file data. The file size isn’t available. A URL without a file extension, such as an avatar endpoint, is treated as an image when it comes from an Image field.
+
+A long list is easier to go through host by host: choose **Domain** from the **Group** menu in the toolbar to group the files by the domain of their URL. The choice is remembered for this location.
+
+The CMS also checks whether each file can still be loaded, and marks one that can’t — deleted, moved or on a host that is gone — with an **Unavailable** badge, so a broken link stands out. A missing non-media file on a host that doesn’t allow cross-origin requests can’t be detected, though.
 
 #### Asset List
 

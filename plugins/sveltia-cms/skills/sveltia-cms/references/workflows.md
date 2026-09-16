@@ -212,7 +212,7 @@ The [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https:/
 
 **Future Plans**
 
-Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend may be added in the future.
+Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend will be added in the near future.
 
 ### Configuration
 
@@ -615,7 +615,7 @@ A **public** repository owned by a personal account is fine. Contributors there 
 
 **Future Plans**
 
-Support for other Git backends may be added in the future.
+Support for other Git backends will be added in the near future.
 
 #### Allowing Forks of a Private Repository
 

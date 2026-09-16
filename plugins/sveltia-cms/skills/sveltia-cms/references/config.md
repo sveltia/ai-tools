@@ -246,14 +246,16 @@ Each message names the collection, file and field it applies to, so you can go s
 
 Two sets of checks run. The first validates the whole configuration against the same [JSON schema](#json-schema) your editor uses, published alongside the CMS version you’re running. It catches wrong value types, values outside an allowed set, and missing required options. A [custom field type](https://sveltiacms.app/en/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
 
-The second covers the rules a schema can’t express:
+The second covers the rules a schema can’t express — mostly mistakes that wouldn’t fail at all otherwise, but would quietly give you an empty collection, a random slug or a validation rule that never runs:
 
-- Common backend misconfigurations
-- File format and extension mismatches
-- Invalid or duplicate collection or field names
-- Mutually exclusive config options
-- Invalid references in Relation fields
-- Options that Sveltia CMS doesn’t support
+- Backend: a missing or misspelled backend name, a `repo` that isn’t in the `owner/repo` format, a missing OAuth client ID, an empty `auth_methods` list, or Open Authoring without Editorial Workflow
+- Site-wide options: a `site_url` that isn’t an absolute URL, a `sanitize_replacement` slug option that itself contains a character slugs can’t have, an empty `i18n.locales` list, a `default_locale` or `initial_locales` entry that isn’t one of the `locales`, or a collection or file `i18n` option with no site-level i18n to build on
+- Collections: duplicate or invalid collection, file, field and variable type names, a collection with none of `folder`, `files` or `divider` or more than one of them, a collection without fields, a configuration where every collection is hidden, and a mismatch between `format` and `extension`
+- Entry naming: an `identifier_field` that names no field, a collection with neither a `title` field nor an `identifier_field` or `slug` option, a `slug` template containing slashes, and `slug`, `path`, `summary`, `thumbnail` and `preview_path` options that refer to fields that don’t exist
+- Entry lists: a `filter` on an undefined field, with neither a `value` nor a `pattern`, or with a pattern that isn’t a valid regular expression; `sortable_fields`, `view_groups` and `view_filters` that refer to undefined fields; a `reorder` group that isn’t defined
+- Fields: mutually exclusive options such as `field`, `fields` and `types`, an explicitly empty `fields` or `types` list, a validation `pattern` that isn’t a valid regular expression, a `min` above the `max` or a `minlength` above the `maxlength`, a Number `step` of zero or less, Select fields with no options, duplicate option values or a `default` that isn’t among them, and conflicting DateTime timezone options
+- References between fields: a Relation field whose `collection` or `file` doesn’t exist, or whose `value_field`, `display_fields`, `search_fields` or `filters` name fields the referenced collection doesn’t have; a Compute `value` template or a List `thumbnail` that names an undefined field
+- Options that Sveltia CMS doesn’t support, including deprecated camel case options such as `valueField`
 
 An option name the schema doesn’t define is a warning rather than an error, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. The option has no effect, and the console says so:
 
