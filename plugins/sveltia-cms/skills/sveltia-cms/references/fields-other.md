@@ -1256,9 +1256,27 @@ Radio buttons (single select) or checkboxes (multi select) for choosing related 
 
 For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
 
-**Future Plans**
+#### Creating Related Entries
 
-Currently, it’s not possible to create new related entries directly from the Relation field UI. We plan to add this feature in future releases. ([Issue #493](https://github.com/sveltia/sveltia-cms/issues/493))
+When the related collection is an entry collection, the field also offers an **Add** button labelled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry you’re editing, so you don’t have to save your work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
+
+The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets you fill in each of them. Clicking **Add** validates the new entry the same way a save does; if a required field is empty, the dialog stays open and the error is shown on the field. Once added, the new entry is selected in the Relation field right away, listed among the options like any other entry, and shown by its label in the Preview Pane.
+
+The new entry is not saved on its own. It’s kept with your draft and committed **together with the entry you’re editing** when you save, in a single commit, so the two never go out of sync: a blog post and the tags created for it land in the repository at the same time. Until then, the entry only exists in your draft:
+
+- If you deselect the new entry before saving, it’s dropped rather than created for nothing.
+- If you add two entries with the same title, the second one gets a distinct slug, e.g. `svelte-1`, the same way it would if you created them one after another.
+- The dialog can be nested: a Relation field in the new entry has its own **Add** button, and the entries created there are saved along with everything else, as long as they are still referenced.
+- Files attached to the new entry, such as an author’s avatar, are uploaded in the same commit.
+- The pending entries are part of the [auto-saved draft](https://sveltiacms.app/en/docs/ui/content-editor#auto-saving-drafts), so they survive a page reload along with the rest of your changes.
+
+The button is not offered in the following cases:
+
+- The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), which has a fixed set of files.
+- The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries#disabling-creation-and-deletion) option.
+- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries#limiting-entry-count), counting the entries pending in your draft. The button is then shown disabled.
+- The Relation field is read-only.
+- The entry you’re editing is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), or the related collection is under the workflow on its own. A pull request stands for a single entry in the workflow, so an entry created on the fly would either be invisible until the pull request is published, or skip the review the related collection asks for. Create the related entry in its own collection instead.
 
 #### Preview
 
@@ -1278,9 +1296,11 @@ Like a relational database that cascades an update of a referenced key, Sveltia 
 
 This applies whenever the stored value is derived from the related entry’s identity, which covers the default `{{slug}}`, any template containing `{{slug}}`, such as `{{locale}}/{{slug}}`, and the canonical slug key. It does not apply to a `value_field` pointing at an ordinary content field, such as `{{title}}`, because such a value doesn’t change when the entry is renamed — but it does break if somebody edits that field. It’s one more reason to prefer the default `{{slug}}`, as noted under [`value_field`](#value-field).
 
-**Cascading deletions unimplemented**
+#### Cascading Deletions
 
-Deletions are not cascaded yet. If a related entry is deleted, entries referencing it keep the stale value, and you’ll have to clear those Relation fields yourself. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so it’s worth checking before you delete one. We plan to add cascading deletions in a future release.
+Deletions are cascaded in the same way. When you delete an entry, whether from the Content Editor or by [selecting one or more entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list, every entry referencing it through a Relation field is rewritten in the same commit as the deletion: a single-select field is cleared, and the deleted entry is dropped from a multi-select field’s list. The confirmation dialog tells you how many entries will be updated. Unlike a rename, this applies whatever the `value_field` is, because references are matched on the stored value rather than derived from the slug. With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the updates go into the same pull request as the deletion.
+
+A reference is never removed at the cost of the referencing entry’s validity, though. If clearing it would break the field’s own [validation rules](#data-validation) — a `required` field left with nothing selected, or a multi-select field left with fewer than `min` items — the deletion is refused, and the dialog lists the entries and fields standing in the way so that you can update them first. The check covers the whole selection: deleting two entries at once may be refused where deleting either on its own would go through. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so you can see what a deletion would touch before you start.
 
 ### Data Validation
 
@@ -2017,6 +2037,8 @@ A string representing the computed value.
 
 If the `{{index}}` variable is used within a list, the value will be a number representing the current index of the item in the list.
 
+If the template contains a UUID variable, the generated UUID is preserved in the saved value across edits.
+
 ### Data Validation
 
 No specific data validation is applied to the Compute field, as its value is derived from other fields.
@@ -2042,6 +2064,11 @@ The value can be computed using a template string that references other fields. 
 
 - A value template that defines how to compute the field’s value. It can include references to other fields using the syntax `{{fields.name}}`, where `name` is the name of the field to reference. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied.
 - The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list).
+- The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
+
+**Warning**
+
+To be kept, a UUID variable has to be at either end of the template, or only be separated from the ends by literal text and other UUID variables, like `{{fields.slug}}-{{uuid_short}}`. A UUID variable sitting between two field references, such as `{{fields.a}}{{uuid}}{{fields.b}}`, can’t be told apart from the values around it once saved, so a new UUID is generated whenever the entry is opened. The same applies when a string transformation changes the shape of the UUID, e.g. `truncate`; `upper` and `lower` are fine.
 
 ### Examples
 
@@ -2375,6 +2402,95 @@ index = 2
       "index": 2
     }
   ]
+}
+```
+
+#### Generating a Unique Identifier
+
+The `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` variables can be combined with other fields to build a readable identifier that stays unique. In this example, the `id` field combines the slugified title with a short random string. Once the entry has been saved, the random part is kept even if the title is edited later.
+
+```yaml [YAML]
+fields:
+  - name: title
+    label: Title
+    widget: string
+  - name: id
+    label: ID
+    widget: compute
+    value: '{{fields.title | slugify}}-{{uuid_shorter}}'
+```
+
+```toml [TOML]
+[[fields]]
+name = "title"
+label = "Title"
+widget = "string"
+[[fields]]
+name = "id"
+label = "ID"
+widget = "compute"
+value = "{{fields.title | slugify}}-{{uuid_shorter}}"
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "title",
+      "label": "Title",
+      "widget": "string"
+    },
+    {
+      "name": "id",
+      "label": "ID",
+      "widget": "compute",
+      "value": "{{fields.title | slugify}}-{{uuid_shorter}}"
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  fields: [
+    {
+      name: 'title',
+      label: 'Title',
+      widget: 'string',
+    },
+    {
+      name: 'id',
+      label: 'ID',
+      widget: 'compute',
+      value: '{{fields.title | slugify}}-{{uuid_shorter}}',
+    },
+  ];
+}
+```
+
+Output example when `title` is “Hello World“:
+
+```yaml [YAML]
+title: Hello World
+id: hello-world-e7bc7d91
+```
+
+```toml [TOML]
+title = "Hello World"
+id = "hello-world-e7bc7d91"
+```
+
+```json [JSON]
+{
+  "title": "Hello World",
+  "id": "hello-world-e7bc7d91"
+}
+```
+
+```js [JavaScript]
+{
+  title: 'Hello World',
+  id: 'hello-world-e7bc7d91',
 }
 ```
 

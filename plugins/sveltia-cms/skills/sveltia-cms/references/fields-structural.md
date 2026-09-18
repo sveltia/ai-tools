@@ -148,7 +148,9 @@ See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example belo
 - **Type**: `string`
 - **Default**: `""`
 
-An Image subfield name to be used as the thumbnail for each list item in the collapsed view, if applicable. If omitted, no thumbnail will be displayed.
+The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail for each list item in the collapsed view. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
+
+A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`.
 
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
@@ -1492,6 +1494,19 @@ Whether the object field is initially collapsed in the UI. If set to `auto`, the
 
 A string template used to generate a summary of the object’s content when it is collapsed in the UI. The template can include placeholders for subfield values using the syntax `{{fieldName}}`. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option.
 
+See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
+
+##### `thumbnail`
+
+- **Type**: `string`
+- **Default**: `""`
+
+The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail of the object when it is collapsed in the UI. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
+
+A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`.
+
+See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
+
 ##### `typeKey`
 
 - **Type**: `string`
@@ -1742,6 +1757,86 @@ address = "123 Publisher St, New York, NY"
       "address": "123 Publisher St, New York, NY"
     }
   }
+}
+```
+
+#### Using Summary and Thumbnail
+
+The following example defines an Object field named `hero` that, when collapsed, shows the `heading` subfield value as the summary along with the image held by the `image` subfield.
+
+```yaml [YAML]
+- name: hero
+  label: Hero
+  widget: object
+  summary: "{{heading}}"
+  thumbnail: "image"
+  fields:
+    - name: heading
+      label: Heading
+      widget: string
+    - name: image
+      label: Image
+      widget: image
+```
+
+```toml [TOML]
+[[fields]]
+name = "hero"
+label = "Hero"
+widget = "object"
+summary = "{{heading}}"
+thumbnail = "image"
+[[fields.fields]]
+name = "heading"
+label = "Heading"
+widget = "string"
+[[fields.fields]]
+name = "image"
+label = "Image"
+widget = "image"
+```
+
+```json [JSON]
+{
+  "name": "hero",
+  "label": "Hero",
+  "widget": "object",
+  "summary": "{{heading}}",
+  "thumbnail": "image",
+  "fields": [
+    {
+      "name": "heading",
+      "label": "Heading",
+      "widget": "string"
+    },
+    {
+      "name": "image",
+      "label": "Image",
+      "widget": "image"
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  name: "hero",
+  label: "Hero",
+  widget: "object",
+  summary: "{{heading}}",
+  thumbnail: "image",
+  fields: [
+    {
+      name: "heading",
+      label: "Heading",
+      widget: "string",
+    },
+    {
+      name: "image",
+      label: "Image",
+      widget: "image",
+    },
+  ],
 }
 ```
 

@@ -169,6 +169,11 @@ The following features will not be implemented in Sveltia CMS due to various rea
 - **Netlify Identity Widget**: It’s not useful without Git Gateway. We plan to develop an alternative solution with role support [in the future](https://sveltiacms.app/en/docs/roadmap).
   - [Netlify Identity](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) was [deprecated](https://github.com/sveltia/sveltia-cms/discussions/284) in February 2025, but it has since been revived by Netlify. However, we still don’t plan to support it in Sveltia CMS due to the lack of Git Gateway support.
 - **Azure DevOps and Bitbucket backends**: For performance reasons. We’ll support these platforms if their APIs improve to allow the CMS to fetch multiple entries at once. Consider migrating to GitHub, GitLab, Gitea or Forgejo if you’d like to use Sveltia CMS now.
+- **Decap Turbo**: It’s a managed hosting service, not a core feature. Some notes:
+  - Performance: Sveltia CMS uses the GraphQL API to retrieve multiple files at once, so it’s already fast. Using a proxy is a bad idea!
+  - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature.
+  - User management, roles and credentials: We plan to implement these features with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/roadmap#v1-0), our free server-side component.
+  - Deploy status: Sveltia CMS partially implements it as part of [deploy previews](https://sveltiacms.app/en/docs/workflows/deploy-previews).
 - [Gatsby plugin](https://github.com/decaporg/gatsby-plugin-decap-cms): In light of Gatsby’s [uncertainty](https://github.com/gatsbyjs/gatsby/discussions/39062), we won’t be investing time in developing a plugin for it. Gatsby users can still create `index.html` themselves. Note: We don’t support Netlify Identity Widget; the favicon can be specified with the `logo.src` option.
 - Performance-related options: Sveltia CMS has [drastically improved performance](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-performance) with GraphQL enabled by default, so these are no longer relevant:
   - Global: [`search`](https://decapcms.org/docs/configuration-options/#search)

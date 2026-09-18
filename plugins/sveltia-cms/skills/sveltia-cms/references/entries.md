@@ -2837,6 +2837,17 @@ sortable_fields:
 
 A named view group can also be used with the [`reorder` option](#reordering-within-groups) to let editors reorder entries within their own group.
 
+##### Grouping by a comparison
+
+A view group can also split the entries by a comparison, using the same options as a [view filter](#comparing-values). The entries satisfying the condition are grouped under the group’s `label`, and the other entries under “Other”. For example, the following group lists the upcoming events first, followed by the past and undated ones:
+
+```yaml
+view_groups:
+  - label: Upcoming
+    field: date
+    gte: '{{today}}'
+```
+
 #### Filtering
 
 The `view_filters` option allows you to define preset filters that editors can quickly apply to the entry listing view. This is useful for quickly accessing specific subsets of entries based on common criteria.
@@ -3001,6 +3012,222 @@ view_filters:
       field: category
       pattern: travel|food
   default: drafts
+```
+
+##### Comparing values
+
+A view filter can compare the field value with a given value instead of, or in addition to, matching a `pattern`. This makes it possible to filter entries by a date, such as upcoming and past events, or by a number, such as products above a certain price. The following options are available:
+
+| Option   | Description                                                                         |
+| -------- | ----------------------------------------------------------------------------------- |
+| `eq`     | The field value has to be equal to the given value.                                 |
+| `ne`     | The field value has to be different from the given value.                           |
+| `lt`     | The field value has to be less than the given value.                                |
+| `lte`    | The field value has to be less than or equal to the given value.                    |
+| `gt`     | The field value has to be greater than the given value.                             |
+| `gte`    | The field value has to be greater than or equal to the given value.                 |
+| `in`     | The field value has to be equal to one of the given values, defined as an array.    |
+| `not_in` | The field value has to be different from all the given values, defined as an array. |
+
+The value of a DateTime field is compared as a date, so the given value has to be in the same format as the field value, or one of the following template tags:
+
+| Tag                                                                        | Description                                                                                                                                                         |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `{{now}}`                                                                  | The current date and time.                                                                                                                                          |
+| `{{today}}`                                                                | The current date in the `YYYY-MM-DD` format. Use this rather than `{{now}}` with a date-only field, so that an entry dated today is included in a `gte` comparison. |
+| `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}` | The parts of the current date and time, which can also be used in a `pattern`, e.g. `^{{year}}` for the entries of this year.                                       |
+
+The tags are resolved in the user’s local time zone whenever the entry list is updated, and every minute while such a filter or group is applied, so a filter like “Upcoming events” keeps working without any change to the configuration.
+
+A number field value and a numeric given value are compared as numbers; any other value is compared as a string. An entry without a value for the field only matches `ne` and `not_in`. When several options are defined for one filter, all of them have to be satisfied.
+
+The comparison options can also be used with the [extended syntax](#filtering) described above, for example to apply the “Upcoming” filter by default:
+
+```yaml
+view_filters:
+  filters:
+    - name: upcoming
+      label: Upcoming
+      field: date
+      gte: '{{today}}'
+    - name: past
+      label: Past
+      field: date
+      lt: '{{today}}'
+  default: upcoming
+```
+
+The example below defines the filters for a list of events:
+
+```yaml [YAML]{10-24}
+collections:
+  - name: events
+    label: Events
+    folder: /content/events
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, time_format: false }
+      - { name: capacity, label: Capacity, widget: number }
+      - { name: status, label: Status, widget: select, options: [scheduled, cancelled] }
+    view_filters:
+      - label: Upcoming
+        field: date
+        gte: '{{today}}'
+      - label: Past
+        field: date
+        lt: '{{today}}'
+      - label: This year
+        field: date
+        pattern: '^{{year}}'
+      - label: Large venues
+        field: capacity
+        gte: 100
+      - label: Not cancelled
+        field: status
+        ne: cancelled
+```
+
+```toml [TOML]{28-51}
+[[collections]]
+name = "events"
+label = "Events"
+folder = "/content/events"
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "date"
+label = "Date"
+widget = "datetime"
+time_format = false
+
+[[collections.fields]]
+name = "capacity"
+label = "Capacity"
+widget = "number"
+
+[[collections.fields]]
+name = "status"
+label = "Status"
+widget = "select"
+options = ["scheduled", "cancelled"]
+
+[[collections.view_filters]]
+label = "Upcoming"
+field = "date"
+gte = "{{today}}"
+
+[[collections.view_filters]]
+label = "Past"
+field = "date"
+lt = "{{today}}"
+
+[[collections.view_filters]]
+label = "This year"
+field = "date"
+pattern = "^{{year}}"
+
+[[collections.view_filters]]
+label = "Large venues"
+field = "capacity"
+gte = 100
+
+[[collections.view_filters]]
+label = "Not cancelled"
+field = "status"
+ne = "cancelled"
+```
+
+```json [JSON]{13-39}
+{
+  "collections": [
+    {
+      "name": "events",
+      "label": "Events",
+      "folder": "/content/events",
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "date", "label": "Date", "widget": "datetime", "time_format": false },
+        { "name": "capacity", "label": "Capacity", "widget": "number" },
+        { "name": "status", "label": "Status", "widget": "select", "options": ["scheduled", "cancelled"] }
+      ],
+      "view_filters": [
+        {
+          "label": "Upcoming",
+          "field": "date",
+          "gte": "{{today}}"
+        },
+        {
+          "label": "Past",
+          "field": "date",
+          "lt": "{{today}}"
+        },
+        {
+          "label": "This year",
+          "field": "date",
+          "pattern": "^{{year}}"
+        },
+        {
+          "label": "Large venues",
+          "field": "capacity",
+          "gte": 100
+        },
+        {
+          "label": "Not cancelled",
+          "field": "status",
+          "ne": "cancelled"
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{13-39}
+{
+  collections: [
+    {
+      name: "events",
+      label: "Events",
+      folder: "/content/events",
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "date", label: "Date", widget: "datetime", time_format: false },
+        { name: "capacity", label: "Capacity", widget: "number" },
+        { name: "status", label: "Status", widget: "select", options: ["scheduled", "cancelled"] },
+      ],
+      view_filters: [
+        {
+          label: "Upcoming",
+          field: "date",
+          gte: "{{today}}",
+        },
+        {
+          label: "Past",
+          field: "date",
+          lt: "{{today}}",
+        },
+        {
+          label: "This year",
+          field: "date",
+          pattern: "^{{year}}",
+        },
+        {
+          label: "Large venues",
+          field: "capacity",
+          gte: 100,
+        },
+        {
+          label: "Not cancelled",
+          field: "status",
+          ne: "cancelled",
+        },
+      ],
+    },
+  ],
+}
 ```
 
 Source: https://sveltiacms.app/en/docs/collections/entries

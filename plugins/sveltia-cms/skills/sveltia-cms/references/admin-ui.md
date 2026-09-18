@@ -301,7 +301,7 @@ Manage your assets with a variety of operations:
 - **Edit** plain text assets, including Markdown, JSON, SVG files and other text-based content using the built-in editor.
 - **Copy** the public URL, file path, text data, or image data of a selected asset to your clipboard.
 - **Download** one or more selected assets at once.
-- **Delete** one or more selected assets at once.
+- **Delete** one or more selected assets at once. If an asset is used in any entries, those entries are updated in the same commit so that no reference is left dangling: a File or Image field holding it is cleared, or loses that item if it holds several files, and an image embedding it in a Markdown or rich text field is removed. The confirmation dialog says how many entries will be updated. The deletion is refused, though, if clearing a reference would break a field’s own validation rules — a `required` Image field with nothing left, a multi-file field with fewer than `min` files, or a required body with nothing but the image — and the dialog then lists the entries and fields in the way so that you can update them first. The Info pane’s **Used in** list shows what an asset is used by before you start.
 
 **Future Plans**
 
@@ -367,6 +367,12 @@ The new slug takes effect when you save the entry, and saving does three things 
 The Edit Slug option is unavailable where a slug can’t meaningfully change: on an entry you haven’t saved yet, on entries in [file and singleton collections](https://sveltiacms.app/en/docs/collections/files), on [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries#managing-hugo-s-special-index-file), and in collections where [entry deletion is disabled](https://sveltiacms.app/en/docs/collections/entries#disabling-creation-and-deletion), because renaming an entry removes its old file. It’s unavailable in a nested collection where entries don’t share one file name as well — with `subfolders: false`, or without the [`meta.path.index_file`](https://sveltiacms.app/en/docs/collections/entries#choosing-a-parent-folder) option: an entry is identified by its whole path below the collection folder there, and no part of that path belongs to the entry alone.
 
 To let users type the slug themselves when they create an entry, instead of having it generated from a template, see [Making Slugs Editable](https://sveltiacms.app/en/docs/collections/entries#making-slugs-editable). That option applies to entry creation only; renaming a saved entry always goes through this dialog.
+
+#### Deleting an Entry
+
+The Delete Entry option in the 3-dot menu removes a saved entry along with the files in its [entry-relative media folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), if it has one. Every entry that points at it through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is updated in the same commit, so no reference is left dangling: the confirmation dialog says how many entries will be updated, and refuses the deletion if clearing a reference would leave a required field empty or a multi-select field short of its minimum, listing the entries and fields in the way. See [Cascading Deletions](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions). Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the deletion is staged in a pull request instead of being committed right away.
+
+The option isn’t offered in [file and singleton collections](https://sveltiacms.app/en/docs/collections/files), or in collections where [entry deletion is disabled](https://sveltiacms.app/en/docs/collections/entries#disabling-creation-and-deletion). To delete several entries at once, [select them in the entry list](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions).
 
 #### View on Live Site
 
@@ -814,7 +820,7 @@ Assets stored in a [collection media folder](https://sveltiacms.app/en/docs/medi
 
 ##### Bulk Actions
 
-Users can select multiple entries to delete them at once, streamlining content management tasks.
+Users can select multiple entries to delete them at once, streamlining content management tasks. Entries referencing any of them through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) are updated in the same commit, and the deletion is refused if that would leave one of those fields invalid; see [Cascading Deletions](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions).
 
 #### Content Search
 

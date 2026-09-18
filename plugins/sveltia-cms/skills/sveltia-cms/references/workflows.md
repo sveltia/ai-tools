@@ -238,6 +238,75 @@ publish_mode = "editorial_workflow"
 }
 ```
 
+#### Enabling the Workflow per Collection
+
+The `publish_mode` option can also be set on a collection, where it overrides the top-level setting. That lets you enable Editorial Workflow for the collections that need a review process and leave the rest in the `simple` mode, where a save is committed straight to the configured branch. The [Editorial Workflow page](#editorial-workflow-page) is available as soon as one collection uses the workflow.
+
+A typical case is a site whose blog posts are reviewed while the site settings are edited directly:
+
+```yaml [YAML]
+collections:
+  - name: posts
+    folder: content/posts
+    publish_mode: editorial_workflow
+  - name: settings
+    folder: content/settings
+    publish_mode: simple
+```
+
+```toml [TOML]
+[[collections]]
+name = "posts"
+folder = "content/posts"
+publish_mode = "editorial_workflow"
+
+[[collections]]
+name = "settings"
+folder = "content/settings"
+publish_mode = "simple"
+```
+
+```json [JSON]
+{
+  "collections": [
+    {
+      "name": "posts",
+      "folder": "content/posts",
+      "publish_mode": "editorial_workflow"
+    },
+    {
+      "name": "settings",
+      "folder": "content/settings",
+      "publish_mode": "simple"
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  collections: [
+    {
+      name: 'posts',
+      folder: 'content/posts',
+      publish_mode: 'editorial_workflow',
+    },
+    {
+      name: 'settings',
+      folder: 'content/settings',
+      publish_mode: 'simple',
+    },
+  ],
+}
+```
+
+Either option can be omitted: a collection without its own `publish_mode` follows the top-level setting, which defaults to `simple`. So you can either enable the workflow site-wide and opt individual collections out, or leave the top level alone and opt individual collections in. [Singletons](https://sveltiacms.app/en/docs/collections/singletons) always follow the top-level setting.
+
+**Notes**
+
+- An entry that already has a pull request stays in the workflow until it’s published or discarded, even if its collection has since been switched to the `simple` mode. Saving it commits to the pull request rather than to the configured branch, so nothing that hasn’t been reviewed slips through.
+- With [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), the collection-level option only applies to maintainers who have write access to the repository. A contributor working on a fork always goes through a pull request, whatever the collection says.
+
 ### How It Works
 
 Nothing an editor does in the CMS touches your configured branch until the change is published. Each entry with unsaved work lives on its own branch with an open pull request, so making a change and releasing it are two separate steps.
@@ -629,7 +698,7 @@ Until both are on, a contributor’s sign-in stops with a message saying the rep
 
 ### Configuration
 
-Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` publish mode:
+Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` publish mode at the top level. A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here: it only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
 
 ```yaml [YAML]
 backend:
