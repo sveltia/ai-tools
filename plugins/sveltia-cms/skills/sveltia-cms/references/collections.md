@@ -582,7 +582,7 @@ See [Editing site deployment configuration files](https://sveltiacms.app/en/docs
 
 #### Front Matter Delimiter
 
-As with entry collections, the [`frontmatter_delimiter` option](https://sveltiacms.app/en/docs/collections/entries#front-matter-delimiter) can also be used to customize the front matter delimiter for Markdown files, either at the collection or file level. Here is an example of setting both `format` and `frontmatter_delimiter` at the file level:
+As with entry collections, the [`frontmatter_delimiter` option](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter) can also be used to customize the front matter delimiter for Markdown files, either at the collection or file level. Here is an example of setting both `format` and `frontmatter_delimiter` at the file level:
 
 ```yaml [YAML]{8-9}
 collections:
@@ -653,7 +653,7 @@ frontmatter_delimiter = "~~~"
 
 When using front matter formats (e.g., `yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter`), you can configure the body field to specify where the main content of the file should be stored. By default, the body field is named `body`, but you can customize this by setting the `body_field` option at either the collection or file level.
 
-See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collections/entries#body-field-for-front-matter-formats) in the entry collections documentation for more details.
+See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) in the entry collections documentation for more details.
 
 ### Singletons
 

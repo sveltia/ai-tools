@@ -2858,7 +2858,7 @@ This is a sample paragraph in **Markdown** format.
 }
 ```
 
-We have included a Markdown example output along with YAML, TOML, and JSON representations because a field named `body` with the Markdown field type would be stored outside of the frontmatter in a Markdown file. If the name of the field were different, the content would be stored in the frontmatter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries#body-field-for-front-matter-formats) for collections and collection files.
+We have included a Markdown example output along with YAML, TOML, and JSON representations because a field named `body` with the Markdown field type would be stored outside of the frontmatter in a Markdown file. If the name of the field were different, the content would be stored in the frontmatter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 Source: https://sveltiacms.app/en/docs/fields/markdown
 

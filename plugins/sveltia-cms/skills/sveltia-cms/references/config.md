@@ -408,7 +408,7 @@ Convert the string to a URL-friendly slug.
 {{value | slugify}}
 ```
 
-The transformation converts the string based on the [global slug options](https://sveltiacms.app/en/docs/collections/entries#global-slug-options).
+The transformation converts the string based on the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options).
 
 Configuration example:
 
@@ -861,7 +861,7 @@ Sveltia CMS supports the following data output formats for content files out of 
 - JSON
 - Raw text files, such as plain text, JSON, XML, or CSV files
 
-To customize the format for each collection, see the [Entry Collection](https://sveltiacms.app/en/docs/collections/entries#file-format-and-extension) and [File Collection](https://sveltiacms.app/en/docs/collections/files#file-format-and-extension) documentation.
+To customize the format for each collection, see the [Entry Collection File Formats](https://sveltiacms.app/en/docs/collections/entries/formats) and [File Collection](https://sveltiacms.app/en/docs/collections/files#file-format-and-extension) documentation.
 
 #### Custom Formats
 
@@ -998,7 +998,7 @@ If there is only the `body` field, the front matter block is omitted altogether:
 This is the body of my post.
 ```
 
-This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries#body-field-for-front-matter-formats) for collections and collection files.
+This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 When i18n is enabled with the `single_file` structure, this behavior doesn’t apply at all. In this case, the `body` field is saved as part of key-value pairs under each locale in the front matter block:
 

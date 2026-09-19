@@ -87,7 +87,7 @@ The naming convention for field names is typically `snake_case` or `camelCase` �
 There are two special field names to be aware of:
 
 - A field named `title` is treated as the default `identifier_field` for an [entry collection](https://sveltiacms.app/en/docs/collections/entries), meaning it will be used as the entry title and slug unless another field is explicitly set as the `identifier_field`.
-- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML, or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries#body-field-for-front-matter-formats) for collections and collection files.
+- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML, or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 #### Optional Options
 
@@ -1974,7 +1974,7 @@ The `default` value supports the following template tags:
 
 - `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, e.g. `en` or `fr`.
 - `{{datetime}}`: The current date/time in [ISO 8601 format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).
-- `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries#slug-template-tags).
+- `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags).
 - `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/en/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) because the user is not authenticated via a Git backend.
 
 [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option.

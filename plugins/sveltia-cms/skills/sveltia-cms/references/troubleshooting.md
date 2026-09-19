@@ -97,13 +97,13 @@ See [issue #404](https://github.com/sveltia/sveltia-cms/issues/404) for details.
 
 #### Non-ASCII Characters in Slugs
 
-By default, Sveltia CMS allows Unicode characters in slugs, which can lead to build errors in some frameworks, like Jekyll, that do not support them. To resolve this issue, set the `encoding` global slug option to `ascii` to automatically transliterate Unicode characters to their ASCII equivalents. See the [Managing Entry Slugs](https://sveltiacms.app/en/docs/collections/entries#managing-entry-slugs) documentation for details.
+By default, Sveltia CMS allows Unicode characters in slugs, which can lead to build errors in some frameworks, like Jekyll, that do not support them. To resolve this issue, set the `encoding` global slug option to `ascii` to automatically transliterate Unicode characters to their ASCII equivalents. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
 
 See [discussion #544](https://github.com/sveltia/sveltia-cms/discussions/544) for details.
 
 #### Excessively Long Slugs
 
-By default, Sveltia CMS does not limit the length of generated slugs, which can lead to build errors in some CI services that have a maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Managing Entry Slugs](https://sveltiacms.app/en/docs/collections/entries#managing-entry-slugs) documentation for details.
+By default, Sveltia CMS does not limit the length of generated slugs, which can lead to build errors in some CI services that have a maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
 
 Source: https://sveltiacms.app/en/docs/troubleshooting
 

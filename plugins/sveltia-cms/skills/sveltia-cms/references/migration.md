@@ -106,7 +106,7 @@ These options were added to Sveltia CMS 0.x but are now deprecated and will be r
 - The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/en/docs/i18n#disabling-non-default-locale-content) instead, which provides more flexibility. `save_all_locales: false` is equivalent to `initial_locales: all`.
 - The `omit_default_locale_from_filename` i18n option: Use the new `omit_default_locale_from_file_path` i18n option instead, which applies to all multiple files/folders structures, not just `multiple_files`.
 - The `multiple_folders_i18n_root` i18n structure: Use the new `multiple_root_folders` i18n structure instead, which has a more intuitive name and the same file structure.
-- The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/en/docs/collections/entries#global-slug-options) instead.
+- The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead.
 - The `yaml_quote` collection option: `yaml_quote: true` is equivalent to `quote: double` in the [new YAML format options](https://sveltiacms.app/en/docs/data-output#controlling-data-output).
 - The `read_only` [UUID field](https://sveltiacms.app/en/docs/fields/uuid) option: Use the [`readonly` common field option](https://sveltiacms.app/en/docs/fields#readonly) instead (which defaults to `true` for UUID fields).
 
@@ -363,7 +363,7 @@ Sveltia CMS marks required fields for efficient data entry. This is the opposite
 
 When [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, Sveltia CMS requires all locales to have values for required fields. In contrast, Netlify/Decap CMS only enforces this for the default locale. This change ensures that content is complete across all locales. If you rely on the previous behavior, you can set the `required` [field-level configuration](https://sveltiacms.app/en/docs/i18n#field-level-configuration) to include only specific locales.
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
 
 ```yaml
 # Netlify/Decap CMS: path "products/hardware"
@@ -375,7 +375,7 @@ content/pages/products/hardware/_index.md
 
 The result is the same, but you choose the parent rather than typing the entry’s own folder. Moving an existing entry works the same way in both.
 
-Both sides of that example assume the `meta.path.index_file` option, which gives every entry the same file name. Without it, Netlify/Decap CMS names a new entry’s file from the `title` field — ignoring the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries#defining-entry-slugs) template and `identifier_field`, so a collection with no `title` field saves every entry as `untitled`. Sveltia CMS names the file from the slug, as it does in any other collection.
+Both sides of that example assume the `meta.path.index_file` option, which gives every entry the same file name. Without it, Netlify/Decap CMS names a new entry’s file from the `title` field — ignoring the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs) template and `identifier_field`, so a collection with no `title` field saves every entry as `untitled`. Sveltia CMS names the file from the slug, as it does in any other collection.
 
 #### Data Output
 
@@ -404,7 +404,7 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 
 #### Configuration Options
 
-- Sveltia CMS supports the [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries#sorting), [`view_filters`](https://sveltiacms.app/en/docs/collections/entries#filtering) and [`view_groups`](https://sveltiacms.app/en/docs/collections/entries#grouping) options with the new `default` option. We still support the legacy Netlify/Decap CMS format as well, so you can use either format for these options.
+- Sveltia CMS supports the [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting), [`view_filters`](https://sveltiacms.app/en/docs/collections/entries/views#filtering) and [`view_groups`](https://sveltiacms.app/en/docs/collections/entries/views#grouping) options with the new `default` option. We still support the legacy Netlify/Decap CMS format as well, so you can use either format for these options.
 - Directory navigation in the Asset Library is partially supported in Sveltia CMS. If you define [collection-specific `media_folder`s](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration), these folders will be displayed in the Asset Library and Select File/Image dialog. We plan to implement the display of subfolders within a configured folder in Sveltia CMS 2.0. We don’t plan to support the `folder_support` and `display_in_navigation` options for `media_library`; subfolders will be displayed with no configuration. ([#301](https://github.com/sveltia/sveltia-cms/issues/301))
 - The `logo_link` global option will not be supported. Use `display_url` or `site_url` instead.
 - The `yaml` global option will not be supported, as Sveltia CMS does not expose underlying `yaml` library options for forward compatibility reasons. However, we do have some [data output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output), including YAML indentation and quotes.

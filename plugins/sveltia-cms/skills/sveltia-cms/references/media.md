@@ -356,7 +356,7 @@ slugify_filename = true
 }
 ```
 
-Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries#global-slug-options).
+Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options).
 
 Source: https://sveltiacms.app/en/docs/media
 
@@ -517,7 +517,7 @@ The absolute path setup is not documented in the official Netlify/Decap CMS docu
 
 ##### Using Placeholders
 
-The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries#slug-template-tags):
+The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags):
 
 - `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`.
 - `{{filename}}`: The entry file name without the extension. (Not the media file name.)
@@ -579,11 +579,11 @@ Some frameworks and static site generators support organizing content and media 
 
 Assets stored in entry-relative folders are only accessible by the associated entry and not available for other entries. Therefore, Sveltia CMS automatically deletes these assets when the associated entry is deleted. When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the empty enclosing folder is also deleted.
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 
 To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to look for media files in the same folder as the content files.
 
-This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a [nested collection](https://sveltiacms.app/en/docs/collections/entries#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
+This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
 
 ```yaml [YAML]{5-7}
 collections:
@@ -778,7 +778,7 @@ cover: images/image1.jpg
 Content goes here...
 ```
 
-Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a [nested collection](https://sveltiacms.app/en/docs/collections/entries#nesting-page-bundles), moves the whole folder in the same commit.
+Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
 
 #### File-Level Configuration
 

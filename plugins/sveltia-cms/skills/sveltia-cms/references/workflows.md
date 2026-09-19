@@ -47,7 +47,7 @@ This works in both production workflows, with a different meaning in each:
 
 - A [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend.
 - A CI/CD provider connected to your repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
-- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) on each collection you want links for. Without it there’s nothing to point at, so no link is shown.
+- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want links for. Without it there’s nothing to point at, so no link is shown.
 
 **Date tags need a date field**
 
@@ -65,8 +65,8 @@ The options below shape what the links do:
 
 | Option | Where | What it does |
 | --- | --- | --- |
-| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) | Collection | Path template appended to the site or preview URL. **Required.** |
-| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths) | Collection | Which date field the `{{year}}`, `{{month}}` and similar tags read |
+| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Path template appended to the site or preview URL. **Required.** |
+| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Which date field the `{{year}}`, `{{month}}` and similar tags read |
 | [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of your live site |
 | `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
 | [`preview_context`](#specifying-a-status-context) | `backend` | Names the exact commit status or environment that carries the preview URL |
@@ -860,7 +860,7 @@ A contributor’s pull request carries no CMS label, so it doesn’t appear on y
 
 An image or file attached to an entry is committed to the same branch as the entry, so it travels with the contribution and can be previewed in the CMS before it’s published.
 
-The [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) itself is read-only for a contributor: uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled — including the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list. [Reordering entries](https://sveltiacms.app/en/docs/collections/entries#managing-entry-order) is disabled for the same reason.
+The [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) itself is read-only for a contributor: uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled — including the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list. [Reordering entries](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is disabled for the same reason.
 
 #### Commit Messages
 

@@ -1293,8 +1293,8 @@ The new entry is not saved on its own. It’s kept with your draft and committed
 The button is not offered in the following cases:
 
 - The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), which has a fixed set of files.
-- The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries#disabling-creation-and-deletion) option.
-- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries#limiting-entry-count), counting the entries pending in your draft. The button is then shown disabled.
+- The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) option.
+- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in your draft. The button is then shown disabled.
 - The Relation field is read-only.
 - The entry you’re editing is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), or the related collection is under the workflow on its own. A pull request stands for a single entry in the workflow, so an entry created on the fly would either be invisible until the pull request is published, or skip the review the related collection asks for. Create the related entry in its own collection instead.
 
@@ -1376,7 +1376,7 @@ The field from the related collection to use as the value for the relation. This
 
 The `{{locale}}` template tag can be used to include the current locale in the value field, e.g. `{{locale}}/{{slug}}`, which is useful for [i18n support](https://sveltiacms.app/en/docs/i18n).
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries#creating-editable-nested-structures), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared file name is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries#managing-preview-paths): an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared file name is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths): an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
 
 When using template strings, keep the following in mind:
 
@@ -2084,7 +2084,7 @@ The value can be computed using a template string that references other fields. 
 
 - A value template that defines how to compute the field’s value. It can include references to other fields using the syntax `{{fields.name}}`, where `name` is the name of the field to reference. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied.
 - The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list).
-- The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
+- The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
 
 **Warning**
 
