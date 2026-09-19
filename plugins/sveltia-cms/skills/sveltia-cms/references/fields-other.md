@@ -324,15 +324,35 @@ Whether to show the option to choose a file by URL instead of uploading/selectin
 
 A comma-separated list of allowed file types ([MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types) or file extensions) for upload. For example, to allow only PDF files, set this option to `application/pdf` or `.pdf`. To allow only image files, set it to `image/*`. If not specified, all file types are allowed. See the [`accept` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/accept) documentation on MDN for more details.
 
-Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD, TIFF are excluded. File field has no default restriction.
+Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD, TIFF are excluded, with one exception: HEIC photos are accepted when [HEIC conversion](https://sveltiacms.app/en/docs/media#heic-photos) is enabled as part of image optimization. File field has no default restriction.
 
 ##### `media_library`
 
+- **Type**: `object`
+- **Default**: `undefined`
+
+Legacy option from Netlify/Decap CMS to configure a single [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage) for this field, overriding the top-level `media_library` option. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
+
 ##### `media_libraries`
+
+- **Type**: `object`
+- **Default**: `undefined`
+
+Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field. This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
 
 ##### `media_folder`
 
+- **Type**: `string`
+- **Default**: `undefined`
+
+The folder in the repository where files uploaded to this field will be stored, overriding the top-level and collection-level `media_folder` options. Must start with a slash (`/`) to indicate an absolute path from the root of the repository, or be an empty string or subfolder name to use entry-relative paths. See the [field-level configuration](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
+
 ##### `public_folder`
+
+- **Type**: `string`
+- **Default**: `undefined`
+
+The public URL path that corresponds to the field-level `media_folder` option, overriding the top-level and collection-level `public_folder` options. If not specified, it defaults to the value of the field-level `media_folder`. See the [field-level configuration](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
 
 ### Examples
 

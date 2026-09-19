@@ -72,6 +72,18 @@ Must be set to `list` to use the List field type.
 
 ##### `default`
 
+- **Type**: `array`
+- **Default**: `[]`
+
+The default value for the field when creating a new entry. The shape of the array depends on how the list is configured:
+
+- For a simple list without `field`, `fields` or `types`, an array of strings. Any object in the array is ignored.
+- For a list with a single `field`, an array of values for that subfield.
+- For a list with `fields`, an array of objects whose keys are the subfield names.
+- For a list with `types`, an array of objects, each including the [`typeKey`](#typekey) property (`type` by default) to identify its variable type.
+
+Note that the field can also be pre-filled with comma-separated [dynamic default values](https://sveltiacms.app/en/docs/ui/content-editor#dynamic-default-values) passed via URL query parameters. Dynamic values take precedence over the `default` option.
+
 ##### `label_singular`
 
 - **Type**: `string`

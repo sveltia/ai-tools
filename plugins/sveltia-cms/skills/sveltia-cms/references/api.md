@@ -348,6 +348,36 @@ The [`getIn`](<https://immutable-js.com/docs/v5/Map/#getIn()>) and [`setIn`](<ht
 
 #### Accessing Media Files
 
+The `mediaFiles` property of the entry object lists the assets referenced by the entry’s [Image](https://sveltiacms.app/en/docs/fields/image) and [File](https://sveltiacms.app/en/docs/fields/file) fields that are stored in a [collection-level or field-level media folder](https://sveltiacms.app/en/docs/media/internal). Assets in the global media folder aren’t included. Each item has the following properties:
+
+- `id`: The Git object ID (SHA-1 hash) of the file.
+- `name`: The file name.
+- `path`: The file path, relative to the repository root.
+- `size`: The file size in bytes.
+- `url` and `displayURL`: A temporary [blob URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static) for the file, or `undefined` if it hasn’t been loaded into the browser yet.
+- `file`: The [`File`](https://developer.mozilla.org/en-US/docs/Web/API/File) object. It’s only set for newly uploaded files that haven’t been saved yet, so you can inspect what’s about to be committed.
+
+The following example demonstrates how to register a pre-save hook that lists the media files associated with the entry and warns about large uploads.
+
+```js
+CMS.registerEventListener({
+  name: 'preSave',
+  handler: ({ entry }) => {
+    entry.get('mediaFiles').forEach((media) => {
+      const { name, path, size, file } = media.toJS();
+
+      console.info(`${file ? 'Uploading' : 'Referencing'} ${name} (${size} bytes) at ${path}`);
+
+      if (file && size > 1024 * 1024) {
+        console.warn(`${name} is larger than 1 MB`);
+      }
+    });
+  },
+});
+```
+
+The handler doesn’t need to return anything here because the entry data isn’t modified.
+
 #### Getting Notification of Saved Entries
 
 The following example demonstrates how to register a post-save hook that logs information about the saved entry and the author who made the changes.

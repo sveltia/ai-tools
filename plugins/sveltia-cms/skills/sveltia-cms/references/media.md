@@ -259,12 +259,26 @@ Then, whenever a user selects images to upload, those images are automatically o
 
 In case you’re not aware, [WebP](https://developers.google.com/speed/webp) offers better compression than conventional formats and is now [widely supported](https://caniuse.com/webp) across major browsers. So there is no reason not to use WebP on the web.
 
-- `raster_image` applies to any supported raster image format: `avif`, `bmp`, `gif`, `jpeg`, `png` and `webp`. If you like, you can use a specific format as key instead of `raster_image`.
+- `raster_image` applies to any supported raster image format: `avif`, `gif`, `heic`, `jpeg`, `png` and `webp`. If you like, you can use a specific format as key instead of `raster_image`, or in addition to it to give one format different options.
 - The `width` and `height` options are the maximum width and height, respectively. If an image is larger than the specified dimension, it will be scaled down. Smaller images will not be resized.
 - File processing is a bit slow on Safari because [native WebP encoding](https://caniuse.com/mdn-api_htmlcanvaselement_toblob_type_parameter_webp) is [not supported](https://bugs.webkit.org/show_bug.cgi?id=183257) and the [jSquash](https://github.com/jamsinclair/jSquash) library is used instead.
 - AVIF conversion is not supported because no browser has native AVIF encoding support ([Chromium won’t fix it](https://issues.chromium.org/issues/40848792)) and the third-party library (and AVIF encoding in general) is very slow.
 - This feature is not intended for creating image variants in different formats and sizes. It should be done with a framework during the build process. Popular frameworks like [Astro](https://docs.astro.build/en/guides/images/), [Eleventy](https://www.11ty.dev/docs/plugins/image/), [Hugo](https://gohugo.io/content-management/image-processing/), [Next.js](https://nextjs.org/docs/pages/api-reference/components/image) and [SvelteKit](https://svelte.dev/docs/kit/images) have built-in image processing capabilities.
 - Exif metadata is stripped from raster images to reduce file size. If you want to keep it, upload the original files without optimization and use the framework to process them later.
+
+##### HEIC Photos
+
+Photos taken on an iPhone or a recent Android phone are often saved in HEIC (HEIF) format, which only Safari can display. When the `raster_image` or `heic` transformation is configured, HEIC photos are accepted by Image fields and the Asset Library, and converted on upload like any other raster image:
+
+- The photo is decoded within the browser using [libheif](https://github.com/strukturag/libheif) compiled to WebAssembly ([`@discourse/heic`](https://www.npmjs.com/package/@discourse/heic), a build from the [jSquash](https://github.com/jamsinclair/jSquash) project), which is downloaded from UNPKG on first use (about 300 KB). Decoding runs in a Web Worker so the interface stays responsive, and takes about half a second for a 12-megapixel photo on a recent laptop. Photos are decoded one at a time. Safari decodes HEIC natively, so nothing is downloaded there.
+- A HEIC photo saved with a `.jpg` extension, which happens when a photo is renamed rather than converted, is detected by its content and converted as well. Without HEIC conversion, such a file is rejected as unusable, because browsers other than Safari can’t display it.
+- A HEIC photo that can’t be decoded is rejected rather than uploaded as is.
+- Use the `heic` key to give HEIC photos their own options, such as a smaller maximum dimension, since they’re typically full-resolution camera shots.
+- If your site adopts a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy), add `blob:` to the `worker-src` directive so that the decoder can run in a Web Worker. The decoder falls back to the main thread otherwise, which freezes the interface during decoding.
+
+Without HEIC conversion, Image fields don’t offer HEIC photos in the file picker, while `.heic` files uploaded to the Asset Library are stored as they are.
+
+Thumbnails of HEIC photos already in the repository are generated with the same decoder regardless of the configuration.
 
 **Future Plans**
 

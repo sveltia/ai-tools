@@ -681,6 +681,64 @@ See real-world examples of SvelteKit integrations in our [Showcase](https://svel
 
 We’ll be adding a detailed development guide for integrating Sveltia CMS with SvelteKit in the near future. In the meantime, feel free to explore the showcase examples for guidance.
 
+#### Serving the CMS as a SvelteKit Route
+
+The standard setup is to place `index.html` and `config.yml` in the `static/admin` folder as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide, but if you’re using the [NPM package](https://sveltiacms.app/en/docs/api#using-the-npm-package), you can also serve the CMS from a regular SvelteKit route. This is useful when you want to bundle the CMS with your site instead of loading it from a CDN, or define the [configuration in JavaScript/TypeScript](https://sveltiacms.app/en/docs/api/initialization) so it can be shared with your site’s content schemas or switched between a real and a test repository depending on the environment.
+
+Sveltia CMS is a client-side single-page application that needs the `window` and `document` objects, so it can’t be rendered on the server. Disable SSR for the admin route by exporting `ssr = false` from its `+page.js` (or `+page.ts`) file; otherwise you’ll see an error like “Cannot read properties of undefined (reading 'bind')” during server-side rendering. The rest of your site can still be server-rendered or built as static pages as usual.
+
+`src/routes/admin/+page.ts`:
+
+```ts
+export const ssr = false;
+```
+
+`src/routes/admin/+page.svelte`:
+
+```svelte
+<script lang="ts">
+  import CMS from '@sveltia/cms';
+  import { config } from '$lib/cms-config';
+
+  CMS.init({ config: { load_config_file: false, ...config } });
+</script>
+
+<svelte:head>
+  <meta name="robots" content="noindex" />
+  <title>Sveltia CMS</title>
+</svelte:head>
+
+<div id="nc-root"></div>
+```
+
+`src/lib/cms-config.ts`:
+
+```ts
+import type { CmsConfig } from '@sveltia/cms';
+
+export const config: CmsConfig = {
+  backend: {
+    name: 'github',
+    repo: 'owner/repo',
+  },
+  media_folder: 'static/uploads',
+  public_folder: '/uploads',
+  collections: [
+    // ...
+  ],
+};
+```
+
+Some notes on this setup:
+
+- `load_config_file: false` tells the CMS not to fetch `config.yml`, since the configuration is passed directly to `init()`. Omit it if you’d rather keep `config.yml` in the `static` folder and only override some options.
+- The `<div id="nc-root">` is a [custom mount element](https://sveltiacms.app/en/docs/customization#custom-mount-element). It keeps the CMS scoped to the page so your site’s layout doesn’t interfere with it. If the admin route has its own [layout group](https://svelte.dev/docs/kit/advanced-routing#Advanced-layouts-group) that doesn’t load any of your site’s CSS, JavaScript or HTML, you can drop the wrapper and let the CMS mount to `<body>` as it normally does.
+- The `noindex` meta tag prevents the admin page from being indexed by search engines.
+
+This approach was shared in a [community discussion](https://github.com/sveltia/sveltia-cms/discussions/665) and should work similarly with other frameworks that let you turn off SSR per page, such as Astro.
+
+#### Loading Content
+
 A key step in integrating Sveltia CMS with SvelteKit is using Vite’s [glob import](https://vite.dev/guide/features#glob-import) to load all your content files at once in [`+layout.js`](https://svelte.dev/docs/kit/load#Layout-data) or somewhere else in your SvelteKit app. Since SvelteKit uses Vite under the hood, you can take advantage of the `import.meta.glob` function without additional configuration. This allows you to easily access and manage your content within the SvelteKit framework.
 
 Source: https://sveltiacms.app/en/docs/frameworks/sveltekit

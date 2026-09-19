@@ -205,7 +205,7 @@ We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/
 Sveltia CMS works with all modern browsers, but there are a few limitations because it utilizes some new web technologies:
 
 - The [local workflow](https://sveltiacms.app/en/docs/workflows/local) requires a Chromium-based browser, including Chrome, Edge and Brave.
-- Safari: The [Test backend](https://sveltiacms.app/en/docs/backends/test) requires version 26 or later; [image optimization](https://sveltiacms.app/en/docs/media/internal#image-optimization) is slower than in other browsers.
+- Safari: The [Test backend](https://sveltiacms.app/en/docs/backends/test) requires version 26 or later; [image optimization](https://sveltiacms.app/en/docs/media#image-optimization) is slower than in other browsers.
 - Firefox Extended Support Release (ESR) and its derivatives, including Tor Browser and Mullvad Browser, are not officially supported, although they may still work.
 
 Make sure to use the latest version of your browser for the best experience.
@@ -326,6 +326,7 @@ If you have the [Preview Pane](#preview-pane) or [i18n support](#i18n-support) e
 The two-pane interface includes the following features:
 
 - **Resizable Panes**: You can adjust the width of each pane by dragging the divider between them, allowing you to customize your workspace according to your preferences.
+- **Swappable Panes**: The small swap button in the middle of the divider switches the two panes around, so the Preview Pane can be on the left and the Edit Pane on the right. The arrangement is remembered per collection, along with the pane widths, and stays in effect until you swap the panes back. If you find the panes on the “wrong” side, this is why — click the button again to restore the default order.
 - **Scroll Synchronization**: When editing long entries, Sveltia CMS synchronizes the scroll position between the Edit Pane and the Preview Pane. This helps you see how your content will look as you write, without having to manually scroll both sections.
 - **Click-to-Highlight**: Clicking on a field in the Preview Pane highlights the corresponding field in the Edit Pane. If the field is collapsed in the Edit Pane, it will automatically expand when clicked in the Preview Pane. This feature makes it easy to locate and edit specific fields based on their appearance in the preview.
 - **Optional Second Pane**: If you’d rather edit at full width, you can hide the second pane with the Show Second Pane option in the editor menu. Your pane layout is remembered and restored when you bring it back. See [User Settings](#user-settings) for details.
@@ -768,7 +769,7 @@ Sveltia CMS does not plan to support WYSIWYG live site previews that fetch data 
 
 End-users can control the editor layout in the CMS UI using the menu located at the top-right corner of the editor interface. These preferences are saved in the browser, allowing users to maintain their preferred layout across sessions.
 
-- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale. The pane layout, including any width you’ve set by dragging the divider, is remembered and restored when you turn the option back on.
+- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale. The pane layout, including any width you’ve set by dragging the divider and whether you’ve swapped the panes, is remembered per collection and restored when you turn the option back on.
 - **Show Preview**: Chooses whether the second pane shows the preview. When [i18n support](#i18n-support) is enabled, turning it off puts another locale’s Edit Pane in the second pane instead.
 - **Sync Scrolling**: Turns scroll synchronization between the two panes on or off. This is enabled by default.
 
