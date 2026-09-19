@@ -287,7 +287,7 @@ Sveltia CMS does not support the `allow_multiple` option. It’s a confusing opt
 - **Type**: `string` or `array of strings`
 - **Default**: `''` or `[]`
 
-The default value for the field. Should be a string for single file upload or an array of strings for multiple file uploads.
+The default value for the field. Should be a string for single file upload or an array of strings for multiple file uploads. If the `multiple` option is set on the field, a value of the other shape is reported as a config validation error on the login screen.
 
 ##### `multiple`
 
@@ -1447,7 +1447,7 @@ The fields from the related collection to search against when filtering related 
 - **Type**: `string`, `number`, `array of strings`, or `array of numbers`
 - **Default**: `null` or `[]`
 
-The default value for the field. Should be a string or number for single select, or an array of strings or numbers for multi select, depending on the `multiple` option.
+The default value for the field. Should be a string or number for single select, or an array of strings or numbers for multi select, depending on the `multiple` option. An array with `multiple` off, or a single value with `multiple` on, is reported as a config validation error on the login screen.
 
 ##### `dropdown_threshold`
 

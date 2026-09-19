@@ -1316,6 +1316,8 @@ view_groups:
   default: year
 ```
 
+The `default` option has to be the `name` of one of the `groups`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open ungrouped.
+
 To sort the Year group in descending order by date, you can add the `sortable_fields` property as described in the [Sorting](#sorting) section above:
 
 ```yaml
@@ -1504,6 +1506,8 @@ view_filters:
       pattern: travel|food
   default: drafts
 ```
+
+The `default` option has to be the `name` of one of the `filters`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open unfiltered.
 
 #### Comparing Values
 

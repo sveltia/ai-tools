@@ -674,7 +674,20 @@ If you plan to only [work with your local repository](https://sveltiacms.app/en/
 
 If you or a small team of developers are the only users of your CMS instance, you can use a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (PAT) for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
-Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on GitHub with the required scopes pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
+Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on GitHub with the required permissions pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
+
+If you create a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) yourself, give it access to the repository and the following repository permissions:
+
+| Permission | Access | Needed for |
+| --- | --- | --- |
+| Contents | Read and write | Everything: reading and committing entries and assets |
+| Pull requests | Read and write | The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), which opens, labels, merges and closes a pull request for each entry |
+
+Metadata (read) is added automatically. A classic token needs the `repo` scope, which covers all of the above.
+
+**Warning**
+
+With the Editorial Workflow, a token that has content access but no pull request access gets as far as committing the entry to its workflow branch, then fails with “Resource not accessible by personal access token” when the CMS tries to open the pull request. Edit the token to add the Pull requests permission; the branches already created will be reused the next time each entry is saved.
 
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 

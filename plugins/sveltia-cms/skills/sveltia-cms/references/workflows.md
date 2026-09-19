@@ -210,6 +210,8 @@ This is an advanced remote workflow designed for teams that require a review pro
 
 The [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend must be used.
 
+Anyone signing in with a [GitHub fine-grained personal access token](https://sveltiacms.app/en/docs/backends/github#access-token) needs the Pull requests permission on it as well as Contents, because the workflow opens, labels, merges and closes a pull request for each entry. OAuth sign-in with the default `repo` scope, and a GitLab token with the `api` scope, already cover this.
+
 **Future Plans**
 
 Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend will be added in the near future.

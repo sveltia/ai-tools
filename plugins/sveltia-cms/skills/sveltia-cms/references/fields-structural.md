@@ -77,10 +77,12 @@ Must be set to `list` to use the List field type.
 
 The default value for the field when creating a new entry. The shape of the array depends on how the list is configured:
 
-- For a simple list without `field`, `fields` or `types`, an array of strings. Any object in the array is ignored.
-- For a list with a single `field`, an array of values for that subfield.
+- For a simple list without `field`, `fields` or `types`, an array of strings.
+- For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/en/docs/fields/object) or [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield, and so on.
 - For a list with `fields`, an array of objects whose keys are the subfield names.
 - For a list with `types`, an array of objects, each including the [`typeKey`](#typekey) property (`type` by default) to identify its variable type.
+
+An item that doesn’t match the configuration — an object in a simple list, a plain value in a list with `fields` or `types`, a property that isn’t a subfield name, or a type name that isn’t one of the `types` — is reported as a config validation error on the login screen, because it would otherwise be silently dropped or saved to the entry as-is. See the [Default Values](#default-values) example below for each shape.
 
 Note that the field can also be pre-filled with comma-separated [dynamic default values](https://sveltiacms.app/en/docs/ui/content-editor#dynamic-default-values) passed via URL query parameters. Dynamic values take precedence over the `default` option.
 
@@ -162,7 +164,7 @@ See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example belo
 
 The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail for each list item in the collapsed view. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
 
-A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`.
+A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`. A name that doesn’t point to an Image or File subfield is reported as a config validation error on the login screen. With `types`, a name shared by the subfields of several types is accepted as long as one of them is an Image or File field.
 
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
@@ -220,7 +222,7 @@ Whether to add new items to the top of the list instead of the bottom. If set to
 - **Type**: `string`
 - **Default**: `type`
 
-This option is effective only when the `types` option is used. It allows you to customize the name of the field that indicates the type of each item in the list. See the [Variable Type](#variable-type) example below for details.
+This option is effective only when the `types` option is used. It allows you to customize the name of the field that indicates the type of each item in the list. See the [Variable Type](#variable-type-with-custom-type-key) example below for details.
 
 You cannot use a key that conflicts with any of the subfield names defined in the object.
 
@@ -1420,6 +1422,311 @@ Output example:
 
 As you can see, the list is stored directly at the root level of the output file, without a parent key (`members`). We don’t have a TOML example here because TOML format cannot represent top-level arrays; thus, the `root` option is ignored for TOML files.
 
+#### Default Values
+
+The shape of the [`default`](#default) option follows the shape of the list. A simple list takes an array of strings:
+
+```yaml [YAML]
+- name: tags
+  label: Tags
+  widget: list
+  default: [travel, photography]
+```
+
+```toml [TOML]
+[[fields]]
+name = "tags"
+label = "Tags"
+widget = "list"
+default = ["travel", "photography"]
+```
+
+```json [JSON]
+{
+  "name": "tags",
+  "label": "Tags",
+  "widget": "list",
+  "default": ["travel", "photography"]
+}
+```
+
+```js [JavaScript]
+{
+  name: "tags",
+  label: "Tags",
+  widget: "list",
+  default: ["travel", "photography"],
+}
+```
+
+A list with a single `field` takes an array of values for that subfield — here, objects for a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield:
+
+```yaml [YAML]
+- name: attributes
+  label: Attributes
+  widget: list
+  field:
+    name: attribute
+    label: Attribute
+    widget: keyvalue
+  default:
+    - { color: red, size: large }
+    - { color: blue, size: small }
+```
+
+```toml [TOML]
+[[fields]]
+name = "attributes"
+label = "Attributes"
+widget = "list"
+default = [{ color = "red", size = "large" }, { color = "blue", size = "small" }]
+
+[fields.field]
+name = "attribute"
+label = "Attribute"
+widget = "keyvalue"
+```
+
+```json [JSON]
+{
+  "name": "attributes",
+  "label": "Attributes",
+  "widget": "list",
+  "field": {
+    "name": "attribute",
+    "label": "Attribute",
+    "widget": "keyvalue"
+  },
+  "default": [
+    { "color": "red", "size": "large" },
+    { "color": "blue", "size": "small" }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  name: "attributes",
+  label: "Attributes",
+  widget: "list",
+  field: {
+    name: "attribute",
+    label: "Attribute",
+    widget: "keyvalue",
+  },
+  default: [
+    { color: "red", size: "large" },
+    { color: "blue", size: "small" },
+  ],
+}
+```
+
+A list with `fields` takes an array of objects whose keys are the subfield names. A subfield left out of an item gets its own `default`, if any, or is left empty, just like an item added in the editor — so `external` is `false` for the first link below:
+
+```yaml [YAML]
+- name: links
+  label: Links
+  widget: list
+  fields:
+    - name: label
+      label: Label
+      widget: string
+    - name: url
+      label: URL
+      widget: string
+    - name: external
+      label: External
+      widget: boolean
+      default: false
+  default:
+    - label: Home
+      url: /
+    - label: GitHub
+      url: https://github.com/
+      external: true
+```
+
+```toml [TOML]
+[[fields]]
+name = "links"
+label = "Links"
+widget = "list"
+default = [
+  { label = "Home", url = "/" },
+  { label = "GitHub", url = "https://github.com/", external = true },
+]
+
+[[fields.fields]]
+name = "label"
+label = "Label"
+widget = "string"
+
+[[fields.fields]]
+name = "url"
+label = "URL"
+widget = "string"
+
+[[fields.fields]]
+name = "external"
+label = "External"
+widget = "boolean"
+default = false
+```
+
+```json [JSON]
+{
+  "name": "links",
+  "label": "Links",
+  "widget": "list",
+  "fields": [
+    { "name": "label", "label": "Label", "widget": "string" },
+    { "name": "url", "label": "URL", "widget": "string" },
+    { "name": "external", "label": "External", "widget": "boolean", "default": false }
+  ],
+  "default": [
+    { "label": "Home", "url": "/" },
+    { "label": "GitHub", "url": "https://github.com/", "external": true }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  name: "links",
+  label: "Links",
+  widget: "list",
+  fields: [
+    { name: "label", label: "Label", widget: "string" },
+    { name: "url", label: "URL", widget: "string" },
+    { name: "external", label: "External", widget: "boolean", default: false },
+  ],
+  default: [
+    { label: "Home", url: "/" },
+    { label: "GitHub", url: "https://github.com/", external: true },
+  ],
+}
+```
+
+A list with `types` takes an array of objects, each naming its variable type with the [`typeKey`](#typekey) property — `type` unless configured otherwise — alongside the subfields of that type. The subfields of that type left out of an item are filled in the same way:
+
+```yaml [YAML]
+- name: sections
+  label: Sections
+  widget: list
+  types:
+    - name: heading
+      label: Heading
+      fields:
+        - name: text
+          label: Text
+          widget: string
+    - name: paragraph
+      label: Paragraph
+      fields:
+        - name: body
+          label: Body
+          widget: markdown
+  default:
+    - type: heading
+      text: Introduction
+    - type: paragraph
+```
+
+```toml [TOML]
+[[fields]]
+name = "sections"
+label = "Sections"
+widget = "list"
+default = [{ type = "heading", text = "Introduction" }, { type = "paragraph" }]
+
+[[fields.types]]
+name = "heading"
+label = "Heading"
+
+[[fields.types.fields]]
+name = "text"
+label = "Text"
+widget = "string"
+
+[[fields.types]]
+name = "paragraph"
+label = "Paragraph"
+
+[[fields.types.fields]]
+name = "body"
+label = "Body"
+widget = "markdown"
+```
+
+```json [JSON]
+{
+  "name": "sections",
+  "label": "Sections",
+  "widget": "list",
+  "types": [
+    {
+      "name": "heading",
+      "label": "Heading",
+      "fields": [{ "name": "text", "label": "Text", "widget": "string" }]
+    },
+    {
+      "name": "paragraph",
+      "label": "Paragraph",
+      "fields": [{ "name": "body", "label": "Body", "widget": "markdown" }]
+    }
+  ],
+  "default": [{ "type": "heading", "text": "Introduction" }, { "type": "paragraph" }]
+}
+```
+
+```js [JavaScript]
+{
+  name: "sections",
+  label: "Sections",
+  widget: "list",
+  types: [
+    {
+      name: "heading",
+      label: "Heading",
+      fields: [{ name: "text", label: "Text", widget: "string" }],
+    },
+    {
+      name: "paragraph",
+      label: "Paragraph",
+      fields: [{ name: "body", label: "Body", widget: "markdown" }],
+    },
+  ],
+  default: [{ type: "heading", text: "Introduction" }, { type: "paragraph" }],
+}
+```
+
+Each of the following would be reported as a config validation error on the login screen, because the item would otherwise be silently dropped or saved to the entry as-is:
+
+```yaml
+# An object in a simple list
+- name: tags
+  widget: list
+  default: [{ name: travel }]
+
+# A plain value in a list with `fields`
+- name: links
+  widget: list
+  fields: [{ name: label }, { name: url }]
+  default: [Home]
+
+# A property that isn’t a subfield name
+- name: links
+  widget: list
+  fields: [{ name: label }, { name: url }]
+  default: [{ label: Home, href: / }]
+
+# A type name that isn’t one of the `types`
+- name: sections
+  widget: list
+  types: [{ name: heading }, { name: paragraph }]
+  default: [{ type: title }]
+```
+
 Source: https://sveltiacms.app/en/docs/fields/list
 
 ---
@@ -1490,7 +1797,9 @@ Each type definition is an object with the following properties:
 - **Type**: `object`
 - **Default**: `{}`
 
-The default value for the object field.
+The default value for the object field: an object whose keys are the subfield names. For an object with `types`, it must also include the [`typeKey`](#typekey) property (`type` by default) to identify the variable type, and its other keys are the names of that type’s subfields.
+
+A property that isn’t a subfield name, a missing type key or a type name that isn’t one of the `types` is reported as a config validation error on the login screen, because it would otherwise be saved to the entry as-is or leave the object empty.
 
 ##### `collapsed`
 
@@ -1515,7 +1824,7 @@ See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example belo
 
 The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail of the object when it is collapsed in the UI. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
 
-A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`.
+A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`. A name that doesn’t point to an Image or File subfield is reported as a config validation error on the login screen. With `types`, a name shared by the subfields of several types is accepted as long as one of them is an Image or File field.
 
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
@@ -2927,7 +3236,9 @@ This affects the `default_language` option and the language used in the `default
 
 The default value for the field, where `code` is a code snippet and `lang` is any valid programming language supported by [Shiki](https://shiki.style/languages).
 
-If `output_code_only` is `true`, this should be a string containing the default code.
+If `output_code_only` is `true`, this should be a string containing the default code. A string is also accepted otherwise, in which case it’s taken as the code with no language.
+
+An object default with a property that isn’t one of the [`keys`](#keys), or an object default with `output_code_only` set to `true`, is reported as a config validation error on the login screen, because the value would otherwise be dropped.
 
 ##### `keys`
 
