@@ -744,6 +744,25 @@ The `entry` and `fieldsMetaData` props are [Immutable Map](https://immutable-js.
 
 For more information on working with Immutable data structures, see the [Immutable.js documentation](https://immutable-js.com/docs/v5/Map/).
 
+### Styling the Preview
+
+The preview pane is a sandboxed `<iframe>` with its own document, so it doesn’t inherit any stylesheets from the admin page — including CSS that your bundler emits for the template or for a component library it uses. Register the styles the template depends on with [`CMS.registerPreviewStyle()`](https://sveltiacms.app/en/docs/api/preview-styles), either as a file path or as a raw CSS string:
+
+```js
+import css from './preview.css?inline'; // Vite
+
+CMS.registerPreviewStyle('/admin/preview.css');
+CMS.registerPreviewStyle(css, { raw: true });
+```
+
+If you render a [Svelte](https://svelte.dev/) component inside the template, you can instead compile it with `css: "injected"`, either per component with [`<svelte:options>`](https://svelte.dev/docs/svelte/svelte-options) or for the whole bundle with the `compilerOptions` of `@sveltejs/vite-plugin-svelte`. Svelte then appends the component’s styles to the document it’s mounted in, which is the preview iframe:
+
+```svelte
+<svelte:options css="injected" />
+```
+
+[Vue](https://vuejs.org/) has no equivalent: the `<style>` block of a single-file component always goes through the bundler’s CSS pipeline, which ends up in the admin page. Keep the styles of a Vue preview component in a separate CSS file and register it as shown above.
+
 ### Examples
 
 **With or without JSX**
@@ -1150,6 +1169,78 @@ export default class ProductPreview extends React.Component {
 }
 
 CMS.registerPreviewTemplate('products', ProductPreview);
+```
+
+#### Using Other Frameworks
+
+The registered component must be a React class component, but it can mount a component written in another framework into the preview document. These examples wrap a [Svelte 5](https://svelte.dev/) or [Vue 3](https://vuejs.org/) component, updating its props in place on each render instead of remounting it. Keep the Svelte wrapper in a `.svelte.js` file so the `$state` rune compiles. The Vue wrapper renders the component from a render function so that changes to the reactive props are picked up; the `rootProps` argument of `createApp()` is not reactive. See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
+
+```js [Svelte]
+import { mount, unmount } from 'svelte';
+import NewsletterPreview from './newsletter-preview.svelte';
+
+const NewsletterPreviewWrapper = createClass({
+  componentDidMount: function () {
+    const { document, entry, getAsset } = this.props;
+
+    this.svelteProps = $state({ entry, getAsset });
+    // Mount into the preview iframe’s document, not the global `document`
+    this.svelteComponent = mount(NewsletterPreview, {
+      target: document.body,
+      props: this.svelteProps,
+    });
+  },
+
+  componentDidUpdate: function () {
+    const { entry, getAsset } = this.props;
+
+    Object.assign(this.svelteProps, { entry, getAsset });
+  },
+
+  componentWillUnmount: function () {
+    unmount(this.svelteComponent);
+  },
+
+  render: function () {
+    // Svelte renders directly into the document, so React has nothing to render
+    return null;
+  },
+});
+
+CMS.registerPreviewTemplate('newsletters', NewsletterPreviewWrapper);
+```
+
+```js [Vue]
+import { createApp, h, reactive } from 'vue';
+import NewsletterPreview from './NewsletterPreview.vue';
+
+const NewsletterPreviewWrapper = createClass({
+  componentDidMount: function () {
+    const { document, entry, getAsset } = this.props;
+
+    this.vueProps = reactive({ entry, getAsset });
+    this.vueApp = createApp({ render: () => h(NewsletterPreview, this.vueProps) });
+    // Mount into the preview iframe’s document, not the global `document`
+    this.vueApp.mount(document.body);
+  },
+
+  componentDidUpdate: function () {
+    const { entry, getAsset } = this.props;
+
+    Object.assign(this.vueProps, { entry, getAsset });
+  },
+
+  componentWillUnmount: function () {
+    this.vueApp.unmount();
+  },
+
+  render: function () {
+    // Vue renders directly into the document, so React has nothing to render
+    return null;
+  },
+});
+
+CMS.registerPreviewTemplate('newsletters', NewsletterPreviewWrapper);
 ```
 
 ### Showcase

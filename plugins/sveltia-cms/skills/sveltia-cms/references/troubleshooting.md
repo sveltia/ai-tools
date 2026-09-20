@@ -505,11 +505,13 @@ We’ll create contributor documentation in the future to encourage community co
 
 Absolutely not. Sveltia CMS is a serious project developed by an experienced UX engineer, with the goal of providing a reliable and high-quality CMS solution for developers and content creators. It was originally created for the maintainer’s own clients who needed a better alternative to Netlify CMS.
 
-A hobby project wouldn’t [solve hundreds of issues](https://sveltiacms.app/en/docs/successor-to-netlify-cms) from a predecessor project, implement numerous new features, maintain a high level of quality and performance, or create comprehensive 90+ page documentation.
+A hobby project wouldn’t [solve hundreds of issues](https://sveltiacms.app/en/docs/successor-to-netlify-cms) from a predecessor project, implement numerous new features, maintain a high level of quality and performance, or create comprehensive 100+ page documentation.
+
+Thousands of users worldwide trust Sveltia CMS, including government agencies, universities, and nonprofit organizations. Visit our [Showcase](https://sveltiacms.app/en/showcase) page to see some of the real-world projects that are using our platform.
 
 #### Is Sveltia CMS a student project?
 
-No. The maintainer is a seasoned professional with over 20 years of experience in web development and open source. Because [he looks half his age](https://github.com/kyoshino#fun-facts-about-me), some people mistakenly assume he is a student. But rest assured, Sveltia CMS is a serious project developed by an experienced UX engineer.
+Absolutely not. The maintainer is a seasoned professional with over 20 years of experience in web development and open source. Because [he looks half his age](https://github.com/kyoshino#fun-facts-about-me), some people mistakenly assume he is a student. But rest assured, Sveltia CMS is a serious project developed by an experienced UX engineer.
 
 #### Why did you create Sveltia CMS?
 
@@ -696,8 +698,10 @@ The configuration options in Sveltia CMS are designed to be compatible with the 
 
 #### Are you using AI agents to develop Sveltia CMS?
 
-We started developing Sveltia CMS before the recent surge in AI agents, so many parts of the codebase were written without AI assistance. We couldn’t use AI agents anyway because they were unfamiliar with Svelte.
+We started developing Sveltia CMS before the recent surge in AI agents, so much of the code was written manually. We couldn’t use AI agents anyway because they were unfamiliar with Svelte.
 
-However, as AI agents become more capable and integrated into our workflow, more and more tasks are being assisted by them. We now use AI for various tasks, including implementing new features, fixing bugs, refactoring, generating test cases, and writing documentation. We rely on Claude Opus to implement advanced features, such as Editorial Workflow.
+However, due to limited resources and an increasingly complex product, we have adapted our workflow to make extensive use of AI agents. Most tasks are now done by Claude, including implementing new features, fixing bugs, refactoring, generating test cases and writing documentation.
+
+If you find our product useful and would like to support us, please consider [sponsoring the maintainer](https://github.com/sponsors/kyoshino), which would help to cover the monthly cost of the Claude subscription (CA$140). Your support would be greatly appreciated!
 
 Source: https://sveltiacms.app/en/docs/faq
