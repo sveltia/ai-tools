@@ -486,6 +486,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [Starlight](https://starlight.astro.build/) docs folder tree in the sidebar with the `subfolders: false` mode, where every file under [`src/content/docs/`](https://starlight.astro.build/guides/project-structure/) is a page at its own path and editors can create new folders as needed.
 - The [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) Relation field option can contain a locale prefix like `{{locale}}/{{slug}}`, which will be replaced with the current locale. It’s intended to support i18n in Astro. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/302))
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
+- [Omitting empty optional fields](https://sveltiacms.app/en/docs/data-output#controlling-data-output): Set the `omit_empty_optional_fields` output option to `true` so that content with unfilled optional fields passes [content collection schema](https://docs.astro.build/en/guides/content-collections/#defining-the-collection-schema) validation. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/241))
 
 ### Development Guide
 
@@ -539,6 +540,13 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 See real-world examples of Eleventy integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=eleventy). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Eleventy.
 
+### Support for Eleventy
+
+We have implemented specific features to enhance the integration of Sveltia CMS with Eleventy:
+
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of pages in the sidebar with the `subfolders: false` mode, where every file is a page at its own [path-based permalink](https://www.11ty.dev/docs/permalinks/) and editors can create new folders as needed.
+- [Editor components](https://sveltiacms.app/en/docs/api/editor-components#styled-separator): An example of a custom component that inserts an Eleventy [shortcode](https://www.11ty.dev/docs/shortcodes/) into Markdown content.
+
 ### Development Guide
 
 We’ll be adding a detailed development guide for integrating Sveltia CMS with Eleventy in the near future. In the meantime, feel free to explore the starter templates and showcase examples for guidance.
@@ -576,6 +584,8 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
 - [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
+- [Editor components](https://sveltiacms.app/en/docs/api/editor-components#examples): Examples of custom components that insert Hugo [shortcodes](https://gohugo.io/content-management/shortcodes/) into Markdown content, such as an image with a caption and a YouTube embed.
+- [Time formatting](https://sveltiacms.app/en/docs/data-output#general-conventions): A standard time is saved as `HH:mm:ss` instead of `HH:mm` for compatibility with Hugo.
 
 ### Development Guide
 
@@ -607,7 +617,11 @@ See real-world examples of Jekyll integrations in our [Showcase](https://sveltia
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Jekyll:
 
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Jekyll sites.
+- [ASCII slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options): Set the `encoding` slug option to `ascii` to transliterate non-ASCII characters, which can otherwise break Jekyll builds. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/544))
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of [pages](https://jekyllrb.com/docs/pages/) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
+- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#customizing-the-redirect-property): Use the `aliases_field` option to store previous paths in the `redirect_from` property expected by the [`jekyll-redirect-from`](https://github.com/jekyll/jekyll-redirect-from) plugin, which is updated when the entry slug is changed in Sveltia CMS.
+- [Top-level List field](https://sveltiacms.app/en/docs/fields/list#top-level-list): Use the `root` option to edit a [data file](https://jekyllrb.com/docs/datafiles/) whose top level is a list, such as a list of members.
+- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for multilingual Jekyll sites, using the `ref` property as the canonical slug key.
 
 ### Development Guide
 
@@ -817,6 +831,7 @@ See real-world examples of Zola integrations in our [Showcase](https://sveltiacm
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Zola:
 
+- [Entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders): Store media files in folders relative to their associated entries, following Zola’s [asset colocation](https://www.getzola.org/documentation/content/overview/#asset-colocation) convention.
 - [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://www.getzola.org/documentation/content/section/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.

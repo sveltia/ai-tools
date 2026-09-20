@@ -1128,7 +1128,7 @@ In the default `subfolders` mode, a folder _is_ an entry: each entry is stored a
             └─ _index.md        # Software
 ```
 
-With `subfolders: false`, entries are regular files that keep their own names, and folders are just folders. This suits [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus), [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress), [Starlight](https://starlight.astro.build/guides/project-structure/), [MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/) and similar setups, where every file becomes a page at its own path:
+With `subfolders: false`, entries are regular files that keep their own names, and folders are just folders. This suits [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus), [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress), [Starlight](https://starlight.astro.build/guides/project-structure/), [MkDocs](https://www.mkdocs.org/user-guide/writing-your-docs/), as well as the pages of an [Eleventy](https://sveltiacms.app/en/docs/frameworks/eleventy) or [Jekyll](https://sveltiacms.app/en/docs/frameworks/jekyll) site, and similar setups, where every file becomes a page at its own path:
 
 ```
 .
