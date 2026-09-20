@@ -427,10 +427,33 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-<script setup>
-import FrameworkChart from '../../../.vitepress/theme/components/FrameworkChart.vue';
-import { data as showcaseLabels } from '../../../data/showcase-labels.data.ts';
-</script>
+Framework distribution across 580 sites in the showcase, sorted by popularity:
+
+| Framework | Sites | Share |
+| --- | ---: | ---: |
+| Astro | 211 | 36.4% |
+| Vanilla JavaScript | 89 | 15.3% |
+| Eleventy | 77 | 13.3% |
+| Hugo | 56 | 9.7% |
+| Custom Tooling | 33 | 5.7% |
+| Jekyll | 31 | 5.3% |
+| Next.js | 30 | 5.2% |
+| SvelteKit | 13 | 2.2% |
+| React | 10 | 1.7% |
+| React Router | 7 | 1.2% |
+| Nuxt | 4 | 0.7% |
+| MkDocs | 3 | 0.5% |
+| Zola | 3 | 0.5% |
+| VitePress | 3 | 0.5% |
+| Vue | 2 | 0.3% |
+| Middleman | 1 | 0.2% |
+| Docusaurus | 1 | 0.2% |
+| Sphinx | 1 | 0.2% |
+| Gatsby | 1 | 0.2% |
+| SolidStart | 1 | 0.2% |
+| TanStack Start | 1 | 0.2% |
+| Pelican | 1 | 0.2% |
+| Blume | 1 | 0.2% |
 
 Source: https://sveltiacms.app/en/docs/frameworks
 
@@ -461,7 +484,7 @@ See real-world examples of Astro integrations in our [Showcase](https://sveltiac
 We have implemented specific features to enhance the integration of Sveltia CMS with Astro:
 
 - The [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) Relation field option can contain a locale prefix like `{{locale}}/{{slug}}`, which will be replaced with the current locale. It’s intended to support i18n in Astro. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/302))
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
+- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
 
 ### Development Guide
 
@@ -547,7 +570,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 
 - [Entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders): Store media files in folders relative to their associated entries, which is a common practice in Hugo projects called [page bundles](https://gohugo.io/content-management/page-bundles/).
 - [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
+- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
 
@@ -581,7 +604,7 @@ See real-world examples of Jekyll integrations in our [Showcase](https://sveltia
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Jekyll:
 
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs): generate localized slugs for multilingual Jekyll sites.
+- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Jekyll sites.
 
 ### Development Guide
 
@@ -790,7 +813,7 @@ See real-world examples of Zola integrations in our [Showcase](https://sveltiacm
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Zola:
 
-- The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
+- The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n/options#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
 - The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.

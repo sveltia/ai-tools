@@ -1345,7 +1345,7 @@ The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slug
 - `{{dirname}}`: the directory name of the entry file relative to the collection `folder`. This is useful when using the `path` option to create subfolders.
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.
-- `{{locale}}`: the locale code of the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n). This is useful when you want to include the locale in the preview URL.
+- `{{locale}}`: the locale code of the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths). This is useful when you want to include the locale in the preview URL.
 
 Just like the `slug` and `path` options, any field name defined in the collection’s `fields` option can also be used as a template tag in `preview_path`. If a field’s name matches one of the predefined tags listed above or in the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags), such as `slug`, `year` or `uuid`, you need to prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the tag itself.
 

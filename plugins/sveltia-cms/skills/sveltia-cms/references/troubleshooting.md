@@ -109,10 +109,6 @@ Source: https://sveltiacms.app/en/docs/troubleshooting
 
 ---
 
-<script setup>
-import CspBuilder from '../../../.vitepress/theme/components/CspBuilder.vue';
-</script>
-
 ## Security
 
 Security is a top priority for Sveltia CMS so that you can manage your content with confidence. This document outlines the security features and practices of Sveltia CMS. It also provides best practices for securing your CMS installation.
@@ -156,14 +152,6 @@ To protect your Sveltia CMS installation and data, follow these best practices:
 - Do not disable the `sanitize_preview` option for [RichText](https://sveltiacms.app/en/docs/fields/richtext) and [Markdown](https://sveltiacms.app/en/docs/fields/markdown) fields unless you fully understand the implications. Disabling this option may expose your site to XSS attacks if untrusted users can edit content.
 
 ### Setting up Content Security Policy
-
-<llm-exclude>
-
-If your site adopts Content Security Policy (CSP), use the tool below to generate a CSP header based on your specific configuration and deployment setup. You can copy the generated header and add it to your server configuration or use it in a `<meta>` tag in your HTML.
-
-</llm-exclude>
-
-<llm-only>
 
 If your site adopts Content Security Policy (CSP), we recommend starting with the base policy below and adding origins for any additional features you use.
 
@@ -395,8 +383,6 @@ If you choose to [disable automatic deployments](https://sveltiacms.app/en/docs/
   https://api.vercel.com
   ```
 
-</llm-only>
-
 **Breaking Change in v0.174.0**
 
 To ensure [GDPR compliance](https://github.com/sveltia/sveltia-cms/issues/443), we have replaced Google Fonts with [Fontsource](https://fontsource.org/) as the CMS’s font provider. If your site adopts a CSP, you may need to update your policy to allow the new font provider, which is served via jsDelivr. Specifically, you need to make the following changes:
@@ -589,7 +575,7 @@ When deciding which projects to feature on the Showcase page, we generally consi
 - Projects by organizations or individuals with little to no online presence will not be featured because it’s difficult to verify their legitimacy.
   - We check social media profiles and other online presences to confirm that the project is legitimate and not spam or scam. Having 100+ followers on social media is a good indicator of this.
 - Projects must not contain any offensive, inappropriate, illegal or NSFW content.
-- Projects containing political, religious, or controversial content will not be featured.
+- Projects containing political, religious, military, or controversial content will not be featured.
   - Discussions of these topics that are academic or critical are acceptable as long as they do not advocate for a specific agenda or viewpoint.
   - We may still feature moderate grassroots campaigns and charities that primarily focus on issues such as civil rights and humanitarianism.
 - Personal blogs and websites will only be featured if they have a significant online presence and credibility, such as having hundreds of followers.

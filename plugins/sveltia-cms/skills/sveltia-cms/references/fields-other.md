@@ -1971,7 +1971,7 @@ favorite_cities = ["San Francisco", "Tokyo", "Paris"]
 
 #### Referencing Entries Across Locales
 
-When [entry slugs are localized](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs), each localized entry stores the default locale’s slug in an extra `translationKey` property. Unlike `{{slug}}`, that property holds the same value in every locale, so it can be used as the value field to reference an entry regardless of the locale being edited:
+When [entry slugs are localized](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs), each localized entry stores the default locale’s slug in an extra `translationKey` property. Unlike `{{slug}}`, that property holds the same value in every locale, so it can be used as the value field to reference an entry regardless of the locale being edited:
 
 ```yaml [YAML]
 fields:
@@ -2031,7 +2031,7 @@ search_fields = ["title"]
 }
 ```
 
-The `translationKey` property is not defined as a field, but it’s still a valid value field. If you have renamed the property with the [`i18n.canonical_slug.key`](https://sveltiacms.app/en/docs/i18n#localizing-entry-slugs) option, such as `ref` for Jekyll, use that key instead.
+The `translationKey` property is not defined as a field, but it’s still a valid value field. If you have renamed the property with the [`i18n.canonical_slug.key`](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs) option, such as `ref` for Jekyll, use that key instead.
 
 Source: https://sveltiacms.app/en/docs/fields/relation
 

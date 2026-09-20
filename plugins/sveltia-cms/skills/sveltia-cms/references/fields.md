@@ -184,13 +184,13 @@ Whether to show a preview of the field’s value in the entry’s preview pane. 
 - **Type**: `boolean` or `duplicate`
 - **Default**: `false`
 
-Indicates whether the field supports internationalization (i18n). See the [i18n documentation](https://sveltiacms.app/en/docs/i18n#field-level-configuration) for more details.
+Indicates whether the field supports internationalization (i18n). See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 
 All visible fields support various validation options to ensure data integrity. Common validation options include:
 
-- By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/en/docs/i18n#field-level-configuration).
+- By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration).
 - String-type and some other simple array-type fields support the `pattern` option, which allows you to define a regular expression that the field’s value must match. This is useful for enforcing specific formats.
 - Some fields support minimum and maximum values/items/lengths or value types, depending on the field type. For example:
   - The [String](https://sveltiacms.app/en/docs/fields/string) field supports `minlength` and `maxlength` options as well as the `type` option that can enforce formats like `email` or `url`.

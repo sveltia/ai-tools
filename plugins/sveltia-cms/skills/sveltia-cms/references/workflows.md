@@ -138,7 +138,7 @@ This check only runs when the page is on the same origin as the CMS — the usua
 #### Where Links Appear
 
 - In the entry editor toolbar, for the default locale.
-- In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/en/docs/i18n#managing-preview-paths-with-i18n).
+- In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths).
 - On the cards of the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
 
 ### Specifying a Status Context

@@ -103,7 +103,7 @@ We’ll update this section with specific migration steps when we release versio
 These options were added to Sveltia CMS 0.x but are now deprecated and will be removed in version 1.0:
 
 - The `automatic_deployments` backend option: Use the new [`skip_ci` option](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) instead, which is more intuitive. `automatic_deployments: false` is equivalent to `skip_ci: true`, and `automatic_deployments: true` is equivalent to `skip_ci: false`.
-- The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/en/docs/i18n#disabling-non-default-locale-content) instead, which provides more flexibility. `save_all_locales: false` is equivalent to `initial_locales: all`.
+- The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/en/docs/i18n/options#disabling-non-default-locale-content) instead, which provides more flexibility. `save_all_locales: false` is equivalent to `initial_locales: all`.
 - The `omit_default_locale_from_filename` i18n option: Use the new `omit_default_locale_from_file_path` i18n option instead, which applies to all multiple files/folders structures, not just `multiple_files`.
 - The `multiple_folders_i18n_root` i18n structure: Use the new `multiple_root_folders` i18n structure instead, which has a more intuitive name and the same file structure.
 - The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead.
@@ -361,7 +361,7 @@ Some features have different names in Sveltia CMS compared to Netlify/Decap CMS.
 
 Sveltia CMS marks required fields for efficient data entry. This is the opposite of Netlify/Decap CMS, which marks optional fields. This change aims to reduce visual clutter and help users focus on the essential fields that must be filled out.
 
-When [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, Sveltia CMS requires all locales to have values for required fields. In contrast, Netlify/Decap CMS only enforces this for the default locale. This change ensures that content is complete across all locales. If you rely on the previous behavior, you can set the `required` [field-level configuration](https://sveltiacms.app/en/docs/i18n#field-level-configuration) to include only specific locales.
+When [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, Sveltia CMS requires all locales to have values for required fields. In contrast, Netlify/Decap CMS only enforces this for the default locale. This change ensures that content is complete across all locales. If you rely on the previous behavior, you can set the `required` [field-level configuration](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) to include only specific locales.
 
 In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
 
@@ -411,7 +411,7 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 
 #### I18n Support
 
-- The `enforce_required_non_default` i18n option will not be supported. Sveltia CMS enforces required fields in all locales by default. However, the `initial_locales` i18n option allows users to [disable non-default locales](https://sveltiacms.app/en/docs/i18n#disabling-non-default-locale-content) if needed. Developers can also specify a subset of locales with the `required` field option, e.g. `required: [en]`.
+- The `enforce_required_non_default` i18n option will not be supported. Sveltia CMS enforces required fields in all locales by default. However, the `initial_locales` i18n option allows users to [disable non-default locales](https://sveltiacms.app/en/docs/i18n/options#disabling-non-default-locale-content) if needed. Developers can also specify a subset of locales with the `required` field option, e.g. `required: [en]`.
 
 #### Widgets
 
