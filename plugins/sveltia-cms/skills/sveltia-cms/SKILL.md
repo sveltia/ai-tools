@@ -123,10 +123,12 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Collection types, file collections, singletons, content modeling | `references/collections.md` |
 | Entry collection paths, slugs, sorting, filtering, nested collections | `references/entries.md` |
 | Shared field options; String, Text, Number, Boolean, Select, Color | `references/fields.md` |
-| List, Object, KeyValue, RichText/Markdown, Code fields | `references/fields-structural.md` |
+| List, Object, KeyValue fields | `references/fields-structural.md` |
+| RichText/Markdown, Code fields | `references/fields-richtext.md` |
 | Image, File, DateTime, Relation, Compute, UUID, Map fields | `references/fields-other.md` |
 | `media_folder`, `public_folder`, internal Git media storage | `references/media.md` |
-| Cloudinary, Uploadcare, S3-compatible storage, stock photos | `references/media-external.md` |
+| Cloudinary, Uploadcare, Azure Blob Storage, stock photos | `references/media-external.md` |
+| Amazon S3 and S3-compatible storage (R2, B2, Spaces, Bunny, Scaleway, Supabase) | `references/media-s3.md` |
 | Multilingual content, `i18n` options, translation services | `references/i18n.md` |
 | Moving from Netlify CMS, Decap CMS or Static CMS; version upgrades | `references/migration.md` |
 | Blank page, auth failures, build errors, CSP, FAQs | `references/troubleshooting.md` |

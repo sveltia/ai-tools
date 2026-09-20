@@ -1,6 +1,6 @@
 # Media Storage
 
-Media folder configuration and internal Git-based storage. For third-party services, see `media-external.md`.
+Media folder configuration and internal Git-based storage. For third-party services, see `media-external.md` and `media-s3.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
