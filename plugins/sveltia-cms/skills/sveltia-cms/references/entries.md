@@ -998,7 +998,7 @@ Source: https://sveltiacms.app/en/docs/collections/entries/slugs
 
 ## Nested Collections
 
-With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily. This feature is called **nested collections** in Netlify/Decap CMS.
+With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily.
 
 **Note for Netlify/Decap CMS users**
 

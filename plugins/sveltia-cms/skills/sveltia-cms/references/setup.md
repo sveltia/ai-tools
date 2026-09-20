@@ -483,6 +483,7 @@ See real-world examples of Astro integrations in our [Showcase](https://sveltiac
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Astro:
 
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [Starlight](https://starlight.astro.build/) docs folder tree in the sidebar with the `subfolders: false` mode, where every file under [`src/content/docs/`](https://starlight.astro.build/guides/project-structure/) is a page at its own path and editors can create new folders as needed.
 - The [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) Relation field option can contain a locale prefix like `{{locale}}/{{slug}}`, which will be replaced with the current locale. It’s intended to support i18n in Astro. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/302))
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
 
@@ -507,6 +508,7 @@ See real-world examples of Docusaurus integrations in our [Showcase](https://sve
 We have implemented specific features to enhance the integration of Sveltia CMS with Docusaurus:
 
 - If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [docs folder tree](https://docusaurus.io/docs/create-doc) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
 
 ### Development Guide
 
@@ -569,10 +571,11 @@ See real-world examples of Hugo integrations in our [Showcase](https://sveltiacm
 We have implemented specific features to enhance the integration of Sveltia CMS with Hugo:
 
 - [Entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders): Store media files in folders relative to their associated entries, which is a common practice in Hugo projects called [page bundles](https://gohugo.io/content-management/page-bundles/).
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://gohugo.io/content-management/sections/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
+- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
+- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
 - [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
-- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
-- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
 
 ### Development Guide
 
@@ -780,8 +783,9 @@ See real-world examples of VitePress integrations in our [Showcase](https://svel
 
 We have implemented specific features to enhance the integration of Sveltia CMS with VitePress:
 
-- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
 - The [`folder` option](https://sveltiacms.app/en/docs/collections/entries#creating-an-entry-collection) for an entry collection can be an empty string (or `.` or `/`) if you want to store entries in the root folder. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [folder tree of pages](https://vitepress.dev/guide/routing#source-directory) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
 
 ### Development Guide
 
@@ -813,10 +817,11 @@ See real-world examples of Zola integrations in our [Showcase](https://sveltiacm
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Zola:
 
-- The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n/options#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
-- The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
-- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
+- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://www.getzola.org/documentation/content/section/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.
+- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
+- The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
+- The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n/options#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
 
 ### Development Guide
 
