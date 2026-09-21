@@ -14,10 +14,6 @@ Already using **Netlify CMS**, **Decap CMS** or **Static CMS**? Check out the [M
 
 Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
 
-**No Free Setup Support**
-
-Sveltia CMS is specifically designed as a [replacement for Netlify/Decap CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms). We are happy to help you migrate, but **we can’t help you set up Sveltia CMS from scratch** through our free support channels. Questions about installation or initial configuration may go unanswered.
-
 ### 1. Install
 
 You can use either a starter template or manually install Sveltia CMS into your existing project.
@@ -427,17 +423,17 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 580 sites in the showcase, sorted by popularity:
+Framework distribution across 585 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 211 | 36.4% |
-| Vanilla JavaScript | 89 | 15.3% |
-| Eleventy | 77 | 13.3% |
-| Hugo | 56 | 9.7% |
-| Custom Tooling | 33 | 5.7% |
+| Astro | 215 | 36.8% |
+| Vanilla JavaScript | 89 | 15.2% |
+| Eleventy | 78 | 13.3% |
+| Hugo | 56 | 9.6% |
+| Custom Tooling | 33 | 5.6% |
 | Jekyll | 31 | 5.3% |
-| Next.js | 30 | 5.2% |
+| Next.js | 30 | 5.1% |
 | SvelteKit | 13 | 2.2% |
 | React | 10 | 1.7% |
 | React Router | 7 | 1.2% |
