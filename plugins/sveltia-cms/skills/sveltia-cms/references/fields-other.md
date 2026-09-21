@@ -1292,7 +1292,7 @@ The new entry is not saved on its own. It’s kept with your draft and committed
 
 The button is not offered in the following cases:
 
-- The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), which has a fixed set of files.
+- The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), with the [`file`](#file) option. The button creates a new entry, but such a field selects an item from a list within an existing file. Adding an item would mean editing that file from another entry, which could conflict with changes made to the file elsewhere, so the item is added by editing the file itself instead.
 - The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) option.
 - The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in your draft. The button is then shown disabled.
 - The Relation field is read-only.
