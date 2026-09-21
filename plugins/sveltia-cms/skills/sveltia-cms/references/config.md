@@ -12,6 +12,16 @@ This guide covers the basics of configuring Sveltia CMS using a configuration fi
 
 We plan to introduce a graphical configuration editor in a future release, allowing users to create and modify the configuration directly within the CMS interface. For now, please refer to this guide for manual configuration.
 
+### Compatibility with Other Platforms
+
+#### Netlify CMS and Decap CMS
+
+Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration files. You can use your existing `config.yml` file from Netlify/Decap CMS with Sveltia CMS, and it should work without any issues in most cases. However, please note that some options may have been deprecated or replaced in Sveltia CMS, so it’s recommended to review the configuration file and make any necessary adjustments. See the [migration guide](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) for details.
+
+#### Pages CMS
+
+Pages CMS was inspired by Netlify CMS and shares a similar configuration structure. While we don’t provide a direct migration path from Pages CMS to Sveltia CMS, you can use your existing `.pages.yml` file as a reference when creating a new configuration for Sveltia CMS. Ask your AI agent to convert the configuration file to Sveltia CMS format. There are [AI tools](https://sveltiacms.app/en/docs/working-with-ai) available to assist with this process.
+
 ### Supported Formats
 
 Sveltia CMS supports configuration files in the following formats:
