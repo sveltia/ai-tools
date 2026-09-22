@@ -228,7 +228,7 @@ The sidebar displays a list of all folders in the repository’s global media fo
 
 ##### Internal Locations
 
-Navigate between the global media folder and collection-specific media folders. This allows you to organize assets at both the global level and within individual collections for more granular asset management.
+Navigate between the global media folder and collection-specific media folders. This allows you to organize assets at both the global level and within individual collections for more granular asset management. Within each of these folders, you can also [browse and manage subfolders](#subfolders).
 
 ##### External Locations
 
@@ -264,6 +264,29 @@ Since these files are hosted elsewhere, they can only be browsed: there is no up
 A long list is easier to go through host by host: choose **Domain** from the **Group** menu in the toolbar to group the files by the domain of their URL. The choice is remembered for this location.
 
 The CMS also checks whether each file can still be loaded, and marks one that can’t — deleted, moved or on a host that is gone — with an **Unavailable** badge, so a broken link stands out. A missing non-media file on a host that doesn’t allow cross-origin requests can’t be detected, though.
+
+#### Subfolders
+
+A repository folder is browsed folder by folder, the way a file manager works. The subfolders of the folder you’re in are listed ahead of its assets — as compact tiles in the grid view, or as rows in the list view — and double-clicking one (or a single click or tap on a touch screen or a small screen) opens it. A breadcrumb in the toolbar shows where you are and leads back to any parent folder, and the browser’s Back button works as well, since each folder has its own URL, such as `#/assets/static/images/2024/summer`. The **All Assets** location lists every asset at once instead.
+
+Click the empty area of the list, or select a folder with a single click or the keyboard, to see the folder’s path and what it holds in the Info pane.
+
+Folders can be managed like assets:
+
+- **Create** a folder with the **New Folder** button in the toolbar. A Git repository can’t hold an empty folder, so the CMS commits a `.gitkeep` placeholder file to keep it in the repository until you upload something to it. The name is sanitized like a file name, and [slugified](https://sveltiacms.app/en/docs/media#slugification-of-filenames) as well if that option is enabled.
+- **Upload** files into the folder you’re in: both the Upload button and drag and drop save the files there.
+- **Rename** a folder from its options menu. Every asset in the folder, at any depth, is moved along in the same commit, and the File and Image fields and Markdown images that reference them are updated with the new paths.
+- **Delete** a folder and everything in it from its options menu. As with [deleting assets](#asset-management), the entries referencing any of the assets are updated in the same commit, the confirmation dialog says how many, and the deletion is refused if clearing a reference would break a field’s validation rules.
+
+Subfolder browsing applies to any global, collection or [asset collection](https://sveltiacms.app/en/docs/media/internal#asset-collections) folder with a fixed path. A [collection media folder](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration) whose path contains a template tag such as `{{slug}}`, or an [entry-relative folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), doesn’t have a single tree to walk, so its assets are listed all at once as before. A collection media folder nested inside the global media folder is its own location in the sidebar rather than a subfolder of the global one.
+
+When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), a folder that is left empty by a move or deletion is removed from the disk, so the local checkout matches what a Git commit would leave. [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, as those changes are committed straight to the branch.
+
+##### Folders on External Locations
+
+[Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and the S3-compatible providers, as well as [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage), store files at paths, so they are browsed folder by folder the same way, with the same breadcrumb, Info pane, **New Folder** button and folder menu. As object storage has no folders of its own, the CMS keeps an empty folder with a zero-byte placeholder object named after the folder with a trailing slash, which is what the consoles of these services do, and it reads the other folders off the file paths. Renaming a folder copies each file to its new path and deletes the original, one file at a time, since the services can’t move a file, and deleting a folder deletes each file in it. Keep in mind that the entries link to the files on these services by URL, so a rename changes those URLs and the entries using them aren’t updated. The search box in the location’s toolbar looks through every folder, listing the matches with their paths.
+
+[Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) has no folders, and [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) handles them in its own widget, so neither is affected.
 
 #### Asset List
 
@@ -561,6 +584,19 @@ When the `skip_ci` backend option is enabled, the Save button in the Content Edi
 #### Auto-Close Editor
 
 When you save your changes, the Content Editor automatically closes the editing interface and returns you to the collection or file list. This streamlines the workflow by reducing the number of clicks needed to return to the main interface after saving. If you prefer to stay in the editor after saving, you can change this behavior in User Preferences.
+
+#### Conflict Resolution
+
+Several people can work on a site at the same time. Sveltia CMS keeps an eye on the repository so that a change one of them pushes isn’t lost when another saves over it:
+
+- **When you open an entry**, the branch is checked for new commits, so you start from the entry as it is, not as it was when you signed in.
+- **While you edit**, the check is repeated every minute and whenever you come back to the tab. It’s a single small request to the backend, and only files that have actually changed are fetched, so the entry and asset lists follow the repository without a reload. If someone changes the entry you have open, a notice appears at the top of the editor saying who changed it and when. Reload Entry starts you over from their version — after asking, if you have unsaved changes — while dismissing the notice lets you carry on with your own.
+- **When you save**, the branch is checked once more. If the entry has been changed or deleted since you opened it, a dialog says so, and nothing is written until you choose Save Anyway. Saving over a change replaces it with yours; saving a deleted entry creates it again.
+- **On GitHub**, the commit also names the branch head it expects, so a commit against a branch that moved in the last moment is refused by GitHub rather than applied. Sveltia CMS then explains what happened, and saving again picks the other change up first.
+
+Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), each unpublished entry lives on its own branch that nobody else writes to, so these checks don’t apply there; a conflict with the main branch, if any, is dealt with when the entry is published.
+
+Only entries on the configured branch are watched. Changes to a colleague’s draft, or to the same entry in the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), aren’t detected.
 
 ### Preview Pane
 

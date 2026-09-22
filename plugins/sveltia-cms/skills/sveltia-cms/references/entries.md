@@ -86,7 +86,7 @@ The following options are commonly used when defining an entry collection:
 - `label`: A human-readable name for the collection. If omitted, the `name` value is used.
 - `label_singular`: A human-readable singular name for the collection. If omitted, the `label` value is used. Used in some parts of the UI like the “Create new” button.
 - `description`: A brief description of the collection, displayed in the UI. Basic Markdown formatting is supported, including bold, italic, strikethrough, code, and links.
-- `folder`: (required) The folder path where the entries are stored, relative to the repository’s root directory. It can be an empty string (or `.` or `/`) to store entries in the root folder.
+- `folder`: (required) The folder path where the entries are stored, relative to the repository’s root directory. It can be an empty string (or `.` or `/`) to store entries in the root folder. With i18n enabled, it can contain the `{{locale}}` placeholder as a folder name, e.g. `content/{{locale}}/posts`, to say where the locale folder goes. See [Custom Locale Folder Placement](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement).
 - `fields`: (required) An array defining the [fields](https://sveltiacms.app/en/docs/fields) for each entry in the collection. Each field has a `name`, `label`, and optional `widget` type.
 
 ### Configuration Guides
@@ -944,6 +944,7 @@ A folder collection’s file path is determined by multiple factors: the `i18n`,
 - The `folder` collection option (required)
   - It specifies the folder where the collection entries are stored, relative to the repository’s root directory.
   - It can contain slashes to create a nested folder structure.
+  - With i18n enabled, it can contain the `{{locale}}` placeholder as a folder name to say where the locale folder goes, which takes precedence over the `structure` i18n option. See [Custom Locale Folder Placement](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement).
 - The [`path`](#using-subfolders) collection option (optional)
   - It defaults to `{{slug}}`, which is the `slug` collection option value.
   - It can contain template tags.
@@ -980,7 +981,7 @@ Looking at the above options, the entry file path can be constructed as follows:
   When the `omit_default_locale_from_file_path` i18n option is set to `true`, the path depends on the locale:
   ```yaml
   /<folder>/<path>.<extension> # default locale
-  /<locale>/<folder>/<path>.<extension> # other locales
+  /<folder>/<locale>/<path>.<extension> # other locales
   ```
 - With the `multiple_root_folders` i18n structure:
   ```yaml
@@ -990,6 +991,15 @@ Looking at the above options, the entry file path can be constructed as follows:
   ```yaml
   /<folder>/<path>.<extension> # default locale
   /<locale>/<folder>/<path>.<extension> # other locales
+  ```
+- With the `{{locale}}` placeholder in the `folder` option, e.g. `content/{{locale}}/posts`, whatever the i18n structure:
+  ```yaml
+  /<folder with the locale filled in>/<path>.<extension>
+  ```
+  When the `omit_default_locale_from_file_path` i18n option is set to `true`, the path depends on the locale:
+  ```yaml
+  /<folder without the locale>/<path>.<extension> # default locale
+  /<folder with the locale filled in>/<path>.<extension> # other locales
   ```
 
 Source: https://sveltiacms.app/en/docs/collections/entries/slugs

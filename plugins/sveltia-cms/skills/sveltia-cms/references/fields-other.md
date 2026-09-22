@@ -221,6 +221,7 @@ If you need to limit uploads to images only, consider using the [Image](https://
 A large upload button is displayed for the File field. When it’s is clicked, a file selection dialog with the following features appears:
 
 - Tabs to select files from different sources: field assets, entry assets, file assets, collection assets, and global assets (if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is enabled).
+- [Subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened to browse them, with a breadcrumb leading back. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
 - An option to upload new files by dragging and dropping them into the dialog or by selecting them from the file system.
 - An option to enter a URL to select a file from an external source (if `choose_url` option is enabled).
 - Integration with [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) if configured.

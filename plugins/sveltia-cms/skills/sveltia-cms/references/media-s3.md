@@ -36,7 +36,7 @@ Create an IAM user with programmatic access and attach a policy granting the min
 }
 ```
 
-The `s3:DeleteObject` action is only needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original.
+The `s3:DeleteObject` action is only needed to delete and rename files and folders from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original, and an empty folder is kept with a zero-byte placeholder object.
 
 The resulting **Access Key ID** goes in `access_key_id` in your config. The **Secret Access Key** is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
 
@@ -200,13 +200,17 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The Amazon S3 media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to S3 or select existing media from your bucket.
+There are two ways to use Amazon S3 in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Amazon S3 directly within the entry editor. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to S3 or select existing media from your bucket.
 
 When uploading media, files will be stored in your S3 bucket, and you can take advantage of S3’s capabilities directly from the CMS. You can also select existing media from your S3 storage.
 
 #### Asset Library
 
-Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/amazon-s3
 
@@ -447,13 +451,17 @@ B2 uses a region-specific endpoint for the S3 API (`https://s3.{region}.backblaz
 
 ### Accessing the Storage
 
-The Backblaze B2 media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Application Key (secret) in the CMS UI when prompted, and you’ll be able to upload new media directly to B2 or select existing media from your bucket.
+There are two ways to use Backblaze B2 in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Backblaze B2 directly within the entry editor. Enter your Application Key (secret) in the CMS UI when prompted, and you’ll be able to upload new media directly to B2 or select existing media from your bucket.
 
 When uploading media, files will be stored in your B2 bucket with zero egress fees for downloads. You can also select existing media from your B2 storage.
 
 #### Asset Library
 
-Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/backblaze-b2
 
@@ -610,13 +618,17 @@ Files are served through the pull zone’s cache. If you replace a file with a n
 
 ### Accessing the Storage
 
-The Bunny Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your storage zone password in the CMS UI when prompted, and you’ll be able to upload new media directly to your storage zone or select existing media.
+There are two ways to use Bunny Storage in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Bunny Storage directly within the entry editor. Enter your storage zone password in the CMS UI when prompted, and you’ll be able to upload new media directly to your storage zone or select existing media.
 
 When uploading media, files will be stored in your storage zone and delivered through the Bunny CDN. You can also select existing media from your storage zone.
 
 #### Asset Library
 
-Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS.
+Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/bunny-storage
 
@@ -815,13 +827,17 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The Cloudflare R2 media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to R2 or select existing media from your bucket.
+There are two ways to use Cloudflare R2 in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudflare R2 directly within the entry editor. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to R2 or select existing media from your bucket.
 
 When uploading media, files will be stored in your R2 bucket, and you can take advantage of R2’s capabilities directly from the CMS. You can also select existing media from your R2 storage.
 
 #### Asset Library
 
-Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/cloudflare-r2
 
@@ -979,13 +995,17 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The DigitalOcean Spaces media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to Spaces or select existing media from your bucket.
+There are two ways to use DigitalOcean Spaces in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on DigitalOcean Spaces directly within the entry editor. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to Spaces or select existing media from your bucket.
 
 When uploading media, files will be stored in your Spaces bucket, and you can take advantage of Spaces’ capabilities directly from the CMS. You can also select existing media from your Spaces storage.
 
 #### Asset Library
 
-DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/digitalocean-spaces
 
@@ -1123,11 +1143,15 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The Scaleway Object Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
+There are two ways to use Scaleway Object Storage in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Scaleway Object Storage directly within the entry editor. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
 
 #### Asset Library
 
-Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/scaleway-object-storage
 
@@ -1274,10 +1298,14 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The Supabase Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
+There are two ways to use Supabase Storage in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Supabase Storage directly within the entry editor. Enter your Secret Access Key in the CMS UI when prompted, and you’ll be able to upload new media directly to your bucket or select existing media.
 
 #### Asset Library
 
-Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder you’re in, and folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/supabase-storage

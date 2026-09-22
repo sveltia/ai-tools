@@ -231,7 +231,7 @@ To collaborate with others, you need to invite them to your repository on the ba
 
 Then, share the admin interface URL with them so they can access Sveltia CMS.
 
-Please note that Sveltia CMS does not officially support multi-user scenarios yet. Be cautious when multiple users are editing content simultaneously, as it may lead to merge conflicts or unintended overwrites. We recommend coordinating with your team to avoid concurrent edits on the same content.
+Several people can edit content at the same time. Sveltia CMS notices when someone else has changed an entry you have open and asks before letting you save over their change. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
 
 #### Iterate and Improve
 
@@ -541,6 +541,7 @@ See real-world examples of Eleventy integrations in our [Showcase](https://svelt
 We have implemented specific features to enhance the integration of Sveltia CMS with Eleventy:
 
 - [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of pages in the sidebar with the `subfolders: false` mode, where every file is a page at its own [path-based permalink](https://www.11ty.dev/docs/permalinks/) and editors can create new folders as needed.
+- [Directory data files](https://sveltiacms.app/en/docs/collections/entries/listings#managing-eleventy-s-directory-data-file): Manage a folder’s [directory data file](https://www.11ty.dev/docs/data-template-dir/), like `posts/posts.json`, beside the Markdown entries it applies to, using the `index_file` option with an `extension` or `format` of its own.
 - [Editor components](https://sveltiacms.app/en/docs/api/editor-components#styled-separator): An example of a custom component that inserts an Eleventy [shortcode](https://www.11ty.dev/docs/shortcodes/) into Markdown content.
 
 ### Development Guide
@@ -579,6 +580,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
 - [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
+- [Translation by content directory](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement): Put the `{{locale}}` placeholder in a collection’s `folder` option, e.g. `content/{{locale}}/posts`, to match a [multilingual Hugo site](https://gohugo.io/content-management/multilingual/#translation-by-content-directory) with a `contentDir` per language, section index files included.
 - [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
 - [Editor components](https://sveltiacms.app/en/docs/api/editor-components#examples): Examples of custom components that insert Hugo [shortcodes](https://gohugo.io/content-management/shortcodes/) into Markdown content, such as an image with a caption and a YouTube embed.
 - [Time formatting](https://sveltiacms.app/en/docs/data-output#general-conventions): A standard time is saved as `HH:mm:ss` instead of `HH:mm` for compatibility with Hugo.

@@ -826,6 +826,8 @@ Here is an example of full customization. All options are optional.
 ```yaml [YAML]
 index_file:
   name: _index # File name without a locale or extension. Default: _index
+  extension: md # File extension. Default: the collection’s extension
+  format: frontmatter # File format. Default: detected from the extension, or the collection’s format
   label: Index File # Human-readable file label. Default: Index File
   icon: home # Material Symbols icon name. Default: home
   fields: # Fields for the index file. If omitted, regular entry fields are used
@@ -837,6 +839,8 @@ index_file:
 ```toml [TOML]
 [index_file]
 name = "_index"
+extension = "md"
+format = "frontmatter"
 label = "Index File"
 icon = "home"
 # fields would be defined as [[index_file.fields]] elements
@@ -849,6 +853,8 @@ preview = false
 {
   "index_file": {
     "name": "_index",
+    "extension": "md",
+    "format": "frontmatter",
     "label": "Index File",
     "icon": "home",
     "fields": [],
@@ -863,6 +869,8 @@ preview = false
 {
   index_file: {
     name: "_index",
+    extension: "md",
+    format: "frontmatter",
     label: "Index File",
     icon: "home",
     fields: [],
@@ -896,6 +904,119 @@ index_file = true
 ```
 
 Note that the special index file is placed right under the `folder`, regardless of the collection’s [`path` option](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders). For example, if the `path` is `{{year}}/{{slug}}`, a regular entry would be saved as `content/posts/2025/title.md`, but the index file remains at `content/posts/_index.md`.
+
+For a multilingual Hugo site using [translation by content directory](https://gohugo.io/content-management/multilingual/#translation-by-content-directory), where the section folders sit below the locale folders, put the [`{{locale}}` placeholder](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement) in the `folder` option, e.g. `content/{{locale}}/posts`. The index file then lands in each locale’s section folder, e.g. `content/en/posts/_index.md`, rather than under the `content` folder.
+
+##### Managing Eleventy’s Directory Data File
+
+The index file doesn’t have to be a Hugo `_index.md`: any file with a fixed name right under the collection folder can be one, in a format of its own. Eleventy’s [directory data file](https://www.11ty.dev/docs/data-template-dir/), for example, is a JSON (or YAML, if configured) file named after the folder, like `posts/posts.json`, that holds the data every Markdown entry in the folder inherits. Set the `name` and `extension` (or `format`) options to manage it beside the entries:
+
+```yaml [YAML]{9-10}
+collections:
+  - name: posts
+    label: Blog posts
+    folder: content/posts
+    fields:
+      - { name: title, label: Title }
+      - { name: body, label: Body, widget: richtext }
+    index_file:
+      name: posts
+      extension: json
+      label: Posts Data
+      icon: description
+      fields:
+        - { name: layout, label: Layout }
+        - { name: tags, label: Tags, widget: list }
+```
+
+```toml [TOML]{16-17}
+[[collections]]
+name = "posts"
+label = "Blog posts"
+folder = "content/posts"
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+
+[collections.index_file]
+name = "posts"
+extension = "json"
+label = "Posts Data"
+icon = "description"
+
+[[collections.index_file.fields]]
+name = "layout"
+label = "Layout"
+
+[[collections.index_file.fields]]
+name = "tags"
+label = "Tags"
+widget = "list"
+```
+
+```json [JSON]{12-13}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog posts",
+      "folder": "content/posts",
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "body", "label": "Body", "widget": "richtext" }
+      ],
+      "index_file": {
+        "name": "posts",
+        "extension": "json",
+        "label": "Posts Data",
+        "icon": "description",
+        "fields": [
+          { "name": "layout", "label": "Layout" },
+          { "name": "tags", "label": "Tags", "widget": "list" }
+        ]
+      }
+    }
+  ]
+}
+```
+
+```js [JavaScript]{12-13}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog posts",
+      folder: "content/posts",
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "body", label: "Body", widget: "richtext" },
+      ],
+      index_file: {
+        name: "posts",
+        extension: "json",
+        label: "Posts Data",
+        icon: "description",
+        fields: [
+          { name: "layout", label: "Layout" },
+          { name: "tags", label: "Tags", widget: "list" },
+        ],
+      },
+    },
+  ],
+}
+```
+
+With this configuration, `content/posts/posts.json` is listed and edited as the collection’s index file, read and written as JSON, while `content/posts/*.md` are the regular entries. Other `.json` files in the folder are left alone. The `format` option works as it does for [the collection](https://sveltiacms.app/en/docs/collections/entries/formats): give it alone to have the extension follow, or give both when they don’t go together, e.g. `extension: md` with `format: toml-frontmatter`. The [front matter delimiters](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter), body field and other file options are shared with the entries.
+
+**Reserved Name**
+
+An index file with an extension of its own could sit beside an entry of the same name, like `posts/posts.md` next to `posts/posts.json`, but the two would be addressed the same way in the CMS. The index file’s name is therefore reserved: such an entry is left out of the collection, and a new entry whose slug would clash with it is renamed like any duplicate.
 
 #### Filtering Entries
 

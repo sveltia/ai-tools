@@ -1225,10 +1225,10 @@ There are two main ways to use the internal media storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Click the Browse button to open the media picker, where you can select existing assets or upload new ones. These fields also support drag-and-drop functionality for easy uploads.
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Click the Browse button to open the media picker, where you can select existing assets or upload new ones, browsing the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and creating new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
 
 #### Standalone Asset Library
 
-You can access the Asset Library from the main navigation menu in the CMS interface. Here, you can view, upload, and manage all your media assets in one place. You can view assets in a grid or list format, search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
+You can access the Asset Library from the main navigation menu in the CMS interface. Here, you can view, upload, and manage all your media assets in one place. You can view assets in a grid or list format, browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
 
 Source: https://sveltiacms.app/en/docs/media/internal

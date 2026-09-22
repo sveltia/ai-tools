@@ -640,7 +640,7 @@ Yes, but with some limitations.
 
 Sveltia CMS does not have built-in user management features at the moment. You need to ask users to create an account with your chosen Git service provider (e.g., GitHub) and invite them to your repository for collaboration. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them. In the near future, we plan to introduce built-in user management features to simplify collaboration.
 
-Also, please note that Sveltia CMS currently doesn’t have any mechanism to avoid conflicts when multiple users edit the same content simultaneously. We recommend establishing a workflow among your team members to prevent such conflicts. We plan to solve this issue in future releases.
+When several people edit content at the same time, Sveltia CMS checks the repository as an entry is opened, while it’s being edited and before it’s saved, so a change someone else has pushed is noticed and never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution) for details.
 
 ### Security and Privacy
 

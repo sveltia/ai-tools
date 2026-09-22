@@ -313,7 +313,11 @@ See the [Transformation URL API reference](https://cloudinary.com/documentation/
 
 ### Accessing the Storage
 
-The Cloudinary media storage can be accessed through the File and Image fields in Sveltia CMS. When uploading media, files will be stored in your Cloudinary account, and you can take advantage of Cloudinary’s transformation capabilities directly from the CMS. You can also select existing media from your Cloudinary storage.
+There are two ways to use Cloudinary in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudinary directly within the entry editor. When uploading media, files will be stored in your Cloudinary account, and you can take advantage of Cloudinary’s transformation capabilities directly from the CMS. You can also select existing media from your Cloudinary storage.
 
 Users are required to authenticate with Cloudinary using their username and password when accessing the media storage provider. The authentication process is handled automatically by Sveltia CMS using the provided API key.
 
@@ -545,7 +549,11 @@ To enhance security, Uploadcare supports [signed uploads](https://uploadcare.com
 
 ### Accessing the Storage
 
-The Uploadcare media storage can be accessed through the File and Image fields in Sveltia CMS. When uploading media, files will be stored in your Uploadcare account, and you can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
+There are two ways to use Uploadcare in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Uploadcare directly within the entry editor. When uploading media, files will be stored in your Uploadcare account, and you can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
 
 #### Asset Library
 
@@ -748,13 +756,17 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 ### Accessing the Storage
 
-The Azure Blob Storage media storage can be accessed through the File and Image fields in Sveltia CMS. Enter your SAS token in the CMS UI when prompted — or at any time under **Settings > Media > Cloud Storage Service API Keys** — and you’ll be able to upload new media directly to Azure or select existing media from your container.
+There are two ways to use Azure Blob Storage in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Azure Blob Storage directly within the entry editor. Enter your SAS token in the CMS UI when prompted — or at any time under **Settings > Media > Cloud Storage Service API Keys** — and you’ll be able to upload new media directly to Azure or select existing media from your container.
 
 When uploading media, files are stored in your container as block blobs, and you can take advantage of Azure’s capabilities directly from the CMS. You can also select existing media from your Blob Storage.
 
 #### Asset Library
 
-Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original.
+Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original. The blobs are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations) by their virtual directories: subfolders are listed ahead of the blobs, uploads go to the folder you’re in, and folders can be created, renamed and deleted — an empty folder is kept with a zero-byte placeholder blob named after it with a trailing slash, and renaming a folder copies and deletes each blob in it.
 
 Source: https://sveltiacms.app/en/docs/media/azure-blob-storage
 
