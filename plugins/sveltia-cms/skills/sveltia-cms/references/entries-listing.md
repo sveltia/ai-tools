@@ -198,6 +198,8 @@ widget = "richtext"
 
 With the above configuration, editors can only create up to 5 entries in the `featured_articles` collection. Once the limit is reached, the “Create new” button will be disabled in the Sveltia CMS interface.
 
+The collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) doesn’t take up a slot. It stands for the collection’s own page rather than for one of the entries in it, so a collection with `limit: 5` and an `index_file` holds its index file plus 5 entries.
+
 ### Hiding the Collection
 
 You can hide an entry collection from the Sveltia CMS interface using the `hide` option. This is useful for collections that are managed programmatically or through other means, and you don’t want editors to see or modify them.
@@ -906,6 +908,10 @@ index_file = true
 Note that the special index file is placed right under the `folder`, regardless of the collection’s [`path` option](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders). For example, if the `path` is `{{year}}/{{slug}}`, a regular entry would be saved as `content/posts/2025/title.md`, but the index file remains at `content/posts/_index.md`.
 
 For a multilingual Hugo site using [translation by content directory](https://gohugo.io/content-management/multilingual/#translation-by-content-directory), where the section folders sit below the locale folders, put the [`{{locale}}` placeholder](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement) in the `folder` option, e.g. `content/{{locale}}/posts`. The index file then lands in each locale’s section folder, e.g. `content/en/posts/_index.md`, rather than under the `content` folder.
+
+The index file is listed beside the regular entries, but it isn’t counted as one of them, because it stands for the collection’s own page rather than for something in it. It’s left out of the entry count shown next to the collection in the [collection list](https://sveltiacms.app/en/docs/ui/content-library#collection-list), and it doesn’t take up a slot in the collection’s [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count). A collection holding nothing but its index file therefore shows a count of `0`.
+
+Only the collection’s own index file is treated this way. When one collection’s `folder` contains another’s — a `pages` collection on `content` with a `posts` collection on `content/posts`, say — the inner collection’s `content/posts/_index.md` is an ordinary entry as far as the outer collection is concerned: the outer collection’s [`filter`](#filtering-entries) applies to it, and it’s counted like any other entry the filter lets through.
 
 ##### Managing Eleventy’s Directory Data File
 

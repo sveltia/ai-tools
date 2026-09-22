@@ -825,7 +825,7 @@ Manage your entries and files in one place. The Content Library provides a centr
 
 #### Collection List
 
-Displays all [collections](https://sveltiacms.app/en/docs/collections) with entry counts for quick access. [Singletons](https://sveltiacms.app/en/docs/collections/singletons) are marked distinctly to differentiate them from regular collections.
+Displays all [collections](https://sveltiacms.app/en/docs/collections) with entry counts for quick access. [Singletons](https://sveltiacms.app/en/docs/collections/singletons) are marked distinctly to differentiate them from regular collections. A collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) isn’t included in its count, because it stands for the collection’s own page rather than for one of the entries in it.
 
 Customization options include:
 
