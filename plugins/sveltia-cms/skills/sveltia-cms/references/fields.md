@@ -1316,7 +1316,7 @@ The Select field type allows users to choose one or more options from a predefin
 
 The options in a Select field are meant to be a static list of a small number of choices defined in the configuration file. If you need dynamic options based on other collections, consider using the [Relation](https://sveltiacms.app/en/docs/fields/relation) field type instead. See also our [how-to guide](https://sveltiacms.app/en/docs/how-tos#using-entry-tags-for-categorization) on using entry tags for categorization.
 
-For boolean (true/false) selections, consider using the [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field type.
+For a simple true/false choice, consider using the [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field type. A Select field with `true` and `false` option values is useful when the choice needs custom labels or a third state, such as `null`. See the [example](#boolean-and-null-values) below.
 
 ### User Interface
 
@@ -1332,13 +1332,13 @@ A string or a list of strings representing the selected option(s).
 
 ### Data Type
 
-It depends on the `options`. Usually a string or an array of strings, depending on whether the `multiple` option is set to `true` or `false`, but can also be a number or an array of numbers if the options are defined as such.
+It depends on the `options`. Usually a string or an array of strings, depending on whether the `multiple` option is set to `true` or `false`, but can also be a number, boolean or `null`, or an array of them, if the options are defined as such.
 
-If the `required` option is set to `false` and no option is selected, the value will be `null` for single select or an empty array for multi select.
+If the `required` option is set to `false` and no option is selected, the value will be an empty array for multi select. For single select, it will be an empty string if the options are strings, or `null` if they are numbers or booleans.
 
 ### Data Validation
 
-- If the `required` option is set to `true`, at least one option must be selected.
+- If the `required` option is set to `true`, at least one option must be selected. An option with the value `null` or an empty string counts as a selection.
 - If the `multiple` option is enabled, the number of selected options must be between the `min` and `max` limits, if specified.
 
 ### Options
@@ -1357,7 +1357,9 @@ In addition to the [common field options](https://sveltiacms.app/en/docs/fields#
 - **Type**: `array`
 - **Default**: `[]`
 
-An array of options for the select field. Each option can be defined as a string/number or as an object with `label` and `value` properties. These options will be presented to the user in the UI.
+An array of options for the select field. Each option can be defined as a string, number, boolean or `null`, or as an object with `label` and `value` properties. These options will be presented to the user in the UI.
+
+TOML doesn’t support `null`, so an option with the value `null` can’t be defined in a TOML configuration file. In a TOML data file, a field with the value `null` is omitted.
 
 The following are valid examples of the `options` configuration:
 
@@ -1478,10 +1480,10 @@ options: [
 
 ##### `default`
 
-- **Type**: `string`, `number`, `array of strings`, or `array of numbers`
-- **Default**: `null` or `[]`
+- **Type**: `string`, `number`, `boolean`, `null`, or an array of them
+- **Default**: an empty string, `null` or `[]`
 
-The default value for the field. Should be a string or number for single select, or an array of strings or numbers for multi select, depending on the `multiple` option. A value that isn’t one of the `options`, or an array with `multiple` off and a single value with `multiple` on, is reported as a config validation error on the login screen.
+The default value for the field. Should be a string, number, boolean or `null` for single select, or an array of them for multi select, depending on the `multiple` option. A value that isn’t one of the `options`, or an array with `multiple` off and a single value with `multiple` on, is reported as a config validation error on the login screen.
 
 ##### `dropdown_threshold`
 
@@ -1656,6 +1658,79 @@ color = "#00FF00"
   "color": "#00FF00"
 }
 ```
+
+#### Boolean and Null Values
+
+Option values can be booleans or `null`, which is useful when a choice needs custom labels or a third state. The following example shows a required field with “Yes”, “No” and “Not relevant” options, stored as `true`, `false` and `null`. Since `null` is one of the options, it counts as a selection and passes the `required` validation.
+
+TOML doesn’t support `null`, so this example is only available in YAML, JSON and JavaScript.
+
+```yaml [YAML]
+- name: accessible
+  label: Wheelchair Accessible
+  widget: select
+  options:
+    - { label: 'Yes', value: true }
+    - { label: 'No', value: false }
+    - { label: Not relevant, value: null }
+  default: null
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "accessible",
+      "label": "Wheelchair Accessible",
+      "widget": "select",
+      "options": [
+        { "label": "Yes", "value": true },
+        { "label": "No", "value": false },
+        { "label": "Not relevant", "value": null }
+      ],
+      "default": null
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  fields: [
+    {
+      name: 'accessible',
+      label: 'Wheelchair Accessible',
+      widget: 'select',
+      options: [
+        { label: 'Yes', value: true },
+        { label: 'No', value: false },
+        { label: 'Not relevant', value: null },
+      ],
+      default: null,
+    },
+  ],
+}
+```
+
+Output example when “No” is selected:
+
+```yaml [YAML]
+accessible: false
+```
+
+```toml [TOML]
+accessible = false
+```
+
+```json [JSON]
+{
+  "accessible": false
+}
+```
+
+**Quote `Yes` and `No` in YAML**
+
+In YAML 1.1, unquoted `yes` and `no` can be read as booleans by some parsers, so it’s safer to quote them when they are used as labels, as shown above.
 
 #### Multi Select with Limits
 
