@@ -786,6 +786,8 @@ slug = "{{date | date('YYYY-MM-DD')}}-{{fields.slug}}"
 
 The `slug` option value should not contain slashes (`/`). If you need to create a nested folder structure for entries, use the [`path` option](#using-subfolders) instead.
 
+The `slug` option can also be an object, whose `template` option specifies the template, along with the options to [make slugs editable](#making-slugs-editable).
+
 #### Slug Template Tags
 
 The following template tags are supported in the `slug` option:
@@ -808,17 +810,162 @@ Additionally, the following unique identifier tags are available. These tags gen
 
 #### Making Slugs Editable
 
-By default, an entry’s slug is generated from the `title` field or the template defined in the `slug` option, and users never see it while writing. To have users choose the slug themselves instead, set the `slug` option to the special `{{fields._slug}}` tag.
+Entry slugs are shown and edited in the Slug panel of the Content Editor’s [sidebar](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel). By default, users can edit the slug both while creating an entry and once it has been saved:
 
-With that option in place, a required Slug field appears above the other fields in the Edit Pane. It looks like a standard string field, but its value becomes the entry slug. The field starts out empty, so the entry can’t be saved until a slug has been entered, and slashes and whitespace are rejected.
+- In a new entry, the panel shows the slug the entry will be saved with, which follows the `slug` template as the entry is edited. The pencil button lets users change it, and emptying it goes back to the template.
+- In a saved entry, the pencil button renames the entry. Renaming moves the entry’s file and rewrites every reference to it when the entry is saved. See [Slug Panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) for details.
 
-**Only while creating an entry**
+To control this, set the `slug` option to an object instead of a template string. The object accepts the following options:
 
-The Slug field is shown only while an entry is being created, including when an existing entry is duplicated. Once the entry has been saved, the field disappears.
+- `template`: The [slug template](#defining-entry-slugs), which is what a string `slug` option specifies. The default is the [identifier field](#specifying-an-identifier-field), like `{{title}}`.
+- `editable`: Whether users can edit the slug. `true` (default) allows it both when an entry is created and once it has been saved, and `false` allows neither. An array picks the stages: `[create]` for new entries only, or `[update]` for saved entries only.
+- `hint`: A short description shown in the Slug panel, e.g. to explain what the slug is used for.
+- `pattern`: A regular expression the slug has to match, along with an error message, e.g. `['^[a-z-]+$', 'Use lowercase letters and hyphens only']`. It works like the [`pattern` field option](https://sveltiacms.app/en/docs/fields#pattern) and applies to a slug typed in by the user.
+- `i18n`: Whether each locale has a slug of its own. See [Localizing Entry Slugs](https://sveltiacms.app/en/docs/i18n/slugs#making-slugs-editable).
 
-A saved entry can still be renamed, but only with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor) in the 3-dot menu of the Content Editor. Renaming moves the entry’s file and rewrites every reference to it, so it’s deliberately kept out of the Edit Pane, where it could otherwise be changed by accident in the middle of routine editing.
+For example, to let users give a new blog post a slug of its own while keeping saved posts at their original URLs:
 
-In an [i18n](https://sveltiacms.app/en/docs/i18n)-enabled collection, `{{fields._slug}}` makes the slug editable in the default locale only, and the remaining locales show the same value as read-only. To let users enter a different slug for each locale, set the `slug` option to `{{fields._slug | localize}}` instead.
+```yaml [YAML]{5-7}
+collections:
+  - name: posts
+    label: Blog Posts
+    folder: /content/posts
+    slug:
+      template: '{{year}}-{{month}}-{{day}}-{{slug}}'
+      editable: [create]
+```
+
+```toml [TOML]{6-8}
+[[collections]]
+name = "posts"
+label = "Blog Posts"
+folder = "/content/posts"
+
+[collections.slug]
+template = "{{year}}-{{month}}-{{day}}-{{slug}}"
+editable = ["create"]
+```
+
+```json [JSON]{7-10}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog Posts",
+      "folder": "/content/posts",
+      "slug": {
+        "template": "{{year}}-{{month}}-{{day}}-{{slug}}",
+        "editable": ["create"]
+      }
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7-10}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog Posts",
+      folder: "/content/posts",
+      slug: {
+        template: "{{year}}-{{month}}-{{day}}-{{slug}}",
+        editable: ["create"],
+      },
+    },
+  ],
+}
+```
+
+**Locking entry URLs**
+
+Renaming an entry changes its URL on your live site, unless your framework [redirects the old URL](https://sveltiacms.app/en/docs/collections/entries/previews#redirects). If your editors shouldn’t change the slug once an entry has been published, set `editable` to `[create]`, or to `false` to have the slug always generated from the template.
+
+##### Having Users Type the Slug
+
+When the slug can’t be derived from the entry’s content, e.g. when the file name is the only place a value is stored, you can have users type the slug themselves. Set the `editable` option to allow editing on creation, without a `template`. The slug is then required: the Slug panel opens by itself when a new entry is created, and the entry can’t be saved until a slug has been entered.
+
+For example, a collection of languages whose file names are [BCP 47](https://en.wikipedia.org/wiki/IETF_language_tag) language codes, such as `en.json` or `pt-br.json`, can guide users with the `hint` and `pattern` options:
+
+```yaml [YAML]{6-9}
+collections:
+  - name: languages
+    label: Languages
+    folder: /content/languages
+    format: json
+    slug:
+      editable: true
+      hint: A BCP 47 language code, like en or pt-br
+      pattern: ['^[a-z]{2,3}(-[a-z0-9]+)*$', 'Must be a BCP 47 language code']
+    fields:
+      - { name: native_name, label: Native Name }
+```
+
+```toml [TOML]{7-10}
+[[collections]]
+name = "languages"
+label = "Languages"
+folder = "/content/languages"
+format = "json"
+
+[collections.slug]
+editable = true
+hint = "A BCP 47 language code, like en or pt-br"
+pattern = ["^[a-z]{2,3}(-[a-z0-9]+)*$", "Must be a BCP 47 language code"]
+
+[[collections.fields]]
+name = "native_name"
+label = "Native Name"
+```
+
+```json [JSON]{8-12}
+{
+  "collections": [
+    {
+      "name": "languages",
+      "label": "Languages",
+      "folder": "/content/languages",
+      "format": "json",
+      "slug": {
+        "editable": true,
+        "hint": "A BCP 47 language code, like en or pt-br",
+        "pattern": ["^[a-z]{2,3}(-[a-z0-9]+)*$", "Must be a BCP 47 language code"]
+      },
+      "fields": [{ "name": "native_name", "label": "Native Name" }]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{8-12}
+{
+  collections: [
+    {
+      name: "languages",
+      label: "Languages",
+      folder: "/content/languages",
+      format: "json",
+      slug: {
+        editable: true,
+        hint: "A BCP 47 language code, like en or pt-br",
+        pattern: ["^[a-z]{2,3}(-[a-z0-9]+)*$", "Must be a BCP 47 language code"],
+      },
+      fields: [{ name: "native_name", label: "Native Name" }],
+    },
+  ],
+}
+```
+
+Without the `editable` option, a collection without a `template` generates the slug from the identifier field as usual, and users can still change it in the Slug panel if they like.
+
+A slug can also be given to a new entry with the `_slug` query parameter when [linking to the Content Editor](https://sveltiacms.app/en/docs/ui/content-editor#entry-slug).
+
+**Deprecation Notice**
+
+The special `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags have been deprecated in favour of the `editable` and `i18n` options described above, and will be removed in Sveltia CMS v1.0.0. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
+
+Also, in earlier versions, setting the collection’s `delete` option to `false` prevented a saved entry’s slug from being edited. This is no longer the case; use `editable: [create]` or `editable: false` instead.
 
 ### File Paths
 
@@ -1328,7 +1475,7 @@ In the `subfolders` mode, a new entry gets a folder of its own within the chosen
 
 With `subfolders: false`, creating an entry never creates a folder, so the tree could otherwise only ever show the folders that already hold a file. A New Folder button below the tree fills that gap: pick the folder to create it in, give it a name, and the new folder becomes the entry’s parent. The name is normalized like an [entry slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) — “User Guides” becomes `user-guides` — and is rejected if it contains a slash, starts with a dot, which would hide the folder, keeps no letter or number once normalized, or is already used by a folder in the same parent. The folder itself reaches the repository when the entry is saved into it, because Git tracks files rather than folders and so has no way to commit an empty folder. The button isn’t shown in the `subfolders` mode, where creating an entry already creates the folder that holds it.
 
-Choosing a different folder for an existing entry moves its file, keeping the name it already has. To change that name instead of the folder it sits in, use the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor), which renames the entry’s own folder and takes everything below it along the same way. The Save button is enabled by the folder alone, so an entry can be moved without touching its content. In the `subfolders` mode, everything below the entry’s folder moves with it in the same commit — its child entries as well as any [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) stored alongside them — so a whole section can be reorganized in one save. The CMS rejects a folder that is already taken by another entry.
+Choosing a different folder for an existing entry moves its file, keeping the name it already has. To change that name instead of the folder it sits in, use the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the entry’s own folder and takes everything below it along the same way. The Save button is enabled by the folder alone, so an entry can be moved without touching its content. In the `subfolders` mode, everything below the entry’s folder moves with it in the same commit — its child entries as well as any [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) stored alongside them — so a whole section can be reorganized in one save. The CMS rejects a folder that is already taken by another entry.
 
 **`index_file` vs `meta.path.index_file`**
 
@@ -1450,7 +1597,7 @@ This requires the [`preview_path` option](#preview-paths), because that option i
 - If the property doesn’t exist yet, it’s created as a list with a single item.
 - If the property already exists as a list, the previous path is appended to it, so redirects accumulate as an entry is renamed over time.
 
-Entry slugs can be changed with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor), which can be accessed via the 3-dot menu in the Content Editor.
+Entry slugs can be changed in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) of the Content Editor’s sidebar.
 
 With the `preview_path` configuration shown above, renaming a June 2025 blog post from `my-first-post` to `hello-world` results in the following front matter:
 

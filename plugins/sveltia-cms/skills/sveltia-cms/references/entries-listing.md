@@ -1702,6 +1702,7 @@ A view filter can compare the field value with a given value instead of, or in a
 | `gte`    | The field value has to be greater than or equal to the given value.                 |
 | `in`     | The field value has to be equal to one of the given values, defined as an array.    |
 | `not_in` | The field value has to be different from all the given values, defined as an array. |
+| `empty`  | The field value has to be empty (`true`) or not (`false`).                          |
 
 The value of a DateTime field is compared as a date, so the given value has to be in the same format as the field value, or one of the following template tags:
 
@@ -1713,7 +1714,49 @@ The value of a DateTime field is compared as a date, so the given value has to b
 
 The tags are resolved in the user’s local time zone whenever the entry list is updated, and every minute while such a filter or group is applied, so a filter like “Upcoming events” keeps working without any change to the configuration.
 
-A number field value and a numeric given value are compared as numbers; any other value is compared as a string. An entry without a value for the field only matches `ne` and `not_in`. When several options are defined for one filter, all of them have to be satisfied.
+A number field value and a numeric given value are compared as numbers; any other value is compared as a string. An entry without a value for the field only matches `ne`, `not_in` and `empty: true`. When several options are defined for one filter, all of them have to be satisfied.
+
+The `empty` option tells the entries that have a value for the field from those that don’t. A value is empty if it’s `null`, an empty string or an empty list, if it’s an Object field whose subfields are all empty, or if the field is missing from the entry altogether — for example, because the field was added to the configuration after the entry was created. Use this rather than `eq` or `ne`, which can’t express a missing value in TOML, where there is no `null`:
+
+```yaml [YAML]
+view_filters:
+  - label: With author
+    field: author
+    empty: false
+  - label: Without author
+    field: author
+    empty: true
+```
+
+```toml [TOML]
+[[collections.view_filters]]
+label = "With author"
+field = "author"
+empty = false
+
+[[collections.view_filters]]
+label = "Without author"
+field = "author"
+empty = true
+```
+
+```json [JSON]
+{
+  "view_filters": [
+    { "label": "With author", "field": "author", "empty": false },
+    { "label": "Without author", "field": "author", "empty": true }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  view_filters: [
+    { label: "With author", field: "author", empty: false },
+    { label: "Without author", field: "author", empty: true },
+  ],
+}
+```
 
 The comparison options can also be used with the [extended syntax](#filtering) described above, for example to apply the “Upcoming” filter by default:
 

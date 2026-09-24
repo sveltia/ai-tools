@@ -239,7 +239,7 @@ Replace the img-src origin with your custom domain if configured.
 
 ##### HEIC Conversion
 
-Required if [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) are converted on upload: the decoder runs in a Web Worker created from a `blob:` URL.
+Required if [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) are converted on upload: the decoder runs in a Web Worker created from a `blob:` URL. Not required for the NPM package, which serves the worker from your site.
 
 - `worker-src`
   ```
@@ -416,6 +416,12 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 - Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js), [Leaflet](https://github.com/Leaflet/Leaflet), and [SVGO](https://github.com/SVG/svgo)
 - Retrieve the WebAssembly decoder for [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) when image optimization is enabled
 - Retrieve [Shiki](https://shiki.style/) language definitions and themes for syntax highlighting in code editors
+
+The NPM package doesn’t use UNPKG for any of these. See below.
+
+**CSP for the NPM Package**
+
+The [NPM package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) serves all the files above, along with the fonts, from your own site. If you use it, you can remove `https://unpkg.com` and `https://cdn.jsdelivr.net` from the policy, and the HEIC conversion doesn’t need `blob:` in `worker-src`.
 
 Source: https://sveltiacms.app/en/docs/security
 

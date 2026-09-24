@@ -27,7 +27,7 @@ There are two primary ways to access the `CMS` object: via a CDN build or by ins
 </script>
 ```
 
-Alternatively, you can use the ES module version, which can be imported using the `mjs` file extension. This script is the same as the NPM package version:
+Alternatively, you can use the ES module version, which can be imported using the `mjs` file extension:
 
 ```html
 <script type="module">
@@ -40,6 +40,8 @@ Alternatively, you can use the ES module version, which can be imported using th
 ```
 
 #### Using the NPM Package
+
+The NPM package is a separate build of the app for use with a build tool like [Vite](https://vite.dev/) or [webpack](https://webpack.js.org/), which doesn’t load any files from CDNs. See [CDN or NPM Package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) for how it differs from the CDN builds.
 
 Install the `@sveltia/cms` package via your preferred package manager:
 

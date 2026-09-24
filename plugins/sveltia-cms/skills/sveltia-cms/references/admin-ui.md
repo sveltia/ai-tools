@@ -356,13 +356,14 @@ The two-pane interface includes the following features:
 
 #### Sidebar
 
-The Content Editor includes a sidebar that provides additional information and tools related to the content you are editing. It’s currently only available on desktop and has three panels:
+The Content Editor includes a sidebar that provides additional information and tools related to the content you are editing. On a small screen, where the sidebar doesn’t fit, its panels are listed in the 3-dot menu and open in a sheet at the bottom of the screen. There are four panels:
 
+- **Slug**: Shows the entry’s slug and lets you edit it. See [Slug Panel](#slug-panel) for details.
 - **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When you click on an error, the corresponding field in the editor will be highlighted. Results appear when you save an entry, and the Validate button in the panel header checks it at any time — against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without, so you can see what’s still missing before the entry can be published.
 - **History**: Shows the commit history of the current content file. When you click on a commit, you’ll see a diff view of the changes made in that commit on your Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
 - **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). When you click on a backlink, you can open the referenced content file in the editor. For example, you can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
 
-More panels and mobile support for the sidebar will be added in the future.
+More panels will be added in the future.
 
 #### Auto-Saving Drafts
 
@@ -374,23 +375,33 @@ Auto-saving draft can be disabled in User Preferences.
 
 The Content Editor includes Revert buttons that allow you to discard all unsaved changes or revert individual fields to their last saved state. This feature is useful if you want to undo changes made during the current editing session.
 
-#### Slug Editor
+#### Slug Panel
 
-An entry’s slug is the identifier that appears in its file name and, in most setups, in its URL on your live site. A slug is set once, when the entry is created — usually [generated from a template](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) — and is not among the fields in the Edit Pane afterwards. To rename a saved entry, use the Edit Slug option in the 3-dot menu.
+An entry’s slug is the identifier that appears in its file name and, in most setups, in its URL on your live site. It’s usually [generated from a template](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs), such as the entry’s title, and is shown in the Slug panel of the [sidebar](#sidebar), which you can also open with the Edit Slug option in the 3-dot menu.
 
-The dialog shows the entry’s current slug in a text field. If entry slugs are localized, there’s one field per locale. A slug cannot be empty, cannot contain slashes or whitespace, and cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). Whatever you type is normalized with your site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) when you confirm.
+The slug is shown as read-only text, with a pencil button to edit it. While you edit it, it’s checked as you type: a slug cannot contain slashes or whitespace, cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and must match the collection’s [`pattern` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) if any. Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever you type is normalized with your site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) where every entry is stored as an index file, the folder holding an entry is what identifies it, so the field holds that folder’s name rather than the path leading to it, and there’s a single field: the folder is shared by every locale. A name is only in the way if another folder in the same parent already uses it, so the same name can appear elsewhere in the tree. The rules differ slightly from a slug’s: spaces are allowed and become hyphens, while a name that starts with a dot, which would hide the folder, or that keeps no letter or number once normalized, is rejected.
+If entry slugs are [localized](https://sveltiacms.app/en/docs/i18n/slugs), the panel has a section for each locale, like the Validation panel. Otherwise, there’s a single slug shared by every locale.
 
-The new slug takes effect when you save the entry, and saving does three things in a single commit:
+##### New Entries
+
+In a new entry, the panel shows the slug the entry will be saved with, which follows the entry’s content as you edit it. A slug containing a date and time, such as `{{year}}-{{month}}-{{day}}-{{slug}}`, is shown with the current date and time, and gets the date and time of the save. A random ID, such as `{{uuid_short}}`, is kept until the entry is saved, so the entry is saved with the slug you see.
+
+Once you give a slug of your own with the pencil button, it no longer follows the entry’s content. To go back to the generated slug, edit the slug and empty it.
+
+If the collection is configured to [have users type the slug](https://sveltiacms.app/en/docs/collections/entries/slugs#having-users-type-the-slug), the panel shows a regular text field instead, opens by itself when you create an entry, and the entry can’t be saved until a slug has been entered.
+
+##### Saved Entries
+
+In a saved entry, the pencil button renames the entry. The new slug takes effect when you save the entry, and saving does three things in a single commit:
 
 - **Renames the file.** The entry moves to the file path matching its new slug. Git records this as a rename, so the file’s history is preserved. In a nested collection the entry’s folder is renamed instead, and everything below it moves along: the entries stored there and, with [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), the files of each [page bundle](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). The entry keeps its place in the tree — renaming never files it under a different parent, which is what the [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) field is for.
 - **Adds a redirect.** If the collection has a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, the entry’s previous URL is recorded in its data so your framework can redirect visitors from the old URL to the new one. See [Redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects).
 - **Updates references.** Every entry that points at this one through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is rewritten to reference the new slug, so no links between entries are left dangling. You can see which entries will be updated in the Backlinks panel of the [sidebar](#sidebar) before you save.
 
-The Edit Slug option is unavailable where a slug can’t meaningfully change: on an entry you haven’t saved yet, on entries in [file and singleton collections](https://sveltiacms.app/en/docs/collections/files), on [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), and in collections where [entry deletion is disabled](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion), because renaming an entry removes its old file. It’s unavailable in a nested collection where entries don’t share one file name as well — with `subfolders: false`, or without the [`meta.path.index_file`](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) option: an entry is identified by its whole path below the collection folder there, and no part of that path belongs to the entry alone.
+In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) where every entry is stored as an index file, the folder holding an entry is what identifies it, so the panel shows that folder’s name rather than the path leading to it, with a Rename Folder button. The folder is shared by every locale unless the slugs are localized. A name is only in the way if another folder in the same parent already uses it, so the same name can appear elsewhere in the tree. The rules differ slightly from a slug’s: spaces are allowed and become hyphens, while a name that starts with a dot, which would hide the folder, or that keeps no letter or number once normalized, is rejected.
 
-To let users type the slug themselves when they create an entry, instead of having it generated from a template, see [Making Slugs Editable](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable). That option applies to entry creation only; renaming a saved entry always goes through this dialog.
+The slug of a saved entry is shown without the pencil button where it can’t meaningfully change: in a collection that doesn’t allow it with the [`editable` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), on an entry awaiting deletion under the Editorial Workflow, and in a nested collection where entries don’t share one file name — with `subfolders: false`, or without the [`meta.path.index_file`](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) option: an entry is identified by its whole path below the collection folder there, and no part of that path belongs to the entry alone. The panel isn’t available for entries in [file and singleton collections](https://sveltiacms.app/en/docs/collections/files), whose file names are fixed in the configuration, or for [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file).
 
 #### Deleting an Entry
 
@@ -574,6 +585,16 @@ https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/new?_locale=fr
 ```
 
 The query parameter can be combined with [dynamic default values](#dynamic-default-values) to pre-fill field values via URL.
+
+#### Entry Slug
+
+When creating a new entry, you can also give it a slug with the `_slug` query parameter. For example:
+
+```
+https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/new?title=My%20First%20Post&_slug=2025-06-15-my-first-post
+```
+
+The slug is only used if the collection allows users to edit the slug when creating an entry, which is the default. See [Making Slugs Editable](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable). It shows up in the [Slug panel](#slug-panel) like a slug you typed yourself, and it’s checked the same way when the entry is saved. If slugs are localized, it applies to the default locale.
 
 ### Saving Behavior
 

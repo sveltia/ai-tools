@@ -57,7 +57,7 @@ If the `required` option is set to `false` and no related entries are selected, 
 
 #### Cascading Updates
 
-Like a relational database that cascades an update of a referenced key, Sveltia CMS keeps Relation field values pointing at the right entry when the entry they reference is renamed. Renaming a related entry with the [Slug Editor](https://sveltiacms.app/en/docs/ui/content-editor#slug-editor) rewrites every entry referencing it, in the same commit as the rename, so no references are left dangling.
+Like a relational database that cascades an update of a referenced key, Sveltia CMS keeps Relation field values pointing at the right entry when the entry they reference is renamed. Renaming a related entry in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) rewrites every entry referencing it, in the same commit as the rename, so no references are left dangling.
 
 This applies whenever the stored value is derived from the related entry’s identity, which covers the default `{{slug}}`, any template containing `{{slug}}`, such as `{{locale}}/{{slug}}`, and the canonical slug key. It does not apply to a `value_field` pointing at an ordinary content field, such as `{{title}}`, because such a value doesn’t change when the entry is renamed — but it does break if somebody edits that field. It’s one more reason to prefer the default `{{slug}}`, as noted under [`value_field`](#value-field).
 
@@ -229,14 +229,14 @@ The maximum number of related entries allowed. This enables validation to preven
 
 An array of filter objects to limit the related entries shown in the Relation field UI. Each filter object has the following properties:
 
-- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`). A `slug` filter matches the same form the value takes, so in a nested collection it’s the entry’s path without the shared index file name.
+- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`). A `slug` filter matches the same form the value takes, so in a nested collection it’s the entry’s path without the shared index file name. If the field holds multiple values, such as a [Select](https://sveltiacms.app/en/docs/fields/select) field with `multiple: true` or a [List](https://sveltiacms.app/en/docs/fields/list) field without subfields, an entry matches when any of its values is included in `values`.
 - `values`: An array of strings or numbers representing the values to match. String values may contain the following template tags that are resolved from the **current** entry being edited:
   - `{{slug}}`: Resolved to the current entry's slug.
-  - `{{fields.fieldName}}`: Resolved to the value of a field named `fieldName` in the current entry.
+  - `{{fields.fieldName}}`: Resolved to the value of a field named `fieldName` in the current entry. If the field holds multiple values, the template is expanded to all of them, so an entry matches when it shares any of them with the current entry.
 
-  Unresolvable templates (e.g. `{{slug}}` for a new, unsaved entry) are ignored, causing the filter to be skipped.
+  Unresolvable templates (e.g. `{{slug}}` for a new, unsaved entry, or `{{fields.fieldName}}` for a field with no values) are ignored, causing the filter to be skipped.
 
-- `exclude` _(optional)_: If `true`, entries **matching** the filter are excluded instead of included. Default: `false`.
+- `exclude` _(optional)_: If `true`, entries **matching** the filter are excluded instead of included. An entry whose field holds multiple values is excluded when any of them matches. Default: `false`.
 
 Example — show only published entries in a specific category:
 
