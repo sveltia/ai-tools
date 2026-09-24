@@ -691,6 +691,58 @@ thumbnail = ["thumbnailImage", "coverImage"]
 
 A nested field can be specified using dot notation, e.g. `heroImage.src`. A wildcard in the field name is also supported, e.g. `images.*.src`, to target images in a list field.
 
+#### Thumbnail Paths
+
+If your thumbnails are stored at predictable locations rather than referenced by a field, you can specify a file path instead of a field name. A value starting with a slash is treated as a path, which is resolved in the same way as an Image field value, so it’s typically a path under your [`public_folder`](https://sveltiacms.app/en/docs/media/internal). This avoids adding an extra field to every entry just to hold a thumbnail path that can be derived from the entry itself.
+
+The path can contain the same template tags as the [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths), including `{{slug}}`, `{{dirname}}`, `{{filename}}`, date and time tags, and field values. The date and time tags are based on the field specified with the `preview_path_date_field` option, or the first DateTime field in the collection. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be used as well. For example:
+
+```yaml [YAML]
+thumbnail: '/images/thumbnails/{{slug}}.webp'
+```
+
+```toml [TOML]
+thumbnail = "/images/thumbnails/{{slug}}.webp"
+```
+
+```json [JSON]
+{
+  "thumbnail": "/images/thumbnails/{{slug}}.webp"
+}
+```
+
+```js [JavaScript]
+{
+  thumbnail: "/images/thumbnails/{{slug}}.webp",
+}
+```
+
+Paths and field names can be combined in an array. They are tried in order, so the example below uses the `coverImage` field when no file exists at the given path:
+
+```yaml [YAML]
+thumbnail: ['/images/thumbnails/{{slug}}.webp', coverImage]
+```
+
+```toml [TOML]
+thumbnail = ["/images/thumbnails/{{slug}}.webp", "coverImage"]
+```
+
+```json [JSON]
+{
+  "thumbnail": ["/images/thumbnails/{{slug}}.webp", "coverImage"]
+}
+```
+
+```js [JavaScript]
+{
+  thumbnail: ["/images/thumbnails/{{slug}}.webp", "coverImage"],
+}
+```
+
+The template tags are filled with the values of the default locale. If a tag cannot be resolved, for example because the field it refers to is empty, the path is skipped and the next candidate is tried. A relative path is not supported, because a value without a leading slash is treated as a field name.
+
+#### Disabling Thumbnails
+
 Occasionally, you may not have suitable images for thumbnails. For example, your images may have subtle differences or varied aspect ratios. In that case, you can disable the thumbnail feature by setting the `thumbnail` option to `false` or an empty array:
 
 ```yaml [YAML]

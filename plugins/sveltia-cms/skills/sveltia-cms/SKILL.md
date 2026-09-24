@@ -125,7 +125,8 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Shared field options; String, Text, Number, Boolean, Select, Color | `references/fields.md` |
 | List, Object, KeyValue fields | `references/fields-structural.md` |
 | RichText/Markdown, Code fields | `references/fields-richtext.md` |
-| Image, File, DateTime, Relation, Compute, UUID, Map fields | `references/fields-other.md` |
+| Image, File, DateTime, Map fields | `references/fields-media.md` |
+| Relation, Compute, UUID fields | `references/fields-relation.md` |
 | `media_folder`, `public_folder`, internal Git media storage | `references/media.md` |
 | Cloudinary, Uploadcare, Azure Blob Storage, stock photos | `references/media-external.md` |
 | Amazon S3 and S3-compatible storage (R2, B2, Spaces, Bunny, Scaleway, Supabase) | `references/media-s3.md` |
