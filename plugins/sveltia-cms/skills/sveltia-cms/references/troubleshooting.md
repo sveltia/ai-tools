@@ -608,7 +608,7 @@ We have a public [roadmap](https://sveltiacms.app/en/docs/roadmap) that outlines
 
 #### How often are new releases made?
 
-Usually a few times a week, depending on the number of changes and fixes. We follow a continuous release model, so new features, improvements, and bug fixes are released as soon as they are ready. See the [Releases](https://sveltiacms.app/en/docs/releases) page for details.
+Usually several times a week, depending on the number of changes and fixes. We follow a continuous release model, so new features, improvements, and bug fixes are released as soon as they are ready. See the [Releases](https://sveltiacms.app/en/docs/releases) page for details.
 
 #### How can I contribute to Sveltia CMS?
 
@@ -624,7 +624,7 @@ The only comparable product is our predecessor, Netlify/Decap CMS, which is the 
 
 To decide which CMS solution is right for your project, we recommend evaluating your specific needs and requirements, and comparing the features, pricing, and support options of different solutions to find the best fit for you.
 
-Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/docs/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or see if it’s being used in projects similar to yours on our [Showcase](https://sveltiacms.app/en/showcase) page.
+Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/docs/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [Showcase](https://sveltiacms.app/en/showcase).
 
 #### Is Sveltia CMS framework-agnostic?
 

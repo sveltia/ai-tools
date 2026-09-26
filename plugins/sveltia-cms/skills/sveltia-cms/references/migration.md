@@ -397,7 +397,7 @@ Source: https://sveltiacms.app/en/docs/migration/netlify-decap-cms
 
 ## Migrating from Static CMS
 
-Sveltia CMS provides partial compatibility with [Static CMS](https://github.com/StaticJsCMS/static-cms), an archived fork of Netlify CMS. Since Static CMS was archived over a year ago, we don’t plan to implement additional compatibility beyond what’s listed below. However, we may still adopt some of their features that we find useful.
+Sveltia CMS is partially compatible with [Static CMS](https://github.com/StaticJsCMS/static-cms), an archived fork of Netlify CMS. As Static CMS was archived some time ago, we don’t intend to implement any further compatibility beyond what is listed below. However, we may still adopt some of their features that we find useful.
 
 ### Compatibility
 
