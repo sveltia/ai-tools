@@ -117,6 +117,8 @@ The following configurations are possible:
 
 If multiple modes are enabled, users can switch between them using a mode selector in the editor toolbar.
 
+The `raw` mode comes with syntax highlighting for Markdown, including the code in fenced code blocks, while keeping the Markdown syntax characters visible. The toolbar buttons and editor components also work in this mode, inserting Markdown into the text. See the [`buttons`](#buttons) and [`editor_components`](#editor-components) options below for details.
+
 ##### `buttons`
 
 - **Type**: `array`
@@ -135,9 +137,13 @@ By default, all buttons are enabled. You can customize the toolbar by specifying
 
 Unlike Netlify/Decap CMS, all the block type buttons are available under the block type selector in Sveltia CMS. Users can select the block type from a dropdown menu rather than having separate buttons for each block type.
 
-**Future Plans**
+In `raw` mode, the buttons insert Markdown instead:
 
-These buttons are disabled when `raw` mode is active. This behavior may be changed in future releases to allow certain buttons to function in `raw` mode as well.
+- The inline formatting buttons wrap the selected text with the corresponding Markdown syntax, such as `**` for bold, or remove it if the text is already formatted. The `Ctrl+B`/`Command+B` and `Ctrl+I`/`Command+I` keyboard shortcuts are also available.
+- The `link` button opens a dialog to insert a Markdown link, using the selected text as the link text. The `Ctrl+K`/`Command+K` keyboard shortcut is also available.
+- The block type selector changes the selected lines to headings, lists, a quote or a code block, and shows the block type of the line where the cursor is.
+
+These edits can be undone with the browser’s standard undo command, just like typing.
 
 ##### `editor_components`
 
@@ -154,6 +160,8 @@ Sveltia CMS includes the following built-in editor components for the RichText f
 - `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option.
 
 Both are enabled by default. You can disable them by omitting them from the `editor_components` option.
+
+Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text.
 
 **Note for Netlify/Decap CMS users**
 

@@ -371,9 +371,23 @@ When creating or editing content, Sveltia CMS automatically saves draft backups 
 
 Auto-saving draft can be disabled in User Preferences.
 
-#### Revert Changes
+#### Revert, Restore and Clear
 
-The Content Editor includes Revert buttons that allow you to discard all unsaved changes or revert individual fields to their last saved state. This feature is useful if you want to undo changes made during the current editing session.
+The Content Editor offers three ways to start over, side by side in the 3-dot menus:
+
+- **Revert Changes** discards the unsaved changes, bringing back the last saved values. This is useful if you want to undo changes made during the current editing session.
+- **Restore Default** puts back the values a new entry would have, taking each field’s `default` option into account.
+- **Clear** empties the values, ignoring the defaults, so you can fill in the fields from scratch. A List field is left without items and a KeyValue field without pairs. A required field then has to be filled in again before the entry can be saved.
+
+They apply to different parts of the entry depending on the menu:
+
+- The menu of a field applies to that field alone, including the subfields of an [Object](https://sveltiacms.app/en/docs/fields/object) or [List](https://sveltiacms.app/en/docs/fields/list) field.
+- The content options menu in the header of an editor pane applies to every field in the locale shown in the pane, labeled Revert Changes, Restore Default and Clear All.
+- The editor options menu at the top-right corner applies to every field in every locale, labeled Revert All Changes, Restore Default and Clear All.
+
+Because the pane and editor menus change many fields at once, they ask for confirmation first. A field can be reverted to undo a restore or clear, until the entry is saved.
+
+Restoring and clearing leave alone the values a user doesn’t enter: [Hidden](https://sveltiacms.app/en/docs/fields/hidden), [UUID](https://sveltiacms.app/en/docs/fields/uuid) and [Compute](https://sveltiacms.app/en/docs/fields/compute) fields, read-only fields, and the type of a variable type Object field. An optional Object field that is collapsed stays collapsed. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, restoring or clearing a field in the default locale does the same in the other locales where the field is duplicated, while in another locale only the fields that can be translated there are changed.
 
 #### Slug Panel
 
@@ -434,7 +448,7 @@ Sveltia CMS includes several keyboard shortcuts to enhance productivity while ed
 - Save an entry: `Ctrl+S` (Windows/Linux) or `Command+S` (macOS)
 - Cancel entry editing: `Escape`
 
-Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, and `Tab` to indent a list item.
+Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, `Ctrl+K`/`Command+K` to insert a link, and `Tab` to indent a list item. The bold, italic and link shortcuts work in both the rich text and raw Markdown editing modes.
 
 ### Linking to Content Editor
 

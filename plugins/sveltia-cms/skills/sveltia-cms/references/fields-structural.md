@@ -107,6 +107,14 @@ The minimum number of items required in the list. If the number of items is belo
 
 The maximum number of items allowed in the list. If the number of items exceeds this value, a validation error will be shown.
 
+A list limited to one item with `max: 1`, which is how a single object is stored in an array, is shown like an [Object field](https://sveltiacms.app/en/docs/fields/object) rather than a list, so users don’t have to deal with the array:
+
+- The item count, the list toggle and the reorder controls are hidden, and the item is kept expanded.
+- If the field is required, the item is there from the start, filled with the default values of the subfields, and it can’t be removed. It’s added to a new entry, and to an existing entry that doesn’t have one yet. This doesn’t apply to a [variable type](#types) list, where the user chooses the type of the item, and can remove it to choose another.
+- If the field is optional, the Add button is shown until the item is added, and the item can be removed again.
+- A [simple list field](#simple-list-field) shows a single input, without the Remove and reorder controls.
+- A list holding more items than that, e.g. because the file was edited outside the CMS, is shown as a regular list, so that the extra items can be removed.
+
 #### Subfield Definition
 
 These options are mutually exclusive; you can only use one of them at a time:
@@ -2367,9 +2375,11 @@ The KeyValue field type allows users to create and manage a dynamic list of key-
 
 #### Editor
 
-A dynamic list of key-value pairs, where users can add, edit, and remove entries. Each entry consists of a text input for the key and a text input for the value.
+A dynamic list of key-value pairs, where users can add, edit, reorder and remove entries. Each entry consists of a text input for the key and a text input for the value.
 
-You can press Enter to move focus or add a new row while editing.
+- You can press Enter to move focus or add a new row while editing.
+- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). The pairs are saved in the order they are shown.
+- A field without pairs shows a blank row, like a [simple List field](https://sveltiacms.app/en/docs/fields/list#simple-list-field), so there’s always somewhere to type. The blank row isn’t saved until its key is filled in, and removing the last pair leaves one in its place.
 
 #### Preview
 
@@ -2383,7 +2393,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 
 ### Data Validation
 
-- If the `required` option is set to `true`, at least one key-value pair must be present.
+- If the `required` option is set to `true`, at least one key-value pair must be present. A blank pair, with neither a key nor a value, doesn’t count.
 - Keys must be unique and non-empty strings. Keys cannot contain dots (`.`) as they may interfere with nested data structures.
 - If `min` and/or `max` options are specified, the number of key-value pairs must be within the defined limits.
 
@@ -2423,6 +2433,13 @@ The label for the key input field.
 
 The label for the value input field.
 
+##### `label_singular`
+
+- **Type**: `string`
+- **Default**: The value of the `label` option
+
+A label used for a single key-value pair, e.g., “Setting” for a field labeled “Settings”. It will be displayed on the Add button, just like the [`label_singular` option for the List field](https://sveltiacms.app/en/docs/fields/list#label-singular).
+
 ##### `min`
 
 - **Type**: `integer`
@@ -2455,6 +2472,7 @@ In addition to the [common `i18n` option values](https://sveltiacms.app/en/docs/
 
 - The keys are copied from the default locale to the other locales, where they are read-only. Keys can only be added, renamed or removed in the default locale, and any such change is immediately reflected in the other locales.
 - The values can be edited separately for each locale. When a key is renamed in the default locale, the other locales keep the value they had under the old name; a newly added key starts with an empty value in the other locales.
+- The order of the keys follows the default locale as well: reordering the pairs there reorders them in the other locales, which keep their own values.
 
 See the [Translated Values with Shared Keys](#translated-values-with-shared-keys) example below for details.
 

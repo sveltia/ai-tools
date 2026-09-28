@@ -586,6 +586,8 @@ The browser’s native date/time picker. Depending on the configuration, it can 
 
 We plan to enhance the UI with a custom date/time picker in the future.
 
+A field with the [`auto_now`](#auto-now) option shows its value as text instead, as it can’t be edited. The field is hidden while a new entry is being created.
+
 #### Preview
 
 A string representation of the date and/or time, formatted according to the specified `format`, `date_format`, or `time_format` options, or in ISO 8601 format by default.
@@ -614,6 +616,8 @@ If the output format is TOML, the date-time string will be represented as a nati
 - The date/time value must be a valid date/time string according to the specified format or ISO 8601.
 - If the `pattern` option is provided, the date/time value must match the specified regular expression pattern.
 
+A field with the [`auto_now`](#auto-now) option is not validated, as its value is set automatically.
+
 ### Options
 
 In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the DateTime field supports the following options:
@@ -641,6 +645,29 @@ Also, Sveltia CMS (and Decap CMS 3.1.1) has replaced the Moment.js library with 
 - **Default**: `""`
 
 A default date and/or time value for the field in ISO 8601 format or the specified custom format. Use `{{now}}` to set the default value to the current date and time.
+
+##### `auto_now`
+
+- **Type**: `boolean` or `string[]`
+- **Default**: `false`
+
+Whether to set the field to the current date and time automatically when an entry is saved. This is useful for keeping track of when an entry was created and last modified, such as the `date` and `lastmod` front matter fields in Hugo. Accepted values:
+
+- `true`: The value is set whenever the entry is saved. Same as `[create, update]`.
+- `false` (default): The value is not set automatically.
+- An array of the stages at which the value is set:
+  - `create`: When the entry is first saved. It also covers a value that hasn’t been set yet, such as one in a List item added to an existing entry, or one in an entry saved before the option was enabled.
+  - `update`: Whenever an existing entry is saved.
+
+Use `[create]` for a creation date and `true` for a last modified date.
+
+Unlike `default: '{{now}}'`, which fills in the current date and time when a new entry draft is created, this option sets the value at the time of saving. The value is stored in the same format as other values, with the other options such as `format`, `input_timezone` and `output_utc` applied, but it includes seconds. All the fields and locales saved together get the same value.
+
+The field is read-only: its value is shown as text rather than an input, and it’s not validated. The field is hidden while a new entry is being created, as it has no value until the entry is saved. The value is not localized, so the same value is used for all locales.
+
+**Limitations**
+
+The option is ignored in a field within a [rich text editor component](https://sveltiacms.app/en/docs/fields/richtext#editor-components), where the field can be edited as usual. Setting the value when an entry is published with the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is not supported yet.
 
 ##### `type`
 
@@ -978,6 +1005,91 @@ eventDateTimeUtc = 2025-08-15T14:30:00.000Z
 ```json [JSON]
 {
   "eventDateTimeUtc": "2025-08-15T14:30:00Z"
+}
+```
+
+#### Creation and Modification Dates
+
+Use the `auto_now` option to record when an entry was created and last modified. The `date` field is set when the entry is first saved, and the `lastmod` field whenever it’s saved:
+
+```yaml [YAML]
+fields:
+  - name: date
+    label: Created
+    widget: datetime
+    auto_now: [create]
+  - name: lastmod
+    label: Last Modified
+    widget: datetime
+    auto_now: true
+```
+
+```toml [TOML]
+[[fields]]
+name = "date"
+label = "Created"
+widget = "datetime"
+auto_now = ["create"]
+
+[[fields]]
+name = "lastmod"
+label = "Last Modified"
+widget = "datetime"
+auto_now = true
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "date",
+      "label": "Created",
+      "widget": "datetime",
+      "auto_now": ["create"]
+    },
+    {
+      "name": "lastmod",
+      "label": "Last Modified",
+      "widget": "datetime",
+      "auto_now": true
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+fields: [
+  {
+    name: 'date',
+    label: 'Created',
+    widget: 'datetime',
+    auto_now: ['create'],
+  },
+  {
+    name: 'lastmod',
+    label: 'Last Modified',
+    widget: 'datetime',
+    auto_now: true,
+  },
+],
+```
+
+Output example, after the entry is updated:
+
+```yaml [YAML]
+date: 2025-08-15T14:30:12
+lastmod: 2025-09-02T09:05:47
+```
+
+```toml [TOML]
+date = 2025-08-15T14:30:12.000
+lastmod = 2025-09-02T09:05:47.000
+```
+
+```json [JSON]
+{
+  "date": "2025-08-15T14:30:12",
+  "lastmod": "2025-09-02T09:05:47"
 }
 ```
 
