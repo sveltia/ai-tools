@@ -51,7 +51,7 @@ This works in both production workflows, with a different meaning in each:
 
 **Date tags need a date field**
 
-When `preview_path` uses `{{year}}`, `{{month}}` or another date tag, the CMS reads it from the collection’s DateTime field — or the one named by `preview_path_date_field`. If no such field exists, a configuration warning says so, because the preview link would otherwise go missing with no explanation. A field that exists but is left empty on an entry has the same effect, and can only be spotted on the entry itself.
+When `preview_path` uses `{{year}}`, `{{month}}` or another date tag, the CMS reads it from the first DateTime field of the collection, or of the file in a file collection — or the top-level DateTime field named by `preview_path_date_field`. If no such field exists, a configuration warning says so, because the preview link would otherwise go missing with no explanation. A field that exists but is left empty on an entry has the same effect, and can only be spotted on the entry itself.
 
 **Future Plans**
 
@@ -65,8 +65,8 @@ The options below shape what the links do:
 
 | Option | Where | What it does |
 | --- | --- | --- |
-| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
-| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Which date field the `{{year}}`, `{{month}}` and similar tags read |
+| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
+| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Which top-level DateTime field the `{{year}}`, `{{month}}` and similar tags read. Default: the first DateTime field |
 | [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of your live site |
 | `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
 | [`preview_context`](#specifying-a-status-context) | `backend` | Names the exact commit status or environment that carries the preview URL |
@@ -480,7 +480,7 @@ Decap CMS has a separate Unpublish action, and its Delete button removes the ent
 #### Deleting an Unpublished Entry
 
 - If the entry has **never been published**, deleting it closes its pull request. Nothing is left behind, because nothing was ever merged into the configured branch.
-- If the entry **updates a published one**, the button is labelled **Discard** instead. Discarding closes the pull request and restores the published version, which stays in the configured branch. The entry itself isn’t deleted.
+- If the entry **updates a published one**, the button is labeled **Discard** instead. Discarding closes the pull request and restores the published version, which stays in the configured branch. The entry itself isn’t deleted.
 
 ### Restricting Publishing and Deletion
 
@@ -790,9 +790,9 @@ A private repository always needs the full `repo` scope, so set `auth_scope: rep
 
 Because the CMS can’t tell whether your repository is public until someone signs in, it can’t choose for you. It logs a configuration warning when `open_authoring` is enabled and `auth_scope` is left unset, so the broader scope is never requested by accident — setting either value silences it.
 
-**Your OAuth client has to honour the option**
+**Your OAuth client has to honor the option**
 
-The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honours it, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
+The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honors it, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
 
 The option only applies to the [OAuth sign-in flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow); it has no effect on access token sign-in.
 
@@ -856,7 +856,7 @@ There’s no Ready stage, because marking an entry ready to publish is only mean
 
 **Different from Editorial Workflow**
 
-Editorial Workflow records the status in a [pull request label](https://sveltiacms.app/en/docs/workflows/editorial#statuses). Labelling requires write access to the repository, which a contributor doesn’t have, so their status is read from the pull request itself instead. Nothing has to be configured for this — the CMS picks the right approach based on the signed-in user.
+Editorial Workflow records the status in a [pull request label](https://sveltiacms.app/en/docs/workflows/editorial#statuses). Labeling requires write access to the repository, which a contributor doesn’t have, so their status is read from the pull request itself instead. Nothing has to be configured for this — the CMS picks the right approach based on the signed-in user.
 
 A contributor’s pull request carries no CMS label, so it doesn’t appear on your own Editorial Workflow board. Review and merge it on GitHub, the same as any other community contribution. See [Reviewing Contributions](#reviewing-contributions) below.
 
@@ -935,7 +935,7 @@ Deleting the branch after merging is optional. If you leave it, the CMS deletes 
 
 ### Deleting Entries
 
-A contributor can delete their own unpublished work: the Delete button closes their pull request, if there is one, and deletes the branch from their fork. Nothing was ever merged, so nothing is left behind. If the entry updates one that’s already live, the button is labelled **Discard** instead and the published version is untouched.
+A contributor can delete their own unpublished work: the Delete button closes their pull request, if there is one, and deletes the branch from their fork. Nothing was ever merged, so nothing is left behind. If the entry updates one that’s already live, the button is labeled **Discard** instead and the published version is untouched.
 
 Taking a published entry off the site is a maintainer’s job, so contributors aren’t offered it. The Delete control is hidden for them in the entry editor, and in the entry list a selection that includes a published entry can’t be deleted. Deleting a published entry yourself works as it does in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-a-published-entry).
 

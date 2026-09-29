@@ -97,7 +97,7 @@ The default content for the field, written in Markdown.
 - **Type**: `boolean`
 - **Default**: `false`
 
-Whether to limit the editor height. When set to `true`, the editor height is reduced and a scrollbar appears when the content exceeds the height.
+Whether to limit the editor height. When set to `true`, the editor height is limited to 240 pixels and a scrollbar appears when the content exceeds the height.
 
 ##### `modes`
 
@@ -115,7 +115,7 @@ The following configurations are possible:
 - Rich text only: `[rich_text]`
 - Raw mode only: `[raw]`
 
-If multiple modes are enabled, users can switch between them using a mode selector in the editor toolbar.
+If multiple modes are enabled, the first one is selected initially, and users can switch between them using a mode selector in the editor toolbar.
 
 The `raw` mode comes with syntax highlighting for Markdown, including the code in fenced code blocks, while keeping the Markdown syntax characters visible. The toolbar buttons and editor components also work in this mode, inserting Markdown into the text. See the [`buttons`](#buttons) and [`editor_components`](#editor-components) options below for details.
 
@@ -148,7 +148,7 @@ These edits can be undone with the browser’s standard undo command, just like 
 ##### `editor_components`
 
 - **Type**: `array`
-- **Default**: `[code-block, image]`
+- **Default**: `[code-block, image]` plus the names of all the registered [custom components](https://sveltiacms.app/en/docs/api/editor-components)
 
 The editor component names to include in the rich text editor.
 
@@ -162,6 +162,10 @@ Sveltia CMS includes the following built-in editor components for the RichText f
 Both are enabled by default. You can disable them by omitting them from the `editor_components` option.
 
 Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text.
+
+**Multiple Images**
+
+The built-in `image` component is designed for single-file selection. There is no option for selecting multiple images because there is no standard Markdown syntax for it. To enable multiple images, use a custom component to achieve the desired output, as shown in [this example](https://sveltiacms.app/en/docs/api/editor-components#multiple-images-with-caption).
 
 **Note for Netlify/Decap CMS users**
 
@@ -224,7 +228,7 @@ We recommend keeping this option enabled unless disabling it fixes a broken prev
 
 ### Global Field Defaults
 
-You can define default options for all RichText fields globally using the `field_defaults.richtext` option at the root of your CMS configuration. This allows you to set common configurations for all RichText fields in your CMS without having to specify them in each field definition.
+You can define default options for all RichText and [Markdown](https://sveltiacms.app/en/docs/fields/markdown) fields globally using the `field_defaults.richtext` option at the root of your CMS configuration. This allows you to set common configurations for all RichText and Markdown fields in your CMS without having to specify them in each field definition.
 
 The following options can be defined globally:
 
@@ -239,7 +243,7 @@ The following options can be defined globally:
 - `use_markdown_shortcuts`
 - `sanitize_preview`
 
-The following example configures all RichText fields to use `minimal: true`, disables Markdown shortcuts, and enables only the `bold`, `italic`, and `link` buttons by default.
+The following example configures all RichText and Markdown fields to use `minimal: true`, disables Markdown shortcuts, and enables only the `bold`, `italic`, and `link` buttons by default.
 
 ```yaml [YAML]
 field_defaults:
@@ -593,7 +597,7 @@ This affects the `default_language` option and the language used in the `default
 - **Type**: `object` or `string`
 - **Default**: `{ code: "", lang: "" }`
 
-The default value for the field, where `code` is a code snippet and `lang` is any valid programming language supported by [Shiki](https://shiki.style/languages).
+The default value for the field, where `code` is a code snippet and `lang` is any valid programming language supported by [Shiki](https://shiki.style/languages). If the [`keys`](#keys) option is set, use its property names instead.
 
 If `output_code_only` is `true`, this should be a string containing the default code. A string is also accepted otherwise, in which case it’s taken as the code with no language.
 

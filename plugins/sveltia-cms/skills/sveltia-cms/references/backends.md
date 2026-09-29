@@ -429,6 +429,7 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 - Gitea 1.24, Forgejo 12.0 or later.
 - A Gitea or Forgejo account.
 - A Gitea or Forgejo repository to store your content.
+- Write access to the repository. Users with read-only access can’t sign in.
 - Sveltia CMS installed in your project.
 
 **Breaking change from Netlify/Decap CMS**
@@ -437,7 +438,7 @@ Sveltia CMS requires newer versions of Gitea/Forgejo than Netlify/Decap CMS did 
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), You may need to update it to allow requests to Gitea or Forgejo. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to Gitea or Forgejo. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 #### CORS
 
@@ -561,7 +562,7 @@ api_root = "https://codeberg.org/api/v1"
 
 The API version for Gitea/Forgejo is `v1`, so make sure to include `/api/v1` in the `api_root` option.
 
-The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+Because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client, `base_url` is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. It’s not inferred from `api_root`, so both options have to be set. The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -676,11 +677,12 @@ GitHub is one of the most popular Git hosting services, and Sveltia CMS provides
 
 - A GitHub account.
 - A GitHub repository to store your content.
+- Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them work on a fork instead.
 - Sveltia CMS installed in your project.
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), You may need to update it to allow requests to GitHub. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitHub. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
@@ -754,7 +756,7 @@ api_root = "https://github.example.com/api/v3"
 }
 ```
 
-The API version for GitHub Enterprise is `v3`, so make sure to include `/api/v3` in the `api_root` option.
+The API version for GitHub Enterprise is `v3`, so the REST API endpoint is `https://HOSTNAME/api/v3`. You can also set `api_root` to just `https://HOSTNAME`, in which case `/api/v3` is appended automatically.
 
 Sveltia CMS uses the GitHub GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v3` part with `/api/graphql`, e.g. `https://github.example.com/api/graphql`. If your server’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
 
@@ -989,11 +991,14 @@ GitLab is a popular Git hosting service that offers a wide range of features for
 - GitLab 16.3 or later.
 - A GitLab account.
 - A GitLab repository to store your content.
+- The Developer role or higher on the project, like Netlify/Decap CMS requires. The role can come from project membership, a parent group, or a group invited to the project or to a parent group. Users with the Guest or Reporter role can’t sign in.
 - Sveltia CMS installed in your project.
+
+If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own; merging the changes into the protected branch is still up to GitLab’s rules.
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), You may need to update it to allow requests to GitLab. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitLab. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
@@ -1077,7 +1082,7 @@ The API version for GitLab is `v4`, so make sure to include `/api/v4` in the `ap
 
 Sveltia CMS uses the GitLab GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v4` part with `/api/graphql`, e.g. `https://gitlab.example.com/api/graphql`. If your instance’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
 
-The `base_url` option points to your GitLab server only when you use [PKCE authorization](#pkce-authorization). In that case, the OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `oauth/authorize`. If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`. With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead, which must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+The `base_url` option points to your GitLab server only when you use [PKCE authorization](#pkce-authorization). In that case, the OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `oauth/authorize`. The `base_url` is not inferred from `api_root`, so it must be set for a self-hosted instance; otherwise, it defaults to `https://gitlab.com`. If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`. With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead, which must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
 
 ### Authentication
 

@@ -218,7 +218,7 @@ If you need to limit uploads to images only, consider using the [Image](https://
 
 #### Editor
 
-A large upload button is displayed for the File field. When it’s is clicked, a file selection dialog with the following features appears:
+A large upload button is displayed for the File field. When it’s clicked, a file selection dialog with the following features appears:
 
 - Tabs to select files from different sources: field assets, entry assets, file assets, collection assets, and global assets (if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is enabled).
 - [Subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened with a click or the Enter key to browse them, with a breadcrumb leading back. The arrow keys move between the subfolders, like between the files. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
@@ -258,7 +258,7 @@ A list of uploaded file names with links to access each file. For images, a thum
 
 **CSP**
 
-If your site uses a Content Security Policy (CSP), You may need to update it to display external images properly. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to display external images properly. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 ### Data Type
 
@@ -266,14 +266,14 @@ A string representing the URL or path to a file, or the public path to a folder 
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string or an empty array, depending on whether `multiple` is enabled.
 
-By default, Sveltia CMS does not slugify uploaded filenames. If your site generator expects hyphenated filenames, you can enable the `slugify_filename` [internal media storage option](https://sveltiacms.app/en/docs/media#configuration).
+By default, Sveltia CMS does not slugify uploaded filenames. If your site generator expects hyphenated filenames, you can enable the [`slugify_filename`](https://sveltiacms.app/en/docs/media#slugification-of-filenames) media storage option. To rename uploaded files automatically, for example after the entry slug, use the [`filename_template`](https://sveltiacms.app/en/docs/media#renaming-uploaded-files) option.
 
 ### Data Validation
 
 - If the `required` option is set to `true`, at least one file must be selected.
 - If the `multiple` option is enabled, the number of selected files must be between the `min` and `max` limits, if specified.
 - The selected file(s) must match the allowed file types specified in the `accept` option, if provided.
-- If the `pattern` option is provided, the file URL(s) must match the specified regular expression pattern.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the file path or URL must match the regular expression. A file just uploaded is tested by its name until the entry is saved. If the `multiple` option is enabled, the paths or URLs joined with commas, e.g. `/uploads/a.jpg,/uploads/b.jpg`, must match instead: as with Decap CMS, the pattern is tested against all the files rather than against each one. A pattern like `\.pdf$` would therefore only check the last file; use `^[^,]+\.pdf(,[^,]+\.pdf)*$` to accept PDF files only. The pattern is not tested while no file is selected.
 
 ### Options
 
@@ -352,14 +352,14 @@ Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Ot
 - **Type**: `object`
 - **Default**: `undefined`
 
-Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field, overriding the top-level `media_library` option. It applies to the provider named at the top level, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if the top-level `media_library` is not set; in the latter case, `media_library.config.max_file_size` limits the upload size for the field. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
+Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field. Its options are merged over those of the top-level `media_library` option. It applies to the provider set with its own `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if there is none. In the latter case, `media_library.config.max_file_size` limits the upload size for the field. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
 
 ##### `media_libraries`
 
 - **Type**: `object`
 - **Default**: `undefined`
 
-Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field. This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
+Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field. Each provider’s settings, including those of the internal media storage (`default`), are merged over the same provider’s top-level settings, and so is a nested object such as `config`, key by key, so only the options that differ need to be set. The merge is only one level deep, and the shared `all` options are merged shallowly, so a `transformations` map set here replaces the top-level one as a whole. Providers not defined here fall back to the top-level configuration. This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
 
 ##### `media_folder`
 
@@ -414,7 +414,7 @@ widget = "file"
       label: 'Document',
       widget: 'file',
     },
-  ];
+  ],
 }
 ```
 
@@ -487,7 +487,7 @@ accept = "application/pdf,.pdf"
       max: 5,
       accept: 'application/pdf,.pdf',
     },
-  ];
+  ],
 }
 ```
 
@@ -550,7 +550,7 @@ select_folder = true
       widget: 'file',
       select_folder: true,
     },
-  ];
+  ],
 }
 ```
 
@@ -696,7 +696,7 @@ The [`min`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attribut
 ##### `max`
 
 - **Type**: `string`
-- **Default**: `undefined`
+- **Default**: `9999-12-31T23:59` for `datetime-local`, `9999-12-31` for `date`, and `undefined` for `time`
 
 The [`max`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/max) HTML attribute value for the date/time input. The expected format depends on the `type` option:
 

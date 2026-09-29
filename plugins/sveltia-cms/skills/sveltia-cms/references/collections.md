@@ -377,6 +377,7 @@ A file collection supports the following options:
 - `editor`: Content Editor options, such as `preview: false` to disable the preview pane. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#collection-level).
 - `publish_mode`: The publish mode for the collection, overriding the top-level option. Optional. See [Enabling the Workflow per Collection](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection).
 - `publish`: Set to `false` to hide the publishing controls in Editorial Workflow. Optional. See [Restricting Publishing and Deletion](https://sveltiacms.app/en/docs/workflows/editorial#restricting-publishing-and-deletion).
+- `readonly`: Set to `true` to make every file in the collection read-only. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
 
 Unlike entry collections, the collection-level `preview_path` and `preview_path_date_field` options don’t apply to file collections. Set them on each file instead.
 
@@ -395,6 +396,7 @@ A file definition within a file collection supports the following options:
 - `media_folder`, `public_folder`: Media folder options for the file, overriding the top-level and collection-level options. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/media/internal#file-level-configuration).
 - `i18n`: I18n options for the file. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#file-level-configuration).
 - `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#file-level).
+- `readonly`: Set to `true` to make the file read-only, while the other files in the collection stay editable. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
 - `preview_path`, `preview_path_date_field`: The file’s URL path on the live site. Optional. [See below](#preview-path) for details.
 
 A listed file doesn’t have to exist in the repository. If it’s missing, the Content Editor opens with empty fields (or their default values), and the file is created when the editor saves it.
@@ -1227,7 +1229,7 @@ Here are some common content models for different types of websites and applicat
 
 #### Event Management Site
 
-- **Events**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for events, with fields: name (String, required), date (DateTime, required), location (Relation), description (RichText), registration_url (String), capacity (Number), status (Select: upcoming/ongoing/completed/cancelled), and featured (Boolean), linked to categories, locations, and sessions via Relation fields.
+- **Events**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for events, with fields: name (String, required), date (DateTime, required), location (Relation), description (RichText), registration_url (String), capacity (Number), status (Select: upcoming/ongoing/completed/canceled), and featured (Boolean), linked to categories, locations, and sessions via Relation fields.
 - **Categories**: entry collection for event categories (e.g., Conference, Webinar, Workshop), linked to events via a Relation field.
 - **Locations**: entry collection for available venues, with fields: name (String, required), address (String), city (String), capacity (Number), and map_url (String), linked to events via a Relation field.
 - **Organizers**: entry collection for event organizers, with fields: name (String, required), role (String), bio (RichText), and photo (Image).

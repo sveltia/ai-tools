@@ -42,7 +42,7 @@ The resulting **Access Key ID** goes in `access_key_id` in your config. The **Se
 
 #### Public Read Access
 
-Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable:
+Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Sveltia CMS doesn’t set object ACLs, which new buckets have disabled by default, so grant public read access with a bucket policy instead:
 
 1. In the S3 console, open the bucket’s **Permissions** tab.
 2. Under **Block Public Access**, disable `BlockPublicPolicy` and `RestrictPublicBuckets`.
@@ -145,7 +145,7 @@ public_url = "https://media.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -154,8 +154,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | AWS Access Key ID (safe to store in config). |
 | `bucket` | Yes | The S3 bucket name. |
 | `region` | Yes | AWS region, e.g. `us-east-1`, `eu-west-1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
-| `force_path_style` | No | Use path-style URLs (`s3.region.amazonaws.com/bucket`) instead of virtual-hosted-style (`bucket.s3.region.amazonaws.com`). Defaults to `false`. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `force_path_style` | No | Use path-style URLs (`s3.region.amazonaws.com/bucket`) instead of virtual-hosted-style (`bucket.s3.region.amazonaws.com`). Defaults to `false`. Has no effect with `endpoint`, which always uses path-style URLs. |
+| `endpoint` | No | Custom endpoint URL for another S3-compatible service, such as [MinIO](https://www.min.io/), e.g. `https://minio.example.com`. Objects are addressed as `{endpoint}/{bucket}/{key}`. |
 | `public_url` | No | Custom domain for asset URLs (e.g. a CloudFront distribution). See [Custom Domain](#custom-domain) below. |
 
 ### Custom Domain
@@ -188,13 +189,16 @@ img-src     https://s3.us-east-1.amazonaws.com;
 
 Replace `us-east-1` with your actual bucket region.
 
-If using a custom domain via `public_url`, add it to `img-src` as well:
+If using a custom domain via `public_url`, add it to `connect-src` and `img-src` as well:
 
 ```
-connect-src https://*.s3.us-east-1.amazonaws.com;
+connect-src https://*.s3.us-east-1.amazonaws.com
+            https://media.example.com;
 img-src     https://*.s3.us-east-1.amazonaws.com
             https://media.example.com;
 ```
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -291,7 +295,7 @@ b2 account authorize <adminKeyId> <adminKey>
 b2 bucket update --cors-rules '[{
   "corsRuleName": "sveltia-cms",
   "allowedOrigins": ["https://your-cms-domain.com"],
-  "allowedOperations": ["s3_get", "s3_head", "s3_put", "s3_delete", "s3_post"],
+  "allowedOperations": ["s3_get", "s3_head", "s3_put", "s3_delete"],
   "allowedHeaders": ["*"],
   "exposeHeaders": ["ETag", "x-amz-request-id"],
   "maxAgeSeconds": 3600
@@ -317,14 +321,15 @@ b2 bucket get my-bucket
 The S3 operations Sveltia CMS requires are:
 
 - `s3_get` — for `ListObjectsV2` (listing) and `GetObject` (preview/download)
-- `s3_head` — for `HeadObject` (metadata checks)
+- `s3_head` — optional, for the unsigned `HEAD` requests the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) sends to check whether files linked from entries still exist
 - `s3_put` — for `PutObject` (uploads and replacements) and `CopyObject` (renames)
 - `s3_delete` — for `DeleteObject` (deletions and renames)
-- `s3_post` — for multipart uploads
+
+Sveltia CMS uploads each file with a single `PUT` request, so `s3_post` (used for multipart uploads) isn’t needed.
 
 Deleting and renaming files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`; if your existing rule lacks them, update it, otherwise the browser will block those requests during the preflight check.
 
-B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, `PUT`, `DELETE`, `POST`).
+B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, `PUT`, `DELETE`).
 
 ### Configuration
 
@@ -392,7 +397,7 @@ Do not write your Application Key (secret) in the configuration file, as it shou
 | `access_key_id` | Yes | B2 Application Key ID (keyID). Safe to store in config. |
 | `bucket` | Yes | The B2 bucket name. |
 | `region` | Yes | B2 region, e.g. `us-west-001`, `us-east-005`, `eu-central-003`. See [B2 regions list](https://www.backblaze.com/docs/cloud-storage-regions-and-endpoints). |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `public_url` | No | CDN or custom domain URL for asset previews. Only required for **private buckets**. Public buckets serve objects directly via the S3 endpoint. |
 
 ### Public Buckets vs. Private Buckets
@@ -424,18 +429,22 @@ The storage endpoint is always used for listing and uploading operations regardl
 API calls (list, upload) go to `https://s3.{region}.backblazeb2.com`. For public buckets, asset URLs use `https://{bucket}.s3.{region}.backblazeb2.com`:
 
 ```
-connect-src https://s3.us-east-005.backblazeb2.com;
+connect-src https://s3.us-east-005.backblazeb2.com
+            https://my-bucket.s3.us-east-005.backblazeb2.com;
 img-src     https://my-bucket.s3.us-east-005.backblazeb2.com;
 ```
 
 If using a private bucket with a CDN via `public_url`:
 
 ```
-connect-src https://s3.us-east-005.backblazeb2.com;
+connect-src https://s3.us-east-005.backblazeb2.com
+            https://cdn.example.com;
 img-src     https://cdn.example.com;
 ```
 
 Replace `us-east-005` and `my-bucket` with your actual region and bucket name.
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -443,7 +452,7 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 #### No Per-Object ACLs
 
-B2’s S3 API does not support the `x-amz-acl` header for per-object access control. Visibility is controlled at the bucket level (public or private). Sveltia CMS automatically omits the `x-amz-acl: public-read` header when uploading to B2, so uploads work correctly regardless of bucket visibility.
+B2’s S3 API does not support the `x-amz-acl` header for per-object access control. Visibility is controlled at the bucket level (public or private). Sveltia CMS doesn’t send the header to B2, so uploads work correctly regardless of bucket visibility.
 
 #### Region Endpoint
 
@@ -587,18 +596,21 @@ Do not write your storage zone password in the configuration file, as it should 
 | `region` | Yes | Two-letter [region code](#regions) of the storage zone’s main region, e.g. `de`. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Pull zone hostname for asset previews and downloads, e.g. `https://my-zone.b-cdn.net`. Required because the storage endpoint always requires authentication. |
 | `access_key_id` | No | Defaults to `bucket`, as the storage zone name serves as the access key ID. There is normally no reason to set it. |
-| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. |
+| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. A trailing slash is added if missing. |
 
 ### Content Security Policy
 
 API calls (list, upload, rename, delete) go to the regional S3 endpoint, and asset URLs use your pull zone hostname:
 
 ```
-connect-src https://de-s3.storage.bunnycdn.com;
+connect-src https://de-s3.storage.bunnycdn.com
+            https://my-zone.b-cdn.net;
 img-src     https://my-zone.b-cdn.net;
 ```
 
 Replace `de` and `my-zone.b-cdn.net` with your actual region code and pull zone hostname.
+
+The pull zone hostname must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, the pull zone must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -606,7 +618,7 @@ See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-c
 
 #### No Per-Object ACLs
 
-Bunny Storage does not support the `x-amz-acl` header for per-object access control. Access to the files is controlled through the pull zone. Sveltia CMS automatically omits the `x-amz-acl: public-read` header when uploading to Bunny Storage.
+Bunny Storage does not support the `x-amz-acl` header for per-object access control. Access to the files is controlled through the pull zone. Sveltia CMS doesn’t send the header to Bunny Storage.
 
 #### Single-Object Operations
 
@@ -762,7 +774,7 @@ jurisdiction = "eu" # Optional; 'default' | 'eu' | 'fedramp'
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -772,7 +784,7 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `bucket` | Yes | The R2 bucket name. |
 | `account_id` | Yes | Your Cloudflare account ID. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Public URL for asset previews and downloads. Required because the R2 S3 API always requires authentication. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `jurisdiction` | No | Cloudflare R2 [jurisdictional restriction](#jurisdictional-restrictions) for the bucket. One of `'default'`, `'eu'`, `'fedramp'`. Defaults to `'default'`. |
 
 #### Jurisdictional Restrictions
@@ -805,23 +817,28 @@ The hosts to allow depend on your `public_url` setting and `jurisdiction`.
 **r2.dev subdomain** — allow the exact `pub-{hash}.r2.dev` host:
 
 ```
-connect-src https://abcdef1234567890abcdef1234567890.r2.cloudflarestorage.com;
+connect-src https://abcdef1234567890abcdef1234567890.r2.cloudflarestorage.com
+            https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 img-src     https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 ```
 
 **Custom domain** — allow your custom domain, plus the S3 API endpoint for listing and uploading:
 
 ```
-connect-src https://abcdef1234567890abcdef1234567890.r2.cloudflarestorage.com;
+connect-src https://abcdef1234567890abcdef1234567890.r2.cloudflarestorage.com
+            https://media.example.com;
 img-src     https://media.example.com;
 ```
 
-**Non-default jurisdiction** — replace the `connect-src` hostname with the jurisdiction-specific endpoint. For example, with `jurisdiction: eu`:
+**Non-default jurisdiction** — replace the S3 API endpoint in `connect-src` with the jurisdiction-specific one. For example, with `jurisdiction: eu`:
 
 ```
-connect-src https://abcdef1234567890abcdef1234567890.eu.r2.cloudflarestorage.com;
+connect-src https://abcdef1234567890abcdef1234567890.eu.r2.cloudflarestorage.com
+            https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 img-src     https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 ```
+
+The public URL host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, it must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -868,7 +885,9 @@ The resulting **Access Key** goes in `access_key_id` in your config. The **Secre
 
 #### Public Read Access
 
-Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Set the Space’s file listing to **Public** in **Spaces > Settings**, which makes objects publicly readable by default. Alternatively, configure individual object ACLs.
+Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Files in a Space are private by default, and the Space’s file listing setting only controls whether anyone can list them, not whether they can be read. Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL, so no further setup is needed, and the file listing can stay private.
+
+Files uploaded by other means, such as the control panel, stay private unless you set their permissions to **Public**. Their previews won’t load in the CMS until you do.
 
 #### CORS
 
@@ -945,7 +964,7 @@ public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -954,7 +973,7 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | Spaces Access Key. Safe to store in config. |
 | `bucket` | Yes | The Space name. |
 | `region` | Yes | Spaces region, e.g. `nyc3`, `sfo2`, `ams3`, `sgp1`, `fra1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `public_url` | No | CDN or custom subdomain URL for asset previews. See [CDN Endpoint](#cdn-endpoint) below. |
 
 ### CDN Endpoint
@@ -978,18 +997,22 @@ Do **not** set `public_url` to the CDN URL and rely on it for API operations. Th
 API calls (list, upload) go to `https://{region}.digitaloceanspaces.com`. Asset URLs use `https://{bucket}.{region}.digitaloceanspaces.com` by default:
 
 ```
-connect-src https://nyc3.digitaloceanspaces.com;
+connect-src https://nyc3.digitaloceanspaces.com
+            https://my-space.nyc3.digitaloceanspaces.com;
 img-src     https://my-space.nyc3.digitaloceanspaces.com;
 ```
 
-If using the CDN or a custom subdomain via `public_url`:
+If using the CDN via `public_url`:
 
 ```
-connect-src https://nyc3.digitaloceanspaces.com;
-img-src     https://my-space.nyc3.cdn.digitaloceanspaces.com; # or a custom subdomain:
+connect-src https://nyc3.digitaloceanspaces.com
+            https://my-space.nyc3.cdn.digitaloceanspaces.com;
+img-src     https://my-space.nyc3.cdn.digitaloceanspaces.com;
 ```
 
-Replace `nyc3` and `my-space` with your actual region and bucket name.
+Replace `nyc3` and `my-space` with your actual region and bucket name. If you use a custom subdomain, such as `https://images.example.com`, allow it in place of the CDN endpoint.
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom subdomain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -1034,7 +1057,9 @@ The resulting **Access Key ID** goes in `access_key_id` in your config. The **Se
 
 #### Public Read Access
 
-Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. When creating or configuring a bucket, set its **Visibility** to **Public** in **Scaleway Console > Object Storage > [bucket] > Bucket settings**.
+Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Objects are private by default, even in a bucket whose **Visibility** is **Public**, as that setting only controls whether anyone can list them. Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL, so the bucket can stay private. The API key’s IAM policy needs the `ObjectStorageObjectsWrite` or `ObjectStorageFullAccess` permission set, both of which include the `PutObjectAcl` permission. If the bucket has a bucket policy, it must allow `s3:PutObjectAcl` as well.
+
+Objects uploaded by other means, such as the console, stay private unless you make them public, or add a bucket policy that grants `s3:GetObject` to everyone. Their previews won’t load in the CMS until you do.
 
 #### CORS
 
@@ -1097,7 +1122,7 @@ public_url = "https://my-cdn.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -1106,8 +1131,8 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | Scaleway IAM Access Key ID. Safe to store in config. |
 | `bucket` | Yes | The bucket name. |
 | `region` | Yes | Scaleway region: `fr-par`, `nl-ams`, `pl-waw`, or `it-mil`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
-| `public_url` | No | CDN or custom domain URL for asset previews. See [CDN / Custom Domain](#cdn--custom-domain) below. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `public_url` | No | CDN or custom domain URL for asset previews. See [CDN / Custom Domain](#cdn-custom-domain) below. |
 
 ### CDN / Custom Domain
 
@@ -1126,18 +1151,22 @@ Do **not** set `public_url` to a CDN URL and rely on it for API operations. The 
 API calls (list, upload) go to `https://s3.{region}.scw.cloud`. Asset URLs use `https://{bucket}.s3.{region}.scw.cloud` by default:
 
 ```
-connect-src https://s3.fr-par.scw.cloud;
+connect-src https://s3.fr-par.scw.cloud
+            https://my-bucket.s3.fr-par.scw.cloud;
 img-src     https://my-bucket.s3.fr-par.scw.cloud;
 ```
 
 If using a CDN or custom domain via `public_url`:
 
 ```
-connect-src https://s3.fr-par.scw.cloud;
+connect-src https://s3.fr-par.scw.cloud
+            https://my-cdn.example.com;
 img-src     https://my-cdn.example.com;
 ```
 
 Replace `fr-par` and `my-bucket` with your actual region and bucket name.
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -1255,7 +1284,7 @@ public_url = "https://my-cdn.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -1264,16 +1293,16 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | Supabase S3 Access Key ID. Safe to store in config. |
 | `project_id` | Yes | Supabase Project ID. Used to construct the S3 API endpoint and public URL. |
 | `bucket` | Yes | The storage bucket name. |
-| `region` | Yes | The project region shown on the Storage S3 configuration page, e.g. `us-east-1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. |
+| `region` | No | The project region shown on the Storage S3 configuration page, e.g. `eu-central-1`. Defaults to `us-east-1`. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `public_url` | No | Custom domain URL for asset previews. See [Custom Domain](#custom-domain) below. |
 
 ### Custom Domain
 
-By default, asset URLs use the Supabase public storage URL (`https://{project_id}.supabase.co/storage/v1/object/public/{bucket}/{key}`). To serve assets via a custom domain, set `public_url` to your domain’s base URL:
+By default, asset URLs use the Supabase public storage URL (`https://{project_id}.supabase.co/storage/v1/object/public/{bucket}/{key}`). To serve assets via a custom domain, set `public_url` to the same URL on your domain, including the `/storage/v1/object/public/{bucket}` path, as the object key is appended to it directly:
 
 ```yaml
-public_url: 'https://media.example.com'
+public_url: 'https://media.example.com/storage/v1/object/public/my-bucket'
 ```
 
 ### Content Security Policy
@@ -1281,18 +1310,22 @@ public_url: 'https://media.example.com'
 API calls (list, upload) go to `https://{project_id}.storage.supabase.co`. Asset URLs use `https://{project_id}.supabase.co` by default:
 
 ```
-connect-src https://abcdefghijklmnopqrst.storage.supabase.co;
+connect-src https://abcdefghijklmnopqrst.storage.supabase.co
+            https://abcdefghijklmnopqrst.supabase.co;
 img-src     https://abcdefghijklmnopqrst.supabase.co;
 ```
 
 If using a custom domain via `public_url`:
 
 ```
-connect-src https://abcdefghijklmnopqrst.storage.supabase.co;
+connect-src https://abcdefghijklmnopqrst.storage.supabase.co
+            https://media.example.com;
 img-src     https://media.example.com;
 ```
 
 Replace `abcdefghijklmnopqrst` with your actual Project ID.
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 

@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Custom Editor Components
 
-A custom editor component allows you to create reusable, complex block-level component available in the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext).
+A custom editor component allows you to create reusable, complex block-level or inline components available in the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext).
 
 By default, registered components appear under the Insert button on the editor toolbar, though they can also be placed directly on the toolbar using the `trigger` option. When clicked, they insert a predefined template into the editor at the current cursor position.
 
@@ -18,7 +18,7 @@ To register a custom editor component, use the `registerEditorComponent` method 
 CMS.registerEditorComponent(definition);
 ```
 
-The component `definition` object includes the following properties:
+Registering a component with the same `id` again replaces the previous one. The component `definition` object includes the following properties:
 
 #### Required Properties
 
@@ -26,20 +26,21 @@ The component `definition` object includes the following properties:
 - `fields` (array of field definitions): An array defining the [fields](https://sveltiacms.app/en/docs/fields) to be displayed in the component.
 - `pattern` (RegExp): A regular expression used to identify existing instances of the component in the Markdown content.
   - It’s recommended to use [named capture groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group) corresponding to the field names so that `fromBlock` can be omitted if no additional processing is needed.
-  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern.
+  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern. Otherwise, the component is treated as an inline component that matches text within a paragraph.
+  - The `g` (global) flag is ignored.
 - `fromBlock` (function): A function that takes a regex match array and returns an object mapping field names to their values.
   - This property can be omitted if the `pattern` regular expression contains named capture groups corresponding to the field names, and no additional processing like type conversion is needed.
   - Otherwise, this property is required. You must provide a function to extract field values from the regex match.
-- `toBlock` (function): A function that takes an object mapping field names to their values and returns a string representing the Markdown content to be inserted.
+- `toBlock` (function): A function that takes an object mapping field names to their values and returns a string representing the Markdown content to be inserted. It’s also called once with an empty object while the editor is being initialized, so it must handle missing values.
 
 #### Optional Properties
 
 - `label` (string): The text label displayed on the toolbar button. Defaults to the `id` value.
 - `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name to display on the toolbar button.
 - `trigger` (string): The trigger UI of the component, either `menuitem` (default) or `button`. A menu item is placed under the Insert menu, while a button is placed directly on the toolbar.
-- `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, no preview is shown.
+- `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, or if it returns another type of value, no preview is shown.
 - `mode` (string): Editing mode for the component. `block` (default) renders the component within the rich text editor as an expandable field list. `dialog` renders a compact placeholder that opens a dialog when clicked.
-- `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Falls back to the first string field value, then to the component label.
+- `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Like the Object field’s `summary` option, it supports nested field names and transformations. Falls back to the first String or Text field value, then to the component label.
 - `collapsed` (boolean): If true, the component's fields panel is collapsed by default when inserted (`block` mode only).
 
 **Breaking change from Netlify/Decap CMS**
@@ -56,7 +57,7 @@ The optional `toPreview` function can return any of the following:
 
 “As is” means that neither Markdown parsing nor sanitization is applied, so the value of a nested RichText or Markdown field is displayed verbatim, such as `**bold**`, unless you render it yourself. The CMS provides the `renderRichText` method for exactly that purpose, which renders the value into an element of your choice just like the preview pane, nested components included — see [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown).
 
-The function may also be called with an empty object while the editor is being initialized, so make sure that it works without any field values, as the examples below do by using default values.
+Like `toBlock`, the function is also called once with an empty object while the editor is being initialized, so make sure that it works without any field values, as the examples below do by using default values. A preview is reused as long as the component’s Markdown is unchanged.
 
 **Security Risk**
 
@@ -270,7 +271,7 @@ CMS.registerEditorComponent({
 
 The shortcode is flat — `lang` and `code` are separate attributes — so `fromBlock` reassembles them into the `snippet` object the Code field expects, and `toBlock` takes them apart again.
 
-Destructuring with a `= {}` default matters here. As noted in [Preview Output](#preview-output) above, these functions may be called with an empty object while the editor is being initialized, and destructuring `snippet` from it would otherwise throw.
+Destructuring with a `= {}` default matters here. As noted in [Preview Output](#preview-output) above, these functions are called with an empty object while the editor is being initialized, and destructuring `snippet` from it would otherwise throw.
 
 The `toPreview` function returns a fenced code block rather than `<pre><code>` markup. Because a string preview is parsed as Markdown, the fence gives you syntax highlighting for free and the code is escaped for you, so a snippet containing `<` or `&` is displayed rather than interpreted.
 
@@ -450,7 +451,7 @@ CMS.registerEditorComponent({
 
 The `toPreview` function can also return a DOM element, which is inserted into the preview as is. This allows you to reuse a component written with Svelte, Vue or any other framework that can be mounted on an element, so the preview matches what your site actually renders.
 
-Because the CMS cannot destroy a component that it didn’t create, it dispatches a custom `Unmount` event on the returned element once the preview is replaced or the entry is closed. Listen for that event to tear down your component and avoid memory leaks.
+Because the CMS cannot destroy a component that it didn’t create, it dispatches a custom `Unmount` event on the returned element once the preview is replaced or removed, the preview pane is closed, or the entry is closed. Listen for that event to tear down your component and avoid memory leaks.
 
 The following example renders a “Warning” component that wraps some body text. Because the body is a nested [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, its value arrives as a Markdown string, and the element you return is inserted as is — so `**bold**` would show up with the asterisks intact unless you render it. The example passes the value to the component, which renders it with the [`renderRichText`](https://sveltiacms.app/en/docs/api/rendering-markdown) method once its element is available — with an attachment in Svelte, or in the `onMounted` hook in Vue:
 
@@ -575,11 +576,11 @@ It takes the target element, the Markdown string and an optional options object,
 const destroy = CMS.renderRichText(element, markdown, options);
 ```
 
-The content is rendered asynchronously, so the target element can still be detached from the document when you call the method — for example, an element created in `toPreview` that the CMS inserts into the preview pane afterwards.
+The content is rendered asynchronously, and the target element doesn’t have to be attached to the document yet when you call the method — for example, an element created in `toPreview` that the CMS inserts into the preview pane afterwards.
 
 The `options` object accepts the following property:
 
-- `fieldConfig` — [RichText field](https://sveltiacms.app/en/docs/fields/richtext) options to be applied, such as [`editor_components`](https://sveltiacms.app/en/docs/fields/richtext#editor-components) to restrict the available components and [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) to disable sanitization. The output is sanitized by default, regardless of the [`field_defaults`](https://sveltiacms.app/en/docs/fields/richtext#global-field-defaults) configuration.
+- `fieldConfig` — [RichText field](https://sveltiacms.app/en/docs/fields/richtext) options to be applied, such as [`editor_components`](https://sveltiacms.app/en/docs/fields/richtext#editor-components) to restrict the available components and [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) to disable sanitization. Options not given here fall back to the [`field_defaults`](https://sveltiacms.app/en/docs/fields/richtext#global-field-defaults) configuration, except for `sanitize_preview`: the output is sanitized unless it’s explicitly set to `false` here.
 
 The method is designed for an editor component whose `toPreview` returns a DOM element, where the value of a nested RichText field would otherwise be displayed verbatim. Call the returned `destroy` function once the CMS dispatches the `Unmount` event on the element, so that the nested previews are destroyed along with your component:
 
@@ -697,8 +698,8 @@ CMS.registerPreviewTemplate(name, component);
 
 #### Parameters
 
-- `name` (string, required): The name of the [collection](https://sveltiacms.app/en/docs/collections) or [collection file](https://sveltiacms.app/en/docs/collections/files) for which the preview template is being registered.
-- `component` (React component, required): A React **class component** that defines the preview template. This component receives the entry data as props and should render the preview accordingly. You can use either JSX or non-JSX syntax to define the component — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
+- `name` (string, required): The name of the [entry collection](https://sveltiacms.app/en/docs/collections/entries), or the name of the file in a [file collection](https://sveltiacms.app/en/docs/collections/files) or [singleton collection](https://sveltiacms.app/en/docs/collections/singletons), for which the preview template is being registered. Registering a template with the same name again replaces the previous one.
+- `component` (React component, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the preview template. This component receives the entry data as props and should render the preview accordingly. You can use either JSX or non-JSX syntax to define the component — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
 
 ### Component Props
 
@@ -707,38 +708,39 @@ The component you register receives the following props during render:
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): Contains the entry data with the following structure:
   ```js
   {
-    data: { ... },      // Default locale data
-    i18n: {             // Non-default locale data (if i18n is enabled)
+    data: { ... },      // Data of the locale being previewed
+    i18n: {             // Data of the other locales (if i18n is enabled)
       [locale]: {
         data: { ... }
       }
     },
-    slug,               // Entry slug
-    path,               // Entry file path
-    newRecord,          // Boolean indicating if it's a new entry
+    slug,               // Entry slug, or an empty string for a new entry
+    path,               // Entry file path, or an empty string for a new entry
+    newRecord,          // Always `false` in a preview
     collection,         // Collection name
-    mediaFiles,         // Array of media files associated with the entry
+    mediaFiles,         // Array of all the media files in the collection's media folder
   }
   ```
 - `widgetFor` (function): Returns a React element rendering a Svelte field preview for a given field key path. Useful for rendering individual field previews.
-- `widgetsFor` (function): Returns widget data for a given field name. For list fields, returns an array of objects; for object fields, returns a single object; for primitive fields, returns the raw value. Each object has:
+- `widgetsFor` (function): Returns widget data for a given top-level field name. For List fields, returns an array of Immutable Maps; for Object fields, returns a single Immutable Map; for other fields, returns the raw value. Each Map has:
   ```js
   {
-    data: { ... },              // Raw field values
-    widgets: { ... }            // React preview elements keyed by field name
+    data: { ... },              // Raw values of the list item or object
+    widgets: { ... }            // Immutable Map of React preview elements keyed by subfield name
   }
   ```
+  `widgets` is empty for a list item that is a primitive value, such as a string.
 - `getAsset` (function): Takes a file path, typically a File or Image field value, and returns an asset object with the following properties, or `undefined` if no matching asset is found:
   - `url` (string): A URL to display the file in the preview, typically a `blob:` URL. The public path is used until the blob URL is available.
   - `path` (string): The public path of the file.
   - `fileObj` (`File` or `undefined`): The file selected by the user, if the file hasn’t been saved yet.
   - `field` (`undefined`): Always `undefined`. It’s included only for compatibility with Netlify/Decap CMS.
   - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
-  - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix.
-- `getCollection` (function): Async function that returns entries from a specified collection. Takes parameters:
-  - `collectionName` (string): Name of the collection to query
-  - `slug` (string, optional): Entry slug to fetch a specific entry; if omitted, returns all entries
-- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by field name. Useful for accessing related entry data from relation fields.
+  - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix. It rejects with an error if the file can’t be retrieved.
+- `getCollection` (function): Async function that returns entries from a specified collection, each as an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
+  - `collectionName` (string): Name of the collection to query. The Promise is rejected if the collection is not found.
+  - `slug` (string, optional): Entry slug to fetch a specific entry; if omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
+- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s key path, e.g. `author` for a top-level field, `details.author` for a field nested in an Object field or `authors.0.person` for one in a List item. A trailing index is removed, so the subfield of a List field with a single `field` uses the List field’s key path, e.g. `tags` instead of `tags.0`. Useful for accessing related entry data from relation fields.
 - `document` (Document): The preview pane iframe's Document object. Use this instead of the global `document` to manipulate the preview DOM.
 - `window` (Window): The preview pane iframe's Window object. Use this instead of the global `window` to access the preview window context.
 
@@ -1181,7 +1183,7 @@ CMS.registerPreviewTemplate('products', ProductPreview);
 
 #### Using Other Frameworks
 
-The registered component must be a React class component, but it can mount a component written in another framework into the preview document. These examples wrap a [Svelte 5](https://svelte.dev/) or [Vue 3](https://vuejs.org/) component, updating its props in place on each render instead of remounting it. Keep the Svelte wrapper in a `.svelte.js` file so the `$state` rune compiles. The Vue wrapper renders the component from a render function so that changes to the reactive props are picked up; the `rootProps` argument of `createApp()` is not reactive. See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
+The registered component must be a React component, but it can mount a component written in another framework into the preview document. These examples wrap a [Svelte 5](https://svelte.dev/) or [Vue 3](https://vuejs.org/) component, updating its props in place on each render instead of remounting it. Keep the Svelte wrapper in a `.svelte.js` file so the `$state` rune compiles. The Vue wrapper renders the component from a render function so that changes to the reactive props are picked up; the `rootProps` argument of `createApp()` is not reactive. See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
 
 ```js [Svelte]
 import { mount, unmount } from 'svelte';
@@ -1261,7 +1263,7 @@ Source: https://sveltiacms.app/en/docs/api/preview-templates
 
 ## Custom Preview Styles
 
-Sveltia CMS comes with built-in preview styles for the admin interface. However, you can also register your own custom preview styles to customize the appearance of the admin interface according to your needs.
+Sveltia CMS comes with built-in styles for the entry preview pane. However, you can also register your own custom preview styles to make the preview look like your site.
 
 ### Overview
 
@@ -1279,8 +1281,8 @@ There are two ways to register custom preview styles in Sveltia CMS: by providin
 
 #### Parameters
 
-- `filePath` (string): The path to the CSS file containing the custom styles. This file should be accessible from the CMS admin interface. It can be a relative path or an absolute URL.
-- `cssString` (string): A string containing the raw CSS styles to be applied to the admin interface.
+- `filePath` (string): The path to the CSS file containing the custom styles. This file should be accessible from the CMS admin interface. It can be a relative path, which is resolved against the current page URL, or an absolute URL.
+- `cssString` (string): A string containing the raw CSS styles to be applied to the preview pane.
 - `options` (object, optional): An options object that can contain the following property:
   - `raw` (boolean): Set this to `true` if you are providing a raw CSS string. Defaults to `false`.
 
@@ -1317,7 +1319,7 @@ CMS.registerPreviewStyle('/path/to/first-style.css');
 CMS.registerPreviewStyle('/path/to/second-style.css');
 ```
 
-This allows you to layer styles and create complex customizations for the Sveltia CMS admin interface.
+This allows you to layer styles and create complex customizations for the entry preview.
 
 ### Showcase
 
@@ -1389,7 +1391,7 @@ display_url = "https://www.example.com/blog/"
 
 ### Logout Redirect URL
 
-The `logout_redirect_url` configuration option allows you to specify a custom URL to which users will be redirected after they log out of the Sveltia CMS admin interface. This can be useful for directing users back to your main website or a specific landing page.
+The `logout_redirect_url` configuration option allows you to specify a custom URL to which users will be redirected after they log out of the Sveltia CMS admin interface. This can be useful for directing users back to your main website or a specific landing page. If omitted, users stay on the CMS sign-in page after logging out.
 
 ```yaml [YAML]
 logout_redirect_url: https://example.com/logged-out
@@ -1417,8 +1419,8 @@ You can customize the logo displayed in the Sveltia CMS admin interface by speci
 
 The `logo` configuration option, defined at the root level of the configuration file, accepts an object with the following properties:
 
-- `src`: The URL or path to the custom logo image. (Required)
-- `show_in_header`: A boolean indicating whether to display the logo in the header. (Optional, default: `true`)
+- `src`: The URL or path to the custom logo image. If omitted, the deprecated `logo_url` option is used, if defined, and the Sveltia CMS logo otherwise. (Optional)
+- `show_in_header`: A boolean indicating whether to display the logo in the header. It has no effect without a custom logo. (Optional, default: `true`)
 
 Configuration example:
 

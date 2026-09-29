@@ -15,7 +15,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), You may need to update it to allow requests to Cloudinary. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to Cloudinary. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
@@ -78,12 +78,13 @@ media_library:
 
 The `config` object includes the Cloudinary [Media Library widget options](https://cloudinary.com/documentation/media_library_widget#2_set_the_configuration_options). Here are some important notes regarding the configuration options:
 
-- The following parameters are required:
+- The following parameters are required. A [field-level configuration](#field-level-configuration) inherits them from the top-level configuration, so they don’t need to be repeated there:
   - `cloud_name`: Your Cloudinary cloud name.
   - `api_key`: Your Cloudinary API key.
 - `default_transformations`: Transformations to apply to all uploaded images. Only the first transformation in the array will be applied to uploaded media in Sveltia CMS. See the [Image transformations](#image-transformations) section below for more details on defining transformations.
 - `max_files`: The maximum number of assets that can be selected at once. The field’s [`max`](https://sveltiacms.app/en/docs/fields/file#max) option takes precedence if set. Defaults to `20`.
-- Some options are not applicable in Sveltia CMS and will be ignored if provided, such as `button_caption` and `inline_container`.
+- `multiple`: Whether to allow selecting multiple assets. The field’s [`multiple`](https://sveltiacms.app/en/docs/fields/file#multiple) option takes precedence.
+- Some options are not applicable in Sveltia CMS and will be ignored if provided, such as `button_caption`.
 
 **Warning**
 
@@ -110,16 +111,17 @@ media_libraries:
     use_transformations: true
 ```
 
-```toml [TOML]{5-6}
+```toml [TOML]{2-3}
 [media_libraries.cloudinary]
+output_filename_only = false
+use_transformations = true
+
 [media_libraries.cloudinary.config]
 cloud_name = "YOUR_CLOUD_NAME"
 api_key = "YOUR_API_KEY"
-output_filename_only = false
-use_transformations = true
 ```
 
-```json [JSON]{7-8}
+```json [JSON]{8-9}
 {
   "media_libraries": {
     "cloudinary": {
@@ -134,7 +136,7 @@ use_transformations = true
 }
 ```
 
-```js [JavaScript]{7-8}
+```js [JavaScript]{8-9}
 {
   media_libraries: {
     cloudinary: {
@@ -151,7 +153,7 @@ use_transformations = true
 
 #### Field-Level Configuration
 
-The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. Here is an example of configuring a File field to use the Cloudinary media storage with custom default transformations and storing only the filename:
+The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so is the `config` object, key by key, so a field only needs to set the options it changes: `cloud_name` and `api_key` don’t need to be repeated, and an option such as `use_transformations` is inherited unless the field sets it. An array such as `default_transformations` is replaced, not combined. Setting `cloudinary` to `false` makes Cloudinary unavailable for the field. Here is an example of configuring a File field to use the Cloudinary media storage with custom default transformations and storing only the filename:
 
 ```yaml [YAML]{5-11}
 fields:
@@ -234,10 +236,11 @@ default_transformations = [[{quality = "auto", fetch_format = "auto"}]]
 
 **Legacy `media_library` Option**
 
-As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. Here is an example of configuring a File field to use the Cloudinary media storage with the legacy option:
+As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Cloudinary media storage with the legacy option:
 
 ```yaml
 media_library:
+  name: cloudinary
   config:
     default_transformations:
       - - quality: auto
@@ -344,7 +347,7 @@ Sveltia CMS uses the Uploadcare API to integrate the service instead of the depr
 
 However, some features available in the previous integration, such as image editing, camera capture and external sources, are not currently supported in Sveltia CMS. We’ll consider adding these features in future releases.
 
-Also, in the `config` object, only `publicKey` and `multiple` options are supported at this time. Please refer to the [Configuration](#configuration) section for more details.
+Also, in the `config` object, only the `publicKey`, `multiple` and `cdnBase` options are supported at this time. Please refer to the [Configuration](#configuration) section for more details.
 
 ### Requirements
 
@@ -353,7 +356,7 @@ Also, in the `config` object, only `publicKey` and `multiple` options are suppor
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), You may need to update it to allow requests to Uploadcare. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to Uploadcare. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
@@ -409,27 +412,28 @@ media_library:
     publicKey: YOUR_PUBLIC_KEY
 ```
 
-The `config` object includes the Uploadcare [jQuery File Uploader options](https://uploadcare.com/docs/uploads/file-uploader-options/). However, only `publicKey` and `multiple` are supported in Sveltia CMS at this time, as we don’t actually use the pre-built uploader.
+The `config` object includes the Uploadcare [jQuery File Uploader options](https://uploadcare.com/docs/uploads/file-uploader-options/). However, only `publicKey`, `multiple` and `cdnBase` are supported in Sveltia CMS at this time, as we don’t actually use the pre-built uploader.
 
-- `publicKey` (string, required): Your Uploadcare public API key.
-- `multiple` (boolean, optional): If set to `true`, allows selecting multiple files at once. Default is `false`. This option is available for backward compatibility; use the `multiple` option in the File or Image field configuration instead.
+- `publicKey` (string, required): Your Uploadcare public API key. A [field-level configuration](#field-level-configuration) inherits it from the top-level configuration, so it doesn’t need to be repeated there.
+- `multiple` (boolean, optional): If set to `true`, allows selecting multiple files at once. Default is `false`. This option is available for backward compatibility; use the `multiple` option in the File or Image field configuration instead, which takes precedence over this option.
+- `cdnBase` (string, optional): The CDN origin used in output URLs, such as a custom CDN domain. Default: the origin of the file URL returned by Uploadcare, typically `https://ucarecdn.com`.
 
 **Warning**
 
-Do not write your Uploadcare secret key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the secret key when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your Uploadcare secret key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the secret key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 There are two Sveltia CMS-specific configuration options you can include under the `settings` object:
 
 - `autoFilename` (boolean): If set to `true`, a filename will be added at the end of the file URL when selecting files, e.g. `https://ucarecdn.com/UUID/filename.jpg`. Default is `false`.
-- `defaultOperations` (string): A string of default image transformation operations to be applied to images when they are selected. For example, `/resize/800x600/` will resize images to fit within 800x600 pixels by default. See the [Uploadcare documentation](https://uploadcare.com/docs/transformations/image/) for available operations.
+- `defaultOperations` (string): A string of default image transformation operations to be applied to images when they are selected. It must start with a slash, and it’s not added to the URLs of non-image files. For example, `/resize/800x600/` will resize images to fit within 800x600 pixels by default. See the [Uploadcare documentation](https://uploadcare.com/docs/transformations/image/) for available operations.
 
 **Tip**
 
-Unlike most of other config options, the setting keys are camelCased. (Not `auto_filename` but `autoFilename`.)
+Unlike most other config options, the setting keys are camelCased. (Not `auto_filename` but `autoFilename`.)
 
 The complete configuration with these additional options looks like this:
 
-```yaml [YAML]
+```yaml [YAML]{5-7}
 media_libraries:
   uploadcare:
     config:
@@ -439,7 +443,7 @@ media_libraries:
       defaultOperations: '/resize/800x600/'
 ```
 
-```toml [TOML]
+```toml [TOML]{5-7}
 [media_libraries.uploadcare]
 [media_libraries.uploadcare.config]
 publicKey = "YOUR_PUBLIC_KEY"
@@ -449,7 +453,7 @@ autoFilename = true
 defaultOperations = "/resize/800x600/"
 ```
 
-```json [JSON]
+```json [JSON]{7-10}
 {
   "media_libraries": {
     "uploadcare": {
@@ -465,7 +469,7 @@ defaultOperations = "/resize/800x600/"
 }
 ```
 
-```js [JavaScript]
+```js [JavaScript]{7-10}
 {
   media_libraries: {
     uploadcare: {
@@ -483,9 +487,9 @@ defaultOperations = "/resize/800x600/"
 
 #### Field-Level Configuration
 
-The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. Here is an example of configuring a File field to use the Uploadcare media storage with custom default operations:
+The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so are the `config` and `settings` objects, key by key, so a field only needs to set the options it changes: `publicKey` doesn’t need to be repeated, and a setting such as `autoFilename` is inherited unless the field sets it. Setting `uploadcare` to `false` makes Uploadcare unavailable for the field. Here is an example of configuring a File field to use the Uploadcare media storage with custom default operations:
 
-```yaml [YAML]
+```yaml [YAML]{4-7}
 - name: my_image
   label: My Image
   widget: image
@@ -495,16 +499,16 @@ The `media_libraries` configuration can also be specified at the field level for
         defaultOperations: '/crop/200x200/'
 ```
 
-```toml [TOML]
+```toml [TOML]{5-6}
 [[fields]]
 name = "my_image"
 label = "My Image"
 widget = "image"
-[[fields.media_libraries.uploadcare.settings]]
+[fields.media_libraries.uploadcare.settings]
 defaultOperations = "/crop/200x200/"
 ```
 
-```json [JSON]
+```json [JSON]{5-11}
 {
   "name": "my_image",
   "label": "My Image",
@@ -519,7 +523,7 @@ defaultOperations = "/crop/200x200/"
 }
 ```
 
-```js [JavaScript]
+```js [JavaScript]{5-11}
 {
   name: "my_image",
   label: "My Image",
@@ -536,10 +540,11 @@ defaultOperations = "/crop/200x200/"
 
 **Legacy `media_library` Option**
 
-As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. Here is an example of configuring a File field to use the Uploadcare media storage with the legacy option:
+As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Uploadcare media storage with the legacy option:
 
 ```yaml
 media_library:
+  name: uploadcare
   settings:
     defaultOperations: '/crop/200x200/'
 ```
@@ -723,7 +728,7 @@ prefix = "cms-uploads/" # Optional
 
 **Warning**
 
-Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage first time, which will be stored securely in the browser’s local storage.
+Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage for the first time, which will be stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -732,7 +737,7 @@ Do not write your SAS token in the configuration file, as it should be kept conf
 | `account_name` | Yes | The storage account name. Used to construct the Blob service endpoint, `https://{account_name}.blob.core.windows.net`. Not required if `endpoint` is given. |
 | `container` | Yes | The blob container name. |
 | `public_url` | No | Public URL for asset downloads. Required unless the container allows anonymous read access, because the URL stored in your entries can’t contain the SAS token. |
-| `prefix` | No | Path prefix within the container, e.g. `uploads/`. |
+| `prefix` | No | Path prefix within the container, e.g. `uploads/`. A trailing slash is added if missing. |
 | `endpoint` | No | Custom Blob service endpoint, including the account path where applicable, e.g. the [Azurite emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) URL `http://127.0.0.1:10000/devstoreaccount1`. Overrides `account_name`. |
 
 ### Content Security Policy
@@ -744,12 +749,15 @@ connect-src https://mystorageaccount.blob.core.windows.net;
 img-src     https://mystorageaccount.blob.core.windows.net;
 ```
 
-If you serve assets through a CDN or custom domain via `public_url`, use that host for `img-src` instead:
+If you serve assets through a CDN or custom domain via `public_url`, add that host to `connect-src` and use it for `img-src` instead:
 
 ```
-connect-src https://mystorageaccount.blob.core.windows.net;
+connect-src https://mystorageaccount.blob.core.windows.net
+            https://media.example.com;
 img-src     https://media.example.com;
 ```
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
 
 Replace `mystorageaccount` with your actual storage account name.
 
@@ -800,7 +808,7 @@ More providers, including paid stock photo services, will be added in future rel
 
 #### Non-hotlinking Providers
 
-Due to the non-hotlinking policies, Pexels and Pixabay are disabled if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is disabled due to the lack of the [`media_folder` option](https://sveltiacms.app/en/docs/media/internal#media-folder) in the configuration.
+Due to the non-hotlinking policies, Pexels and Pixabay are disabled if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is disabled due to the lack of the [`media_folder` option](https://sveltiacms.app/en/docs/media/internal#media-folder) in the configuration. They are also hidden for a field where the internal media storage is [disabled](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) with `media_libraries.default: false`.
 
 ### Requirements
 
@@ -884,6 +892,10 @@ providers = []
   },
 }
 ```
+
+Setting `stock_assets` to `false` also disables all the providers.
+
+The `stock_assets` option can be set for an individual [Image](https://sveltiacms.app/en/docs/fields/image) field under its `media_libraries` option as well. The field-level options are merged over the top-level ones, so a field can offer a different set of providers, or none.
 
 ### Using Stock Photos
 

@@ -23,7 +23,7 @@ For multi-select options with many entries, a tag input UI will be used instead 
 
 #### Creating Related Entries
 
-When the related collection is an entry collection, the field also offers an **Add** button labelled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry you’re editing, so you don’t have to save your work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
+When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry you’re editing, so you don’t have to save your work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
 
 The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets you fill in each of them. Clicking **Add** validates the new entry the same way a save does; if a required field is empty, the dialog stays open and the error is shown on the field. Once added, the new entry is selected in the Relation field right away, listed among the options like any other entry, and shown by its label in the Preview Pane.
 
@@ -71,6 +71,7 @@ A reference is never removed at the cost of the referencing entry’s validity, 
 
 - If the `required` option is set to `true`, at least one related entry must be selected.
 - If the `multiple` option is enabled, the number of selected entries must be between the `min` and `max` limits, if specified.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the stored value of the selected entry, as defined by the `value_field` option, must match the regular expression. For multi select, the stored values joined with commas, e.g. `foo,bar,baz`, must match instead: as with Decap CMS, the pattern is tested against the whole selection rather than against each value, so use `^[a-z-]+(,[a-z-]+)*$` rather than `^[a-z-]+$` to accept lowercase slugs only. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
 
 ### Options
 
@@ -90,7 +91,7 @@ Must be set to `relation`.
 - **Type**: `string`
 - **Default**: `undefined`
 
-The name of the collection to relate to. This collection must exist in the CMS configuration, and can be either an entry collection or a file collection. If the target collection is a file collection, the `file` option must also be specified.
+The name of the collection to relate to. This collection must exist in the CMS configuration, and can be either an entry collection or a file collection. Use `_singletons` to relate to a [singleton](https://sveltiacms.app/en/docs/collections/singletons). If the target collection is a file collection or the singleton collection, the `file` option must also be specified.
 
 #### Optional Options
 
@@ -105,7 +106,7 @@ The `options_length` option is also not supported in Sveltia CMS because the per
 - **Type**: `string`
 - **Default**: `undefined`
 
-The name of a file within the target [file collection](https://sveltiacms.app/en/docs/collections/files) to relate to. Required if the target collection is a file collection.
+The name of a file within the target [file collection](https://sveltiacms.app/en/docs/collections/files), or of a singleton, to relate to. Required if the target collection is a file collection or the singleton collection.
 
 ##### `value_field`
 
@@ -122,6 +123,8 @@ The field from the related collection to use as the value for the relation. This
 The `{{locale}}` template tag can be used to include the current locale in the value field, e.g. `{{locale}}/{{slug}}`, which is useful for [i18n support](https://sveltiacms.app/en/docs/i18n).
 
 In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared file name is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths): an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
+
+In a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file), an entry’s slug is its position in the array, which changes when the entries are reordered or one is deleted. The value field must therefore refer to a field, preferably one with a unique value like an ID; `{{slug}}`, including the default, is reported as invalid.
 
 When using template strings, keep the following in mind:
 
@@ -187,7 +190,7 @@ display_fields = ["first_name", "last_name"]
 - **Type**: `array` of `strings`
 - **Default**: value of `display_fields` option
 
-The fields from the related collection to search against when filtering related entries in the Relation field UI. This should be an array of field names. By default, it uses the same fields as specified in the `display_fields` option.
+The fields from the related collection to search against when filtering related entries in the Relation field UI. This should be an array of field names, which can also be string templates, just like `display_fields`. By default, it uses the same fields as specified in the `display_fields` option.
 
 ##### `default`
 
@@ -232,7 +235,7 @@ The maximum number of related entries allowed. This enables validation to preven
 An array of filter objects to limit the related entries shown in the Relation field UI. Each filter object has the following properties:
 
 - `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`). A `slug` filter matches the same form the value takes, so in a nested collection it’s the entry’s path without the shared index file name. If the field holds multiple values, such as a [Select](https://sveltiacms.app/en/docs/fields/select) field with `multiple: true` or a [List](https://sveltiacms.app/en/docs/fields/list) field without subfields, an entry matches when any of its values is included in `values`.
-- `values`: An array of strings or numbers representing the values to match. String values may contain the following template tags that are resolved from the **current** entry being edited:
+- `values`: An array of strings or numbers representing the values to match. A value may be one of the following template tags, which are resolved from the **current** entry being edited. The tag has to be the whole value, not part of a longer string like `tag-{{slug}}`:
   - `{{slug}}`: Resolved to the current entry's slug.
   - `{{fields.fieldName}}`: Resolved to the value of a field named `fieldName` in the current entry. If the field holds multiple values, the template is expanded to all of them, so an entry matches when it shares any of them with the current entry.
 
@@ -786,13 +789,13 @@ Source: https://sveltiacms.app/en/docs/fields/relation
 
 ## Compute Field
 
-The Compute field type displays read-only computed values based on other fields in the entry. It automatically updates the displayed value when the dependent fields change.
+The Compute field type stores read-only values computed from other fields in the entry. It automatically updates the value when the dependent fields change.
 
 ### User Interface
 
 #### Editor
 
-Read-only display of computed values based on other fields in the entry. The value is automatically updated when the dependent fields change.
+The field isn’t shown in the editor; its value is computed from other fields and updated automatically when they change. It can’t be edited, regardless of the [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) option.
 
 #### Preview
 
@@ -802,7 +805,7 @@ A read-only display of the computed value.
 
 A string representing the computed value.
 
-If the `{{index}}` variable is used within a list, the value will be a number representing the current index of the item in the list.
+If the template consists of the `{{index}}` variable alone, the value will be a number representing the current index of the item in the list. Combined with other text or variables, it’s part of a string.
 
 If the template contains a UUID variable, the generated UUID is preserved in the saved value across edits.
 
@@ -915,7 +918,7 @@ value = "{{fields.first_name}} {{fields.last_name}}"
       widget: 'compute',
       value: '{{fields.first_name}} {{fields.last_name}}',
     },
-  ];
+  ],
 }
 ```
 
@@ -1012,7 +1015,7 @@ value = "mailto:{{fields.contact_email}}?subject=Inquiry"
       widget: 'compute',
       value: 'mailto:{{fields.contact_email}}?subject=Inquiry',
     },
-  ];
+  ],
 }
 ```
 
@@ -1125,7 +1128,7 @@ value = "{{index}}"
         },
       ],
     },
-  ];
+  ],
 }
 ```
 
@@ -1231,7 +1234,7 @@ value = "{{fields.title | slugify}}-{{uuid_shorter}}"
       widget: 'compute',
       value: '{{fields.title | slugify}}-{{uuid_shorter}}',
     },
-  ];
+  ],
 }
 ```
 
@@ -1273,7 +1276,7 @@ The UUID field type provides a read-only field that automatically generates and 
 
 #### Editor
 
-Read-only display of a [UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID) (Universally Unique Identifier) value. The UUID is automatically generated when a new entry is created and cannot be modified by the user.
+Read-only display of a [UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID) (Universally Unique Identifier) value. The UUID is automatically generated when a new entry is created and can’t be modified by default, because the [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) option defaults to `true` for this field type. Set it to `false` to make the value editable.
 
 #### Preview
 
@@ -1283,7 +1286,7 @@ A read-only view of the UUID value.
 
 A string representing a UUID in the standard 36-character format (e.g., `df733d7e-d2f7-4e4f-8f27-803046b64040`). Alphabetic characters are in lowercase.
 
-If `use_b32_encoding` is set to true, the UUID will be represented in a 26-character [Base32](https://en.wikipedia.org/wiki/Base32) format (e.g., `C5T6KX3M6N7G4Y2Z1A0B9C8D7E`).
+If `use_b32_encoding` is set to true, the UUID will be represented in a 26-character lowercase [Base32](https://en.wikipedia.org/wiki/Base32) format (e.g., `c5t6kx3m6n7g4y2z2a5b7c3d4e`).
 
 ### Data Validation
 
@@ -1327,7 +1330,7 @@ A string prefix to prepend to the generated UUID. Useful for adding context or c
 - **Type**: `boolean`
 - **Default**: `false`
 
-Whether to use Base32 encoding for the UUID. If set to `true`, the UUID will be represented in a 26-character Base32 format instead of the standard 36-character format.
+Whether to use Base32 encoding for the UUID. If set to `true`, the UUID will be represented in a 26-character lowercase Base32 format instead of the standard 36-character format.
 
 ### Examples
 
@@ -1424,16 +1427,16 @@ use_b32_encoding = true
 Output example:
 
 ```yaml [YAML]
-order_id: ORD-C5T6KX3M6N7G4Y2Z1A0B9C8D7E
+order_id: ORD-c5t6kx3m6n7g4y2z2a5b7c3d4e
 ```
 
 ```toml [TOML]
-order_id = "ORD-C5T6KX3M6N7G4Y2Z1A0B9C8D7E"
+order_id = "ORD-c5t6kx3m6n7g4y2z2a5b7c3d4e"
 ```
 
 ```json [JSON]
 {
-  "order_id": "ORD-C5T6KX3M6N7G4Y2Z1A0B9C8D7E"
+  "order_id": "ORD-c5t6kx3m6n7g4y2z2a5b7c3d4e"
 }
 ```
 

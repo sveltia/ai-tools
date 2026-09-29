@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Entry Operations
 
-Sveltia CMS provides options to control entry creation, deletion and duplication, limit the number of entries, hide collections from the interface, and let editors reorder entries manually.
+Sveltia CMS provides options to control entry creation, deletion and duplication, limit the number of entries, make content read-only, hide collections from the interface, and let editors reorder entries manually.
 
 ### Disabling Creation and Deletion
 
@@ -200,6 +200,114 @@ With the above configuration, editors can only create up to 5 entries in the `fe
 
 The collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) doesn’t take up a slot. It stands for the collection’s own page rather than for one of the entries in it, so a collection with `limit: 5` and an `index_file` holds its index file plus 5 entries.
 
+### Making Content Read-Only
+
+You can make content read-only with the `readonly` option. Editors can still browse, search and view read-only content, including its preview, but they can’t change it. The option can be set at three levels:
+
+- **Globally**: At the top level of the configuration, `readonly: true` puts the whole CMS in read-only mode. This is handy while your site is under maintenance or being migrated, when editors shouldn’t write to the repository.
+- **Collection**: On an entry collection, a file collection or an [asset collection](https://sveltiacms.app/en/docs/media/internal#asset-collections), `readonly: true` locks that collection only.
+- **File**: On a file in a file collection, or on a [singleton](https://sveltiacms.app/en/docs/collections/singletons), `readonly: true` locks that file only, while the other files stay editable.
+
+```yaml [YAML]{5}
+collections:
+  - name: archive
+    label: Archive
+    folder: /content/archive
+    readonly: true
+    fields:
+      - { name: title, label: Title }
+      - { name: body, label: Body, widget: richtext }
+```
+
+```toml [TOML]{5}
+[[collections]]
+name = "archive"
+label = "Archive"
+folder = "/content/archive"
+readonly = true
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+```
+
+```json [JSON]{7}
+{
+  "collections": [
+    {
+      "name": "archive",
+      "label": "Archive",
+      "folder": "/content/archive",
+      "readonly": true,
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "body", "label": "Body", "widget": "richtext" }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7}
+{
+  collections: [
+    {
+      name: "archive",
+      label: "Archive",
+      folder: "/content/archive",
+      readonly: true,
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "body", label: "Body", widget: "richtext" },
+      ],
+    },
+  ],
+}
+```
+
+To put the whole CMS in read-only mode, add the option to the top level instead:
+
+```yaml [YAML]
+readonly: true
+```
+
+```toml [TOML]
+readonly = true
+```
+
+```json [JSON]
+{
+  "readonly": true
+}
+```
+
+```js [JavaScript]
+{
+  readonly: true,
+}
+```
+
+A read-only level locks everything below it, and a lower level can’t opt out with `readonly: false`. For example, while the whole CMS is read-only, every collection and file is read-only as well.
+
+For read-only content, Sveltia CMS:
+
+- Shows a message at the top of the entry list, the Content Editor and the Asset Library, saying that the content can be viewed but not changed. When the whole CMS is read-only, the message says so instead.
+- Disables creating, duplicating, deleting and reordering entries, including from the global Create menu and the **Add** button of a Relation field that [creates related entries](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries). The Create menu button itself is disabled when nothing can be created, as in read-only mode.
+- Opens entries and files with every field locked. The Save button, the slug and parent folder editors, the translation and copy options, and the reset options are not available.
+- Hides the Editorial Workflow controls for the entry, so it can’t be moved through the review stages, published or discarded.
+- Disables uploading, replacing, editing, renaming and deleting assets in the media folders of the read-only collection or file, as well as creating, renaming and deleting subfolders there. The global media folder is only read-only along with the whole CMS.
+
+Read-only entries also stay intact when other content changes. Sveltia CMS normally updates the entries that refer to an entry or asset when it’s renamed or deleted, but it can’t update a read-only entry. Instead, it refuses to delete an entry or asset that a read-only entry refers to, and to rename such an entry or asset, and tells the editor which read-only entries are in the way.
+
+**Not a security measure**
+
+The `readonly` option only affects the Sveltia CMS interface. It doesn’t stop anyone with write access to the repository from changing the content through Git or the Git hosting service. Use your Git host’s permissions, such as branch protection rules, to restrict write access.
+
 ### Hiding the Collection
 
 You can hide an entry collection from the Sveltia CMS interface using the `hide` option. This is useful for collections that are managed programmatically or through other means, and you don’t want editors to see or modify them.
@@ -273,6 +381,8 @@ When the `hide` option is set to `true`, the collection will not appear in the S
 When the `reorder` option is set to `true`, Sveltia CMS enables manual reordering of entries in the listing view. This is useful for collections where the order of the entries matters, such as a list of featured products or a custom navigation menu.
 
 With this option enabled, users can reorder entries by dragging and dropping them or using the arrow buttons.
+
+In a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file), the entries can always be reordered without this option, which can’t be used there. The order of the objects in the array is the order of the entries, so no `order` field is written.
 
 ```yaml [YAML]{5}
 collections:
@@ -510,7 +620,7 @@ After creating an entry collection, you might want to customize how entries are 
 
 ### Summaries
 
-By default, Sveltia CMS uses the `title` field (or a field defined with the [`identifier_field` option](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field)) as the summary for each entry in the listing view.
+By default, Sveltia CMS uses the `title` field (or a field defined with the [`identifier_field` option](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field)) as the summary for each entry in the listing view. If the field is empty or missing, the `title`, `name` or `label` field is used instead, whichever has a value first.
 
 Sometimes entries might only have a `body` field without a `title` field. In such cases, Sveltia CMS will look for a header in the Markdown body field, if it exists, or use the entry slug as a fallback to ensure that the summary is never empty. This behavior supports typical Markdown-based setups like [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress) and [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus).
 
@@ -1222,7 +1332,7 @@ Sveltia CMS provides several options to customize how entries are displayed in t
 
 ### Sorting
 
-By default, Sveltia CMS supports sorting by `title`, `date`, `author` and `description` fields if they exist in the collection. If the `date` and `author` fields are not present, Sveltia CMS will look for commit date and author information from Git history (if available) to enable sorting by those fields.
+By default, Sveltia CMS supports sorting by `title`, `name`, `date`, `author` and `description` fields if they exist in the collection, as well as by the [identifier field](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field) if it’s set with the `identifier_field` option. If the `date` and `author` fields are not present, Sveltia CMS will look for commit date and author information from Git history (if available) to enable sorting by those fields.
 
 When the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) is defined for a collection, Sveltia CMS also enables sorting by entry summaries. This allows you to sort entries based on the customized summary content, which can include multiple fields and string transformations.
 
@@ -1384,10 +1494,10 @@ collections:
       - { name: draft, label: Draft, widget: boolean }
       - { name: body, label: Body, widget: richtext }
     view_groups:
-      - field: draft
       - label: Drafts
+        field: draft
+      - label: Year
         field: date
-        label: Year
         pattern: '\d{4}'
 ```
 
@@ -1484,6 +1594,8 @@ pattern = "\\d{4}"
 }
 ```
 
+Without a `pattern` or a [comparison option](#grouping-by-a-comparison), entries are grouped by the field value itself, as with the `draft` group above. With a `pattern`, they are grouped by the part of the field value that matches it, such as the four-digit year of the `date` field.
+
 **Extended syntax**
 
 Sveltia CMS supports an extended syntax used in [Static CMS](https://staticjscms.netlify.app/docs/collection-overview#view-groups) to define a default group. Here is the same configuration using the extended syntax:
@@ -1501,7 +1613,7 @@ view_groups:
   default: year
 ```
 
-The `default` option has to be the `name` of one of the `groups`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open ungrouped.
+In this syntax, each group needs a `name`, so that the `default` option can refer to it. The `default` option has to be the `name` of one of the `groups`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open ungrouped.
 
 To sort the Year group in descending order by date, you can add the `sortable_fields` property as described in the [Sorting](#sorting) section above:
 
@@ -1692,7 +1804,7 @@ view_filters:
   default: drafts
 ```
 
-The `default` option has to be the `name` of one of the `filters`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open unfiltered.
+In this syntax, each filter needs a `name`, so that the `default` option can refer to it. The `default` option has to be the `name` of one of the `filters`; any other name is reported as a config validation error on the login screen, as the collection would otherwise open unfiltered.
 
 #### Comparing Values
 
@@ -1791,7 +1903,7 @@ collections:
       - { name: title, label: Title }
       - { name: date, label: Date, widget: datetime, time_format: false }
       - { name: capacity, label: Capacity, widget: number }
-      - { name: status, label: Status, widget: select, options: [scheduled, cancelled] }
+      - { name: status, label: Status, widget: select, options: [scheduled, canceled] }
     view_filters:
       - label: Upcoming
         field: date
@@ -1805,9 +1917,9 @@ collections:
       - label: Large venues
         field: capacity
         gte: 100
-      - label: Not cancelled
+      - label: Not canceled
         field: status
-        ne: cancelled
+        ne: canceled
 ```
 
 ```toml [TOML]{28-51}
@@ -1835,7 +1947,7 @@ widget = "number"
 name = "status"
 label = "Status"
 widget = "select"
-options = ["scheduled", "cancelled"]
+options = ["scheduled", "canceled"]
 
 [[collections.view_filters]]
 label = "Upcoming"
@@ -1858,9 +1970,9 @@ field = "capacity"
 gte = 100
 
 [[collections.view_filters]]
-label = "Not cancelled"
+label = "Not canceled"
 field = "status"
-ne = "cancelled"
+ne = "canceled"
 ```
 
 ```json [JSON]{13-39}
@@ -1874,7 +1986,7 @@ ne = "cancelled"
         { "name": "title", "label": "Title" },
         { "name": "date", "label": "Date", "widget": "datetime", "time_format": false },
         { "name": "capacity", "label": "Capacity", "widget": "number" },
-        { "name": "status", "label": "Status", "widget": "select", "options": ["scheduled", "cancelled"] }
+        { "name": "status", "label": "Status", "widget": "select", "options": ["scheduled", "canceled"] }
       ],
       "view_filters": [
         {
@@ -1898,9 +2010,9 @@ ne = "cancelled"
           "gte": 100
         },
         {
-          "label": "Not cancelled",
+          "label": "Not canceled",
           "field": "status",
-          "ne": "cancelled"
+          "ne": "canceled"
         }
       ]
     }
@@ -1919,7 +2031,7 @@ ne = "cancelled"
         { name: "title", label: "Title" },
         { name: "date", label: "Date", widget: "datetime", time_format: false },
         { name: "capacity", label: "Capacity", widget: "number" },
-        { name: "status", label: "Status", widget: "select", options: ["scheduled", "cancelled"] },
+        { name: "status", label: "Status", widget: "select", options: ["scheduled", "canceled"] },
       ],
       view_filters: [
         {
@@ -1943,9 +2055,9 @@ ne = "cancelled"
           gte: 100,
         },
         {
-          label: "Not cancelled",
+          label: "Not canceled",
           field: "status",
-          ne: "cancelled",
+          ne: "canceled",
         },
       ],
     },

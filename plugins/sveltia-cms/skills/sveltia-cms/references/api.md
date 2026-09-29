@@ -106,15 +106,17 @@ The methods other than those listed above are not supported in Sveltia CMS. This
 
 For [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates), [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components) and [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types), you can use React components to create rich, interactive previews and editor interfaces. Sveltia CMS supports both JSX and non-JSX syntax for defining these components.
 
+A component can be a class component, a function component, or a component wrapped with `memo` or `forwardRef`. Sveltia CMS bundles its own copy of React 19 to render them, so write your components for React 19. That copy of React is available as `CMS.React`, and as the `React` export of the NPM package, giving you the full React API, including [hooks](#using-hooks).
+
 #### Without JSX
 
-Sveltia CMS exposes two constructs globally to allow you to create React components inline without requiring a build step:
+To let you create React components inline without a build step, Sveltia CMS also exposes a few shorthands globally: `h` (and its alias `createElement`) and `createClass` for compatibility with Netlify/Decap CMS, plus `rf` for `React.Fragment`:
 
-- `h` — An alias for `React.createElement()`, used to create React elements in the non-JSX examples
-- `rf` - An alias for `React.Fragment`, used to create React fragments in the non-JSX examples
-- `createClass` — Used to define React class components when not using JSX syntax
+- `h` (or `createElement`) — An alias for `CMS.React.createElement()`, used to create React elements in the non-JSX examples
+- `rf` — An alias for `CMS.React.Fragment`, used to create React fragments in the non-JSX examples
+- `createClass` — Used to define React class components when not using JSX syntax. It comes from the [`create-react-class`](https://www.npmjs.com/package/create-react-class) package, as React itself no longer provides it
 
-These are available on the `window` object when Sveltia CMS is loaded. No additional imports are necessary to use them.
+These are available on the `window` object when Sveltia CMS is loaded, so no imports are necessary to use them. React itself isn’t a global, so it can’t clash with another copy of React your page may load; use `CMS.React` for anything else.
 
 Define the methods you pass to `createClass`, such as `render`, as function expressions rather than arrow functions. `createClass` binds each method to the component instance, which an arrow function doesn’t allow, so `this.props` would be undefined within it. Any other function, including a callback within a method, can be an arrow function.
 
@@ -127,6 +129,51 @@ We plan to add support for [Preact+HTM](https://preactjs.com/guide/v10/getting-s
 #### With JSX
 
 Sveltia CMS does not provide a built-in JSX transpiler. To use JSX syntax, you need a build step to transpile it to JavaScript, such as [Vite](https://vitejs.dev/).
+
+#### Using Hooks
+
+Function components can use React hooks such as `useState` and `useEffect`, as long as the hooks come from the copy of React bundled with Sveltia CMS — `CMS.React`, or the `React` export of the NPM package:
+
+```js [CDN]
+const { useState, useEffect } = CMS.React;
+```
+
+```js [NPM]
+import CMS, { React } from '@sveltia/cms';
+
+const { useState, useEffect } = React;
+```
+
+For example, the following control for a [custom field type](https://sveltiacms.app/en/docs/api/field-types) keeps whether its text area is expanded in state:
+
+```js
+const { useState } = CMS.React;
+
+const NotesControl = ({ forID, classNameWrapper, value, onChange }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return h(
+    rf,
+    null,
+    h('textarea', {
+      id: forID,
+      className: classNameWrapper,
+      rows: expanded ? 12 : 3,
+      value: value ?? '',
+      onChange: (event) => onChange(event.target.value),
+    }),
+    h(
+      'button',
+      { type: 'button', onClick: () => setExpanded(!expanded) },
+      expanded ? 'Collapse' : 'Expand',
+    ),
+  );
+};
+
+CMS.registerFieldType('notes', NotesControl);
+```
+
+A hook imported from another copy of React, such as the `react` package in your project’s dependencies, throws an “Invalid hook call” error. If you install the NPM package, import `React` from `@sveltia/cms` and take the hooks from it. If you load Sveltia CMS from the CDN, take the hooks from `CMS.React` (`window.CMS.React`), even when you bundle your own components with a build tool — importing `@sveltia/cms` in that case would load a second copy of the CMS. Never take them from the `react` package. The JSX itself can still be compiled with your project’s `react` package, as long as it’s React 19 too, so that Sveltia CMS can render the elements it creates.
 
 Source: https://sveltiacms.app/en/docs/api
 
@@ -146,7 +193,13 @@ CMS.init({ config });
 
 #### Parameters
 
-- `config` (optional): An object that can contain any of the configuration options available in the `config.yml` file. If provided, this configuration will be merged with the one loaded from `config.yml` (if the `load_config_file` option is `true` or omitted) or used directly (if `load_config_file` is `false`).
+- `config` (optional): An object that can contain any of the configuration options available in the `config.yml` file. If provided, this configuration will be merged with the one loaded from `config.yml` (if the `load_config_file` option is `true` or omitted), with its options taking precedence over the file’s — except that arrays such as `collections` are concatenated rather than replaced, so an item can be added but not replaced — or used directly as a complete configuration (if `load_config_file` is `false`).
+
+#### Return Value
+
+The function returns a Promise that resolves once the app has been mounted. The app is mounted on the [`<div id="nc-root">`](https://sveltiacms.app/en/docs/customization#custom-mount-element) element if present, or the `<body>` element otherwise. If the page is still loading and there is no such element yet, the CMS waits for the page content to be loaded first.
+
+If `config` is neither an object nor `undefined`, the Promise is rejected with a `TypeError`. Calls after the first one are ignored, so the CMS can only be initialized once.
 
 **Config File Loading Behavior**
 
@@ -317,7 +370,7 @@ Additionally, the following events are available when using [Editorial Workflow]
 
 The handler function receives an object with the following properties:
 
-- `author`: The author object that contains the `login` (login name) and `name` (display name) of the user who triggered the event. It’s not available for the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) since it doesn’t track user information.
+- `author`: The author object that contains the `login` (login name) and `name` (display name) of the user who triggered the event. Both are always strings: a value that isn’t available, such as with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), which doesn’t track user information, is an empty string.
 - `entry`: The entry object serialized to an [Immutable Map](https://immutable-js.com/docs/v5/Map/). It contains the following properties:
   ```js
   {
@@ -337,7 +390,7 @@ The handler function receives an object with the following properties:
 
 <!-- any other properties? -->
 
-For the `preSave` event, the handler can return a modified entry object in Immutable Map format to change the data before it is saved. The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`.
+For the `preSave` event, the handler can return a modified entry object in Immutable Map format, or just the modified `data` Map like `entry.get('data').set('title', 'New Title')`, to change the data before it is saved. Only the changes to `data` and `i18n.*.data` are applied; changes to other properties, such as `slug`, are ignored. The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`. If multiple handlers are registered, each one receives the changes made by the previous ones.
 
 For other events, the return value is ignored.
 
@@ -417,7 +470,7 @@ The following example demonstrates how to register a post-save hook that logs in
 CMS.registerEventListener({
   name: 'postSave',
   handler: ({ author, entry }) => {
-    console.log(`Entry saved by ${author?.login ?? 'Unknown'}:` entry.toJS());
+    console.log(`Entry saved by ${author.login || 'Unknown'}:`, entry.toJS());
   },
 });
 ```
@@ -446,12 +499,12 @@ CMS.registerCustomFormat(name, extension, { fromFile, toFile });
 
 #### Parameters
 
-- `name` (string): A unique name for the custom format. This name will be used to reference the format in collection configurations.
-- `extension` (string): The file extension associated with this format (e.g., `json5`, `yaml`, `toml`).
-- `fromFile` (function): A parser function that takes a string (the content of the file) and returns a JavaScript object.
-- `toFile` (function): A formatter function that takes a JavaScript object and returns a string (the content to be saved to the file).
+- `name` (string): A unique name for the custom format. This name will be used to reference the format in collection configurations. A custom format with the same name as a built-in one, such as `json`, takes precedence over the built-in format, and registering a format with the same name again replaces the previous one.
+- `extension` (string): The file extension associated with this format, without a leading dot (e.g., `json5`, `yaml`, `toml`).
+- `fromFile` (function): A parser function that takes a string (the content of the file, trimmed and with line breaks normalized to `\n`) and returns a JavaScript object.
+- `toFile` (function): A formatter function that takes a JavaScript object and returns a string (the content to be saved to the file). The output is trimmed and a trailing line break is added.
 
-You can omit either `fromFile` or `toFile` if you only need to customize one direction (parsing or formatting). If you omit `fromFile`, the CMS will use the default parser for the specified file extension. Similarly, if you omit `toFile`, the CMS will use the default formatter. You must provide at least one of the two functions.
+You can omit either `fromFile` or `toFile` if you only need to customize one direction (parsing or formatting). If you omit `fromFile`, the CMS will use the built-in parser for the format name, if any, such as `yaml` or `json`. Similarly, if you omit `toFile`, the CMS will use the built-in formatter. If the format name isn’t a built-in one, provide both functions: without `fromFile`, files in the format can’t be loaded, and without `toFile`, saving an entry fails with an error, leaving the file untouched. The CMS logs a warning to the browser console when such a function is missing. You must provide at least one of the two functions; otherwise an error is thrown.
 
 The functions `fromFile` and `toFile` can also be asynchronous, allowing you to perform async operations if needed.
 
@@ -512,7 +565,7 @@ label = "Item 1"
 }
 ```
 
-You don’t need to specify the file `extension` in the collection configuration; the CMS will automatically use the correct extension based on the registered format.
+You don’t need to specify the file `extension` in the collection configuration; the CMS will automatically use the extension of the registered format. If the collection has an `extension` option, it’s ignored in favor of the registered one.
 
 ### Examples
 
@@ -593,7 +646,7 @@ CMS.registerCustomFormat('json', 'json', {
 });
 ```
 
-If you omit `fromFile`, the CMS will fall back to the default parser for that file extension. In this case, the standard `JSON.parse` method will be used to parse JSON files.
+If you omit `fromFile`, the CMS will fall back to the built-in parser for the format name. In this case, the standard `JSON.parse` method will be used to parse JSON files.
 
 #### Custom Markdown Parser/Formatter
 
@@ -843,10 +896,10 @@ For backward compatibility with Netlify/Decap CMS, the `registerWidget` method i
 
 #### Parameters
 
-- `name` (string, required): The name of the custom field type. This is the name you will use in your collection configuration to reference this type. It should be unique and not conflict with [built-in field types](https://sveltiacms.app/en/docs/fields#built-in-field-types) names.
-- `control` (React component or string, required): A React **class component** that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here; the field shows no control and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
-- `preview` (React component, optional): A React **class component** that defines how the field’s value is previewed in the CMS preview pane. If not provided, no preview will be shown.
-- `schema` (object, optional): A [JSON schema](https://json-schema.org/) object that defines the configuration options for the field type.
+- `name` (string, required): The name of the custom field type. This is the name you will use in your collection configuration to reference this type. It cannot be the name of a [built-in field type](https://sveltiacms.app/en/docs/fields#built-in-field-types); an error is thrown if it is. Registering a field type with the same name again replaces the previous one.
+- `control` (React component or string, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here; the field shows no control and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
+- `preview` (React component, optional): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines how the field’s value is previewed in the CMS preview pane. If not provided, no preview will be shown.
+- `schema` (object, optional): A [JSON schema](https://json-schema.org/) (draft-07) object that defines the configuration options for the field type. See [Field Schema](#field-schema) below.
 
 You can use either JSX or non-JSX syntax to define the component — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
 
@@ -926,7 +979,7 @@ The function is only available while an entry is being edited; it rejects otherw
 
 ##### Custom Validation
 
-Control components may optionally implement an `isValid` instance method for custom validation. The method should return:
+Control components may optionally implement an `isValid` method for custom validation. On a class component, it’s an instance method. A function component, which has no instance, exposes the method with the [`useImperativeHandle`](https://react.dev/reference/react/useImperativeHandle) hook from `CMS.React` instead, given the `ref` prop it receives, or the ref passed by `forwardRef`. See [Using Hooks](https://sveltiacms.app/en/docs/api#using-hooks). The method should return:
 
 - `true` when the value is valid.
 - `false` or `{ error: { message: "text" } }` when the value is invalid.
@@ -934,20 +987,46 @@ Control components may optionally implement an `isValid` instance method for cus
 
 The method is called with two arguments: the current field value and the field configuration as an [Immutable Map](https://immutable-js.com/docs/v5/Map/), the same as the `field` prop. It runs whenever any field in the entry is modified, not only your field, so it can also check the value against other fields read from the `entry` prop. If the method is called again before an earlier Promise settles, the earlier result is discarded, so you can simply return a new Promise on each call. Saving the entry waits for any pending validation to complete. If the method throws an error or returns a rejected Promise, the value is considered invalid, and the error message is shown to the user.
 
+In a function component, the method can be exposed as follows. See the [Number with Validation](#number-with-validation) example below for a class component.
+
+```js
+const { useImperativeHandle } = CMS.React;
+
+const NumberControl = ({ forID, classNameWrapper, value, onChange, ref }) => {
+  useImperativeHandle(
+    ref,
+    () => ({
+      isValid: (value) =>
+        value == null || !Number.isNaN(value) || { error: { message: 'Must be a number' } },
+    }),
+    [],
+  );
+
+  return h('input', {
+    id: forID,
+    className: classNameWrapper,
+    type: 'number',
+    value: value ?? '',
+    onChange: (event) =>
+      onChange(event.target.value === '' ? null : parseFloat(event.target.value)),
+  });
+};
+```
+
 #### Preview Component Props
 
 The preview component receives the following props:
 
 - `value` (any): The current field value to display in the preview.
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
-- `metadata` (Immutable Map): Any available metadata for the current field. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
+- `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the field’s key path, so it works for a field nested in an Object or List field too. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited, with the same structure as the [`entry` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. Read the content with `entry.getIn(['data', 'fieldName'])`.
 - `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
-- `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by field name, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
+- `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by the field’s key path, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
 #### Field Schema
 
-The `schema` parameter is a [JSON schema](https://json-schema.org/) object that defines the configuration options for your field type. When users include your custom field type in their collection config, they can set these configuration options. For example:
+The `schema` parameter is a [JSON schema](https://json-schema.org/) (draft-07) object that defines the configuration options for your field type. When users include your custom field type in their collection config, they can set these configuration options. For example:
 
 ```js
 const schema = {
@@ -1007,12 +1086,14 @@ Only the built-in field types that work outside the entry editor can be reused t
 
 For any other built-in field type, such as `list` or `object`, the method returns `undefined` and logs a warning to the browser console, because those editors read from and write to the entry draft directly and can’t be rendered on their own.
 
-The returned components accept the same `value`, `field`, `forID` and `onChange` props as a custom control, with two differences:
+The returned control component accepts the same `value`, `field`, `forID` and `onChange` props as a custom control, with two differences:
 
 - The `field` prop can be an [Immutable Map](https://immutable-js.com/docs/v5/Map/), a plain object, or any object exposing an Immutable Map-like `get` method. A plain object is the simplest way to pass an ad hoc field configuration, while the other shapes let you reuse a control wrapper ported from Netlify/Decap CMS as is.
 - The `classNameWrapper` prop is ignored, given that built-in components come with their own styles.
 
 You can also pass the optional `locale`, `keyPath`, `required`, `readonly` and `invalid` props. When they are omitted, they are inherited from the field being edited, so a reused control behaves consistently with the rest of the CMS: it’s marked required, read-only and invalid exactly when your custom field is. This inheritance takes precedence over the ad hoc field configuration, given that the configuration typically describes how to render the input rather than the field itself. For example, a `required: false` option there won’t make a required field optional, which would otherwise let the user select an empty value that the CMS then rejects.
+
+The returned preview component accepts the `value` and `field` props, plus the optional `locale` and `keyPath` props.
 
 **Compatibility Note**
 
@@ -1144,7 +1225,7 @@ const ColorPreview = createClass({
   },
 });
 
-CMS.registerFieldType('color', ColorControl, ColorPreview);
+CMS.registerFieldType('color-swatch', ColorControl, ColorPreview);
 ```
 
 ```jsx [With JSX]
@@ -1179,7 +1260,7 @@ class ColorPreview extends React.Component {
   }
 }
 
-CMS.registerFieldType('color', ColorControl, ColorPreview);
+CMS.registerFieldType('color-swatch', ColorControl, ColorPreview);
 ```
 
 #### Number with Validation
@@ -1192,7 +1273,12 @@ const NumberControl = createClass({
     const min = this.props.field.get('min');
     const max = this.props.field.get('max');
 
-    if (isNaN(value)) {
+    // Leave an empty field to the `required` option
+    if (value == null) {
+      return true;
+    }
+
+    if (Number.isNaN(value)) {
       return { error: { message: 'Must be a number' } };
     }
 
@@ -1215,10 +1301,11 @@ const NumberControl = createClass({
       id: this.props.forID,
       className: this.props.classNameWrapper,
       type: 'number',
-      value: this.props.value || '',
+      value: this.props.value ?? '',
       min: min,
       max: max,
-      onChange: (e) => this.props.onChange(parseFloat(e.target.value) || null),
+      onChange: (e) =>
+        this.props.onChange(e.target.value === '' ? null : parseFloat(e.target.value)),
     });
   },
 });
@@ -1236,7 +1323,7 @@ const schema = {
   },
 };
 
-CMS.registerFieldType('number', NumberControl, NumberPreview, schema);
+CMS.registerFieldType('bounded-number', NumberControl, NumberPreview, schema);
 ```
 
 ```jsx [With JSX]
@@ -1245,7 +1332,12 @@ class NumberControl extends React.Component {
     const min = this.props.field.get('min');
     const max = this.props.field.get('max');
 
-    if (isNaN(value)) {
+    // Leave an empty field to the `required` option
+    if (value == null) {
+      return true;
+    }
+
+    if (Number.isNaN(value)) {
       return { error: { message: 'Must be a number' } };
     }
 
@@ -1269,10 +1361,12 @@ class NumberControl extends React.Component {
         id={this.props.forID}
         className={this.props.classNameWrapper}
         type="number"
-        value={this.props.value || ''}
+        value={this.props.value ?? ''}
         min={min}
         max={max}
-        onChange={(e) => this.props.onChange(parseFloat(e.target.value) || null)}
+        onChange={(e) =>
+          this.props.onChange(e.target.value === '' ? null : parseFloat(e.target.value))
+        }
       />
     );
   }
@@ -1291,7 +1385,7 @@ const schema = {
   },
 };
 
-CMS.registerFieldType('number', NumberControl, NumberPreview, schema);
+CMS.registerFieldType('bounded-number', NumberControl, NumberPreview, schema);
 ```
 
 #### JSON Editor

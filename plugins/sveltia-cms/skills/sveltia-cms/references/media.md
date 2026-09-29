@@ -60,7 +60,7 @@ media_libraries:
     config:
       max_file_size: 1024000 # default: Infinity
       slugify_filename: true # default: false
-      transformations: # See the documentation for details
+      # transformations: # See the documentation for details
   cloudinary:
     config:
       cloud_name: YOUR_CLOUD_NAME
@@ -87,10 +87,11 @@ slugify_filename = true # default: false
 # transformations: See the documentation for details
 
 [media_libraries.cloudinary]
+output_filename_only = true
+
 [media_libraries.cloudinary.config]
 cloud_name = "YOUR_CLOUD_NAME"
 api_key = "YOUR_API_KEY"
-output_filename_only = true
 
 [media_libraries.uploadcare]
 [media_libraries.uploadcare.config]
@@ -165,9 +166,11 @@ defaultOperations = "/resize/800x600/"
 
 See the individual media storage provider documentation for specific configuration options and details.
 
+The `media_libraries` option can also be defined for a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field. The options of each provider, including the internal media storage (`default`), the stock photo providers (`stock_assets`) and the shared `all` options, are merged over the same provider’s top-level options, so a field only needs to set the options it changes, or `false` to make the provider unavailable for the field. A nested object such as `config` is merged key by key, but only one level deep, while other values, including arrays such as the `providers` list, are replaced. The `all` options are merged shallowly, too. So a field-level `transformations` map, under `all` or `default.config`, replaces the top-level one as a whole rather than being merged format by format. Providers not defined there fall back to the top-level configuration.
+
 **Legacy `media_library` Option**
 
-Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS, but it is recommended to use the `media_libraries` option for new configurations. With the legacy option, only a single media storage provider can be configured. Here is an example of configuring Cloudinary using the legacy option:
+Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS, but it is recommended to use the `media_libraries` option for new configurations. With the legacy option, only a single media storage provider can be configured. If both options define the same provider, `media_libraries` takes precedence. Unlike Netlify/Decap CMS, which requires the `name`, Sveltia CMS applies a legacy option without a `name` to the internal media storage. Here is an example of configuring Cloudinary using the legacy option:
 
 ```yaml
 media_library:
@@ -180,9 +183,9 @@ media_library:
 
 ### Additional Features
 
-A couple of additional features are available to enhance your media management experience. These features can be applied to both internal and external storage providers, except for Cloudinary, which uses its own media library widget.
+A couple of additional features are available to enhance your media management experience. These features apply to the internal media storage and to files uploaded to external storage providers, except for Cloudinary, which uses its own Media Library widget.
 
-The configuration goes in the `media_libraries` option, under the `all` key, which applies to all media storage providers.
+The configuration goes in the `media_libraries` option, under the `all` key. For the internal media storage, these options can be overridden by the same options in `media_libraries.default.config`. A File or Image field can also have its own `media_libraries.all` options, which are merged into the global ones. For the internal media storage, the options are applied in this order, each overriding the previous ones: the top-level `all`, the top-level `default.config`, the field-level `all` and the field-level `default.config`. So a field-level `all` option takes precedence over the same option in the top-level `default.config`.
 
 #### Image Optimization
 
@@ -196,11 +199,11 @@ media_libraries:
     transformations:
       raster_image: # original format
         format: webp # new format, only `webp` is supported
-        quality: 85 # default: 85
+        quality: 85 # integer between 0 and 100, default: 85
         width: 2048 # default: original size
         height: 2048 # default: original size
       svg:
-        optimize: true
+        optimize: true # default: false
 ```
 
 ```toml [TOML]{2-9}
@@ -255,12 +258,13 @@ optimize = true
 }
 ```
 
-Then, whenever a user selects images to upload, those images are automatically optimized, all within the browser. Raster images such as JPEG and PNG are converted to WebP format and resized if necessary. SVG images are minified using the [SVGO](https://github.com/svg/svgo) library.
+Then, whenever a user selects images to upload, those images are automatically optimized, all within the browser. Raster images such as JPEG and PNG are converted to WebP format and resized if necessary. SVG images are minified using the [SVGO](https://github.com/svg/svgo) library if the `optimize` option is `true`, which removes unnecessary data such as comments and editor metadata.
 
 In case you’re not aware, [WebP](https://developers.google.com/speed/webp) offers better compression than conventional formats and is now [widely supported](https://caniuse.com/webp) across major browsers. So there is no reason not to use WebP on the web.
 
 - `raster_image` applies to any supported raster image format: `avif`, `gif`, `heic`, `jpeg`, `png` and `webp`. If you like, you can use a specific format as key instead of `raster_image`, or in addition to it to give one format different options.
-- The `width` and `height` options are the maximum width and height, respectively. If an image is larger than the specified dimension, it will be scaled down. Smaller images will not be resized.
+- The `width` and `height` options are the maximum width and height in pixels, respectively. If an image is larger than the specified dimension, it will be scaled down, keeping the aspect ratio. Smaller images will not be scaled up.
+- If the browser can’t encode WebP, the image may be saved in PNG format instead, with the file extension changed accordingly.
 - File processing is a bit slow on Safari because [native WebP encoding](https://caniuse.com/mdn-api_htmlcanvaselement_toblob_type_parameter_webp) is [not supported](https://bugs.webkit.org/show_bug.cgi?id=183257) and the [jSquash](https://github.com/jamsinclair/jSquash) library is used instead.
 - AVIF conversion is not supported because no browser has native AVIF encoding support ([Chromium won’t fix it](https://issues.chromium.org/issues/40848792)) and the third-party library (and AVIF encoding in general) is very slow.
 - This feature is not intended for creating image variants in different formats and sizes. It should be done with a framework during the build process. Popular frameworks like [Astro](https://docs.astro.build/en/guides/images/), [Eleventy](https://www.11ty.dev/docs/plugins/image/), [Hugo](https://gohugo.io/content-management/image-processing/), [Next.js](https://nextjs.org/docs/pages/api-reference/components/image) and [SvelteKit](https://svelte.dev/docs/kit/images) have built-in image processing capabilities.
@@ -286,7 +290,7 @@ We may add more transformation options in the future.
 
 #### File Size Limits
 
-If you want to restrict the maximum file size for uploads, you can set the `max_file_size` option (in bytes) in the `media_libraries` configuration at the top level, collection level, or field level. The default value is `Infinity`, meaning there is no limit. The legacy field-level `media_library.config.max_file_size` option from Netlify/Decap CMS is also supported for the internal media storage.
+If you want to restrict the maximum file size for uploads, you can set the `max_file_size` option (in bytes) in the `media_libraries` configuration at the top level or in a File/Image field. The default value is `Infinity`, meaning there is no limit. The legacy field-level `media_library.config.max_file_size` option from Netlify/Decap CMS is also supported for the internal media storage.
 
 For example, to set a maximum file size of 1 MB for all uploads, add the following to your `config.yml`:
 
@@ -358,6 +362,76 @@ slugify_filename = true
 
 Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options).
 
+#### Renaming Uploaded Files
+
+Files are uploaded with their original names by default, which are often meaningless, like `IMG_1234.jpg`, or may reveal private information. To give uploaded files consistent names, set the `filename_template` option to a template for the new filename.
+
+```yaml [YAML]{3}
+media_libraries:
+  all:
+    filename_template: '{{year}}{{month}}{{day}}-{{uuid_short}}'
+```
+
+```toml [TOML]{2}
+[media_libraries.all]
+filename_template = "{{year}}{{month}}{{day}}-{{uuid_short}}"
+```
+
+```json [JSON]{4}
+{
+  "media_libraries": {
+    "all": {
+      "filename_template": "{{year}}{{month}}{{day}}-{{uuid_short}}"
+    }
+  }
+}
+```
+
+```js [JavaScript]{4}
+{
+  media_libraries: {
+    all: {
+      filename_template: "{{year}}{{month}}{{day}}-{{uuid_short}}",
+    },
+  },
+}
+```
+
+With this configuration, a photo named `IMG_1234.jpg` uploaded on September 29, 2026, would be saved as something like `20260929-392bdcf3b642.jpg`.
+
+The template supports the same [template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) and [string transformations](https://sveltiacms.app/en/docs/string-transformations) as the entry `slug` option, plus the following tags for the original file:
+
+- `{{filename}}`: The original filename without the extension, e.g. `IMG_1234`.
+- `{{extension}}`: The original file extension, e.g. `jpg`.
+
+Keep these points in mind:
+
+- The file extension is always appended to the new filename, so don’t include it in the template. If the file is converted to another format by [image optimization](#image-optimization), the new extension is used.
+- The value of each tag is slugified according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options), while the rest of the template is used as is, except for characters that are not allowed in filenames. Enable the [`slugify_filename`](#slugification-of-filenames) option as well to slugify the whole filename.
+- If a file with the same name already exists in the folder, a number is appended to the new filename, like `20260929-392bdcf3b642-1.jpg`.
+- A file that replaces an existing asset keeps the name of that asset.
+
+When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So you can also use the tags that refer to the entry, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value. The file is shown with the new filename in the field before the entry is saved, and the name follows any changes to the entry until then. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
+
+In a multilingual entry, the tags are filled with the content of the default locale, so a file used in several locales has the same name everywhere. If you rename the file by hand before saving the entry, the template no longer applies to the file.
+
+A file uploaded in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) or to an external storage provider is renamed right away, without an entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
+
+The option can also be set for a specific File or Image field, under the field’s `media_libraries` option. For example, to name the cover images of blog posts after the entry:
+
+```yaml
+collections:
+  - name: posts
+    fields:
+      - name: cover
+        label: Cover Image
+        widget: image
+        media_libraries:
+          default:
+            config:
+              filename_template: '{{slug}}-cover'
+```
+
 Source: https://sveltiacms.app/en/docs/media
 
 ---
@@ -376,7 +450,7 @@ No special requirements are needed to use the internal media storage, as it work
 
 ### Configuring Folder Paths
 
-You can configure the folder paths for storing and accessing media files in the internal media storage at three levels: top-level, collection-level, and field-level. The settings at each level override the ones at the previous level.
+You can configure the folder paths for storing and accessing media files in the internal media storage at four levels: top-level, collection-level, file-level, and field-level. The settings at each level override the ones at the previous level.
 
 #### Top-Level Configuration
 
@@ -505,7 +579,7 @@ If `public_folder` is not specified, it will default to the value of the collect
 
 **Absolute vs. Relative Paths**
 
-The collection-level and field-level `media_folder` option must be starting with a slash (`/`) to indicate an absolute path from the root of the repository, while a leading slash can be omitted in the top-level `media_folder` option.
+The collection-level and field-level `media_folder` option must start with a slash (`/`) to indicate an absolute path from the root of the repository, while a leading slash can be omitted in the top-level `media_folder` option.
 
 If you use a relative path, Sveltia CMS will treat it as relative to the collection `folder` (and `path`, if defined). See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
 
@@ -853,7 +927,7 @@ public_folder = "/uploads/about"
 }
 ```
 
-The same [placeholder variables](#using-placeholders) mentioned above can be used in field-level `media_folder` and `public_folder` options.
+The same [placeholder variables](#using-placeholders) mentioned above can be used in file-level `media_folder` and `public_folder` options.
 
 #### Field-Level Configuration
 
@@ -972,16 +1046,17 @@ To define an asset collection, add a new entry to the `asset_collections` array 
 - `icon`: Optional icon for the asset collection, which can be a string representing a [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web) icon name.
 - `media_folder`: The folder in the repository where media files for this collection will be stored. Required and must be an absolute path relative to the root of the repository. A leading slash can be omitted, but it is recommended to include it for clarity.
 - `public_folder`: The public URL path that corresponds to the `media_folder`. If omitted, it defaults to the value of `media_folder`.
+- `readonly`: Set to `true` to make the asset collection read-only, so assets can’t be uploaded to, changed in or deleted from it. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
 
 Configure your asset collections like this:
 
 ```yaml [YAML]
 asset_collections:
-  - name: avatars
-    label: Avatars
+  - name: images
+    label: Images
     icon: image
-    media_folder: /public/uploads/avatars
-    public_folder: /uploads/avatars
+    media_folder: /public/uploads/images
+    public_folder: /uploads/images
   - name: logos
     label: Logos
     icon: brand_family
@@ -1075,7 +1150,7 @@ public_folder = "/uploads/documents"
 
 ### Additional Features
 
-For backward compatibility, the [additional media storage features](https://sveltiacms.app/en/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key, which applies only to the internal media storage provider, as opposed to the `all` key that applies to all providers.
+For backward compatibility, the [additional media storage features](https://sveltiacms.app/en/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key, which applies only to the internal media storage provider, as opposed to the `all` key that also applies to files uploaded to external storage providers. Options set here override the same options under the `all` key at the same level.
 
 ```yaml [YAML]{4-11}
 media_libraries:

@@ -53,6 +53,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 
 - If the `required` option is set to `true`, the list must contain at least one item.
 - If the `min` and/or `max` options are specified, the number of items in the list must be within the defined limits.
+- For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list rather than against each item, so a pattern that describes a single item has to allow for the commas: use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$` to accept lowercase words only.
 - Each item in the list is validated according to the subfield definitions, if applicable.
 
 ### Options
@@ -115,6 +116,20 @@ A list limited to one item with `max: 1`, which is how a single object is stored
 - A [simple list field](#simple-list-field) shows a single input, without the Remove and reorder controls.
 - A list holding more items than that, e.g. because the file was edited outside the CMS, is shown as a regular list, so that the extra items can be removed.
 
+##### `root`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+Whether to store the list at the root level of the output file, without a parent key. This is useful for creating top-level lists in files. It works with both [simple](#simple-list-field) and [complex](#complex-list-field) lists.
+
+The `root` option is ignored in the following cases:
+
+- The collection or file contains other fields. You can still have subfields under the List field.
+- The file format is TOML, because TOML doesn’t support top-level arrays.
+
+See the [Top-Level List](#top-level-list) example below for details.
+
 #### Subfield Definition
 
 These options are mutually exclusive; you can only use one of them at a time:
@@ -135,27 +150,13 @@ Each type definition is an object with the following properties:
 
 - `name` (string, required): The unique identifier for the type.
 - `label` (string, optional): The display label for the type. Defaults to `name`.
-- `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Other field types are invalid.
+- `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
 - `summary` (string, optional): A template for the summary shown on a collapsed item of this type. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
 #### Subfield Options
 
 These options are effective only when the `field`, `fields`, or `types` option is used:
-
-##### `root`
-
-- **Type**: `boolean`
-- **Default**: `false`
-
-Whether to store the list at the root level of the output file, without a parent key. This is useful for creating top-level lists in files.
-
-The `root` option is ignored in the following cases:
-
-- The file or singleton contains multiple fields. You can still have subfields under the List field.
-- The file format is TOML, because TOML doesn’t support top-level arrays.
-
-See the [Top-Level List](#top-level-list) example below for details.
 
 ##### `summary`
 
@@ -1796,7 +1797,7 @@ Each type definition is an object with the following properties:
 
 - `name` (string, required): The unique identifier for the type.
 - `label` (string, optional): The display label for the type. Defaults to `name`.
-- `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Other field types are invalid.
+- `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
 - `summary` (string, optional): A template for the summary shown when the object of this type is collapsed. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
@@ -2461,7 +2462,7 @@ The maximum number of key-value pairs allowed. This enables validation to preven
 - **Type**: `boolean`
 - **Default**: `false`
 
-If set to `true`, the key-value pairs will be stored at the root level of the entry data instead of nested under the field name. This is similar to how the [`root` option for the List field](https://sveltiacms.app/en/docs/fields/list#root) works. The option is ignored if the file or singleton contains multiple fields.
+If set to `true`, the key-value pairs will be stored at the root level of the entry data instead of nested under the field name. This is similar to how the [`root` option for the List field](https://sveltiacms.app/en/docs/fields/list#root) works. The option is ignored unless the field is the only field in the collection or file.
 
 See the [Top-Level key-value pairs](#top-level-key-value-pairs) example below for details.
 

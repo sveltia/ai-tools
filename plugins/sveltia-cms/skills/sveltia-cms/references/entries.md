@@ -1,12 +1,12 @@
 # Entry Collections: Formats, Slugs and Paths
 
-Folder-based entry collections in depth: file formats, slugs, file paths, nested collections, preview paths and redirects. For listing, view and operation options, see `entries-listing.md`.
+Entry collections in depth: file formats, slugs, file paths, nested collections, single-file collections, preview paths and redirects. For listing, view and operation options, see `entries-listing.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Entry Collections
 
-An entry collection contains multiple entries of the same type. Editors can usually create, edit, and delete entries within the collection. Typical use cases for entry collections include blog posts, tags, products or events. Each entry in the collection is represented by a separate file.
+An entry collection contains multiple entries of the same type. Editors can usually create, edit, and delete entries within the collection. Typical use cases for entry collections include blog posts, tags, products or events. Each entry in the collection is represented by a separate file, or all the entries can be stored in a [single JSON file](https://sveltiacms.app/en/docs/collections/entries/single-file).
 
 **Note for Netlify/Decap CMS users**
 
@@ -86,7 +86,8 @@ The following options are commonly used when defining an entry collection:
 - `label`: A human-readable name for the collection. If omitted, the `name` value is used.
 - `label_singular`: A human-readable singular name for the collection. If omitted, the `label` value is used. Used in some parts of the UI like the “Create new” button.
 - `description`: A brief description of the collection, displayed in the UI. Basic Markdown formatting is supported, including bold, italic, strikethrough, code, and links.
-- `folder`: (required) The folder path where the entries are stored, relative to the repository’s root directory. It can be an empty string (or `.` or `/`) to store entries in the root folder. With i18n enabled, it can contain the `{{locale}}` placeholder as a folder name, e.g. `content/{{locale}}/posts`, to say where the locale folder goes. See [Custom Locale Folder Placement](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement).
+- `folder`: (required unless `file` is used) The folder path where the entries are stored, relative to the repository’s root directory. It can be an empty string (or `.` or `/`) to store entries in the root folder. With i18n enabled, it can contain the `{{locale}}` placeholder as a folder name, e.g. `content/{{locale}}/posts`, to say where the locale folder goes. See [Custom Locale Folder Placement](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement).
+- `file`: The path to a JSON file storing all the entries as an array of objects, used instead of `folder`. See [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file).
 - `fields`: (required) An array defining the [fields](https://sveltiacms.app/en/docs/fields) for each entry in the collection. Each field has a `name`, `label`, and optional `widget` type.
 
 ### Configuration Guides
@@ -96,6 +97,7 @@ The remaining entry collection options are documented on the following pages:
 - [File Formats](https://sveltiacms.app/en/docs/collections/entries/formats): Choose between Markdown with front matter, YAML, JSON and TOML, and customize the file extension, front matter delimiter and body field.
 - [Slugs and File Paths](https://sveltiacms.app/en/docs/collections/entries/slugs): Generate entry slugs from fields and template tags, make slugs editable, and organize entries into subfolders and page bundles.
 - [Nested Collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage hierarchical content in a folder tree that editors can browse and organize.
+- [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file): Store all the entries in one JSON file, as an array of objects.
 - [Preview Paths and Redirects](https://sveltiacms.app/en/docs/collections/entries/previews): Point the CMS at an entry’s URL on your site for previews, and record redirects when slugs change.
 - [Entry Operations](https://sveltiacms.app/en/docs/collections/entries/operations): Disable creation, deletion or duplication, limit the entry count, hide the collection, and enable manual reordering.
 - [Entry Listings](https://sveltiacms.app/en/docs/collections/entries/listings): Customize entry summaries and thumbnails, manage Hugo’s index file, and include or exclude entries.
@@ -261,7 +263,7 @@ The JSON and YAML formats can be customized via the [global `output` option](htt
 
 **Deprecation Notice**
 
-The collection-level `yaml_quote` option has been deprecated in favor of the `quote` option in the [global `output` option](https://sveltiacms.app/en/docs/data-output#controlling-data-output). The `yaml_quote` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly. `yaml_quote: true` is equivalent to `quote: double` in the global YAML format options.
+The collection-level `yaml_quote` option has been deprecated in favor of the `quote` option in the [global `output` option](https://sveltiacms.app/en/docs/data-output#controlling-data-output). The `yaml_quote` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly. `yaml_quote: true` is equivalent to `output.yaml.quote: double`.
 
 If you want to use a different file format, register a custom format using the [Custom File Formats API](https://sveltiacms.app/en/docs/api/file-formats) and specify its name in the `format` option.
 
@@ -567,7 +569,7 @@ Sveltia CMS provides several ways to customize the slug (filename) of an entry i
 
 #### Global Slug Options
 
-The `slug` option defined at the top-level of the configuration file applies to all collections. The default settings are as follows:
+The `slug` option defined at the top-level of the configuration file applies to all collections, including the names of entry folders created or renamed in a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested). It also applies to the names of uploaded asset files and new asset folders when [filename slugification](https://sveltiacms.app/en/docs/media#slugification-of-filenames) is enabled. The default settings are as follows:
 
 ```yaml [YAML]
 slug:
@@ -981,7 +983,7 @@ A slug can also be given to a new entry with the `_slug` query parameter when [l
 
 **Deprecation Notice**
 
-The special `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags have been deprecated in favour of the `editable` and `i18n` options described above, and will be removed in Sveltia CMS v1.0.0. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
+The special `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags have been deprecated in favor of the `editable` and `i18n` options described above, and will be removed in Sveltia CMS v1.0.0. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
 
 Also, in earlier versions, setting the collection’s `delete` option to `false` prevented a saved entry’s slug from being edited. This is no longer the case; use `editable: [create]` or `editable: false` instead.
 
@@ -1474,7 +1476,7 @@ Such a link keeps working for as long as the folder does. A folder exists while 
 
 In the `subfolders` mode, a folder that has no subfolder of its own is left out of the tree, because such a folder is an entry rather than a container — it’s already listed in its parent folder’s entry list. Set `subfolders: false` if you want every folder to appear in the tree.
 
-Each folder in the tree is labelled with the summary of its index file, falling back to the folder name. With `subfolders: false`, the folder name is always used.
+Each folder in the tree is labeled with the summary of its index file, falling back to the folder name. With `subfolders: false`, the folder name is always used.
 
 ### Choosing a Parent Folder
 
@@ -1505,6 +1507,182 @@ Source: https://sveltiacms.app/en/docs/collections/entries/nested
 
 ---
 
+## Single-File Collections
+
+An entry collection normally stores each entry in a file of its own. With the `file` option instead of `folder`, all the entries are stored in one JSON file, as an array of objects. This suits sites that read their content from a data file, such as a vanilla JavaScript site fetching a list of team members, products or links, or a static site generator’s data file.
+
+**Tip**
+
+Sveltia CMS can also edit such a file as a single entry, with a [top-level List field](https://sveltiacms.app/en/docs/fields/list#top-level-list) in a file collection. Use that instead if the list is short and edited as a whole, e.g. a navigation menu, or if the file isn’t in JSON format.
+
+### Creating a Single-File Collection
+
+Here is an example configuration for a list of team members:
+
+```yaml [YAML]{5}
+collections:
+  - name: members
+    label: Team Members
+    label_singular: Team Member
+    file: /data/members.json
+    identifier_field: name
+    fields:
+      - { name: id, label: ID }
+      - { name: name, label: Name }
+      - { name: role, label: Role, required: false }
+      - { name: photo, label: Photo, widget: image, required: false }
+```
+
+```toml [TOML]{5}
+[[collections]]
+name = "members"
+label = "Team Members"
+label_singular = "Team Member"
+file = "/data/members.json"
+identifier_field = "name"
+
+[[collections.fields]]
+name = "id"
+label = "ID"
+
+[[collections.fields]]
+name = "name"
+label = "Name"
+
+[[collections.fields]]
+name = "role"
+label = "Role"
+required = false
+
+[[collections.fields]]
+name = "photo"
+label = "Photo"
+widget = "image"
+required = false
+```
+
+```json [JSON]{7}
+{
+  "collections": [
+    {
+      "name": "members",
+      "label": "Team Members",
+      "label_singular": "Team Member",
+      "file": "/data/members.json",
+      "identifier_field": "name",
+      "fields": [
+        { "name": "id", "label": "ID" },
+        { "name": "name", "label": "Name" },
+        { "name": "role", "label": "Role", "required": false },
+        { "name": "photo", "label": "Photo", "widget": "image", "required": false }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7}
+{
+  collections: [
+    {
+      name: "members",
+      label: "Team Members",
+      label_singular: "Team Member",
+      file: "/data/members.json",
+      identifier_field: "name",
+      fields: [
+        { name: "id", label: "ID" },
+        { name: "name", label: "Name" },
+        { name: "role", label: "Role", required: false },
+        { name: "photo", label: "Photo", widget: "image", required: false },
+      ],
+    },
+  ],
+}
+```
+
+The file then looks like this, with one object for each entry:
+
+```json
+[
+  { "id": "alice", "name": "Alice", "role": "Chair" },
+  { "id": "bob", "name": "Bob", "role": "Treasurer" }
+]
+```
+
+The `file` option is a path to a `.json` file, relative to the repository’s root directory. JSON is the only supported format, so the `format` option can only be `json`, if set. The `folder` and `file` options can’t be used together.
+
+The file doesn’t have to exist yet: it’s created when the first entry is saved.
+
+### How It Works
+
+- Each object in the array is an entry. The entries are listed in the order of the array.
+- A new entry is added to the end of the array.
+- Deleting an entry removes its object from the array.
+- The entries can always be [reordered](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) with the drag-and-drop UI, without the `reorder` option. The objects are moved within the array, and no `order` field is written.
+- Saving an entry rewrites the whole file, but only the object of that entry changes. Items that aren’t objects, and properties that aren’t defined as fields, are kept as they are.
+
+Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`, `filter`, `summary`, `sortable_fields`, `view_filters`, `view_groups` and `media_folder`, work as usual. A relative `media_folder` is relative to the folder of the file. As all the entries share that folder and can use any image in it, images are not deleted along with an entry.
+
+### Unsupported Options
+
+The following entry collection options assume one file per entry, so they can’t be used with the `file` option, and the configuration is reported as invalid if they are:
+
+- `extension`, `path`, `slug` and `slug_length`
+- `nested` and `meta`
+- `index_file`
+- `reorder`, as the entries can always be reordered
+
+Editorial Workflow is not supported either. The collection can’t use the `editorial_workflow` [publish mode](https://sveltiacms.app/en/docs/workflows/editorial), and Open Authoring can’t be enabled. If Editorial Workflow is enabled for the whole site, set the collection’s `publish_mode` option to `simple`. For the same reason, a Relation field in the collection can’t refer to a collection that uses Editorial Workflow, as renaming or deleting an entry there would update the references to it in a pull request.
+
+### Internationalization
+
+With [i18n](https://sveltiacms.app/en/docs/i18n) enabled for the collection, each object holds all the translations, like a file with the [`single_file` structure](https://sveltiacms.app/en/docs/i18n/structures#single-file) does, whatever structure is configured for the site:
+
+```json
+[
+  {
+    "en": { "name": "Alice", "role": "Chair" },
+    "fr": { "name": "Alice", "role": "Direction" }
+  }
+]
+```
+
+If the [`single_file_default_root` structure](https://sveltiacms.app/en/docs/i18n/structures#single-file-default-root) is configured, the default locale’s fields are stored at the top level of each object instead. The `{{locale}}` placeholder can’t be used in the file path.
+
+### Identifying Entries
+
+An entry is identified by its position in the array, which serves as its slug: `0` for the first entry, `1` for the second, and so on. The position changes when the entries are reordered or one is deleted, so the slug can’t be used to refer to an entry from elsewhere:
+
+- A [Relation field](https://sveltiacms.app/en/docs/fields/relation) referring to the collection must store a field value with the `value_field` option, preferably a field with a unique value like `id` in the example above. The default `{{slug}}` value is reported as invalid.
+- The `preview_path` and `thumbnail` options can’t contain the `{{slug}}` tag. Use a field instead, e.g. `/team/{{id}}`.
+- The URL of an entry in the CMS points to its position, so a bookmarked entry may open another one after a reorder.
+- Unsaved changes are not backed up in the browser, as a backup could otherwise be restored to another entry.
+
+The commit author and date of an entry are those of the file’s last commit, which may be about another entry, so the entries can’t be sorted by them.
+
+### Editing at the Same Time
+
+**Risk of data loss**
+
+All the entries are stored in one file, and Sveltia CMS doesn’t lock entries while someone edits them. Keep the following in mind when several people edit the same collection.
+
+Before saving, Sveltia CMS checks the repository for changes made by someone else, then applies only your change to the file as it is now. A colleague’s change to another entry is kept.
+
+The save is refused if the entry you’re editing has been changed or deleted in the meantime, or another entry has moved to its position because entries were added, deleted or reordered. You’re then asked to cancel editing and open the entry again from the list to make your edits. Unlike an entry stored in a file of its own, you can’t save over the other change, as the entry at the same position may be a different one. Deleting or reordering entries is refused the same way.
+
+There is still a short window between the check and the commit itself:
+
+- With GitHub, the commit is rejected if someone else has committed in between, and you can save again.
+- With Gitea/Forgejo, the commit is rejected if the file has changed in between.
+- With GitLab, the other commit is overwritten, and the change made in it is lost. If several people edit a large file frequently, consider taking turns, or split the content into several collections.
+
+As the file changes with every save, its commit history covers all the entries, and the History panel in the Content Editor’s sidebar lists every commit made to the file.
+
+Source: https://sveltiacms.app/en/docs/collections/entries/single-file
+
+---
+
 ## Preview Paths and Redirects
 
 The `preview_path` option tells Sveltia CMS where an entry lives on your site, which enables site previews, deploy previews and automatic redirects when an entry’s slug changes.
@@ -1520,7 +1698,7 @@ The path is appended to your site’s own address, or to the address of a build 
 The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
 
 - `{{slug}}`: the entire slug of the entry, not just the slugified entry identifier.
-- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different date field. If no DateTime field is found, the `preview_path` option will be ignored, and a configuration warning is shown so the missing link doesn’t go unexplained. A field that exists but is left empty on an entry has the same effect on that entry.
+- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different top-level DateTime field. If no DateTime field is found, the `preview_path` option will be ignored, and a configuration warning is shown so the missing link doesn’t go unexplained. A field that exists but is left empty on an entry has the same effect on that entry.
 - `{{dirname}}`: the directory name of the entry file relative to the collection `folder`. This is useful when using the `path` option to create subfolders.
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.

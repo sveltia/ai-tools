@@ -38,7 +38,7 @@ See [issue #469](https://github.com/sveltia/sveltia-cms/issues/469) for details.
 
 In the CMS configuration, you must define the `name` option for collections, collections files, fields and variable types. These names have to be unique within their scope and cannot contain certain special characters.
 
-Invalid characters include spaces as well as dots (`.`) and asterisks (`*`), which are used to denote nested structures and wildcards, respectively, especially for the [Relation](https://sveltiacms.app/en/docs/fields/relation) field type’s field references. If you use invalid names, the CMS will show config validation errors on the login screen.
+Invalid characters include spaces, colons (`:`) and angle brackets (`<`, `>`) as well as dots (`.`) and asterisks (`*`), which are used to denote nested structures and wildcards, respectively, especially for the [Relation](https://sveltiacms.app/en/docs/fields/relation) field type’s field references. If you use invalid names, the CMS will show config validation errors on the login screen.
 
 For example, the following configuration is invalid because the field name `foo.bar` contains a dot:
 

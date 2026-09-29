@@ -80,9 +80,9 @@ An exception is the Hidden field type that only supports `name`, `widget`, `defa
 
 - **Type**: `string`
 
-The unique identifier for the field within a field list. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields`, and so on.
+The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields`, and so on.
 
-The naming convention for field names is typically `snake_case` or `camelCase` — it’s up to you to choose a consistent style. However, it cannot contain spaces or special characters like a dot (`.`) or an asterisk (`*`).
+The naming convention for field names is typically `snake_case` or `camelCase` — it’s up to you to choose a consistent style. However, it cannot contain spaces, periods (`.`), asterisks (`*`), colons (`:`) or angle brackets (`<`, `>`).
 
 There are two special field names to be aware of:
 
@@ -110,7 +110,7 @@ The human-readable label for the field. It’s displayed in the UI as the field�
 - **Type**: `string`
 - **Default**: `""`
 
-A comment to be added before the field in the output file. It’s only supported for the `yaml` format and front matter in YAML. Other formats, such as JSON and TOML, ignore this option. The comment is not displayed in the UI; use the [`hint`](#hint) option to show a description to users.
+A comment to be added before the field in the output file. It’s only supported for the `yaml` format and front matter in YAML. Other formats, such as JSON and TOML, ignore this option. The comment is not displayed in the UI; use the [`hint`](#hint) option to show a description to users. A line break can be given as `\n`.
 
 For example, with the following field definition:
 
@@ -127,14 +127,14 @@ The output file will look like this:
 title: My First Post
 ```
 
-Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/object) field are also added before the corresponding keys.
+Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/object) field are also added before the corresponding keys, while comments on subfields of a [List](https://sveltiacms.app/en/docs/fields/list) field or a [variable-type](https://sveltiacms.app/en/docs/fields/object#variable-type) Object field are ignored.
 
 ##### `hint`
 
 - **Type**: `string`
 - **Default**: `""`
 
-A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, strikethrough, links, and inline code.
+A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, strikethrough, links, and inline code. A line break can be given as a literal backslash followed by `n`, e.g. `\n` in a plain or single-quoted YAML string; in JSON or a double-quoted YAML/TOML string, escape the backslash (`\\n`). A real newline is rendered as a space. The hint is not displayed while the field is [read-only](#readonly).
 
 ##### `required`
 
@@ -198,10 +198,10 @@ Whether to show a preview of the field’s value in the entry’s preview pane. 
 
 ##### `i18n`
 
-- **Type**: `boolean` or `duplicate`
-- **Default**: `false`
+- **Type**: `boolean`, `translate`, `duplicate` or `none`
+- **Default**: `false`, or `duplicate` for a subfield of a field using `duplicate`
 
-Indicates whether the field supports internationalization (i18n). See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
+Indicates whether the field supports internationalization (i18n). `true` (or `translate`) enables the field in all locales, while `false` (or `none`) enables it in the default locale only. `duplicate` makes the field read-only in non-default locales and copies the default locale’s value to them. A subfield without its own `i18n` option follows its parent’s `duplicate` strategy, while under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 
@@ -1357,6 +1357,7 @@ If the `required` option is set to `false` and no option is selected, the value 
 
 - If the `required` option is set to `true`, at least one option must be selected. An option with the value `null` or an empty string counts as a selection.
 - If the `multiple` option is enabled, the number of selected options must be between the `min` and `max` limits, if specified.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the selected option value must match the regular expression. For multi select, the selected values joined with commas, e.g. `foo,bar,baz`, must match instead: as with Decap CMS, the pattern is tested against the whole selection rather than against each value, so use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$` to accept lowercase values only. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
 
 ### Options
 
@@ -1374,9 +1375,8 @@ Must be set to `select`.
 ##### `options`
 
 - **Type**: `array`
-- **Default**: `[]`
 
-An array of options for the select field. Each option can be defined as a string, number, boolean or `null`, or as an object with `label` and `value` properties. These options will be presented to the user in the UI.
+An array of options for the select field. Each option can be defined as a string, number, boolean or `null`, or as an object with `label` and `value` properties. These options will be presented to the user in the UI. An empty list or a list with duplicate values is reported as a config validation error on the login screen.
 
 TOML doesn’t support `null`, so an option with the value `null` can’t be defined in a TOML configuration file. In a TOML data file, a field with the value `null` is omitted.
 
@@ -2064,7 +2064,7 @@ The default value for the hidden field when creating a new entry. Any data type 
 
 TOML does not support `null` values, so avoid using `null` as the default value when the collection’s data format is set to TOML.
 
-The `default` value supports the following template tags:
+A string `default` value supports the following template tags, which are filled in when a new entry draft is created:
 
 - `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, e.g. `en` or `fr`.
 - `{{datetime}}`: The current date/time in [ISO 8601 format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).

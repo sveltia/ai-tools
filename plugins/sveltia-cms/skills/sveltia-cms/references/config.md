@@ -306,6 +306,7 @@ String transformations can be applied in the following contexts:
 - [Hidden Field](https://sveltiacms.app/en/docs/fields/hidden): the `default` option
 - [List Field](https://sveltiacms.app/en/docs/fields/list): the `summary` option
 - [Object Field](https://sveltiacms.app/en/docs/fields/object): the `summary` option
+- [Editor Components](https://sveltiacms.app/en/docs/api/editor-components): the `summary` option
 
 **Future Plans**
 
@@ -976,6 +977,8 @@ indent_sequences = true # false for compact style
   },
 }
 ```
+
+For JSON, `indent_size` is the number of spaces or tabs per indent level; it defaults to `2` with `indent_style: space` and `1` with `indent_style: tab`. For YAML, `quote: none` leaves string values unquoted unless quotes are required, while `single` and `double` wrap them in single or double quotes.
 
 ### Understanding Exceptions
 
