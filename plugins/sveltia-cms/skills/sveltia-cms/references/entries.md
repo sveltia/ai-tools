@@ -177,7 +177,7 @@ widget = "richtext"
 }
 ```
 
-By default, entry collections use the `title` field as the slug (filename). The default format is `yaml-frontmatter` with the `md` extension, meaning each entry will be saved as a Markdown file with YAML front matter. A Markdown field named `body` is treated as the main content of the file, while other fields are stored in the front matter; this behavior can be configured using the [`body_field` option](#body-field-for-front-matter-formats) in the collection definition.
+By default, entry collections use the `title` field as the slug (filename). If neither the `format` nor the `extension` option is set, entries are Markdown files with the `md` extension, and new entries are saved with YAML front matter. See [Default Format and Extension](#default-format-and-extension) for details. A Markdown field named `body` is treated as the main content of the file, while other fields are stored in the front matter; this behavior can be configured using the [`body_field` option](#body-field-for-front-matter-formats) in the collection definition.
 
 If you create a blog post with the title “My First Post”, the file will be saved at `content/posts/my-first-post.md`, with the following content:
 
@@ -246,7 +246,7 @@ The output file for a post created with this configuration would look like this:
 
 ### Format
 
-The following file formats are supported for entry collections. You can specify the desired format using the `format` option to define how entries are parsed and saved. The default format is `yaml-frontmatter`.
+The following file formats are supported for entry collections. You can specify the desired format using the `format` option to define how entries are parsed and saved. If omitted, the format is determined by the extension, as explained in [Default Format and Extension](#default-format-and-extension).
 
 - `yml` or `yaml`: YAML files with the `yml` extension by default.
 - `toml`: TOML files with the `toml` extension by default.
@@ -312,6 +312,24 @@ extension = "markdown"
 ```
 
 You can use any valid file extension, such as `html`, `txt`, or `mdx`. Just make sure that the file format and extension are compatible. If there is an obvious mismatch, Sveltia CMS will raise a validation error. For example, if you use `json` format with `md` extension, it will result in an error because JSON files should have a `json` extension.
+
+### Default Format and Extension
+
+The `format` and `extension` options are both optional. When one or both of them are omitted, Sveltia CMS determines the missing values as follows:
+
+- **Neither option is set**: The extension is `md` and the format is `frontmatter`, meaning the front matter format of existing entries is detected automatically, and new entries are saved with YAML front matter.
+- **Only `format` is set**: The extension is the default one for the format, as listed in the [Format](#format) section above.
+- **Only `extension` is set**: The format is determined by the extension:
+  - `yml` or `yaml`: `yaml`
+  - `toml`: `toml`
+  - `json`: `json`
+  - `astro`: `raw`
+  - `md`, `markdown`, `mdx`, `mdown`, `mdwn`, `mkd`, `mkdn` or `html.md`: `frontmatter`
+  - Any other extension: `yaml-frontmatter`
+
+**Warning**
+
+The CMS does not look at the existing files in the collection folder to guess the extension. Only files with the configured extension are listed as entries, and the extension defaults to `md`. If your collection folder contains JSON, YAML or TOML files, you must set the `extension` or `format` option; otherwise, no entries will appear. The same applies to Netlify/Decap CMS.
 
 ### Front Matter Delimiter
 
@@ -1079,6 +1097,8 @@ public_folder = ""
 
 With the above configuration, a blog post with the title “My First Post” will be saved at `content/posts/my-first-post/index.md`, and its media files will be stored in the same folder.
 
+Since the collection has the `path` option, the `media_folder: ''` and `public_folder: ''` lines can be omitted when the global `media_folder` option is defined: in that case, the collection-level `media_folder` [defaults to an empty string](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders).
+
 The same options can be combined with the `nested` option to build a tree of page bundles, where each entry has both its own media folder and its own child entries. See [Nesting Page Bundles](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles).
 
 #### Constructing File Paths
@@ -1493,6 +1513,8 @@ The `preview_path` option tells Sveltia CMS where an entry lives on your site, w
 
 The `preview_path` option allows you to define a custom URL path for previewing entries on your live site. This option accepts a string with template tags that will be replaced with entry-specific values when generating the preview URL. The CMS provides links to preview the entries based on this URL structure.
 
+Without `preview_path`, the CMS can’t tell where an entry lives, so a published entry has no preview link. An unpublished entry in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still links to the root of its [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews), whose address changes with each pull request, so the link is the easiest way to find it. A `preview_path` that can’t be filled in for an entry, such as one with date tags on an entry whose date is empty, gives no link at all.
+
 The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for how those are found.
 
 The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
@@ -1587,6 +1609,8 @@ Setting the `preview_path` option does two more things:
 
 - It lets the CMS keep links working when an entry is renamed. See [Redirects](#redirects) below.
 - It’s what [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) need in order to point at an entry. Without it there’s nothing to append to the site or preview address, so no preview link is shown.
+
+The `preview_path` and `preview_path_date_field` options can also be set on each file of a [file collection](https://sveltiacms.app/en/docs/collections/files#preview-path), where the collection-level options have no effect.
 
 ### Redirects
 

@@ -683,7 +683,9 @@ A custom preview template allows you to define how content entries are displayed
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/customization/#registerpreviewtemplate) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include any undocumented component props. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/customization/#registerpreviewtemplate) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include any undocumented component props.
+
+Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 ### Overview
 
@@ -726,7 +728,13 @@ The component you register receives the following props during render:
     widgets: { ... }            // React preview elements keyed by field name
   }
   ```
-- `getAsset` (function): Returns the asset item for a given path. Returns `undefined` if not found. Automatically resolves image paths to blob URLs for preview purposes.
+- `getAsset` (function): Takes a file path, typically a File or Image field value, and returns an asset object with the following properties, or `undefined` if no matching asset is found:
+  - `url` (string): A URL to display the file in the preview, typically a `blob:` URL. The public path is used until the blob URL is available.
+  - `path` (string): The public path of the file.
+  - `fileObj` (`File` or `undefined`): The file selected by the user, if the file hasn’t been saved yet.
+  - `field` (`undefined`): Always `undefined`. It’s included only for compatibility with Netlify/Decap CMS.
+  - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
+  - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix.
 - `getCollection` (function): Async function that returns entries from a specified collection. Takes parameters:
   - `collectionName` (string): Name of the collection to query
   - `slug` (string, optional): Entry slug to fetch a specific entry; if omitted, returns all entries
@@ -1325,7 +1333,9 @@ Sveltia CMS offers various customization options to tailor the admin interface a
 
 ### Site URL
 
-The `site_url` configuration option allows you to specify the base URL of your Sveltia CMS installation. This is useful for generating absolute URLs for assets, links, and redirects within the admin interface.
+The `site_url` configuration option allows you to specify the URL of your published site. It’s used for the link to the live site in the admin interface, entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option, and public asset URLs. If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
+
+To link the admin interface to a different URL than the one used for previews and assets, use the [`display_url`](#display-url) option.
 
 ```yaml [YAML]
 site_url: https://example.com
@@ -1344,6 +1354,36 @@ site_url = "https://example.com"
 ```js [JavaScript]
 {
   site_url: 'https://example.com',
+}
+```
+
+### Display URL
+
+The `display_url` configuration option allows you to specify the URL opened by the link to the live site in the admin interface, which is available in the account menu and on the custom logo in the application header. Unlike `site_url`, it doesn’t affect preview links or asset URLs. If omitted, it defaults to the `site_url` option value.
+
+The value can be an absolute URL or a path relative to the CMS origin.
+
+```yaml [YAML]
+site_url: https://example.com
+display_url: https://www.example.com/blog/
+```
+
+```toml [TOML]
+site_url = "https://example.com"
+display_url = "https://www.example.com/blog/"
+```
+
+```json [JSON]
+{
+  "site_url": "https://example.com",
+  "display_url": "https://www.example.com/blog/"
+}
+```
+
+```js [JavaScript]
+{
+  site_url: 'https://example.com',
+  display_url: 'https://www.example.com/blog/',
 }
 ```
 
@@ -1411,6 +1451,10 @@ show_in_header = true
   },
 }
 ```
+
+**Breaking change from Netlify/Decap CMS**
+
+In Sveltia CMS, the `show_in_header` option defaults to `true`, so your logo appears in the header without extra configuration. In Decap CMS, the logo is shown in the header only when the option is explicitly set to `true`. To hide the logo from the header, set `show_in_header` to `false`.
 
 For backward compatibility, the `logo_url` configuration option is still supported but deprecated. It is recommended to use the `logo` object for better flexibility and future-proofing.
 

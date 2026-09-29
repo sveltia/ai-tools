@@ -134,8 +134,9 @@ These options are mutually exclusive; you can only use one of them at a time:
 Each type definition is an object with the following properties:
 
 - `name` (string, required): The unique identifier for the type.
-- `label` (string, required): The display label for the type.
+- `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Other field types are invalid.
+- `summary` (string, optional): A template for the summary shown on a collapsed item of this type. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
 #### Subfield Options
@@ -1794,8 +1795,9 @@ Either `fields` or `types` must be provided. You cannot use both options simulta
 Each type definition is an object with the following properties:
 
 - `name` (string, required): The unique identifier for the type.
-- `label` (string, required): The display label for the type.
+- `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Other field types are invalid.
+- `summary` (string, optional): A template for the summary shown when the object of this type is collapsed. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
 #### Optional Options

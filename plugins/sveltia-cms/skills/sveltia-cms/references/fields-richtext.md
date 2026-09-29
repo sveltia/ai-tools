@@ -72,7 +72,7 @@ Must be set to `richtext`.
 
 **Breaking changes from Netlify/Decap CMS**
 
-Sveltia CMS has changed the default value of the `sanitize_preview` option to `true` for improved security. In Netlify/Decap CMS, the default is `false`, which may expose users to XSS vulnerabilities.
+Sveltia CMS has changed the default value of the `sanitize_preview` option to `true` for improved security. In Netlify CMS and Decap CMS prior to 3.13.0, the default is `false`, which may expose users to XSS vulnerabilities.
 
 Also, Sveltia CMS does not support the deprecated camelCase `editorComponents` option. Use `editor_components` instead.
 
@@ -90,7 +90,7 @@ Specifies the data format of the content. Possible values are `markdown` and `ht
 - **Type**: `string`
 - **Default**: `""`
 
-The default content for the field. The format should match the selected `format` option.
+The default content for the field, written in Markdown.
 
 ##### `minimal`
 

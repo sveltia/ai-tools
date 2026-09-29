@@ -47,7 +47,7 @@ This works in both production workflows, with a different meaning in each:
 
 - A [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend.
 - A CI/CD provider connected to your repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
-- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want links for. Without it there’s nothing to point at, so no link is shown.
+- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, from where you can find the page yourself, and a published entry has no link.
 
 **Date tags need a date field**
 
@@ -65,7 +65,7 @@ The options below shape what the links do:
 
 | Option | Where | What it does |
 | --- | --- | --- |
-| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Path template appended to the site or preview URL. **Required.** |
+| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
 | [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Collection | Which date field the `{{year}}`, `{{month}}` and similar tags read |
 | [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of your live site |
 | `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
@@ -239,6 +239,8 @@ publish_mode = "editorial_workflow"
   publish_mode: 'editorial_workflow',
 }
 ```
+
+The option accepts `editorial_workflow` or `simple`, the default. An empty string is treated as `simple`.
 
 #### Enabling the Workflow per Collection
 
@@ -975,7 +977,7 @@ No special requirements are needed to use the simple workflow. Users can start m
 
 ### Configuration
 
-No specific configuration is required for this workflow.
+No specific configuration is required for this workflow. It’s used when the top-level `publish_mode` option is omitted, set to `simple` or set to an empty string. A collection can override it with its own [`publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) option.
 
 ### Workflow
 

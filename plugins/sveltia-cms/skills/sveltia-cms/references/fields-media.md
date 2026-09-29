@@ -308,6 +308,8 @@ The default value for the field. Should be a string for single file upload or an
 
 Whether to allow uploading or selecting multiple files.
 
+For backward compatibility with Netlify/Decap CMS, if this option is not set, the `multiple` option in the media storage `config` is used as a fallback: first `media_libraries.*.config.multiple` or `media_library.config.multiple` on the field, then the same options at the top level. Using the `multiple` option on the field is recommended.
+
 ##### `min`
 
 - **Type**: `integer`
@@ -350,7 +352,7 @@ Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Ot
 - **Type**: `object`
 - **Default**: `undefined`
 
-Legacy option from Netlify/Decap CMS to configure a single [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage) for this field, overriding the top-level `media_library` option. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
+Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field, overriding the top-level `media_library` option. It applies to the provider named at the top level, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if the top-level `media_library` is not set; in the latter case, `media_library.config.max_file_size` limits the upload size for the field. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
 
 ##### `media_libraries`
 

@@ -42,7 +42,7 @@ The Sveltia CMS UI consists of several main pages:
 The account menu is accessible from the user avatar in the navigation bar. It provides access to:
 
 - A link to the user’s profile page (if supported by the backend).
-- A link to the live site. It’s customizable with the [`site_url` configuration option](https://sveltiacms.app/en/docs/customization#site-url).
+- A link to the live site. It points to the [`display_url`](https://sveltiacms.app/en/docs/customization#display-url) or [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) configuration option value, in that order of precedence.
 - User Settings, including appearance, language, Content Editor preferences, and Developer Mode.
 - Keyboard shortcuts reference.
 - Sign In with Mobile option, which shows a QR code for passwordless sign-in on mobile devices.

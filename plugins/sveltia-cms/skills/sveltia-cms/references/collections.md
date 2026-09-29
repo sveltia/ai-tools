@@ -275,7 +275,7 @@ Source: https://sveltiacms.app/en/docs/collections
 
 ## File Collections
 
-A file collection contains pre-defined files, each representing a single piece of content. Editors can edit the content of these files but cannot create or delete them. Typical use cases for file collections include site settings, homepage content or about pages.
+A file collection contains pre-defined files, each representing a single piece of content. Editors can edit the content of these files but cannot add new files or delete existing ones. A listed file that doesn’t exist yet is created when it’s first saved. Typical use cases for file collections include site settings, homepage content or about pages.
 
 ### Creating a File Collection
 
@@ -366,8 +366,19 @@ A file collection supports the following options:
 
 - `name`: A unique identifier for the collection. Required.
 - `label`: A human-readable name for the collection. Optional.
+- `label_singular`: A human-readable singular name for the collection. Optional. Used in the editor title when a file that doesn’t exist yet is being created.
+- `description`: A brief description of the collection, displayed in the UI. Optional. Basic Markdown formatting is supported.
 - `icon`: A Material Symbols icon name to represent the collection in the CMS UI. Optional.
 - `files`: An array of file definitions within the collection. Required.
+- `hide`: Whether to hide the collection from the UI. Optional. See [Hiding the Collection](https://sveltiacms.app/en/docs/collections/entries/operations#hiding-the-collection).
+- `format`, `frontmatter_delimiter`, `body_field`: The default file format options for the files in the collection. Optional. Each file can override them. [See below](#file-format-and-extension) for details.
+- `media_folder`, `public_folder`: Media folder options for the collection. Optional. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration).
+- `i18n`: I18n options for the collection. Optional. Each file also needs its own `i18n` option to be localized. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#collection-level-configuration).
+- `editor`: Content Editor options, such as `preview: false` to disable the preview pane. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#collection-level).
+- `publish_mode`: The publish mode for the collection, overriding the top-level option. Optional. See [Enabling the Workflow per Collection](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection).
+- `publish`: Set to `false` to hide the publishing controls in Editorial Workflow. Optional. See [Restricting Publishing and Deletion](https://sveltiacms.app/en/docs/workflows/editorial#restricting-publishing-and-deletion).
+
+Unlike entry collections, the collection-level `preview_path` and `preview_path_date_field` options don’t apply to file collections. Set them on each file instead.
 
 #### File Options
 
@@ -378,13 +389,21 @@ A file definition within a file collection supports the following options:
 - `icon`: A Material Symbols icon name to represent the file in the CMS UI. Optional.
 - `file`: The path to the file in the content repository. Required.
 - `format`: The file format (e.g., `yaml`, `json`, `toml`, `yaml-frontmatter`, etc.). Optional. [See below](#file-format-and-extension) for details.
+- `frontmatter_delimiter`: The front matter delimiter. Optional. [See below](#front-matter-delimiter) for details.
+- `body_field`: The body field options for front matter formats. Optional. [See below](#body-field-for-front-matter-formats) for details.
 - `fields`: An array of field definitions for the file content. Required.
+- `media_folder`, `public_folder`: Media folder options for the file, overriding the top-level and collection-level options. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/media/internal#file-level-configuration).
+- `i18n`: I18n options for the file. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#file-level-configuration).
+- `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#file-level).
+- `preview_path`, `preview_path_date_field`: The file’s URL path on the live site. Optional. [See below](#preview-path) for details.
+
+A listed file doesn’t have to exist in the repository. If it’s missing, the Content Editor opens with empty fields (or their default values), and the file is created when the editor saves it.
 
 ### File Format and Extension
 
 The file format and extension for each file in a file collection can be customized using the `format` property within each file definition. Sveltia CMS supports various file formats, including Markdown, YAML, JSON, and TOML.
 
-By default, file format is determined based on the file extension. If it is a Markdown file (e.g., `.md`), it uses `yaml-frontmatter` format. For other extensions, it uses the corresponding format (e.g., `.yaml` uses `yaml` format).
+By default, file format is determined based on the file extension. If it is a Markdown file (e.g., `.md`), it uses the `frontmatter` format, which detects YAML, TOML or JSON front matter automatically; a new file is saved with YAML front matter. For other extensions, it uses the corresponding format (e.g., `.yaml` uses `yaml` format). See [Default Format and Extension](https://sveltiacms.app/en/docs/collections/entries/formats#default-format-and-extension) for the full list.
 
 To illustrate, here is a file collection with two files using different formats:
 
@@ -654,6 +673,95 @@ frontmatter_delimiter = "~~~"
 When using front matter formats (e.g., `yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter`), you can configure the body field to specify where the main content of the file should be stored. By default, the body field is named `body`, but you can customize this by setting the `body_field` option at either the collection or file level.
 
 See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) in the entry collections documentation for more details.
+
+### Preview Path
+
+A file has no preview link by default. To link it to its page on the live site, or on a [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews), set the `preview_path` option on the file. It works like the collection-level [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) of an entry collection, with the following differences:
+
+- `{{slug}}` is the file’s `name` option value.
+- `{{dirname}}` is the directory of the `file` path, relative to the repository’s root directory, since a file collection has no `folder`.
+- Field values, date/time tags, `{{filename}}`, `{{extension}}` and `{{locale}}` are filled in the same way, using the file’s own `fields`. The date/time tags use the file’s first DateTime field unless `preview_path_date_field` is set.
+
+```yaml [YAML]{8}
+collections:
+  - name: pages
+    label: Pages
+    files:
+      - name: about
+        label: About Page
+        file: content/pages/about.md
+        preview_path: /about/
+        fields:
+          - { name: title, label: Title }
+          - { name: body, label: Body, widget: richtext }
+```
+
+```toml [TOML]{9}
+[[collections]]
+name = "pages"
+label = "Pages"
+
+[[collections.files]]
+name = "about"
+label = "About Page"
+file = "content/pages/about.md"
+preview_path = "/about/"
+
+[[collections.files.fields]]
+name = "title"
+label = "Title"
+
+[[collections.files.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+```
+
+```json [JSON]{11}
+{
+  "collections": [
+    {
+      "name": "pages",
+      "label": "Pages",
+      "files": [
+        {
+          "name": "about",
+          "label": "About Page",
+          "file": "content/pages/about.md",
+          "preview_path": "/about/",
+          "fields": [
+            { "name": "title", "label": "Title" },
+            { "name": "body", "label": "Body", "widget": "richtext" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{11}
+{
+  collections: [
+    {
+      name: "pages",
+      label: "Pages",
+      files: [
+        {
+          name: "about",
+          label: "About Page",
+          file: "content/pages/about.md",
+          preview_path: "/about/",
+          fields: [
+            { name: "title", label: "Title" },
+            { name: "body", label: "Body", widget: "richtext" },
+          ],
+        },
+      ],
+    },
+  ],
+}
+```
 
 ### Singletons
 

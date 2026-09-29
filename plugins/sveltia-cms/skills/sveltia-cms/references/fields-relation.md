@@ -129,6 +129,8 @@ When using template strings, keep the following in mind:
 - Nested fields can also be referenced using dot notation, e.g., `{{author.name}}`.
 - To reference list items, use a wildcard `*` for the index, e.g., `{{tags.*}}` or `{{gallery.*.image}}`. This works for a list field with the `field` or `fields` option.
 
+A plain field name or dot-notation path without the curly brackets, such as `title`, `name.first` or `cities.*.id`, is treated as if it were enclosed in `{{…}}`. The same applies to `display_fields` and `search_fields`. The exception is a bare `slug`, which refers to the field named `slug` (`{{fields.slug}}`), not the entry slug; use `{{slug}}` for the latter.
+
 The value field must be unique across all entries in the related collection to avoid conflicts. For example, using `{{title}}` as the value field is not recommended unless you can guarantee that all titles are unique. That’s why the default is `{{slug}}`, which is unique by design.
 
 ##### `display_fields`

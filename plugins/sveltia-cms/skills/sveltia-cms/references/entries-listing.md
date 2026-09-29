@@ -1228,7 +1228,13 @@ When the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/l
 
 When the [`reorder` option](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is enabled for a collection, Sveltia CMS enables manual sorting of entries in the listing view. This allows users to drag and drop entries to reorder them as needed.
 
-You can customize the sortable fields using the `sortable_fields` option. It accepts an array of field names that you want to enable for sorting in the entry listing view. It also accepts a special `slug` field to sort entries by their slugs.
+You can customize the sortable fields using the `sortable_fields` option. It accepts an array of field names that you want to enable for sorting in the entry listing view. It also accepts the following special keys, which read entry metadata instead of a field:
+
+- `slug`: Sort entries by their slugs.
+- `commit_date`: Sort entries by the date of the last commit that modified the entry file.
+- `commit_author`: Sort entries by the author of the last commit that modified the entry file.
+
+The `commit_date` and `commit_author` keys are only shown when Git commit information is available for the collection’s entries; otherwise, they are ignored. Even with `sortable_fields` defined, Sveltia CMS adds them automatically when the information is available and the list doesn’t include `date` or `author`, respectively.
 
 The example below shows how to enable sorting by custom fields such as `category` and nested fields like `author.name`:
 
@@ -1359,7 +1365,7 @@ For backward compatibility with Static CMS, the `direction` option accepts title
 
 **Known issue**
 
-Git commit information is not available with the GitLab backend due to API limitations.
+Git commit information is currently loaded only with the GitHub backend. With the GitLab and Gitea/Forgejo backends, it’s only available for entries saved during the current session, due to API limitations. It’s not available in the local workflow or with the Test backend.
 
 ### Grouping
 

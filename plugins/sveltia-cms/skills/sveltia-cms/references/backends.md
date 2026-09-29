@@ -185,6 +185,104 @@ auth_methods = ["token"]
 
 The `auth_methods` array must contain at least one method. An empty array will result in a configuration error.
 
+#### OAuth Endpoint
+
+When a user signs in with OAuth, Sveltia CMS opens an authorization URL made of the `base_url` and `auth_endpoint` options joined with a slash. Leading and trailing slashes are ignored. The token URL is derived from the same URL by replacing `/authorize` with the backend’s token path. The defaults are:
+
+| Backend       | `base_url`                | `auth_endpoint`         |
+| ------------- | ------------------------- | ----------------------- |
+| GitHub        | `https://api.netlify.com` | `auth`                  |
+| GitLab        | `https://api.netlify.com` | `auth`                  |
+| Gitea/Forgejo | `https://gitea.com`       | `login/oauth/authorize` |
+
+With [PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) (`auth_type: pkce`), the GitLab defaults are `https://gitlab.com` and `oauth/authorize` instead, because the CMS talks to GitLab directly.
+
+You usually only need to change `base_url`. Set `auth_endpoint` if your OAuth client or Git service serves the authorization page at a different path:
+
+```yaml [YAML]{4-5}
+backend:
+  name: gitlab
+  repo: owner/repo
+  base_url: https://auth.example.com
+  auth_endpoint: gitlab/oauth/authorize
+```
+
+```toml [TOML]{4-5}
+[backend]
+name = "gitlab"
+repo = "owner/repo"
+base_url = "https://auth.example.com"
+auth_endpoint = "gitlab/oauth/authorize"
+```
+
+```json [JSON]{5-6}
+{
+  "backend": {
+    "name": "gitlab",
+    "repo": "owner/repo",
+    "base_url": "https://auth.example.com",
+    "auth_endpoint": "gitlab/oauth/authorize"
+  }
+}
+```
+
+```js [JavaScript]{5-6}
+{
+  backend: {
+    name: "gitlab",
+    repo: "owner/repo",
+    base_url: "https://auth.example.com",
+    auth_endpoint: "gitlab/oauth/authorize",
+  },
+}
+```
+
+**Breaking change from Netlify/Decap CMS**
+
+The `auth_endpoint` option must be a path relative to `base_url`, not a full URL. The Decap CMS documentation shows a full URL like `https://gitea.example.com/login/oauth/authorize` for the Gitea backend, which results in an invalid authorization URL in Sveltia CMS. Put the origin in `base_url` and the path in `auth_endpoint` instead, or omit `auth_endpoint` to use the default path.
+
+#### Site Domain
+
+With the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds your OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
+
+By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, for example when the CMS is served from a preview URL that isn’t registered with your OAuth client, set the `site_domain` option:
+
+```yaml [YAML]{4}
+backend:
+  name: github
+  repo: user/repo
+  site_domain: www.example.com
+```
+
+```toml [TOML]{4}
+[backend]
+name = "github"
+repo = "user/repo"
+site_domain = "www.example.com"
+```
+
+```json [JSON]{5}
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "site_domain": "www.example.com"
+  }
+}
+```
+
+```js [JavaScript]{5}
+{
+  backend: {
+    name: "github",
+    repo: "user/repo",
+    site_domain: "www.example.com",
+  },
+}
+```
+
+When Netlify is the OAuth client, an internationalized domain name is converted to Punycode before it’s sent.
+
 #### Commit Messages
 
 You can customize the Git commit messages used when saving content. The `commit_messages` option allows you to define templates for various actions. Here’s the default configuration:
@@ -256,7 +354,7 @@ You can use the following template tags in commit messages:
 
 - `{{collection}}`: The `label_singular` or `label` of the collection.
 - `{{slug}}`: The slug of the entry.
-- `{{path}}`: The file path of the media asset.
+- `{{path}}`: The file path of the entry or media asset.
 - `{{message}}`: The commit message generated for the change, wrapped by the `openAuthoring` template.
 - `{{author-email}}`: The email of the signed-in user, if available.
 - `{{author-login}}`: The login name of the signed-in user, if available.
@@ -463,6 +561,8 @@ api_root = "https://codeberg.org/api/v1"
 
 The API version for Gitea/Forgejo is `v1`, so make sure to include `/api/v1` in the `api_root` option.
 
+The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+
 **Breaking change from Netlify/Decap CMS**
 
 In Netlify/Decap CMS, the default origin of the `base_url` and `api_root` backend options is set to `https://try.gitea.io` (test instance). In Sveltia CMS, we changed it to `https://gitea.com` (public free service). In most cases, anyway, you need to set these options explicitly to point to your own Gitea/Forgejo instance.
@@ -618,47 +718,47 @@ repo = "user/repo"
 
 #### GitHub Enterprise
 
-By default, Sveltia CMS uses the public GitHub instance at `https://github.com`. If you use a self-hosted GitHub Enterprise instance, you need to set the `base_url` and `api_root` options in your backend configuration to point to your GitHub Enterprise server URL.
+By default, Sveltia CMS uses the public GitHub instance at `https://github.com`. If you use a self-hosted GitHub Enterprise Server instance, you need to set the `api_root` option in your backend configuration to point to your server’s API endpoint.
 
-```yaml [YAML]{4-5}
+```yaml [YAML]{4}
 backend:
   name: github
   repo: owner/repo
-  base_url: https://github.example.com
   api_root: https://github.example.com/api/v3
 ```
 
-```toml [TOML]{4-5}
+```toml [TOML]{4}
 [backend]
 name = "github"
 repo = "owner/repo"
-base_url = "https://github.example.com"
 api_root = "https://github.example.com/api/v3"
 ```
 
-```json [JSON]{5-6}
+```json [JSON]{5}
 {
   "backend": {
     "name": "github",
     "repo": "owner/repo",
-    "base_url": "https://github.example.com",
     "api_root": "https://github.example.com/api/v3"
   }
 }
 ```
 
-```js [JavaScript]{5-6}
+```js [JavaScript]{5}
 {
   backend: {
     name: "github",
     repo: "owner/repo",
-    base_url: "https://github.example.com",
     api_root: "https://github.example.com/api/v3",
   },
 }
 ```
 
 The API version for GitHub Enterprise is `v3`, so make sure to include `/api/v3` in the `api_root` option.
+
+Sveltia CMS uses the GitHub GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v3` part with `/api/graphql`, e.g. `https://github.example.com/api/graphql`. If your server’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
+
+Don’t set the `base_url` option to your GitHub Enterprise Server URL. The `base_url` option specifies the URL of your OAuth client, not the GitHub instance. To sign in with the [authorization code flow](#authorization-code-flow), deploy an OAuth client that supports GitHub Enterprise Server, such as [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) with the `GITHUB_HOSTNAME` environment variable, and point `base_url` to it. Alternatively, sign in with an [access token](#access-token).
 
 ### Authentication
 
@@ -823,6 +923,8 @@ You can also use [third-party OAuth clients](https://decapcms.org/docs/external-
 
 The setup process is similar to using Sveltia CMS Authenticator. You need to register a new OAuth app on GitHub and configure the third-party client with the app credentials. Then, update your CMS configuration to include the `base_url` option pointing to your OAuth client URL, like in the example above.
 
+If the client serves the authorization page at a path other than `/auth`, also set the [`auth_endpoint`](https://sveltiacms.app/en/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option as well.
+
 **Disclaimer**
 
 Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use them at your own risk. Some clients may not be compatible with Sveltia CMS.
@@ -832,6 +934,8 @@ Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use 
 For backward compatibility with Netlify CMS, Sveltia CMS supports the authorization code flow using Netlify as an OAuth client. It’s the default authentication method if you don’t configure authentication explicitly, and you don’t need to set up a backend server yourself.
 
 If you’re a Netlify customer, follow the [official guide](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/) to register a new OAuth app on GitHub and link it to your Netlify site. No configuration changes are needed in Sveltia CMS.
+
+Netlify identifies your site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
 **Disclaimer**
 
@@ -971,6 +1075,10 @@ api_root = "https://gitlab.example.com/api/v4"
 
 The API version for GitLab is `v4`, so make sure to include `/api/v4` in the `api_root` option.
 
+Sveltia CMS uses the GitLab GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v4` part with `/api/graphql`, e.g. `https://gitlab.example.com/api/graphql`. If your instance’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
+
+The `base_url` option points to your GitLab server only when you use [PKCE authorization](#pkce-authorization). In that case, the OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `oauth/authorize`. If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`. With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead, which must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+
 ### Authentication
 
 There are multiple ways to authenticate with GitLab when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started, but PKCE authorization is recommended if your CMS instance is used by multiple users or non-technical users because it’s more user-friendly and secure.
@@ -1093,6 +1201,8 @@ You can also use [third-party OAuth clients](https://decapcms.org/docs/external-
 
 The setup process is similar to using Sveltia CMS Authenticator. You need to register a new OAuth app on GitLab and configure the third-party client with the app credentials. Then, update your CMS configuration to include the `base_url` option pointing to your OAuth client URL, like in the example above.
 
+The authorization URL is `base_url` followed by `/auth` by default, which is what clients made for Netlify/Decap CMS expect. If the client uses a different path, set the [`auth_endpoint`](https://sveltiacms.app/en/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option as well.
+
 **Disclaimer**
 
 Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use them at your own risk. Some clients may not be compatible with Sveltia CMS.
@@ -1109,6 +1219,8 @@ To set it up, you need to register a new OAuth app on GitLab and update your Sve
 1. Open the Netlify site dashboard and [provide the Client ID and Client Secret](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings) of your registered OAuth app.
 
 No configuration changes are needed in Sveltia CMS.
+
+Netlify identifies your site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
 **Disclaimer**
 

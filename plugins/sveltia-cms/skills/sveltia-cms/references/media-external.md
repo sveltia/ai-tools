@@ -82,6 +82,7 @@ The `config` object includes the Cloudinary [Media Library widget options](https
   - `cloud_name`: Your Cloudinary cloud name.
   - `api_key`: Your Cloudinary API key.
 - `default_transformations`: Transformations to apply to all uploaded images. Only the first transformation in the array will be applied to uploaded media in Sveltia CMS. See the [Image transformations](#image-transformations) section below for more details on defining transformations.
+- `max_files`: The maximum number of assets that can be selected at once. The field’s [`max`](https://sveltiacms.app/en/docs/fields/file#max) option takes precedence if set. Defaults to `20`.
 - Some options are not applicable in Sveltia CMS and will be ignored if provided, such as `button_caption` and `inline_container`.
 
 **Warning**
@@ -172,8 +173,8 @@ name = "cover_image"
 label = "Cover Image"
 widget = "image"
 [fields.media_libraries.cloudinary]
-[fields.media_libraries.cloudinary.config]
 output_filename_only = true
+[fields.media_libraries.cloudinary.config]
 default_transformations = [[{quality = "auto", fetch_format = "auto"}]]
 ```
 

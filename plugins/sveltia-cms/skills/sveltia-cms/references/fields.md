@@ -110,14 +110,31 @@ The human-readable label for the field. It’s displayed in the UI as the field�
 - **Type**: `string`
 - **Default**: `""`
 
-A description or comment for the field. It’s displayed between the field label and the field input in the UI. Basic Markdown formatting is supported, including bold, italics, links, and inline code.
+A comment to be added before the field in the output file. It’s only supported for the `yaml` format and front matter in YAML. Other formats, such as JSON and TOML, ignore this option. The comment is not displayed in the UI; use the [`hint`](#hint) option to show a description to users.
+
+For example, with the following field definition:
+
+```yaml
+- name: title
+  label: Title
+  comment: The title of the post, used in the page header
+```
+
+The output file will look like this:
+
+```yaml
+# The title of the post, used in the page header
+title: My First Post
+```
+
+Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/object) field are also added before the corresponding keys.
 
 ##### `hint`
 
 - **Type**: `string`
 - **Default**: `""`
 
-A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, links, and inline code.
+A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, strikethrough, links, and inline code.
 
 ##### `required`
 
@@ -1036,7 +1053,7 @@ The type of value to store. Can be one of the following:
 
 **Note for Netlify/Decap CMS users**
 
-The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Number) says the `value_type` option accepts any type other than `int` and `float` , which results in the value being stored as a string. However, it actually doesn’t work in Decap CMS. So, Sveltia CMS only supports `int` and `float`, along with the new `int/string` and `float/string` types. Other types will default to `int`.
+The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Number) says the `value_type` option accepts any type other than `int` and `float` , which results in the value being stored as a string. However, it actually doesn’t work in Decap CMS. So, Sveltia CMS officially supports only `int` and `float`, along with the new `int/string` and `float/string` types. For backward compatibility, other types are treated like `int/string`: the UI only accepts integer input, and the value is stored as a string.
 
 ##### `min`
 
@@ -1350,7 +1367,9 @@ In addition to the [common field options](https://sveltiacms.app/en/docs/fields#
 ##### `widget`
 
 - **Type**: `string`
-- **Default**: `string` The `options` can be defined with custom labels and values. The following example shows a select field for choosing a color with specific hex values. Must be set to `select`.
+- **Default**: `string`
+
+Must be set to `select`.
 
 ##### `options`
 
@@ -1480,10 +1499,10 @@ options: [
 
 ##### `default`
 
-- **Type**: `string`, `number`, `boolean`, `null`, or an array of them
+- **Type**: `string`, `number`, `boolean`, `null`, an object with `label` and `value` properties, or an array of them
 - **Default**: an empty string, `null` or `[]`
 
-The default value for the field. Should be a string, number, boolean or `null` for single select, or an array of them for multi select, depending on the `multiple` option. A value that isn’t one of the `options`, or an array with `multiple` off and a single value with `multiple` on, is reported as a config validation error on the login screen.
+The default value for the field. Should be a string, number, boolean or `null` for single select, or an array of them for multi select, depending on the `multiple` option. An option can also be copied as is from the `options` list, as an object with `label` and `value` properties, in which case only its `value` is saved. A value that isn’t one of the `options`, or an array with `multiple` off and a single value with `multiple` on, is reported as a config validation error on the login screen.
 
 ##### `dropdown_threshold`
 

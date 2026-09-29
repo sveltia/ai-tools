@@ -286,7 +286,7 @@ We may add more transformation options in the future.
 
 #### File Size Limits
 
-If you want to restrict the maximum file size for uploads, you can set the `max_file_size` option (in bytes) in the `media_libraries` configuration at the top level, collection level, or field level. The default value is `Infinity`, meaning there is no limit.
+If you want to restrict the maximum file size for uploads, you can set the `max_file_size` option (in bytes) in the `media_libraries` configuration at the top level, collection level, or field level. The default value is `Infinity`, meaning there is no limit. The legacy field-level `media_library.config.max_file_size` option from Netlify/Decap CMS is also supported for the internal media storage.
 
 For example, to set a maximum file size of 1 MB for all uploads, add the following to your `config.yml`:
 
@@ -435,7 +435,7 @@ A few notes about this option:
 
 ##### Public Folder
 
-The `public_folder` option defines the public URL path that corresponds to the `media_folder`. The leading slash is required in this option. If `public_folder` is not specified, it will default to the value of `media_folder`.
+The `public_folder` option defines the public URL path that corresponds to the `media_folder`. The leading slash is added automatically if omitted, but it is recommended to include it for clarity. If `public_folder` is not specified, it will default to the value of `media_folder` with a leading slash.
 
 With the above configuration, if a media file is stored in `/public/uploads/image.jpg` and your site is hosted at `https://example.com`, the public URL to access the image would be `https://example.com/uploads/image.jpg`.
 
@@ -584,6 +584,10 @@ In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nest
 To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to look for media files in the same folder as the content files.
 
 This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
+
+**Tip**
+
+When a collection has the `path` option but no `media_folder` option of its own, its `media_folder` defaults to an empty string, and `public_folder` follows it, so the entry-relative setup below is implied. This applies when the [global `media_folder`](#media-folder) option is defined. Set the collection-level `media_folder` explicitly to store the media elsewhere.
 
 ```yaml [YAML]{5-7}
 collections:

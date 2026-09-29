@@ -170,7 +170,15 @@ If you use the UNPKG CDN, you have to set a global variable `CMS_MANUAL_INIT` to
 </script>
 ```
 
+The `init` function is also exposed as the global `initCMS` variable, so code written for Netlify/Decap CMS, such as `const { CMS, initCMS: init } = window;`, works as is.
+
 For NPM installations, you don’t need this step; manual initialization is the default behavior. In other words, you always have to call `init()` yourself.
+
+#### Registering Customizations
+
+The `register*` methods, such as `registerPreviewTemplate` and `registerFieldType`, can be called before or after `init()`. Registered items are looked up when they are needed, and the configuration is loaded asynchronously after `init()` is called, so anything registered in the same script is picked up either way.
+
+However, field type [schemas](https://sveltiacms.app/en/docs/api/field-types#field-schema), [editor component](https://sveltiacms.app/en/docs/api/editor-components) fields and [custom file formats](https://sveltiacms.app/en/docs/api/file-formats) are processed when the configuration or the content is loaded. Register them synchronously rather than in a delayed callback, so they are available by then.
 
 #### Typing the Configuration Object
 
@@ -238,6 +246,27 @@ CMS.init({
   },
 });
 ```
+
+Objects are merged recursively, but arrays are appended rather than replaced. For example, if `config.yml` defines a `posts` collection and the manual configuration defines a `pages` collection, the CMS will have both collections, in that order:
+
+```js
+CMS.init({
+  config: {
+    collections: [
+      {
+        name: 'pages',
+        // other options
+      },
+    ],
+  },
+});
+```
+
+This means you can’t use a partial configuration to remove, reorder or modify items in an array such as `collections`. A collection with the same name as one in `config.yml` is added as a separate item rather than overriding it. If you need full control, set `load_config_file` to `false` and provide the complete configuration instead.
+
+**Note for Netlify/Decap CMS users**
+
+The Netlify/Decap CMS documentation says arrays are replaced during the merge. However, Netlify/Decap CMS actually appends them, just like Sveltia CMS, so your existing configuration will work the same way.
 
 ### Showcase
 
@@ -792,7 +821,9 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store. Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components and the [`entry`, `getAsset` and `fieldsMetaData` props](#preview-component-props) for preview components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store.
+
+Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
 
 **Naming Convention**
 
@@ -813,7 +844,7 @@ For backward compatibility with Netlify/Decap CMS, the `registerWidget` method i
 #### Parameters
 
 - `name` (string, required): The name of the custom field type. This is the name you will use in your collection configuration to reference this type. It should be unique and not conflict with [built-in field types](https://sveltiacms.app/en/docs/fields#built-in-field-types) names.
-- `control` (React component, required): A React **class component** that defines the control (input) part of the field.
+- `control` (React component or string, required): A React **class component** that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here; the field shows no control and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
 - `preview` (React component, optional): A React **class component** that defines how the field’s value is previewed in the CMS preview pane. If not provided, no preview will be shown.
 - `schema` (object, optional): A [JSON schema](https://json-schema.org/) object that defines the configuration options for the field type.
 
@@ -901,6 +932,8 @@ Control components may optionally implement an `isValid` instance method for cus
 - `false` or `{ error: { message: "text" } }` when the value is invalid.
 - A Promise that resolves to any of the above formats for async validation.
 
+The method is called with two arguments: the current field value and the field configuration as an [Immutable Map](https://immutable-js.com/docs/v5/Map/), the same as the `field` prop. It runs whenever any field in the entry is modified, not only your field, so it can also check the value against other fields read from the `entry` prop. If the method is called again before an earlier Promise settles, the earlier result is discarded, so you can simply return a new Promise on each call. Saving the entry waits for any pending validation to complete. If the method throws an error or returns a rejected Promise, the value is considered invalid, and the error message is shown to the user.
+
 #### Preview Component Props
 
 The preview component receives the following props:
@@ -908,6 +941,9 @@ The preview component receives the following props:
 - `value` (any): The current field value to display in the preview.
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
 - `metadata` (Immutable Map): Any available metadata for the current field. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
+- `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited, with the same structure as the [`entry` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. Read the content with `entry.getIn(['data', 'fieldName'])`.
+- `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
+- `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by field name, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
 #### Field Schema
 
