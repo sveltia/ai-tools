@@ -432,6 +432,8 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 - Write access to the repository. Users with read-only access can’t sign in.
 - Sveltia CMS installed in your project.
 
+If the configured branch is [protected](https://docs.gitea.com/usage/access-control/protected-branches) and doesn’t allow a user to push, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own, but the Publish button is only shown to users who are allowed to merge into the branch.
+
 **Breaking change from Netlify/Decap CMS**
 
 Sveltia CMS requires newer versions of Gitea/Forgejo than Netlify/Decap CMS did to leverage enhanced, high-performance API capabilities. For security reasons, it’s recommended to use the latest stable versions of Gitea/Forgejo.
@@ -679,6 +681,8 @@ GitHub is one of the most popular Git hosting services, and Sveltia CMS provides
 - A GitHub repository to store your content.
 - Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them work on a fork instead.
 - Sveltia CMS installed in your project.
+
+If the configured branch is [protected](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) and doesn’t allow a user to push, e.g. because it requires a pull request, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own. GitHub doesn’t tell whether a user can merge a pull request, so the Publish button is still shown, and GitHub refuses the merge if the user isn’t allowed to make it.
 
 #### CSP
 
@@ -994,7 +998,7 @@ GitLab is a popular Git hosting service that offers a wide range of features for
 - The Developer role or higher on the project, like Netlify/Decap CMS requires. The role can come from project membership, a parent group, or a group invited to the project or to a parent group. Users with the Guest or Reporter role can’t sign in.
 - Sveltia CMS installed in your project.
 
-If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own; merging the changes into the protected branch is still up to GitLab’s rules.
+If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own, but the Publish button is only shown to users who can merge the entry’s merge request.
 
 #### CSP
 

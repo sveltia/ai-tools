@@ -26,6 +26,10 @@ Local/remote images can be pasted or dropped into the editor to insert them. Not
 
 Emoji autocomplete is enabled by default. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
 
+**Paragraphs and Line Breaks**
+
+In the editor, pressing Enter inserts a new paragraph, while pressing Shift+Enter inserts a line break within the current paragraph.
+
 **Breaking change from Netlify/Decap CMS**
 
 Remark plugins are not supported because Sveltia CMS uses the Lexical framework instead of Slate. The `CMS.registerRemarkPlugin` API method is a noop in Sveltia CMS.
