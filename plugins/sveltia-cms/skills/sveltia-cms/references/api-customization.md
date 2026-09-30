@@ -717,7 +717,7 @@ The component you register receives the following props during render:
     slug,               // Entry slug, or an empty string for a new entry
     path,               // Entry file path, or an empty string for a new entry
     newRecord,          // Always `false` in a preview
-    collection,         // Collection name
+    collection,         // Collection name, or `_singletons` for a singleton
     mediaFiles,         // Array of all the media files in the collection's media folder
   }
   ```
@@ -738,8 +738,8 @@ The component you register receives the following props during render:
   - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
   - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix. It rejects with an error if the file can’t be retrieved.
 - `getCollection` (function): Async function that returns entries from a specified collection, each as an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
-  - `collectionName` (string): Name of the collection to query. The Promise is rejected if the collection is not found.
-  - `slug` (string, optional): Entry slug to fetch a specific entry; if omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
+  - `collectionName` (string): Name of the collection to query. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). The Promise is rejected if the collection is not found.
+  - `slug` (string, optional): Entry slug to fetch a specific entry, or the file name in a file collection or the singleton collection; if omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
 - `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s key path, e.g. `author` for a top-level field, `details.author` for a field nested in an Object field or `authors.0.person` for one in a List item. A trailing index is removed, so the subfield of a List field with a single `field` uses the List field’s key path, e.g. `tags` instead of `tags.0`. Useful for accessing related entry data from relation fields.
 - `document` (Document): The preview pane iframe's Document object. Use this instead of the global `document` to manipulate the preview DOM.
 - `window` (Window): The preview pane iframe's Window object. Use this instead of the global `window` to access the preview window context.
@@ -1193,11 +1193,14 @@ const NewsletterPreviewWrapper = createClass({
   componentDidMount: function () {
     const { document, entry, getAsset } = this.props;
 
-    this.svelteProps = $state({ entry, getAsset });
+    // `$state` can only initialize a variable, not an object property
+    const svelteProps = $state({ entry, getAsset });
+
+    this.svelteProps = svelteProps;
     // Mount into the preview iframe’s document, not the global `document`
     this.svelteComponent = mount(NewsletterPreview, {
       target: document.body,
-      props: this.svelteProps,
+      props: svelteProps,
     });
   },
 

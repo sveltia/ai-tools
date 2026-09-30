@@ -1133,7 +1133,13 @@ icon = "settings"
 
 ### Referencing Singleton Files
 
-If you want to reference a singleton file with a [Relation](https://sveltiacms.app/en/docs/fields/relation) field, use `_singletons` (note an underscore prefix) as the `collection` name.
+Singletons belong to a collection named `_singletons` (note the underscore prefix). Use this name wherever a collection name is expected, along with the singleton’s `name` as the file name:
+
+- In a [Relation](https://sveltiacms.app/en/docs/fields/relation) field, set `collection` to `_singletons` and `file` to the singleton’s name.
+- In a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates), call `getCollection('_singletons', 'settings')` to get the `settings` singleton, or `getCollection('_singletons')` to get all the singletons. `getCollection('settings')` doesn’t work, because `settings` is a file name, not a collection name.
+- In a custom preview template or an [event hook](https://sveltiacms.app/en/docs/api/events), the `collection` property of a singleton’s entry is `_singletons`.
+
+`registerPreviewTemplate()` is different: like with a file collection, it takes the file name, which is the singleton’s own name, e.g. `registerPreviewTemplate('settings', SettingsPreview)`.
 
 Source: https://sveltiacms.app/en/docs/collections/singletons
 

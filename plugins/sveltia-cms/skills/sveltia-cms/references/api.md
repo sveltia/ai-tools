@@ -383,7 +383,7 @@ The handler function receives an object with the following properties:
     slug, // Entry slug
     path, // Entry path
     newRecord, // Boolean indicating if it's a new entry
-    collection, // Collection name
+    collection, // Collection name, or `_singletons` for a singleton
     mediaFiles, // Array of associated media files
   }
   ```
