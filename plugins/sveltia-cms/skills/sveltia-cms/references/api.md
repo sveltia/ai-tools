@@ -874,9 +874,7 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` prop](#control-component-props) for control components and the [`entry`, `getAsset` and `fieldsMetaData` props](#preview-component-props) for preview components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store.
-
-Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` and `getAsset` props](#control-component-props) for control components and the [`entry`, `getAsset` and `fieldsMetaData` props](#preview-component-props) for preview components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store.
 
 **Naming Convention**
 
@@ -912,6 +910,7 @@ The control component receives the following props:
 - `forID` (string): The HTML `id` attribute that should be used for the main input element. This enables proper label association and accessibility.
 - `classNameWrapper` (string): A CSS class name that can be applied to your input element for consistent styling with built-in field controls.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited. Read the content with `entry.getIn(['data', 'fieldName'])`. This lets your control display values derived from other fields in the same entry, such as dynamically generated select options. The prop is updated whenever any field in the entry is modified, so your control always sees the latest content. See the [Dependent Select](#dependent-select) example below.
+- `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found, just like the [`getAsset` prop](#preview-component-props) of a preview component. Use its `url` property to display a file stored in the value, such as an image the user picked with the [`pickFile` prop](#picking-files). See the [Image with Derived Files](#image-with-derived-files) example below.
 - `onChange` (function): A callback function that must be called with the new value whenever the user modifies the field. This updates the entry draft in the CMS.
 - `addFile` (function): A function that adds a file to the entry draft, so that the file is uploaded along with the entry when it’s saved. It returns a Promise that resolves to a temporary URL to be stored in the field value. See [Uploading Files](#uploading-files) below.
 - `pickFile` (function): A function that opens the same file selection dialog as a built-in File or Image field, so the user can pick an existing file, upload a new one, enter a URL or choose a stock photo. It returns a Promise that resolves to the picked file, with the value to be stored in the field. See [Picking Files](#picking-files) below.
@@ -1021,7 +1020,7 @@ The preview component receives the following props:
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
 - `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the field’s key path, so it works for a field nested in an Object or List field too. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited, with the same structure as the [`entry` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. Read the content with `entry.getIn(['data', 'fieldName'])`.
-- `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
+- `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. The path can also be a temporary `blob:` URL returned from the [`addFile`](#uploading-files) or [`pickFile`](#picking-files) prop. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
 - `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by the field’s key path, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
 #### Field Schema
@@ -1570,12 +1569,13 @@ const ImageMetaControl = createClass({
 const ImageMetaPreview = createClass({
   render: function () {
     const value = this.props.value || {};
+    // Resolve a path in the repository to a URL, or use an external URL as is
+    const src = value.image && (this.props.getAsset(value.image)?.url ?? value.image);
 
     return h(
       'div',
       {},
-      value.image &&
-        h('img', { src: value.image, alt: value.alt || '', style: { maxWidth: '200px' } }),
+      src && h('img', { src, alt: value.alt || '', style: { maxWidth: '200px' } }),
       value.alt && h('p', { style: { fontSize: '12px', color: '#666' } }, `Alt: ${value.alt}`),
     );
   },
@@ -1626,12 +1626,12 @@ class ImageMetaControl extends React.Component {
 class ImageMetaPreview extends React.Component {
   render() {
     const value = this.props.value || {};
+    // Resolve a path in the repository to a URL, or use an external URL as is
+    const src = value.image && (this.props.getAsset(value.image)?.url ?? value.image);
 
     return (
       <div>
-        {value.image && (
-          <img src={value.image} alt={value.alt || ''} style={{ maxWidth: '200px' }} />
-        )}
+        {src && <img src={src} alt={value.alt || ''} style={{ maxWidth: '200px' }} />}
         {value.alt && <p style={{ fontSize: '12px', color: '#666' }}>Alt: {value.alt}</p>}
       </div>
     );
@@ -1708,6 +1708,8 @@ const PhotoControl = createClass({
 
   render: function () {
     const value = this.props.value || {};
+    // `getAsset` resolves both a public path and a temporary URL to a URL that can be displayed
+    const thumbnail = value.thumbnail && this.props.getAsset(value.thumbnail);
 
     return h(
       'div',
@@ -1717,7 +1719,7 @@ const PhotoControl = createClass({
         { id: this.props.forID, type: 'button', onClick: this.handlePick },
         'Choose Image',
       ),
-      value.thumbnail && h('img', { src: value.thumbnail, alt: '', width: 50 }),
+      thumbnail && h('img', { src: thumbnail.url, alt: '', width: 50 }),
       this.state.error && h('p', { style: { color: 'red' } }, this.state.error),
     );
   },
@@ -1726,12 +1728,13 @@ const PhotoControl = createClass({
 const PhotoPreview = createClass({
   render: function () {
     const value = this.props.value || {};
+    const original = value.original && this.props.getAsset(value.original);
 
-    if (!value.original) {
+    if (!original) {
       return null;
     }
 
-    return h('img', { src: value.original, alt: '', style: { maxWidth: '300px' } });
+    return h('img', { src: original.url, alt: '', style: { maxWidth: '300px' } });
   },
 });
 
@@ -1788,13 +1791,15 @@ class PhotoControl extends React.Component {
 
   render() {
     const value = this.props.value || {};
+    // `getAsset` resolves both a public path and a temporary URL to a URL that can be displayed
+    const thumbnail = value.thumbnail && this.props.getAsset(value.thumbnail);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button id={this.props.forID} type="button" onClick={this.handlePick}>
           Choose Image
         </button>
-        {value.thumbnail && <img src={value.thumbnail} alt="" width={50} />}
+        {thumbnail && <img src={thumbnail.url} alt="" width={50} />}
         {this.state.error && <p style={{ color: 'red' }}>{this.state.error}</p>}
       </div>
     );
@@ -1804,12 +1809,13 @@ class PhotoControl extends React.Component {
 class PhotoPreview extends React.Component {
   render() {
     const value = this.props.value || {};
+    const original = value.original && this.props.getAsset(value.original);
 
-    if (!value.original) {
+    if (!original) {
       return null;
     }
 
-    return <img src={value.original} alt="" style={{ maxWidth: '300px' }} />;
+    return <img src={original.url} alt="" style={{ maxWidth: '300px' }} />;
   }
 }
 

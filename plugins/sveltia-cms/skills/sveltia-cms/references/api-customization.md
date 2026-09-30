@@ -686,8 +686,6 @@ A custom preview template allows you to define how content entries are displayed
 
 Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/customization/#registerpreviewtemplate) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include any undocumented component props.
 
-Additionally, we haven’t verified that all of the examples below work with Sveltia CMS. If you encounter any issues, please [report them to us](https://github.com/sveltia/sveltia-cms/issues).
-
 ### Overview
 
 To register a custom preview template, use the `registerPreviewTemplate` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
@@ -730,9 +728,9 @@ The component you register receives the following props during render:
   }
   ```
   `widgets` is empty for a list item that is a primitive value, such as a string.
-- `getAsset` (function): Takes a file path, typically a File or Image field value, and returns an asset object with the following properties, or `undefined` if no matching asset is found:
+- `getAsset` (function): Takes a file path, typically a File or Image field value, including the temporary `blob:` URL the field holds for a file that hasn’t been saved yet, and returns an asset object with the following properties, or `undefined` if no matching asset is found:
   - `url` (string): A URL to display the file in the preview, typically a `blob:` URL. The public path is used until the blob URL is available.
-  - `path` (string): The public path of the file.
+  - `path` (string): The public path of the file, or the temporary `blob:` URL of a file that hasn’t been saved yet.
   - `fileObj` (`File` or `undefined`): The file selected by the user, if the file hasn’t been saved yet.
   - `field` (`undefined`): Always `undefined`. It’s included only for compatibility with Netlify/Decap CMS.
   - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
@@ -955,7 +953,7 @@ const ArticlePreview = createClass({
   render: function () {
     const { entry, fieldsMetaData, widgetFor } = this.props;
     const authorSlug = entry.getIn(['data', 'author']);
-    const authorData = fieldsMetaData.getIn(['author', 'authors', authorSlug]).toJS();
+    const authorData = fieldsMetaData.getIn(['author', 'authors', authorSlug])?.toJS();
 
     return h(
       'article',
@@ -989,7 +987,7 @@ export default class ArticlePreview extends React.Component {
   render() {
     const { entry, fieldsMetaData, widgetFor } = this.props;
     const authorSlug = entry.getIn(['data', 'author']);
-    const authorData = fieldsMetaData.getIn(['author', 'authors', authorSlug]).toJS();
+    const authorData = fieldsMetaData.getIn(['author', 'authors', authorSlug])?.toJS();
 
     return (
       <article style={{ padding: '20px', maxWidth: '600px' }}>
