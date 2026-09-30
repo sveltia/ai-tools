@@ -1349,6 +1349,10 @@ CMS.registerPreviewStyle('/path/to/second-style.css');
 
 This allows you to layer styles and create complex customizations for the entry preview.
 
+#### Styling Specific Fields
+
+The default preview marks each field with the `data-field-type`, `data-key-path` and `data-typed-key-path` attributes, so your styles can target specific fields. See [Styling Fields](https://sveltiacms.app/en/docs/customization#styling-fields) for details.
+
 ### Showcase
 
 Real-world examples of custom preview styles can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-styles).
