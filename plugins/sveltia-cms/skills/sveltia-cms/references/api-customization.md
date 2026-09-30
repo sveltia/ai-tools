@@ -1349,9 +1349,37 @@ CMS.registerPreviewStyle('/path/to/second-style.css');
 
 This allows you to layer styles and create complex customizations for the entry preview.
 
-#### Styling Specific Fields
+### Styling Specific Fields
 
-The default preview marks each field with the `data-field-type`, `data-key-path` and `data-typed-key-path` attributes, so your styles can target specific fields. See [Styling Fields](https://sveltiacms.app/en/docs/customization#styling-fields) for details.
+The default preview marks each field with three attributes that identify it, which your preview styles can use to target specific fields:
+
+- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown`, or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
+- `data-key-path`: The field’s key path, e.g. `title` for a top-level field, `details.author` for a field in an Object field, or `sections.0.heading` for a subfield of the first item in a List field.
+- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, so one selector matches the subfield in all the items, e.g. `sections.*.heading`. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
+
+```css
+[data-key-path='title'] p {
+  font-size: 2em;
+}
+
+[data-typed-key-path='sections.*.body'] p {
+  font-family: serif;
+}
+
+[data-field-type='markdown'] {
+  line-height: 1.8;
+}
+```
+
+A [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#linking-to-the-edit-pane) has these attributes only where it adds them itself, apart from the field previews that `widgetFor` and `widgetsFor` return.
+
+The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. The preview is rendered in an iframe once you register a preview style, so your admin page styles don’t affect it, and your preview styles don’t affect the Edit Pane.
+
+The attributes are primarily for internal use, and the rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
+
+**Why “key path”?**
+
+The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object, keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
 
 ### Showcase
 
@@ -1572,29 +1600,17 @@ Sveltia CMS will automatically detect the presence of the `nc-root` element and 
 
 ### Styling Fields
 
-Every field in the Edit Pane has three attributes that identify it, which you can use to style specific fields with CSS on your admin page:
-
-- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown`, or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
-- `data-key-path`: The field’s key path, e.g. `title` for a top-level field, `details.author` for a field in an Object field, or `sections.0.heading` for a subfield of the first item in a List field.
-- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, so one selector matches the subfield in all the items, e.g. `sections.*.heading`. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
+Every field in the Edit Pane has the `data-field-type`, `data-key-path` and `data-typed-key-path` attributes, so you can style specific fields with CSS on your admin page:
 
 ```html
 <style>
   [data-key-path='title'] input {
     font-size: 1.5em;
   }
-
-  [data-typed-key-path='sections.*.body'] textarea {
-    min-height: 20em;
-  }
 </style>
 ```
 
-The default Preview Pane marks each field with the same attributes, so a selector like `[data-key-path='title']` matches the field in both panes; target an element inside it, like `input` above, to style one of them. The attributes are primarily for internal use, and the rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
-
-**Why “key path”?**
-
-The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object, keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
+The default Preview Pane marks each field with the same attributes. See [Styling Specific Fields](https://sveltiacms.app/en/docs/api/preview-styles#styling-specific-fields) for what the attributes contain and how to style the preview.
 
 ### JavaScript API
 
