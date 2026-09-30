@@ -771,6 +771,33 @@ If you render a [Svelte](https://svelte.dev/) component inside the template, you
 
 [Vue](https://vuejs.org/) has no equivalent: the `<style>` block of a single-file component always goes through the bundler’s CSS pipeline, which ends up in the admin page. Keep the styles of a Vue preview component in a separate CSS file and register it as shown above.
 
+### Linking to the Edit Pane
+
+The default preview supports [Scroll Synchronization and Click-to-Highlight](https://sveltiacms.app/en/docs/ui/content-editor): scrolling one pane scrolls the other to the same field, and clicking a field in the preview highlights it in the Edit Pane. A custom preview template gets both features by marking its elements with the `data-key-path` attribute, whose value is the key path of the field the element displays:
+
+- A top-level field uses its name, e.g. `title`.
+- A field nested in an Object field adds its name with a dot, e.g. `details.author`.
+- A field in a List item adds the item’s zero-based index, e.g. `sections.0.heading` for the `heading` subfield of the first item in the `sections` List field.
+
+Clicking a marked element, or anything inside it, highlights the field of the innermost marked element: the Edit Pane expands any collapsed List or Object field containing it, scrolls it into view and focuses it. To let keyboard users do the same, make the element focusable with `tabIndex={0}`; pressing Enter on it highlights the field. An event handler in the template can call `event.preventDefault()` to stop a click or Enter key press from highlighting a field, e.g. for a button that does something else.
+
+```jsx
+<article>
+  <h1 data-key-path="title" tabIndex={0}>
+    {entry.getIn(['data', 'title'])}
+  </h1>
+  <div data-key-path="sections">
+    {entry.getIn(['data', 'sections'])?.map((section, index) => (
+      <section key={index}>
+        <h2 data-key-path={`sections.${index}.heading`}>{section.get('heading')}</h2>
+      </section>
+    ))}
+  </div>
+</article>
+```
+
+The field previews that `widgetFor` and `widgetsFor` return are already marked.
+
 ### Examples
 
 **With or without JSX**
