@@ -1566,6 +1566,32 @@ Sveltia CMS will automatically detect the presence of the `nc-root` element and 
 
 `nc-root` is short for “Netlify CMS Root,” a naming convention carried over from Netlify/Decap CMS to maintain familiarity for users transitioning between the two systems.
 
+### Styling Fields
+
+Every field in the Edit Pane has three attributes that identify it, which you can use to style specific fields with CSS on your admin page:
+
+- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown`, or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
+- `data-key-path`: The field’s key path, e.g. `title` for a top-level field, `details.author` for a field in an Object field, or `sections.0.heading` for a subfield of the first item in a List field.
+- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, so one selector matches the subfield in all the items, e.g. `sections.*.heading`. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
+
+```html
+<style>
+  [data-key-path='title'] input {
+    font-size: 1.5em;
+  }
+
+  [data-typed-key-path='sections.*.body'] textarea {
+    min-height: 20em;
+  }
+</style>
+```
+
+The default Preview Pane marks each field with the same attributes, so a selector like `[data-key-path='title']` matches the field in both panes; target an element inside it, like `input` above, to style one of them. The attributes are primarily for internal use, and the rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
+
+**Why “key path”?**
+
+The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object, keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
+
 ### JavaScript API
 
 Sveltia CMS offers a comprehensive API that enables developers to extend and customize its features. You can register custom field types, preview templates, editor components, and more to enhance the content management experience.
