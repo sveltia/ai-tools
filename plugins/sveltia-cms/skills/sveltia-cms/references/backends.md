@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Backends
 
-A backend defines where your content is stored and how Sveltia CMS interacts with it. Sveltia CMS primarily supports Git-based backends, allowing seamless integration with popular Git hosting services.
+A backend defines where content is stored and how Sveltia CMS interacts with it. Sveltia CMS primarily supports Git-based backends, allowing seamless integration with popular Git hosting services.
 
 ### Supported Backends
 
@@ -28,7 +28,7 @@ Also, Sveltia CMS does not support the undocumented custom backend API. The `CMS
 
 ### Configuration
 
-All the configuration options for backends can be set in the `backend` option of your CMS configuration file. Here is a basic example of configuring the GitHub backend:
+All the configuration options for backends can be set in the `backend` option of the CMS configuration file. Here is a basic example of configuring the GitHub backend:
 
 ```yaml [YAML]
 backend:
@@ -104,7 +104,7 @@ branch = "develop"
 
 #### Authentication Methods
 
-By default, Sveltia CMS allows users to sign in using either OAuth or an access token. You can restrict the available sign-in methods by setting the `auth_methods` option to an array containing only the methods you want to allow:
+By default, Sveltia CMS allows users to sign in using either OAuth or an access token. You can restrict the available sign-in methods by setting the `auth_methods` option to an array containing only the methods to allow:
 
 | Value   | Description                                |
 | ------- | ------------------------------------------ |
@@ -243,9 +243,9 @@ The `auth_endpoint` option must be a path relative to `base_url`, not a full URL
 
 #### Site Domain
 
-With the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds your OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
+With the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds the OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
 
-By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, for example when the CMS is served from a preview URL that isn’t registered with your OAuth client, set the `site_domain` option:
+By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, for example when the CMS is served from a preview URL that isn’t registered with the OAuth client, set the `site_domain` option:
 
 ```yaml [YAML]{4}
 backend:
@@ -428,7 +428,7 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 
 - Gitea 1.24, Forgejo 12.0 or later.
 - A Gitea or Forgejo account.
-- A Gitea or Forgejo repository to store your content.
+- A Gitea or Forgejo repository to store the content.
 - Write access to the repository. Users with read-only access can’t sign in.
 - Sveltia CMS installed in your project.
 
@@ -444,7 +444,7 @@ If your site uses a Content Security Policy (CSP), you may need to update it to 
 
 #### CORS
 
-In your Gitea or Forgejo instance, you may need to enable Cross-Origin Resource Sharing (CORS) to allow your Sveltia CMS admin interface to communicate with the backend API. Refer to the [Gitea](https://docs.gitea.com/administration/config-cheat-sheet#cors-cors) or [Forgejo](https://forgejo.org/docs/latest/admin/config-cheat-sheet/#cors-cors) documentation for instructions on how to configure CORS.
+In your Gitea or Forgejo instance, you may need to enable Cross-Origin Resource Sharing (CORS) to allow the Sveltia CMS admin interface to communicate with the backend API. Refer to the [Gitea](https://docs.gitea.com/administration/config-cheat-sheet#cors-cors) or [Forgejo](https://forgejo.org/docs/latest/admin/config-cheat-sheet/#cors-cors) documentation for instructions on how to configure CORS.
 
 ### Configuration
 
@@ -673,12 +673,12 @@ Source: https://sveltiacms.app/en/docs/backends/gitea-forgejo
 
 ## GitHub Backend
 
-GitHub is one of the most popular Git hosting services, and Sveltia CMS provides first-class support for it. With the GitHub backend, you can easily manage your content stored in GitHub repositories.
+GitHub is one of the most popular Git hosting services, and Sveltia CMS provides first-class support for it. With the GitHub backend, editors can easily manage content stored in GitHub repositories.
 
 ### Requirements
 
 - A GitHub account.
-- A GitHub repository to store your content.
+- A GitHub repository to store the content.
 - Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them work on a fork instead.
 - Sveltia CMS installed in your project.
 
@@ -941,7 +941,7 @@ For backward compatibility with Netlify CMS, Sveltia CMS supports the authorizat
 
 If you’re a Netlify customer, follow the [official guide](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/) to register a new OAuth app on GitHub and link it to your Netlify site. No configuration changes are needed in Sveltia CMS.
 
-Netlify identifies your site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
+Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
 **Disclaimer**
 
@@ -959,7 +959,7 @@ GraphQL support is enabled for GitHub repositories. Sveltia CMS uses the GitHub 
 
 #### Commit Signing
 
-When you commit changes to your GitHub repository through Sveltia CMS, the commits are automatically GPG-signed and [marked as verified](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification). This ensures the authenticity and integrity of your commits, providing an additional layer of security for your content management workflow. No additional configuration is needed to enable commit signing.
+When you commit changes to your GitHub repository through Sveltia CMS, the commits are automatically GPG-signed and [marked as verified](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification). This ensures the authenticity and integrity of the commits, providing an additional layer of security for your content management workflow. No additional configuration is needed to enable commit signing.
 
 #### Service Status Checking
 
@@ -988,13 +988,13 @@ Source: https://sveltiacms.app/en/docs/backends/github
 
 ## GitLab Backend
 
-GitLab is a popular Git hosting service that offers a wide range of features for developers and teams. Sveltia CMS provides robust support for GitLab repositories, allowing you to manage your content seamlessly.
+GitLab is a popular Git hosting service that offers a wide range of features for developers and teams. Sveltia CMS provides robust support for GitLab repositories, allowing editors to manage content seamlessly.
 
 ### Requirements
 
 - GitLab 16.3 or later.
 - A GitLab account.
-- A GitLab repository to store your content.
+- A GitLab repository to store the content.
 - The Developer role or higher on the project, like Netlify/Decap CMS requires. The role can come from project membership, a parent group, or a group invited to the project or to a parent group. Users with the Guest or Reporter role can’t sign in.
 - Sveltia CMS installed in your project.
 
@@ -1229,7 +1229,7 @@ To set it up, you need to register a new OAuth app on GitLab and update your Sve
 
 No configuration changes are needed in Sveltia CMS.
 
-Netlify identifies your site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
+Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
 **Disclaimer**
 
@@ -1277,7 +1277,7 @@ Source: https://sveltiacms.app/en/docs/backends/gitlab
 
 ## Test Backend
 
-The Test backend is a simple backend for testing and local development. It stores entries and assets in a virtual file system in the browser, allowing you to test your Sveltia CMS setup without needing a repository.
+The Test backend is a simple backend for testing and local development. It stores entries and assets in a virtual file system in the browser, allowing developers to test the Sveltia CMS setup without needing a repository.
 
 ### Configuration
 

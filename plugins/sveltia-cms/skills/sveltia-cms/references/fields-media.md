@@ -247,7 +247,7 @@ With the [`select_folder`](#select-folder) option, the field takes a folder inst
 
 - A click or the Space key selects a subfolder, and a double click or the Enter key opens it. The arrow keys move between the subfolders.
 - The folder being browsed is selected when no subfolder is. The path to be saved is shown at the bottom of the dialog.
-- If the `multiple` option is also enabled, several folders can be selected at once, including from different parent folders: the selection is kept while you browse.
+- If the `multiple` option is also enabled, several folders can be selected at once, including from different parent folders: the selection is kept while the user browses.
 - A new folder can be created from the dialog, as usual.
 
 Only repository folders with a fixed path can be browsed. [Entry-relative folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), folders whose path contains a template tag such as `{{slug}}`, [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) and the URL input are not available, and files can’t be uploaded, dropped or pasted.

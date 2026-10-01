@@ -1466,7 +1466,7 @@ The `depth` option counts path segments the same way as it does without `path`, 
 
 ### Browsing Nested Entries
 
-The collection appears in the sidebar as a tree. Selecting a folder lists its entries in the main area, and the URL reflects the folder you’re browsing, so a link to a specific folder can be shared:
+The collection appears in the sidebar as a tree. Selecting a folder lists its entries in the main area, and the URL reflects the folder being browsed, so a link to a specific folder can be shared:
 
 ```
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/filter/FOLDER_PATH
@@ -1667,13 +1667,13 @@ The commit author and date of an entry are those of the file’s last commit, wh
 
 All the entries are stored in one file, and Sveltia CMS doesn’t lock entries while someone edits them. Keep the following in mind when several people edit the same collection.
 
-Before saving, Sveltia CMS checks the repository for changes made by someone else, then applies only your change to the file as it is now. A colleague’s change to another entry is kept.
+Before saving, Sveltia CMS checks the repository for changes made by someone else, then applies only the user’s change to the file as it is now. A colleague’s change to another entry is kept.
 
-The save is refused if the entry you’re editing has been changed or deleted in the meantime, or another entry has moved to its position because entries were added, deleted or reordered. You’re then asked to cancel editing and open the entry again from the list to make your edits. Unlike an entry stored in a file of its own, you can’t save over the other change, as the entry at the same position may be a different one. Deleting or reordering entries is refused the same way.
+The save is refused if the entry being edited has been changed or deleted in the meantime, or another entry has moved to its position because entries were added, deleted or reordered. The user is then asked to cancel editing and open the entry again from the list to make the edits. Unlike an entry stored in a file of its own, the user can’t save over the other change, as the entry at the same position may be a different one. Deleting or reordering entries is refused the same way.
 
 There is still a short window between the check and the commit itself:
 
-- With GitHub, the commit is rejected if someone else has committed in between, and you can save again.
+- With GitHub, the commit is rejected if someone else has committed in between, and the user can save again.
 - With Gitea/Forgejo, the commit is rejected if the file has changed in between.
 - With GitLab, the other commit is overwritten, and the change made in it is lost. If several people edit a large file frequently, consider taking turns, or split the content into several collections.
 
@@ -1914,6 +1914,6 @@ aliases_field = false
 }
 ```
 
-The same applies if you define a field with the same name as the redirect property in the `fields` option. The CMS assumes that you want to manage the redirects yourself in the Content Editor, so it won’t write to the property on its own. This is the way to go if you’d rather curate the list by hand while still being able to see and edit it in the CMS.
+The same applies if you define a field with the same name as the redirect property in the `fields` option. The CMS assumes that the redirects are to be managed in the Content Editor, so it won’t write to the property on its own. This is the way to go to curate the list by hand while still being able to see and edit it in the CMS.
 
 Source: https://sveltiacms.app/en/docs/collections/entries/previews

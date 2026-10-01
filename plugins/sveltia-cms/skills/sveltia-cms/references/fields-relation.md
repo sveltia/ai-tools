@@ -23,25 +23,25 @@ For multi-select options with many entries, a tag input UI will be used instead 
 
 #### Creating Related Entries
 
-When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry you’re editing, so you don’t have to save your work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
+When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry being edited, so users don’t have to save their work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
 
-The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets you fill in each of them. Clicking **Add** validates the new entry the same way a save does; if a required field is empty, the dialog stays open and the error is shown on the field. Once added, the new entry is selected in the Relation field right away, listed among the options like any other entry, and shown by its label in the Preview Pane.
+The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets users fill in each of them. Clicking **Add** validates the new entry the same way a save does; if a required field is empty, the dialog stays open and the error is shown on the field. Once added, the new entry is selected in the Relation field right away, listed among the options like any other entry, and shown by its label in the Preview Pane.
 
-The new entry is not saved on its own. It’s kept with your draft and committed **together with the entry you’re editing** when you save, in a single commit, so the two never go out of sync: a blog post and the tags created for it land in the repository at the same time. Until then, the entry only exists in your draft:
+The new entry is not saved on its own. It’s kept with the draft and committed **together with the entry being edited** when the user saves, in a single commit, so the two never go out of sync: a blog post and the tags created for it land in the repository at the same time. Until then, the entry only exists in the draft:
 
-- If you deselect the new entry before saving, it’s dropped rather than created for nothing.
-- If you add two entries with the same title, the second one gets a distinct slug, e.g. `svelte-1`, the same way it would if you created them one after another.
+- If the user deselects the new entry before saving, it’s dropped rather than created for nothing.
+- If the user adds two entries with the same title, the second one gets a distinct slug, e.g. `svelte-1`, the same way it would if they were created one after another.
 - The dialog can be nested: a Relation field in the new entry has its own **Add** button, and the entries created there are saved along with everything else, as long as they are still referenced.
 - Files attached to the new entry, such as an author’s avatar, are uploaded in the same commit.
-- The pending entries are part of the [auto-saved draft](https://sveltiacms.app/en/docs/ui/content-editor#auto-saving-drafts), so they survive a page reload along with the rest of your changes.
+- The pending entries are part of the [auto-saved draft](https://sveltiacms.app/en/docs/ui/content-editor#auto-saving-drafts), so they survive a page reload along with the rest of the changes.
 
 The button is not offered in the following cases:
 
 - The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), with the [`file`](#file) option. The button creates a new entry, but such a field selects an item from a list within an existing file. Adding an item would mean editing that file from another entry, which could conflict with changes made to the file elsewhere, so the item is added by editing the file itself instead.
 - The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) option.
-- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in your draft. The button is then shown disabled.
+- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in the draft. The button is then shown disabled.
 - The Relation field is read-only.
-- The entry you’re editing is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), or the related collection is under the workflow on its own. A pull request stands for a single entry in the workflow, so an entry created on the fly would either be invisible until the pull request is published, or skip the review the related collection asks for. Create the related entry in its own collection instead.
+- The entry being edited is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), or the related collection is under the workflow on its own. A pull request stands for a single entry in the workflow, so an entry created on the fly would either be invisible until the pull request is published, or skip the review the related collection asks for. Create the related entry in its own collection instead.
 
 #### Preview
 
@@ -63,9 +63,9 @@ This applies whenever the stored value is derived from the related entry’s ide
 
 #### Cascading Deletions
 
-Deletions are cascaded in the same way. When you delete an entry, whether from the Content Editor or by [selecting one or more entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list, every entry referencing it through a Relation field is rewritten in the same commit as the deletion: a single-select field is cleared, and the deleted entry is dropped from a multi-select field’s list. The confirmation dialog tells you how many entries will be updated. Unlike a rename, this applies whatever the `value_field` is, because references are matched on the stored value rather than derived from the slug. With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the updates go into the same pull request as the deletion.
+Deletions are cascaded in the same way. When an entry is deleted, whether from the Content Editor or by [selecting one or more entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list, every entry referencing it through a Relation field is rewritten in the same commit as the deletion: a single-select field is cleared, and the deleted entry is dropped from a multi-select field’s list. The confirmation dialog tells the user how many entries will be updated. Unlike a rename, this applies whatever the `value_field` is, because references are matched on the stored value rather than derived from the slug. With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the updates go into the same pull request as the deletion.
 
-A reference is never removed at the cost of the referencing entry’s validity, though. If clearing it would break the field’s own [validation rules](#data-validation) — a `required` field left with nothing selected, or a multi-select field left with fewer than `min` items — the deletion is refused, and the dialog lists the entries and fields standing in the way so that you can update them first. The check covers the whole selection: deleting two entries at once may be refused where deleting either on its own would go through. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so you can see what a deletion would touch before you start.
+A reference is never removed at the cost of the referencing entry’s validity, though. If clearing it would break the field’s own [validation rules](#data-validation) — a `required` field left with nothing selected, or a multi-select field left with fewer than `min` items — the deletion is refused, and the dialog lists the entries and fields standing in the way so that the user can update them first. The check covers the whole selection: deleting two entries at once may be refused where deleting either on its own would go through. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so users can see what a deletion would touch before they start.
 
 ### Data Validation
 

@@ -248,7 +248,7 @@ The type definitions are generated from the JSDoc comments in the source code, e
 
 #### Runtime Validation
 
-Sveltia CMS validates your configuration every time it loads. Anything that would break the CMS is listed on the login screen, and you can’t sign in until it’s fixed, so a broken configuration never reaches the content editor. Everything the CMS can safely work around is logged to the browser console as a warning instead.
+Sveltia CMS validates the configuration every time it loads. Anything that would break the CMS is listed on the login screen, and users can’t sign in until it’s fixed, so a broken configuration never reaches the content editor. Everything the CMS can safely work around is logged to the browser console as a warning instead.
 
 Each message names the collection, file and field it applies to, so you can go straight to the line that needs changing:
 
@@ -291,7 +291,7 @@ Source: https://sveltiacms.app/en/docs/config-basics
 
 ## String Transformations
 
-String transformations allow you to manipulate and format string values in your content entries. These transformations can be applied in various contexts, such as generating summaries or formatting dates.
+String transformations allow manipulating and formatting string values in your content entries. These transformations can be applied in various contexts, such as generating summaries or formatting dates.
 
 **Note for Netlify/Decap CMS users**
 
@@ -888,7 +888,7 @@ Here are some key aspects of data output in Sveltia CMS:
 - **Field Ordering**: Fields are always saved in the order they are defined in the configuration, with key-value pairs, making Git commits clean and consistent. Some [exceptions](#understanding-exceptions) apply.
 - **Time Formatting**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility, including Hugo.
 - **File Formatting**: Line breaks are LF (`\n`) across all formats. A newline is added at the end of the file to prevent unnecessary changes.
-- **Text Processing**: Leading and trailing whitespaces in text-type field values are automatically removed when you save an entry. No configuration option is required for this behavior.
+- **Text Processing**: Leading and trailing whitespaces in text-type field values are automatically removed when an entry is saved. No configuration option is required for this behavior.
 - **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array, or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
   - `required: false` makes data input optional, but doesn't make data output optional.
   - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.

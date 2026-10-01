@@ -321,13 +321,13 @@ There are two ways to use Cloudinary in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudinary directly within the entry editor. When uploading media, files will be stored in your Cloudinary account, and you can take advantage of Cloudinary’s transformation capabilities directly from the CMS. You can also select existing media from your Cloudinary storage.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudinary directly within the entry editor. When uploading media, files will be stored in the Cloudinary account, and the CMS can take advantage of Cloudinary’s transformation capabilities directly from the CMS. You can also select existing media from your Cloudinary storage.
 
 Users are required to authenticate with Cloudinary using their username and password when accessing the media storage provider. The authentication process is handled automatically by Sveltia CMS using the provided API key.
 
 #### Asset Library
 
-Cloudinary also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). Because the Cloudinary API can’t be called directly from the browser, the CMS opens the Cloudinary Media Library widget instead, where you can browse and manage your files using Cloudinary’s own interface.
+Cloudinary also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). Because the Cloudinary API can’t be called directly from the browser, the CMS opens the Cloudinary Media Library widget instead, where users can browse and manage the files using Cloudinary’s own interface.
 
 ### Using Transformations in Page Templates
 
@@ -559,11 +559,11 @@ There are two ways to use Uploadcare in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Uploadcare directly within the entry editor. When uploading media, files will be stored in your Uploadcare account, and you can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Uploadcare directly within the entry editor. When uploading media, files will be stored in the Uploadcare account, and the CMS can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
 
 #### Asset Library
 
-Uploadcare also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter your files, and upload, download or delete them without leaving the CMS. Files can’t be renamed or replaced, because the Uploadcare REST API doesn’t support renaming, and a re-uploaded file gets a new UUID and therefore a new URL.
+Uploadcare also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files, and upload, download or delete them without leaving the CMS. Files can’t be renamed or replaced, because the Uploadcare REST API doesn’t support renaming, and a re-uploaded file gets a new UUID and therefore a new URL.
 
 Source: https://sveltiacms.app/en/docs/media/uploadcare
 
@@ -769,13 +769,13 @@ There are two ways to use Azure Blob Storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Azure Blob Storage directly within the entry editor. Enter your SAS token in the CMS UI when prompted — or at any time under **Settings > Media > Cloud Storage Service API Keys** — and you’ll be able to upload new media directly to Azure or select existing media from your container.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Azure Blob Storage directly within the entry editor. After entering the SAS token in the CMS UI when prompted — or at any time under **Settings > Media > Cloud Storage Service API Keys** — users can upload new media directly to Azure or select existing media from the container.
 
-When uploading media, files are stored in your container as block blobs, and you can take advantage of Azure’s capabilities directly from the CMS. You can also select existing media from your Blob Storage.
+When uploading media, files are stored in the container as block blobs, and the CMS can take advantage of Azure’s capabilities directly from the CMS. You can also select existing media from your Blob Storage.
 
 #### Asset Library
 
-Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where you can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original. The blobs are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations) by their virtual directories: subfolders are listed ahead of the blobs, uploads go to the folder you’re in, and folders can be created, renamed and deleted — an empty folder is kept with a zero-byte placeholder blob named after it with a trailing slash, and renaming a folder copies and deletes each blob in it.
+Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original. The blobs are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations) by their virtual directories: subfolders are listed ahead of the blobs, uploads go to the folder being viewed, and folders can be created, renamed and deleted — an empty folder is kept with a zero-byte placeholder blob named after it with a trailing slash, and renaming a folder copies and deletes each blob in it.
 
 Source: https://sveltiacms.app/en/docs/media/azure-blob-storage
 
@@ -899,19 +899,19 @@ The `stock_assets` option can be set for an individual [Image](https://sveltiacm
 
 ### Using Stock Photos
 
-Stock photos can be accessed directly from the [Image](https://sveltiacms.app/en/docs/fields/image) field in the Sveltia CMS interface. When opening the Select Images dialog, you will see stock photo options alongside your existing media storage.
+Stock photos can be accessed directly from the [Image](https://sveltiacms.app/en/docs/fields/image) field in the Sveltia CMS interface. When opening the Select Images dialog, stock photo options are shown alongside the existing media storage.
 
-Select the desired stock photo provider and provide your API key to enable the service. API keys are stored securely in the browser’s local storage, so you don’t need to enter them every time. Lorem Picsum doesn’t require an API key, so it will be available immediately without any configuration.
+Select the desired stock photo provider and provide an API key to enable the service. API keys are stored securely in the browser’s local storage, so users don’t need to enter them every time. Lorem Picsum doesn’t require an API key, so it will be available immediately without any configuration.
 
 By default, curated images from each provider are available for quick access. You can also use the search functionality to find specific images based on keywords. Lorem Picsum doesn’t support searching as mentioned earlier, so it will only show random images.
 
-When you find an image you want to use, simply select it, and it will be inserted into your content just like any other media asset. The CMS may show a dialog where you can copy the image credit information to comply with attribution requirements.
+Once the desired image is found, simply select it, and it will be inserted into the content just like any other media asset. The CMS may show a dialog where you can copy the image credit information to comply with attribution requirements.
 
-Note that some providers require hotlinking to the image’s original URL, while others rather disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies, and downloads the image to your media storage if necessary.
+Note that some providers require hotlinking to the image’s original URL, while others rather disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies, and downloads the image to the media storage if necessary.
 
 **Multi-user setups**
 
-If your CMS instance is used by multiple users, you as an administrator need to distribute your API key to all users to let them use the stock photo feature.
+If your CMS instance is used by multiple users, the administrator needs to distribute an API key to all users to let them use the stock photo feature.
 
 Alternatively, each user can provide their own API key. However, this is not recommended for instances with non-technical end-users because generating and managing API keys may be challenging for them.
 

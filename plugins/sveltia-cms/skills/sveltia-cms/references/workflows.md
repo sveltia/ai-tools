@@ -10,7 +10,7 @@ Sveltia CMS supports several workflows to accommodate different content manageme
 
 ### Development
 
-[Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local) is available for development and testing purposes. It allows you to run Sveltia CMS without needing to connect to a remote repository or authentication service.
+[Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local) is available for development and testing purposes. It allows developers to run Sveltia CMS without needing to connect to a remote repository or authentication service.
 
 ### Production
 
@@ -36,18 +36,18 @@ Source: https://sveltiacms.app/en/docs/workflows
 
 ## Deploy Previews
 
-Most hosting services build your site again whenever a commit lands, and many build a separate copy for each pull request. Sveltia CMS asks your Git backend where those builds ended up, so an editor can open the page they just worked on without hunting for the URL — and can tell whether the build has finished yet.
+Most hosting services build the site again whenever a commit lands, and many build a separate copy for each pull request. Sveltia CMS asks the Git backend where those builds ended up, so an editor can open the page they just worked on without hunting for the URL — and can tell whether the build has finished yet.
 
 This works in both production workflows, with a different meaning in each:
 
-- In [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the **deploy preview** built for its pull request, so you can see a draft before it goes live.
-- In [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), where changes are committed straight to the [configured branch](https://sveltiacms.app/en/docs/backends#branch-selection), an entry links to the **live site**, and the CMS reports whether the build for your latest change has finished.
+- In [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the **deploy preview** built for its pull request, so editors can see a draft before it goes live.
+- In [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), where changes are committed straight to the [configured branch](https://sveltiacms.app/en/docs/backends#branch-selection), an entry links to the **live site**, and the CMS reports whether the build for the latest change has finished.
 
 ### Requirements
 
 - A [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend.
-- A CI/CD provider connected to your repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
-- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, from where you can find the page yourself, and a published entry has no link.
+- A CI/CD provider connected to the repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
+- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, from where the page can be found manually, and a published entry has no link.
 
 **Date tags need a date field**
 
@@ -67,15 +67,15 @@ The options below shape what the links do:
 | --- | --- | --- |
 | [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
 | [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Which top-level DateTime field the `{{year}}`, `{{month}}` and similar tags read. Default: the first DateTime field |
-| [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of your live site |
+| [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of the live site |
 | `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
 | [`preview_context`](#specifying-a-status-context) | `backend` | Names the exact commit status or environment that carries the preview URL |
 
-If `site_url` isn’t set, the CMS falls back to the URL reported by your production deployment, so links can still work without it. When `site_url` _is_ set, it always wins.
+If `site_url` isn’t set, the CMS falls back to the URL reported by the production deployment, so links can still work without it. When `site_url` _is_ set, it always wins.
 
 ### How It Works
 
-Every entry belongs to a commit: the head of its pull request in Editorial Workflow, or the head of the configured branch otherwise. The CMS asks the backend what your CI/CD provider reported for that commit, takes the URL from the answer, and appends the collection’s `preview_path`.
+Every entry belongs to a commit: the head of its pull request in Editorial Workflow, or the head of the configured branch otherwise. The CMS asks the backend what the CI/CD provider reported for that commit, takes the URL from the answer, and appends the collection’s `preview_path`.
 
 So an entry whose `preview_path` is `/blog/{{slug}}` links to `https://example.com/blog/my-post` on the live site, and to `https://cms-posts-hello.example.pages.dev/blog/my-post` on a deploy preview built by Cloudflare Pages.
 
@@ -89,11 +89,11 @@ Providers report a deployment in one of three ways, and Sveltia CMS reads all of
 | **Commit statuses** | Vercel, and CI services that post a build status |
 | **Check runs** (GitHub only) | Cloudflare Pages, AWS Amplify |
 
-All three are read whichever provider you use, so one that isn’t listed still works as long as it reports through any of them. Equally, a provider that reports nowhere the Git host can see — several publish only to their own dashboard, or to a pull request comment — can’t be detected at all. If you’re unsure which applies, open a recent commit on your Git host and see whether anything is attached to it.
+All three are read whichever provider is used, so one that isn’t listed still works as long as it reports through any of them. Equally, a provider that reports nowhere the Git host can see — several publish only to their own dashboard, or to a pull request comment — can’t be detected at all. If you’re unsure which applies, open a recent commit on your Git host and see whether anything is attached to it.
 
-When more than one reports on the same commit, the CMS prefers a finished build with a page to open, then the source whose URL is most reliable — a deployment’s environment URL is always the site, while a commit status URL is sometimes a build log. It then prefers an environment whose name matches what it’s looking for, so a `production` environment isn’t passed over for a `preview` one on your live branch. Ties go to the newest.
+When more than one reports on the same commit, the CMS prefers a finished build with a page to open, then the source whose URL is most reliable — a deployment’s environment URL is always the site, while a commit status URL is sometimes a build log. It then prefers an environment whose name matches what it’s looking for, so a `production` environment isn’t passed over for a `preview` one on the live branch. Ties go to the newest.
 
-An address is only taken from a finished build. Several providers hand out a placeholder while they work — Cloudflare Pages reports its own dashboard until the build succeeds, then replaces it with the preview address — so nothing is offered until there’s a page behind it. A URL leading back to your Git host is ignored for the same reason: that’s a job log, which every GitLab CI job reports.
+An address is only taken from a finished build. Several providers hand out a placeholder while they work — Cloudflare Pages reports its own dashboard until the build succeeds, then replaces it with the preview address — so nothing is offered until there’s a page behind it. A URL leading back to the Git host is ignored for the same reason: that’s a job log, which every GitLab CI job reports.
 
 A build that was canceled or skipped is ignored, even when the provider reports it as successful. This happens in a monorepo, where a site that the commit didn’t touch still reports a result, and its URL leads to the build log rather than a page.
 
@@ -101,11 +101,11 @@ A build that was canceled or skipped is ignored, even when the provider reports 
 
 A check run’s own link usually leads to a build log rather than a site, so it takes more care than the other two sources.
 
-Every run reports its build state, so a provider these rules have never heard of still tells you that a build on the commit is running or has failed. Offering an address is another matter: only a run whose name suggests a deployment does that, and one that doesn’t is ranked below every one that does — so a green test suite can’t stand in for a build that hasn’t finished. For a run that does look like a deployment, the address is taken in this order:
+Every run reports its build state, so a provider these rules have never heard of still reports that a build on the commit is running or has failed. Offering an address is another matter: only a run whose name suggests a deployment does that, and one that doesn’t is ranked below every one that does — so a green test suite can’t stand in for a build that hasn’t finished. For a run that does look like a deployment, the address is taken in this order:
 
 1. **A URL published in the run’s output.** Cloudflare Pages writes a table of preview URLs into its check summary while linking the check itself at the Cloudflare dashboard, so that table is read and dashboard links in it are passed over.
 2. **The run’s own link, but only if the name says “preview”.** AWS Amplify reports “AWS Amplify Console Web Preview” and links straight to the site.
-3. **Neither.** The build state is still reported — so you see that a build is running or has failed — but no address is offered.
+3. **Neither.** The build state is still reported — so the editor sees that a build is running or has failed — but no address is offered.
 
 If your provider’s naming defeats this, name the check explicitly with [`preview_context`](#specifying-a-status-context).
 
@@ -113,7 +113,7 @@ If your provider’s naming defeats this, name the check explicitly with [`previ
 
 What the control does depends on whether a preview is still on its way.
 
-**While a preview is being built for an unpublished entry**, the button reads **Checking for Preview**, is disabled, and shows a turning icon. The live site isn’t where that entry can be seen — it holds the published version, or nothing at all when the entry is new — so offering that link would send you somewhere else.
+**While a preview is being built for an unpublished entry**, the button reads **Checking for Preview**, is disabled, and shows a turning icon. The live site isn’t where that entry can be seen — it holds the published version, or nothing at all when the entry is new — so offering that link would send the editor somewhere else.
 
 **Otherwise the button is a link**, reading **View Preview** when it points at a deploy preview and **View on Live Site** when it points at the live site. A build that’s still running or has failed is described on the control for screen readers, and shown as a badge on the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page):
 
@@ -125,13 +125,13 @@ What the control does depends on whether a preview is still on its way.
 
 A published entry is never made to wait, whatever its build is doing: the live site genuinely holds that page, so the link stays available.
 
-When no CI/CD provider reports anything — because none is connected, or because it reports in a way the backend doesn’t expose — nothing is lost. You get the same live-site link you always had.
+When no CI/CD provider reports anything — because none is connected, or because it reports in a way the backend doesn’t expose — nothing is lost. The same live-site link as before is shown.
 
 While a build is running, the CMS checks again every 5 seconds, so a preview is offered as soon as it exists. On GitHub each check is a single request; on GitLab it costs one shared call plus one per commit being watched. It gives up after 10 minutes: the icon stops turning, the link comes back, and a **Check for Preview** action appears in the entry editor’s options menu. Reopening the entry starts a fresh round of checks, so a build longer than that isn’t lost.
 
 #### Checking Whether the Page Is Live
 
-A finished build isn’t quite the same as a page you can open: a CDN may not have caught up, and a brand-new entry can 404 for a moment after publishing. Where it can, the CMS requests the page itself and keeps treating the build as unfinished until it answers.
+A finished build isn’t quite the same as a page that can be opened: a CDN may not have caught up, and a brand-new entry can 404 for a moment after publishing. Where it can, the CMS requests the page itself and keeps treating the build as unfinished until it answers.
 
 This check only runs when the page is on the same origin as the CMS — the usual case where the CMS is served from `/admin` on the site it edits. A browser can’t read a cross-origin response without permission from that server, and no major static host grants it, so the request is skipped rather than sent to learn nothing. Deploy previews are almost always on another origin, so their state comes from the provider alone.
 
@@ -181,14 +181,14 @@ preview_context = "Cloudflare Pages"
 
 The name is matched exactly first, and as a partial match if nothing matches exactly — so `cloudflare` finds `Cloudflare Pages` too. Matching is case-insensitive.
 
-Setting this option narrows the search deliberately, so if nothing matches, the CMS reports no preview rather than falling back to a provider you didn’t ask for. Check the name against the status or environment as it appears on your repository if a link stops showing up.
+Setting this option narrows the search deliberately, so if nothing matches, the CMS reports no preview rather than falling back to a provider that wasn’t requested. Check the name against the status or environment as it appears on your repository if a link stops showing up.
 
 ### Limitations
 
-- On GitHub, a workflow that deploys your site but reports no deployment, no commit status and no check run can’t be detected. Publishing to GitHub Pages with the official actions creates a deployment, so it works; a hand-rolled workflow that only uploads files may not.
-- [Cloudflare Workers](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) publishes its preview URL in a pull request comment, which no API surfaces alongside the commit. Its check run still reports whether the build succeeded, so you get the build state without a preview link. Cloudflare Pages, which writes the address into its check output, works fully.
+- On GitHub, a workflow that deploys the site but reports no deployment, no commit status and no check run can’t be detected. Publishing to GitHub Pages with the official actions creates a deployment, so it works; a hand-rolled workflow that only uploads files may not.
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) publishes its preview URL in a pull request comment, which no API surfaces alongside the commit. Its check run still reports whether the build succeeded, so the build state is available without a preview link. Cloudflare Pages, which writes the address into its check output, works fully.
 - Reading a preview URL out of a check run’s output means reading what that provider chose to write. If the format changes, the address is no longer found and the entry falls back to its live-site link — degraded rather than broken.
-- On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to your branch. A project that deploys more often than that may push a Review App out of range, in which case its commit status still covers it.
+- On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to the branch. A project that deploys more often than that may push a Review App out of range, in which case its commit status still covers it.
 - A preview behind access control, such as Vercel’s Deployment Protection, answers the liveness check with an authentication error rather than a page. The CMS treats that as “can’t tell” and leaves the link alone, since it works for anyone signed in.
 
 Source: https://sveltiacms.app/en/docs/workflows/deploy-previews
@@ -218,7 +218,7 @@ Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-fo
 
 ### Configuration
 
-Add the `publish_mode` option to the top level of your CMS configuration file:
+Add the `publish_mode` option to the top level of the CMS configuration file:
 
 ```yaml [YAML]
 publish_mode: editorial_workflow
@@ -313,7 +313,7 @@ Either option can be omitted: a collection without its own `publish_mode` follow
 
 ### How It Works
 
-Nothing an editor does in the CMS touches your configured branch until the change is published. Each entry with unsaved work lives on its own branch with an open pull request, so making a change and releasing it are two separate steps.
+Nothing an editor does in the CMS touches the configured branch until the change is published. Each entry with unsaved work lives on its own branch with an open pull request, so making a change and releasing it are two separate steps.
 
 | Editor action | What happens in Git |
 | --- | --- |
@@ -328,10 +328,10 @@ On GitLab the same applies, with merge requests in place of pull requests.
 
 #### Saving and Sending for Review
 
-Saving an entry doesn’t hand it to anyone — it stays a draft until someone moves it on. So when you save an entry that’s still in the Draft status, the CMS asks what you want to do next:
+Saving an entry doesn’t hand it to anyone — it stays a draft until someone moves it on. So when a user saves an entry that’s still in the Draft status, the CMS asks what to do next:
 
 - **Send for Review** moves the entry to In Review straight away, ready for someone to look at.
-- **Later** leaves it as a draft. You can send it whenever you like, using the status button in the entry editor or by dragging its card between columns on the Editorial Workflow page.
+- **Later** leaves it as a draft. It can be sent whenever the user likes, using the status button in the entry editor or by dragging its card between columns on the Editorial Workflow page.
 
 The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone, and it’s withheld while the entry still has required fields to fill in, because there’s nothing worth handing over yet.
 
@@ -339,13 +339,13 @@ The prompt only appears while an entry is still a draft. Saving one that’s alr
 
 A draft is work in progress, so an entry in the Draft status can be saved with its [required fields](https://sveltiacms.app/en/docs/fields#required) left empty. Nothing is marked as an error, and the entry keeps its pull request like any other draft.
 
-Required fields are enforced as soon as the entry leaves the drafting stage. Moving it to In Review or Ready and publishing it are all refused while a required field is empty, in the entry editor and on the Editorial Workflow page alike, and the fields that need attention are marked so you can find them.
+Required fields are enforced as soon as the entry leaves the drafting stage. Moving it to In Review or Ready and publishing it are all refused while a required field is empty, in the entry editor and on the Editorial Workflow page alike, and the fields that need attention are marked so that they are easy to find.
 
 Every other validation rule applies to a draft save as it always has: a value that breaks a `pattern`, `minlength`, `min` or `max` option is still rejected. Only being empty is excused, and only while the entry is a draft.
 
 **A draft can break your build**
 
-Saving a draft commits it to the workflow branch, so whatever builds that branch has to cope with the missing values. A framework that validates content against a schema — [Astro content collections](https://docs.astro.build/en/guides/content-collections/) with Zod, for example — will fail on a field its schema requires, and the deploy preview for the pull request goes red until the entry is filled in. Nothing reaches your configured branch until the entry is published, so the production build is unaffected.
+Saving a draft commits it to the workflow branch, so whatever builds that branch has to cope with the missing values. A framework that validates content against a schema — [Astro content collections](https://docs.astro.build/en/guides/content-collections/) with Zod, for example — will fail on a field its schema requires, and the deploy preview for the pull request goes red until the entry is filled in. Nothing reaches the configured branch until the entry is published, so the production build is unaffected.
 
 If that gets in the way, make the schema tolerant of drafts — `.optional()` or `.nullable()` on the fields in question — or keep those fields required in the CMS and fill them in before saving.
 
@@ -363,7 +363,7 @@ A pending deletion carries a fourth label, `sveltia-cms/pending_deletion`. It is
 
 An entry in the Draft status is kept as a [draft pull request](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/changing-the-stage-of-a-pull-request) or [draft merge request](https://docs.gitlab.com/user/project/merge_requests/drafts/), so it can’t be merged by accident. Moving the entry to In Review or Ready marks it ready for review.
 
-GitHub and GitLab record this differently: GitHub has a dedicated draft flag, while GitLab marks a draft with a `Draft:` prefix on the merge request title. Sveltia CMS adds and removes that prefix for you, so if you edit a merge request title by hand, keep the prefix intact while the entry is in the Draft status.
+GitHub and GitLab record this differently: GitHub has a dedicated draft flag, while GitLab marks a draft with a `Draft:` prefix on the merge request title. Sveltia CMS adds and removes that prefix automatically, so if a merge request title is edited by hand, keep the prefix intact while the entry is in the Draft status.
 
 #### Custom Label Prefix
 
@@ -405,7 +405,7 @@ cms_label_prefix = "my-cms/"
 
 **Migrating from Netlify/Decap CMS**
 
-Sveltia CMS reads the `netlify-cms/` and `decap-cms/` prefixes as well as your configured one, so pull requests created by Netlify CMS or Decap CMS show up straight away. Labels are always written with your configured prefix, so an imported pull request is migrated the first time its status changes.
+Sveltia CMS reads the `netlify-cms/` and `decap-cms/` prefixes as well as the configured one, so pull requests created by Netlify CMS or Decap CMS show up straight away. Labels are always written with the configured prefix, so an imported pull request is migrated the first time its status changes.
 
 #### Squash Merges
 
@@ -455,7 +455,7 @@ A board with a column for each status is available from the top navigation. Drag
 
 Unpublished entries appear in the entry list alongside published ones, each with a badge showing its status:
 
-- An entry that updates a published one **replaces** it in the list, so you see the pending version rather than what’s currently live.
+- An entry that updates a published one **replaces** it in the list, so the user sees the pending version rather than what’s currently live.
 - An entry that has never been published is listed separately under an **Unpublished Entries** heading, above the published entries.
 
 ### Deleting Entries
@@ -550,7 +550,7 @@ Source: https://sveltiacms.app/en/docs/workflows/editorial
 
 ## Local Development Workflow
 
-Developers can smoothly work with local Git repositories using Sveltia CMS while running it on a local development server. This allows you to test and edit your content locally without needing to push changes to a remote repository first.
+Developers can smoothly work with local Git repositories using Sveltia CMS while running it on a local development server. This allows developers to test and edit content locally without needing to push changes to a remote repository first.
 
 **Breaking changes from Netlify/Decap CMS**
 
@@ -558,7 +558,7 @@ Our local development workflow eliminates the need for a proxy server. For secur
 
 **Another Option: Test Backend**
 
-If you want to test the CMS but don’t want to modify local files, you can use the [Test backend](https://sveltiacms.app/en/docs/backends/test) instead. It lets you connect to a virtual file system in your browser, so you can test the CMS without affecting your local files.
+If you want to test the CMS but don’t want to modify local files, you can use the [Test backend](https://sveltiacms.app/en/docs/backends/test) instead. It lets you connect to a virtual file system in the browser, so the CMS can be tested without affecting your local files.
 
 ### Use Cases
 
@@ -611,7 +611,7 @@ In any Chromium-based browser:
 
 1. Open `http://localhost:[port]/admin/index.html`. Replace `[port]` with the actual port number used by your development server.
 1. Click “Work with Local Repository” and select the project’s root directory once prompted.
-1. Edit your content normally using the CMS. All changes are made to local files.
+1. Edit content normally using the CMS. All changes are made to local files.
 
 #### 3. Preview changes
 
@@ -983,10 +983,10 @@ No specific configuration is required for this workflow. It’s used when the to
 
 The simple workflow allows users to create, edit, and delete entries directly in the connected Git repository without any review process. Here’s how it works:
 
-1. Log in to Sveltia CMS using the standard OAuth authentication process or your access token.
+1. Log in to Sveltia CMS using the standard OAuth authentication process or an access token.
 2. Navigate to the desired collection from the collection list.
 3. Create, edit, or delete entries as needed.
-4. Save your changes. Sveltia CMS will automatically commit and push the changes to the connected Git repository.
+4. Save the changes. Sveltia CMS will automatically commit and push the changes to the connected Git repository.
 
 ### Deploying Changes
 

@@ -1395,7 +1395,7 @@ Sveltia CMS offers various customization options to tailor the admin interface a
 
 ### Site URL
 
-The `site_url` configuration option allows you to specify the URL of your published site. It’s used for the link to the live site in the admin interface, entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option, and public asset URLs. If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
+The `site_url` configuration option allows you to specify the URL of the published site. It’s used for the link to the live site in the admin interface, entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option, and public asset URLs. If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
 
 To link the admin interface to a different URL than the one used for previews and assets, use the [`display_url`](#display-url) option.
 
@@ -1451,7 +1451,7 @@ display_url = "https://www.example.com/blog/"
 
 ### Logout Redirect URL
 
-The `logout_redirect_url` configuration option allows you to specify a custom URL to which users will be redirected after they log out of the Sveltia CMS admin interface. This can be useful for directing users back to your main website or a specific landing page. If omitted, users stay on the CMS sign-in page after logging out.
+The `logout_redirect_url` configuration option allows you to specify a custom URL to which users will be redirected after they log out of the Sveltia CMS admin interface. This can be useful for directing users back to the main website or a specific landing page. If omitted, users stay on the CMS sign-in page after logging out.
 
 ```yaml [YAML]
 logout_redirect_url: https://example.com/logged-out

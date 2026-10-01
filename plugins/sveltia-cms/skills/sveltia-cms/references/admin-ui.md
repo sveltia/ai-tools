@@ -10,7 +10,7 @@ This section provides an overview of the application user interface (UI) of Svel
 
 ### Accessing the Admin UI
 
-You can access the Sveltia CMS admin user interface by navigating to the URL where you deployed the `index.html` file in your static files folder. For example, if you deployed your site to `https://example.com` and placed Sveltia CMS in the `admin` folder, you can access it at `https://example.com/admin/`.
+The Sveltia CMS admin user interface is accessed by navigating to the URL where the `index.html` file in the static files folder is deployed. For example, if the site is deployed to `https://example.com` and Sveltia CMS is placed in the `admin` folder, it is available at `https://example.com/admin/`.
 
 ### Main Components
 
@@ -18,7 +18,7 @@ You can access the Sveltia CMS admin user interface by navigating to the URL whe
 
 The login screen allows users to authenticate with the configured backend using the regular OAuth flow or an access token. See each [backend documentation](https://sveltiacms.app/en/docs/backends) for more details on authentication methods.
 
-When working locally, the [local workflow](https://sveltiacms.app/en/docs/workflows/local) option is also available, allowing you to select a local folder for storing content.
+When working locally, the [local workflow](https://sveltiacms.app/en/docs/workflows/local) option is also available, allowing users to select a local folder for storing content.
 
 Users can sign in using the OAuth flow even locally. The OAuth client should allow `http://localhost` as a valid redirect URI for this to work.
 
@@ -32,7 +32,7 @@ There is also the Quick Add button (`+` icon) in the navigation bar, which allow
 
 The Sveltia CMS UI consists of several main pages:
 
-- [Content Library](https://sveltiacms.app/en/docs/ui/content-library): Manage and organize your content entries.
+- [Content Library](https://sveltiacms.app/en/docs/ui/content-library): Manage and organize content entries.
 - [Content Editor](https://sveltiacms.app/en/docs/ui/content-editor): Create and edit content entries.
 - [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library): Manage and upload media assets.
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page): Manage entries before they are published or deleted. This page only appears when the advanced workflow is enabled.
@@ -52,7 +52,7 @@ The account menu is accessible from the user avatar in the navigation bar. It pr
 
 Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled, which enables certain features and displays the CMS version number.
 
-The Advanced tab also has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in your browser, including unsaved drafts, settings and your sign-in state. Neither affects anything already saved to your repository.
+The Advanced tab also has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in the user’s browser, including unsaved drafts, settings and the sign-in state. Neither affects anything already saved to the repository.
 
 ### General Features
 
@@ -60,13 +60,13 @@ Content editing in Sveltia CMS is designed to be intuitive and efficient. Key fe
 
 #### Themes
 
-You can switch between light and dark themes in the CMS interface. The theme setting is **Automatic** by default, meaning the CMS follows your system’s light or dark appearance and switches with it right away. You can pick Dark or Light at any time in the application settings.
+Users can switch between light and dark themes in the CMS interface. The theme setting is **Automatic** by default, meaning the CMS follows the system’s light or dark appearance and switches with it right away. Users can pick Dark or Light at any time in the application settings.
 
 More appearance options will be added in future releases. Stay tuned!
 
 #### Localization
 
-The CMS interface is available in various languages. The language setting is **Automatic** by default, meaning the CMS follows the language set in your browser — and switches as soon as you change it, without a page reload. You can pick a specific language at any time in the application settings, and the CMS will remember your choice for future sessions.
+The CMS interface is available in various languages. The language setting is **Automatic** by default, meaning the CMS follows the language set in the browser — and switches as soon as it changes, without a page reload. Users can pick a specific language at any time in the application settings, and the CMS will remember the choice for future sessions.
 
 Currently, the following languages are available:
 
@@ -104,7 +104,7 @@ Currently, the following languages are available:
 
 </div>
 
-If you have picked a specific language and your browser’s language later becomes available, the CMS will prompt you to switch to it. The prompt doesn’t appear on the Automatic setting, which already follows your browser. If you dismiss it, you can still change the language in the application settings.
+If a user has picked a specific language and the browser’s language later becomes available, the CMS will prompt the user to switch to it. The prompt doesn’t appear on the Automatic setting, which already follows the browser. If the user dismisses it, they can still change the language in the application settings.
 
 **Compatibility Note**
 
@@ -127,15 +127,15 @@ The following languages are available in Decap CMS but not yet available in Svel
 
 </div>
 
-Unlike Netlify CMS and Decap CMS, Sveltia CMS does not require you to configure the app UI locale. The CMS automatically detects and applies your preferred language based on your browser settings. The `CMS.registerLocale` API method is a noop and the `locale` configuration option is ignored in Sveltia CMS.
+Unlike Netlify CMS and Decap CMS, Sveltia CMS does not require developers to configure the app UI locale. The CMS automatically detects and applies the user’s preferred language based on their browser settings. The `CMS.registerLocale` API method is a noop and the `locale` configuration option is ignored in Sveltia CMS.
 
 **CSP Consideration**
 
-If you’re using a strict Content Security Policy (CSP), you may need to add the `connect-src` directive with the value `https://unpkg.com` to your CSP header to allow the CMS to retrieve locale files for the admin interface other than English (US). See the [Setting up Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) section for more details.
+If the site uses a strict Content Security Policy (CSP), you may need to add the `connect-src` directive with the value `https://unpkg.com` to the CSP header to allow the CMS to retrieve locale files for the admin interface other than English (US). See the [Setting up Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) section for more details.
 
 **Localizers Wanted**
 
-Interested in contributing to Sveltia CMS localization? We welcome contributions from the community! You can help translate the CMS interface into your preferred language. Check out the [localization guide](https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md) for instructions on how to get started.
+Interested in contributing to Sveltia CMS localization? We welcome contributions from the community! Contributors can help translate the CMS interface into their language. Check out the [localization guide](https://github.com/sveltia/sveltia-cms/blob/main/src/lib/locales/README.md) for instructions on how to get started.
 
 #### Keyboard Shortcuts
 
@@ -150,19 +150,19 @@ The following keyboard shortcuts are available in the Sveltia CMS UI:
 
 The Sveltia CMS UI is fully responsive and optimized for mobile devices, providing a seamless experience across different screen sizes, including smartphones and tablets.
 
-When you use the CMS for the first time on desktop, it will show a notification suggesting you to try it on mobile for the best experience. It will show a QR code for passwordless sign-in. Your settings will be automatically copied when you sign via the QR code.
+When a user opens the CMS for the first time on desktop, it will show a notification suggesting that they try it on mobile for the best experience. It will show a QR code for passwordless sign-in. The user’s settings will be automatically copied when they sign in via the QR code.
 
-If you dismiss the notification, the mobile login option will still be available in the user menu.
+If the user dismisses the notification, the mobile login option will still be available in the user menu.
 
 #### Installing as an App
 
-Sveltia CMS is a [progressive web app](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA), which means you can [install it](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing) on your device and use it like a native application. Offline support is not available yet, but it will be added in a future release.
+Sveltia CMS is a [progressive web app](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (PWA), which means users can [install it](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing) on their device and use it like a native application. Offline support is not available yet, but it will be added in a future release.
 
 The application logo and title can be [customized](https://sveltiacms.app/en/docs/customization) with the `logo` and `app_title` configuration options. The default title is “Sveltia CMS”.
 
 **CSP Consideration**
 
-If you’re using a strict Content Security Policy (CSP), you may need to add the `manifest-src` directive with the value `blob:` to your CSP header to allow the CMS to be installed as an app. See the [Setting up Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) section for more details.
+If the site uses a strict Content Security Policy (CSP), you may need to add the `manifest-src` directive with the value `blob:` to the CSP header to allow the CMS to be installed as an app. See the [Setting up Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) section for more details.
 
 #### Developer Mode
 
@@ -188,7 +188,7 @@ We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/
 #### Screen Reader Support
 
 - Full [WAI-ARIA](https://w3c.github.io/aria/) support for screen readers like NVDA and VoiceOver.
-- Announcements are read out when you navigate to another page.
+- Announcements are read out when the user navigates to another page.
 - The rich text editor is built with [Lexical](https://lexical.dev/), which follows accessibility best practices and includes [Dragon NaturallySpeaking support](https://lexical.dev/docs/packages/lexical-dragon).
 
 #### Visual Design
@@ -198,7 +198,7 @@ We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/
 
 #### System Preferences
 
-- Honors your operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) and [high contrast](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) settings.
+- Honors the operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) and [high contrast](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) settings.
 
 ### Supported Browsers
 
@@ -208,7 +208,7 @@ Sveltia CMS works with all modern browsers, but there are a few limitations beca
 - Safari: The [Test backend](https://sveltiacms.app/en/docs/backends/test) requires version 26 or later; [image optimization](https://sveltiacms.app/en/docs/media#image-optimization) is slower than in other browsers.
 - Firefox Extended Support Release (ESR) and its derivatives, including Tor Browser and Mullvad Browser, are not officially supported, although they may still work.
 
-Make sure to use the latest version of your browser for the best experience.
+Make sure to use the latest version of the browser for the best experience.
 
 Source: https://sveltiacms.app/en/docs/ui
 
@@ -216,7 +216,7 @@ Source: https://sveltiacms.app/en/docs/ui
 
 ## Asset Library
 
-Sveltia CMS’s Asset Library allows you to efficiently manage and organize your media files, including images, videos, and documents. It serves as a centralized hub for all your digital assets, making it easy to upload, categorize, and retrieve files as needed — whether they are stored in your Git repository with the [internal media storage](https://sveltiacms.app/en/docs/media/internal) or on an [external media storage provider](https://sveltiacms.app/en/docs/media) such as Amazon S3, Cloudflare R2 or Uploadcare.
+Sveltia CMS’s Asset Library allows users to efficiently manage and organize media files, including images, videos, and documents. It serves as a centralized hub for all digital assets, making it easy to upload, categorize, and retrieve files as needed — whether they are stored in the Git repository with the [internal media storage](https://sveltiacms.app/en/docs/media/internal) or on an [external media storage provider](https://sveltiacms.app/en/docs/media) such as Amazon S3, Cloudflare R2 or Uploadcare.
 
 ### Features
 
@@ -224,21 +224,21 @@ The Asset Library includes the following features:
 
 #### Folder List
 
-The sidebar displays a list of all folders in the repository’s global media folder, as well as any collection-specific media folders. If you have configured any [cloud storage services](https://sveltiacms.app/en/docs/media), they are also listed in the sidebar under **External Locations**.
+The sidebar displays a list of all folders in the repository’s global media folder, as well as any collection-specific media folders. If any [cloud storage services](https://sveltiacms.app/en/docs/media) are configured, they are also listed in the sidebar under **External Locations**.
 
 ##### Internal Locations
 
-Navigate between the global media folder and collection-specific media folders. This allows you to organize assets at both the global level and within individual collections for more granular asset management. Within each of these folders, you can also [browse and manage subfolders](#subfolders).
+Navigate between the global media folder and collection-specific media folders. This allows organizing assets at both the global level and within individual collections for more granular asset management. Within each of these folders, users can also [browse and manage subfolders](#subfolders).
 
 ##### External Locations
 
-Assets in external locations are listed under **External Locations** in the sidebar. This includes any cloud storage services you have configured, as well as a special location for linked files.
+Assets in external locations are listed under **External Locations** in the sidebar. This includes any configured cloud storage services, as well as a special location for linked files.
 
 ###### Cloud Storage Services
 
-Every [cloud storage service](https://sveltiacms.app/en/docs/media) configured with the `media_libraries` option is listed under **External Locations** in the sidebar, at `#/assets/-/{service}` — for example `#/assets/-/uploadcare`. Select a service to browse the files stored there, using the same grid or list views, sorting, type filter and Info pane as a repository folder. A search box lets you narrow the list down by file name.
+Every [cloud storage service](https://sveltiacms.app/en/docs/media) configured with the `media_libraries` option is listed under **External Locations** in the sidebar, at `#/assets/-/{service}` — for example `#/assets/-/uploadcare`. Select a service to browse the files stored there, using the same grid or list views, sorting, type filter and Info pane as a repository folder. A search box narrows the list down by file name.
 
-You’ll be prompted for the service’s secret key or SAS token the first time, just like in the [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) field picker; the credential is stored in your browser only and can be changed later under **Settings > Media**. Files can be uploaded, downloaded, renamed, replaced and deleted directly on the service, subject to what its API allows:
+The user is prompted for the service’s secret key or SAS token the first time, just like in the [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) field picker; the credential is stored in the browser only and can be changed later under **Settings > Media**. Files can be uploaded, downloaded, renamed, replaced and deleted directly on the service, subject to what its API allows:
 
 | Service | Upload | Delete | Rename | Replace |
 | --- | --- | --- | --- | --- |
@@ -255,9 +255,9 @@ Files on external services are previewed straight from the service’s URL, so t
 
 ###### Linked Files
 
-The last item under External Locations, **Linked Files** at `#/assets/-/linked`, gathers every file that a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field links to by URL — a picture hosted on another site, a document on a shared drive, an avatar served by a third-party API — so that you can see all of them in one place and check where each one is used. The list is built from the entries themselves, so it needs no configuration and stays in sync as entries are saved. A URL used by several entries is listed once.
+The last item under External Locations, **Linked Files** at `#/assets/-/linked`, gathers every file that a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field links to by URL — a picture hosted on another site, a document on a shared drive, an avatar served by a third-party API — so that all of them can be seen in one place and check where each one is used. The list is built from the entries themselves, so it needs no configuration and stays in sync as entries are saved. A URL used by several entries is listed once.
 
-Files that live in your repository or on a configured cloud storage service have their own locations, so they aren’t listed here, even when an entry stores them as an absolute URL. Images embedded in Markdown or rich text bodies aren’t scanned either.
+Files that live in the repository or on a configured cloud storage service have their own locations, so they aren’t listed here, even when an entry stores them as an absolute URL. Images embedded in Markdown or rich text bodies aren’t scanned either.
 
 Since these files are hosted elsewhere, they can only be browsed: there is no upload, rename, replace or delete. The Info pane shows the kind, the dimensions or duration of a media file, the URL and the entries using the file, and the Copy menu offers the URL and, where the host allows cross-origin requests, the file data. The file size isn’t available. A URL without a file extension, such as an avatar endpoint, is treated as an image when it comes from an Image field.
 
@@ -267,20 +267,20 @@ The CMS also checks whether each file can still be loaded, and marks one that ca
 
 #### Subfolders
 
-A repository folder is browsed folder by folder, the way a file manager works. The subfolders of the folder you’re in are listed ahead of its assets — as compact tiles in the grid view, or as rows in the list view — and double-clicking one (or a single click or tap on a touch screen or a small screen) opens it. A breadcrumb in the toolbar shows where you are and leads back to any parent folder, and the browser’s Back button works as well, since each folder has its own URL, such as `#/assets/static/images/2024/summer`. The **All Assets** location lists every asset at once instead.
+A repository folder is browsed folder by folder, the way a file manager works. The subfolders of the current folder are listed ahead of its assets — as compact tiles in the grid view, or as rows in the list view — and double-clicking one (or a single click or tap on a touch screen or a small screen) opens it. A breadcrumb in the toolbar shows the current location and leads back to any parent folder, and the browser’s Back button works as well, since each folder has its own URL, such as `#/assets/static/images/2024/summer`. The **All Assets** location lists every asset at once instead.
 
 Click the empty area of the list, or select a folder with a single click or the keyboard, to see the folder’s path and what it holds in the Info pane.
 
 Folders can be managed like assets:
 
-- **Create** a folder with the **New Folder** button in the toolbar. A Git repository can’t hold an empty folder, so the CMS commits a `.gitkeep` placeholder file to keep it in the repository until you upload something to it. The name is sanitized like a file name, and [slugified](https://sveltiacms.app/en/docs/media#slugification-of-filenames) as well if that option is enabled.
-- **Upload** files into the folder you’re in: both the Upload button and drag and drop save the files there.
+- **Create** a folder with the **New Folder** button in the toolbar. A Git repository can’t hold an empty folder, so the CMS commits a `.gitkeep` placeholder file to keep it in the repository until something is uploaded to it. The name is sanitized like a file name, and [slugified](https://sveltiacms.app/en/docs/media#slugification-of-filenames) as well if that option is enabled.
+- **Upload** files into the current folder: both the Upload button and drag and drop save the files there.
 - **Rename** a folder from its options menu. Every asset in the folder, at any depth, is moved along in the same commit, and the File and Image fields and Markdown images that reference them are updated with the new paths.
 - **Delete** a folder and everything in it from its options menu. As with [deleting assets](#asset-management), the entries referencing any of the assets are updated in the same commit, the confirmation dialog says how many, and the deletion is refused if clearing a reference would break a field’s validation rules.
 
 Subfolder browsing applies to any global, collection or [asset collection](https://sveltiacms.app/en/docs/media/internal#asset-collections) folder with a fixed path. A [collection media folder](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration) whose path contains a template tag such as `{{slug}}`, or an [entry-relative folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), doesn’t have a single tree to walk, so its assets are listed all at once as before. A collection media folder nested inside the global media folder is its own location in the sidebar rather than a subfolder of the global one.
 
-When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), a folder that is left empty by a move or deletion is removed from the disk, so the local checkout matches what a Git commit would leave. [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, as those changes are committed straight to the branch.
+When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), a folder that is left empty by a move or deletion is removed from the disk, so the local checkout matches what a Git commit would leave. [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, as those changes are committed straight to the branch.
 
 ##### Folders on External Locations
 
@@ -290,23 +290,23 @@ When you’re [working with a local repository](https://sveltiacms.app/en/docs/w
 
 #### Asset List
 
-Thumbnails are displayed for image, video and PDF files for easy identification. You can switch between grid and list views, and sort or filter assets by name and file type.
+Thumbnails are displayed for image, video and PDF files for easy identification. Users can switch between grid and list views, and sort or filter assets by name and file type.
 
-Thumbnails of entries are also displayed in both grid and list views, making it easier to navigate and identify the assets you need.
+Thumbnails of entries are also displayed in both grid and list views, making it easier to navigate and identify the assets needed.
 
 #### Asset Upload
 
-Upload multiple assets at once by browsing or dragging and dropping files directly into the library, including files in nested folders. When you delete an entry or asset file, the empty folder that contains it is also automatically deleted, so you don’t have to clean it up manually.
+Upload multiple assets at once by browsing or dragging and dropping files directly into the library, including files in nested folders. When an entry or asset file is deleted, the empty folder that contains it is also automatically deleted, so there is no need to clean it up manually.
 
 The CMS prevents the same file from being uploaded twice by comparing file hashes and selecting an existing asset instead.
 
 #### Asset Search
 
-Use the search functionality to quickly find specific assets. You can also filter assets by name or file type to narrow down results. Files on [external locations](#external-locations) are searched with the search box in the location’s own toolbar instead.
+Use the search functionality to quickly find specific assets. Assets can also be filtered by name or file type to narrow down results. Files on [external locations](#external-locations) are searched with the search box in the location’s own toolbar instead.
 
 #### Asset Details
 
-Preview image, audio, video, text and PDF files directly in the Asset Library. Check your site’s Content Security Policy (CSP) if the preview doesn’t work as expected.
+Preview image, audio, video, text and PDF files directly in the Asset Library. Check the site’s Content Security Policy (CSP) if the preview doesn’t work as expected.
 
 View comprehensive asset details including:
 
@@ -317,14 +317,14 @@ View comprehensive asset details including:
 
 #### Asset Management
 
-Manage your assets with a variety of operations:
+Manage assets with a variety of operations:
 
 - **Rename** existing assets. If the asset is used in any entries, the File and Image fields will be automatically updated with the new file path.
 - **Replace** existing assets with new versions.
 - **Edit** plain text assets, including Markdown, JSON, SVG files and other text-based content using the built-in editor.
-- **Copy** the public URL, file path, text data, or image data of a selected asset to your clipboard.
+- **Copy** the public URL, file path, text data, or image data of a selected asset to the clipboard.
 - **Download** one or more selected assets at once.
-- **Delete** one or more selected assets at once. If an asset is used in any entries, those entries are updated in the same commit so that no reference is left dangling: a File or Image field holding it is cleared, or loses that item if it holds several files, and an image embedding it in a Markdown or rich text field is removed. The confirmation dialog says how many entries will be updated. The deletion is refused, though, if clearing a reference would break a field’s own validation rules — a `required` Image field with nothing left, a multi-file field with fewer than `min` files, or a required body with nothing but the image — and the dialog then lists the entries and fields in the way so that you can update them first. The Info pane’s **Used in** list shows what an asset is used by before you start.
+- **Delete** one or more selected assets at once. If an asset is used in any entries, those entries are updated in the same commit so that no reference is left dangling: a File or Image field holding it is cleared, or loses that item if it holds several files, and an image embedding it in a Markdown or rich text field is removed. The confirmation dialog says how many entries will be updated. The deletion is refused, though, if clearing a reference would break a field’s own validation rules — a `required` Image field with nothing left, a multi-file field with fewer than `min` files, or a required body with nothing but the image — and the dialog then lists the entries and fields in the way so that they can be updated first. The Info pane’s **Used in** list shows what an asset is used by before deleting.
 
 **Future Plans**
 
@@ -344,30 +344,30 @@ The Content Editor includes the following features to enhance the content creati
 
 #### Two-Pane Interface
 
-If you have the [Preview Pane](#preview-pane) or [i18n support](#i18n-support) enabled, the Content Editor interface will split into two panes. By default, the Edit Pane is displayed on the left side, while the Preview Pane is on the right. This layout allows you to see a live preview of your content while editing. If the UI language is set to a right-to-left (RTL) language, the arrangement will be reversed. For that reason, the CMS UI calls them the first and second panes rather than the left and right panes.
+If the [Preview Pane](#preview-pane) or [i18n support](#i18n-support) is enabled, the Content Editor interface will split into two panes. By default, the Edit Pane is displayed on the left side, while the Preview Pane is on the right. This layout allows users to see a live preview of the content while editing. If the UI language is set to a right-to-left (RTL) language, the arrangement will be reversed. For that reason, the CMS UI calls them the first and second panes rather than the left and right panes.
 
 The two-pane interface includes the following features:
 
-- **Resizable Panes**: You can adjust the width of each pane by dragging the divider between them, allowing you to customize your workspace according to your preferences.
-- **Swappable Panes**: The small swap button in the middle of the divider switches the two panes around, so the Preview Pane can be on the left and the Edit Pane on the right. The arrangement is remembered per collection, along with the pane widths, and stays in effect until you swap the panes back. If you find the panes on the “wrong” side, this is why — click the button again to restore the default order.
-- **Scroll Synchronization**: When editing long entries, Sveltia CMS synchronizes the scroll position between the Edit Pane and the Preview Pane. This helps you see how your content will look as you write, without having to manually scroll both sections.
+- **Resizable Panes**: Users can adjust the width of each pane by dragging the divider between them, allowing them to customize their workspace according to their preferences.
+- **Swappable Panes**: The small swap button in the middle of the divider switches the two panes around, so the Preview Pane can be on the left and the Edit Pane on the right. The arrangement is remembered per collection, along with the pane widths, and stays in effect until the panes are swapped back. If the panes appear on the “wrong” side, this is why — click the button again to restore the default order.
+- **Scroll Synchronization**: When editing long entries, Sveltia CMS synchronizes the scroll position between the Edit Pane and the Preview Pane. This helps users see how the content will look as they write, without having to manually scroll both sections.
 - **Click-to-Highlight**: Clicking on a field in the Preview Pane highlights the corresponding field in the Edit Pane. If the field is collapsed in the Edit Pane, it will automatically expand when clicked in the Preview Pane. This feature makes it easy to locate and edit specific fields based on their appearance in the preview.
-- **Optional Second Pane**: If you’d rather edit at full width, you can hide the second pane with the Show Second Pane option in the editor menu. Your pane layout is remembered and restored when you bring it back. See [User Settings](#user-settings) for details.
+- **Optional Second Pane**: Users who prefer to edit at full width can hide the second pane with the Show Second Pane option in the editor menu. The pane layout is remembered and restored when the pane is shown again. See [User Settings](#user-settings) for details.
 
 #### Sidebar
 
-The Content Editor includes a sidebar that provides additional information and tools related to the content you are editing. On a small screen, where the sidebar doesn’t fit, its panels are listed in the 3-dot menu and open in a sheet at the bottom of the screen. There are four panels:
+The Content Editor includes a sidebar that provides additional information and tools related to the content being edited. On a small screen, where the sidebar doesn’t fit, its panels are listed in the 3-dot menu and open in a sheet at the bottom of the screen. There are four panels:
 
-- **Slug**: Shows the entry’s slug and lets you edit it. See [Slug Panel](#slug-panel) for details.
-- **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When you click on an error, the corresponding field in the editor will be highlighted. Results appear when you save an entry, and the Validate button in the panel header checks it at any time — against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without, so you can see what’s still missing before the entry can be published.
-- **History**: Shows the commit history of the current content file. When you click on a commit, you’ll see a diff view of the changes made in that commit on your Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
-- **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). When you click on a backlink, you can open the referenced content file in the editor. For example, you can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
+- **Slug**: Shows the entry’s slug and lets users edit it. See [Slug Panel](#slug-panel) for details.
+- **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When a user clicks on an error, the corresponding field in the editor will be highlighted. Results appear when an entry is saved, and the Validate button in the panel header checks it at any time — against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without, so users can see what’s still missing before the entry can be published.
+- **History**: Shows the commit history of the current content file. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
+- **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). Clicking a backlink opens the referenced content file in the editor. For example, users can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
 
 More panels will be added in the future.
 
 #### Auto-Saving Drafts
 
-When creating or editing content, Sveltia CMS automatically saves draft backups in the browser’s local storage. This ensures that your work is not lost in case of accidental navigation away from the page or browser crashes. Drafts are saved periodically as you make changes and can be restored when you return to the editing interface.
+When creating or editing content, Sveltia CMS automatically saves draft backups in the browser’s local storage. This ensures that work is not lost in case of accidental navigation away from the page or browser crashes. Drafts are saved periodically as changes are made and can be restored when the user returns to the editing interface.
 
 Auto-saving draft can be disabled in User Preferences.
 
@@ -375,9 +375,9 @@ Auto-saving draft can be disabled in User Preferences.
 
 The Content Editor offers three ways to start over, side by side in the 3-dot menus:
 
-- **Revert Changes** discards the unsaved changes, bringing back the last saved values. This is useful if you want to undo changes made during the current editing session.
+- **Revert Changes** discards the unsaved changes, bringing back the last saved values. This is useful for undoing changes made during the current editing session.
 - **Restore Default** puts back the values a new entry would have, taking each field’s `default` option into account.
-- **Clear** empties the values, ignoring the defaults, so you can fill in the fields from scratch. A List field is left without items and a KeyValue field without pairs. A required field then has to be filled in again before the entry can be saved.
+- **Clear** empties the values, ignoring the defaults, so that fields can be filled in from scratch. A List field is left without items and a KeyValue field without pairs. A required field then has to be filled in again before the entry can be saved.
 
 They apply to different parts of the entry depending on the menu:
 
@@ -391,27 +391,27 @@ Restoring and clearing leave alone the values a user doesn’t enter: [Hidden](h
 
 #### Slug Panel
 
-An entry’s slug is the identifier that appears in its file name and, in most setups, in its URL on your live site. It’s usually [generated from a template](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs), such as the entry’s title, and is shown in the Slug panel of the [sidebar](#sidebar), which you can also open with the Edit Slug option in the 3-dot menu.
+An entry’s slug is the identifier that appears in its file name and, in most setups, in its URL on the live site. It’s usually [generated from a template](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs), such as the entry’s title, and is shown in the Slug panel of the [sidebar](#sidebar), which can also be opened with the Edit Slug option in the 3-dot menu.
 
-The slug is shown as read-only text, with a pencil button to edit it. While you edit it, it’s checked as you type: a slug cannot contain slashes or whitespace, cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and must match the collection’s [`pattern` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) if any. Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever you type is normalized with your site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
+The slug is shown as read-only text, with a pencil button to edit it. While it’s being edited, it’s checked as the user types: a slug cannot contain slashes or whitespace, cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and must match the collection’s [`pattern` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) if any. Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever is typed is normalized with the site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
 
 If entry slugs are [localized](https://sveltiacms.app/en/docs/i18n/slugs), the panel has a section for each locale, like the Validation panel. Otherwise, there’s a single slug shared by every locale.
 
 ##### New Entries
 
-In a new entry, the panel shows the slug the entry will be saved with, which follows the entry’s content as you edit it. A slug containing a date and time, such as `{{year}}-{{month}}-{{day}}-{{slug}}`, is shown with the current date and time, and gets the date and time of the save. A random ID, such as `{{uuid_short}}`, is kept until the entry is saved, so the entry is saved with the slug you see.
+In a new entry, the panel shows the slug the entry will be saved with, which follows the entry’s content as it is edited. A slug containing a date and time, such as `{{year}}-{{month}}-{{day}}-{{slug}}`, is shown with the current date and time, and gets the date and time of the save. A random ID, such as `{{uuid_short}}`, is kept until the entry is saved, so the entry is saved with the slug shown.
 
-Once you give a slug of your own with the pencil button, it no longer follows the entry’s content. To go back to the generated slug, edit the slug and empty it.
+Once a user gives a custom slug with the pencil button, it no longer follows the entry’s content. To go back to the generated slug, edit the slug and empty it.
 
-If the collection is configured to [have users type the slug](https://sveltiacms.app/en/docs/collections/entries/slugs#having-users-type-the-slug), the panel shows a regular text field instead, opens by itself when you create an entry, and the entry can’t be saved until a slug has been entered.
+If the collection is configured to [have users type the slug](https://sveltiacms.app/en/docs/collections/entries/slugs#having-users-type-the-slug), the panel shows a regular text field instead, opens by itself when a user creates an entry, and the entry can’t be saved until a slug has been entered.
 
 ##### Saved Entries
 
-In a saved entry, the pencil button renames the entry. The new slug takes effect when you save the entry, and saving does three things in a single commit:
+In a saved entry, the pencil button renames the entry. The new slug takes effect when the entry is saved, and saving does three things in a single commit:
 
 - **Renames the file.** The entry moves to the file path matching its new slug. Git records this as a rename, so the file’s history is preserved. In a nested collection the entry’s folder is renamed instead, and everything below it moves along: the entries stored there and, with [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), the files of each [page bundle](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). The entry keeps its place in the tree — renaming never files it under a different parent, which is what the [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) field is for.
-- **Adds a redirect.** If the collection has a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, the entry’s previous URL is recorded in its data so your framework can redirect visitors from the old URL to the new one. See [Redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects).
-- **Updates references.** Every entry that points at this one through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is rewritten to reference the new slug, so no links between entries are left dangling. You can see which entries will be updated in the Backlinks panel of the [sidebar](#sidebar) before you save.
+- **Adds a redirect.** If the collection has a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, the entry’s previous URL is recorded in its data so the framework can redirect visitors from the old URL to the new one. See [Redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects).
+- **Updates references.** Every entry that points at this one through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is rewritten to reference the new slug, so no links between entries are left dangling. The Backlinks panel of the [sidebar](#sidebar) shows which entries will be updated before saving.
 
 In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) where every entry is stored as an index file, the folder holding an entry is what identifies it, so the panel shows that folder’s name rather than the path leading to it, with a Rename Folder button. The folder is shared by every locale unless the slugs are localized. A name is only in the way if another folder in the same parent already uses it, so the same name can appear elsewhere in the tree. The rules differ slightly from a slug’s: spaces are allowed and become hyphens, while a name that starts with a dot, which would hide the folder, or that keeps no letter or number once normalized, is rejected.
 
@@ -425,18 +425,18 @@ The option isn’t offered in [file and singleton collections](https://sveltiacm
 
 #### View on Live Site
 
-The 3-dot menu in the Content Editor includes a View on Live Site option. This allows you to quickly open the live version of the entry you are editing, making it easy to check how the current content appears on the actual website.
+The 3-dot menu in the Content Editor includes a View on Live Site option. This allows users to quickly open the live version of the entry being edited, making it easy to check how the current content appears on the actual website.
 
 #### View Source
 
-When Developer Mode is enabled, the 3-dot menu in the Content Editor provides a View Source option. This allows you to quickly open the source file of the entry or asset in your Git repository, making it easy to review or edit the raw content.
+When Developer Mode is enabled, the 3-dot menu in the Content Editor provides a View Source option. This allows users to quickly open the source file of the entry or asset in the Git repository, making it easy to review or edit the raw content.
 
 #### I18n Support
 
-If [internationalization](https://sveltiacms.app/en/docs/i18n) (i18n) is enabled in your Sveltia CMS configuration, the Content Editor provides support for managing translations of your content. You can switch between different language versions of the content you are editing, making it easy to create and maintain multilingual sites.
+If [internationalization](https://sveltiacms.app/en/docs/i18n) (i18n) is enabled in the Sveltia CMS configuration, the Content Editor provides support for managing translations of the content. Users can switch between different language versions of the content being edited, making it easy to create and maintain multilingual sites.
 
-- **Language Switcher**: A language switcher is available in the editor interface, allowing you to select the desired language for editing and preview. If there are any errors or missing translations, they will be indicated in the switcher.
-- **Translate Button**: A Translate button is provided to translate all or specific text-type fields using a third-party [translation service](https://sveltiacms.app/en/docs/integrations/translations). This feature can help speed up the process of creating translations for your content.
+- **Language Switcher**: A language switcher is available in the editor interface, allowing users to select the desired language for editing and preview. If there are any errors or missing translations, they will be indicated in the switcher.
+- **Translate Button**: A Translate button is provided to translate all or specific text-type fields using a third-party [translation service](https://sveltiacms.app/en/docs/integrations/translations). This feature can help speed up the process of creating translations for the content.
 - **Copy Button**: A Copy button is available to copy content from one language version to another, facilitating the translation process.
 
 See also the [Linking to Content Editor](#linking-to-content-editor) section for information on setting the editor pane locale via URL.
@@ -452,17 +452,17 @@ Standard keyboard shortcuts are also available in the Markdown editor, including
 
 ### Linking to Content Editor
 
-Sveltia CMS allows you to link directly to specific states of the Content Editor using URL query parameters. This can be useful for sharing links to specific entries or pre-filling fields when creating new entries.
+Sveltia CMS supports linking directly to specific states of the Content Editor using URL query parameters. This can be useful for sharing links to specific entries or pre-filling fields when creating new entries.
 
 #### Opening Specific Entries
 
-You can link directly to the Content Editor for a specific entry in an [entry collection](https://sveltiacms.app/en/docs/collections/entries) using the following URL format:
+Links can point directly to the Content Editor for a specific entry in an [entry collection](https://sveltiacms.app/en/docs/collections/entries) using the following URL format:
 
 ```
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/entries/ENTRY_ID
 ```
 
-Where `ENTRY_ID` is the entry’s file path within the collection folder, without the file extension. The same format works for a [file/singleton collection](https://sveltiacms.app/en/docs/collections/files), where `ENTRY_ID` is the file’s `name` in your configuration.
+Where `ENTRY_ID` is the entry’s file path within the collection folder, without the file extension. The same format works for a [file/singleton collection](https://sveltiacms.app/en/docs/collections/files), where `ENTRY_ID` is the file’s `name` in the configuration.
 
 **Migrating from Netlify/Decap CMS**
 
@@ -472,7 +472,7 @@ Netlify/Decap CMS also accepts a shorthand for the same link, which it documents
 https://YOUR_DOMAIN/admin/#/edit/COLLECTION_NAME/ENTRY_ID
 ```
 
-Sveltia CMS accepts it too and redirects to the URL above, so any link you’ve already shared keeps working. Use the full format for new links.
+Sveltia CMS accepts it too and redirects to the URL above, so any link already shared keeps working. Use the full format for new links.
 
 #### Dynamic Default Values
 
@@ -484,7 +484,7 @@ The URL format for pre-filling fields is as follows:
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/new?field1=value1&field2=value2
 ```
 
-Where `field1`, `field2`, etc. are the names of the fields you want to pre-fill with `value1`, `value2`, etc. Some notes on using this feature:
+Where `field1`, `field2`, etc. are the names of the fields to pre-fill with `value1`, `value2`, etc. Some notes on using this feature:
 
 - Make sure to [URL-encode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) the parameter values.
 - Use dot notation to target nested fields (e.g. `author.name=John%20Doe`).
@@ -584,9 +584,9 @@ https://example.com/admin/#/collections/posts/new?title=My%20First%20Post&author
 
 #### Editor Pane Locale
 
-By default, Sveltia CMS uses the default locale for the Content Editor pane. However, you can specify a different locale for the editor pane using a URL query parameter when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled.
+By default, Sveltia CMS uses the default locale for the Content Editor pane. However, a different locale can be specified for the editor pane using a URL query parameter when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled.
 
-To set the editor pane locale, append the `_locale` query parameter to the CMS URL with the desired locale code. For example, to open the editor pane in French (`fr`), you would use the following URL:
+To set the editor pane locale, append the `_locale` query parameter to the CMS URL with the desired locale code. For example, to open the editor pane in French (`fr`), use the following URL:
 
 ```
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/entries/ENTRY_ID?_locale=fr
@@ -602,31 +602,31 @@ The query parameter can be combined with [dynamic default values](#dynamic-defau
 
 #### Entry Slug
 
-When creating a new entry, you can also give it a slug with the `_slug` query parameter. For example:
+When creating a new entry, a slug can also be given with the `_slug` query parameter. For example:
 
 ```
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/new?title=My%20First%20Post&_slug=2025-06-15-my-first-post
 ```
 
-The slug is only used if the collection allows users to edit the slug when creating an entry, which is the default. See [Making Slugs Editable](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable). It shows up in the [Slug panel](#slug-panel) like a slug you typed yourself, and it’s checked the same way when the entry is saved. If slugs are localized, it applies to the default locale.
+The slug is only used if the collection allows users to edit the slug when creating an entry, which is the default. See [Making Slugs Editable](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable). It shows up in the [Slug panel](#slug-panel) like a slug typed by the user, and it’s checked the same way when the entry is saved. If slugs are localized, it applies to the default locale.
 
 ### Saving Behavior
 
 #### Save and Publish Options
 
-When the `skip_ci` backend option is enabled, the Save button in the Content Editor has a dropdown menu that allows you to choose between two saving options. See the [Disabling Automatic Deployments](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) section for more details.
+When the `skip_ci` backend option is enabled, the Save button in the Content Editor has a dropdown menu that allows users to choose between two saving options. See the [Disabling Automatic Deployments](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) section for more details.
 
 #### Auto-Close Editor
 
-When you save your changes, the Content Editor automatically closes the editing interface and returns you to the collection or file list. This streamlines the workflow by reducing the number of clicks needed to return to the main interface after saving. If you prefer to stay in the editor after saving, you can change this behavior in User Preferences.
+When a user saves changes, the Content Editor automatically closes the editing interface and returns to the collection or file list. This streamlines the workflow by reducing the number of clicks needed to return to the main interface after saving. Users who prefer to stay in the editor after saving can change this behavior in User Preferences.
 
 #### Conflict Resolution
 
 Several people can work on a site at the same time. Sveltia CMS keeps an eye on the repository so that a change one of them pushes isn’t lost when another saves over it:
 
-- **When you open an entry**, the branch is checked for new commits, so you start from the entry as it is, not as it was when you signed in.
-- **While you edit**, the check is repeated every minute and whenever you come back to the tab. It’s a single small request to the backend, and only files that have actually changed are fetched, so the entry and asset lists follow the repository without a reload. If someone changes the entry you have open, a notice appears at the top of the editor saying who changed it and when. Reload Entry starts you over from their version — after asking, if you have unsaved changes — while dismissing the notice lets you carry on with your own.
-- **When you save**, the branch is checked once more. If the entry has been changed or deleted since you opened it, a dialog says so, and nothing is written until you choose Save Anyway. Saving over a change replaces it with yours; saving a deleted entry creates it again.
+- **When a user opens an entry**, the branch is checked for new commits, so they start from the entry as it is, not as it was when they signed in.
+- **While a user edits**, the check is repeated every minute and whenever they come back to the tab. It’s a single small request to the backend, and only files that have actually changed are fetched, so the entry and asset lists follow the repository without a reload. If someone changes the entry that is open, a notice appears at the top of the editor saying who changed it and when. Reload Entry starts over from their version — after asking, if there are unsaved changes — while dismissing the notice lets the user carry on with their own.
+- **When a user saves**, the branch is checked once more. If the entry has been changed or deleted since it was opened, a dialog says so, and nothing is written until the user chooses Save Anyway. Saving over a change replaces it with theirs; saving a deleted entry creates it again.
 - **On GitHub**, the commit also names the branch head it expects, so a commit against a branch that moved in the last moment is refused by GitHub rather than applied. Sveltia CMS then explains what happened, and saving again picks the other change up first.
 
 Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), each unpublished entry lives on its own branch that nobody else writes to, so these checks don’t apply there; a conflict with the main branch, if any, is dealt with when the entry is published.
@@ -639,15 +639,15 @@ Developers can enhance the content editing experience by providing real-time pre
 
 **Info**
 
-Please note that, due to the nature of framework-agnostic design, we don’t plan to support live site previews that fetch data from the actual website. If you need this feature, consider using a framework-specific CMS solution.
+Please note that, due to the nature of framework-agnostic design, we don’t plan to support live site previews that fetch data from the actual website. If this feature is needed, consider using a framework-specific CMS solution.
 
 #### Disabling Previews
 
-Previews are enabled by default. However, if you want to disable the preview feature entirely, you can do so at different levels:
+Previews are enabled by default. However, to disable the preview feature entirely, do so at different levels:
 
 ##### Global
 
-Add the following configuration to the top level of your `config.yml` file:
+Add the following configuration to the top level of the `config.yml` file:
 
 ```yaml [YAML]
 editor:
@@ -677,7 +677,7 @@ preview = false
 
 ##### Collection-Level
 
-Add the same `editor` option to a specific collection in your `config.yml` file:
+Add the same `editor` option to a specific collection in the `config.yml` file:
 
 ```yaml [YAML]
 collections:
@@ -729,7 +729,7 @@ preview = false
 
 ##### File-Level
 
-Add the same `editor` option to a specific file in your `config.yml` file:
+Add the same `editor` option to a specific file in the `config.yml` file:
 
 ```yaml
 files:
@@ -781,7 +781,7 @@ preview = false
 
 ##### Field-Level
 
-Add the `preview` option to a specific field in your `config.yml` file:
+Add the `preview` option to a specific field in the `config.yml` file:
 
 ```yaml [YAML]
 fields:
@@ -834,13 +834,13 @@ Sveltia CMS allows developers to create custom preview templates and styles to p
 
 #### Live Preview
 
-Sveltia CMS does not plan to support WYSIWYG live site previews that fetch data from the actual website, due to its framework-agnostic design. If you require this feature, consider using a framework-specific CMS solution.
+Sveltia CMS does not plan to support WYSIWYG live site previews that fetch data from the actual website, due to its framework-agnostic design. If this feature is required, consider using a framework-specific CMS solution.
 
 #### User Settings
 
 End-users can control the editor layout in the CMS UI using the menu located at the top-right corner of the editor interface. These preferences are saved in the browser, allowing users to maintain their preferred layout across sessions.
 
-- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale. The pane layout, including any width you’ve set by dragging the divider and whether you’ve swapped the panes, is remembered per collection and restored when you turn the option back on.
+- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale. The pane layout, including any width set by dragging the divider and whether the panes have been swapped, is remembered per collection and restored when the option is turned back on.
 - **Show Preview**: Chooses whether the second pane shows the preview. When [i18n support](#i18n-support) is enabled, turning it off puts another locale’s Edit Pane in the second pane instead.
 - **Sync Scrolling**: Turns scroll synchronization between the two panes on or off. This is enabled by default.
 
@@ -854,7 +854,7 @@ Source: https://sveltiacms.app/en/docs/ui/content-editor
 
 ## Content Library
 
-Manage your entries and files in one place. The Content Library provides a centralized location to organize, search, and manage all your contents efficiently.
+Manage entries and files in one place. The Content Library provides a centralized location to organize, search, and manage all contents efficiently.
 
 ### Features
 
@@ -864,9 +864,9 @@ Displays all [collections](https://sveltiacms.app/en/docs/collections) with entr
 
 Customization options include:
 
-- Collection labels can be defined using the `label` option in your collection configuration.
-- Collection icons can be set using the [`icon` option](https://sveltiacms.app/en/docs/collections#icons) in your collection configuration.
-- Dividers can be added between collections using the [`divider` option](https://sveltiacms.app/en/docs/collections#dividers) in your collection configuration.
+- Collection labels can be defined using the `label` option in the collection configuration.
+- Collection icons can be set using the [`icon` option](https://sveltiacms.app/en/docs/collections#icons) in the collection configuration.
+- Dividers can be added between collections using the [`divider` option](https://sveltiacms.app/en/docs/collections#dividers) in the collection configuration.
 
 #### Entry List
 
@@ -874,7 +874,7 @@ To access the Entry List, navigate to the Content Library and select a collectio
 
 ##### Entry Summaries
 
-To customize the information displayed for each entry in the Entry List, you can define a [summary field](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) in your entry collection configuration. This allows you to highlight specific fields that are most relevant to your workflow. For file collections, the filename is used as the summary.
+To customize the information displayed for each entry in the Entry List, a [summary field](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) can be defined in the entry collection configuration. This allows highlighting specific fields that are most relevant to the workflow. For file collections, the filename is used as the summary.
 
 ##### View Modes
 
@@ -896,6 +896,6 @@ Users can select multiple entries to delete them at once, streamlining content m
 
 #### Content Search
 
-Instant full-text search across all entries and files helps you find content quickly. Search results are ranked by relevance to ensure you get the most pertinent results first.
+Instant full-text search across all entries and files helps users find content quickly. Search results are ranked by relevance to ensure the most pertinent results come first.
 
 Source: https://sveltiacms.app/en/docs/ui/content-library

@@ -10,7 +10,7 @@ Sveltia CMS supports multiple media storage providers for managing media assets 
 
 **Note for Netlify/Decap CMS users**
 
-In Sveltia CMS, the term “media storage provider” is used instead of “media library” to avoid confusion with Sveltia CMS’s [Asset Library feature](https://sveltiacms.app/en/docs/ui/asset-library) that allows you to manage media assets from multiple sources in one place. There is no change in functionality or configuration; it’s simply a terminology update.
+In Sveltia CMS, the term “media storage provider” is used instead of “media library” to avoid confusion with Sveltia CMS’s [Asset Library feature](https://sveltiacms.app/en/docs/ui/asset-library) that lets users manage media assets from multiple sources in one place. There is no change in functionality or configuration; it’s simply a terminology update.
 
 ### Internal Storage
 
@@ -183,7 +183,7 @@ media_library:
 
 ### Additional Features
 
-A couple of additional features are available to enhance your media management experience. These features apply to the internal media storage and to files uploaded to external storage providers, except for Cloudinary, which uses its own Media Library widget.
+A couple of additional features are available to enhance media management. These features apply to the internal media storage and to files uploaded to external storage providers, except for Cloudinary, which uses its own Media Library widget.
 
 The configuration goes in the `media_libraries` option, under the `all` key. For the internal media storage, these options can be overridden by the same options in `media_libraries.default.config`. A File or Image field can also have its own `media_libraries.all` options, which are merged into the global ones. For the internal media storage, the options are applied in this order, each overriding the previous ones: the top-level `all`, the top-level `default.config`, the field-level `all` and the field-level `default.config`. So a field-level `all` option takes precedence over the same option in the top-level `default.config`.
 
@@ -411,9 +411,9 @@ Keep these points in mind:
 - If a file with the same name already exists in the folder, a number is appended to the new filename, like `20260929-392bdcf3b642-1.jpg`.
 - A file that replaces an existing asset keeps the name of that asset.
 
-When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So you can also use the tags that refer to the entry, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value. The file is shown with the new filename in the field before the entry is saved, and the name follows any changes to the entry until then. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
+When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So the tags that refer to the entry can also be used, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value. The file is shown with the new filename in the field before the entry is saved, and the name follows any changes to the entry until then. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
 
-In a multilingual entry, the tags are filled with the content of the default locale, so a file used in several locales has the same name everywhere. If you rename the file by hand before saving the entry, the template no longer applies to the file.
+In a multilingual entry, the tags are filled with the content of the default locale, so a file used in several locales has the same name everywhere. If the user renames the file by hand before saving the entry, the template no longer applies to the file.
 
 A file uploaded in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) or to an external storage provider is renamed right away, without an entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
 
@@ -780,7 +780,7 @@ content/posts/de/my-first-post/index.md   # cover: image1.jpg
 content/posts/en/my-first-post/image1.jpg
 ```
 
-Sveltia CMS resolves that path across locales, so the image appears in the content editor whichever locale you are editing. Your framework may not: taken literally from the German entry’s own folder, `image1.jpg` points at a file that isn’t there. Hugo resolves it for page bundles, where [a bundle inherits the resources of its translated pages](https://gohugo.io/content-management/multilingual/), as long as the two are linked as translations. If your framework has no such mechanism, prefer the `multiple_files` structure, which keeps the media next to every locale’s file.
+Sveltia CMS resolves that path across locales, so the image appears in the content editor whichever locale the user is editing. Your framework may not: taken literally from the German entry’s own folder, `image1.jpg` points at a file that isn’t there. Hugo resolves it for page bundles, where [a bundle inherits the resources of its translated pages](https://gohugo.io/content-management/multilingual/), as long as the two are linked as translations. If your framework has no such mechanism, prefer the `multiple_files` structure, which keeps the media next to every locale’s file.
 
 If you want to organize media files in a subfolder within each entry folder, you can specify the subfolder name in the `media_folder` and `public_folder` options.
 
@@ -1304,10 +1304,10 @@ There are two main ways to use the internal media storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, you can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Click the Browse button to open the media picker, where you can select existing assets or upload new ones, browsing the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and creating new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Clicking the Browse button opens the media picker, where users can select existing assets or upload new ones, browsing the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and creating new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
 
 #### Standalone Asset Library
 
-You can access the Asset Library from the main navigation menu in the CMS interface. Here, you can view, upload, and manage all your media assets in one place. You can view assets in a grid or list format, browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
+The Asset Library is accessible from the main navigation menu in the CMS interface. Here, users can view, upload, and manage all media assets in one place. Assets can be viewed in a grid or list format, and users can browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files and view asset details such as file size, dimensions and a list of entries using the asset.
 
 Source: https://sveltiacms.app/en/docs/media/internal

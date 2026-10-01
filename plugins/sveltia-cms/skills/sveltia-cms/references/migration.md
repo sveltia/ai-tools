@@ -127,7 +127,7 @@ Sveltia CMS is still in beta. Although it’s already being used in production b
 
 ### Examples
 
-Still not sure if Sveltia CMS is the right choice for you? Check out the following examples of sites that have been migrated from Netlify CMS and Decap CMS to see how other users have successfully transitioned to Sveltia CMS.
+Still not sure if Sveltia CMS is the right choice? Check out the following examples of sites that have been migrated from Netlify CMS and Decap CMS to see how other users have successfully transitioned to Sveltia CMS.
 
 - [Examples of sites migrated from Netlify CMS](https://sveltiacms.app/en/showcase?migrated-from=netlify-cms)
 - [Examples of sites migrated from Decap CMS](https://sveltiacms.app/en/showcase?migrated-from=decap-cms)
@@ -136,7 +136,7 @@ Still not sure if Sveltia CMS is the right choice for you? Check out the followi
 
 We have made Sveltia CMS highly compatible with Netlify/Decap CMS, allowing more users to seamlessly switch to our modern successor. In most cases, Sveltia CMS can be used as a drop-in replacement for Netlify/Decap CMS with just a one-line code update.
 
-However, we never planned to achieve 100% feature parity, so some features will not be added due to deprecation and other factors. See the compatibility information below to learn how your site may be affected by the migration.
+However, we never planned to achieve 100% feature parity, so some features will not be added due to deprecation and other factors. See the compatibility information below to learn how the site may be affected by the migration.
 
 #### Current Limitations
 
@@ -206,7 +206,7 @@ There are some differences in behavior between Sveltia CMS and Netlify/Decap CMS
 - By default, Sveltia CMS does not slugify uploaded filenames, as mentioned in the [asset management](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-asset-management) section. If your site generator expects hyphenated filenames, you can enable the `slugify_filename` [internal media storage option](https://sveltiacms.app/en/docs/media#slugification-of-filenames).
 - In some cases, the [data output](https://sveltiacms.app/en/docs/data-output) of Sveltia CMS may differ from that of Netlify/Decap CMS. Notably, Sveltia CMS does not omit empty optional fields by default. If you have data validation in your site generator, this could cause issues. Use the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) if needed.
 - Sveltia CMS requires a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), meaning it only works with HTTPS, `localhost` or `127.0.0.1` URLs. If you’re running your own remote server and serving content over HTTP, the CMS will not work. We recommend obtaining a TLS certificate from [Let’s Encrypt](https://letsencrypt.org/).
-- In Sveltia CMS, the `sanitize_preview` option for the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type is set to `true` by default to prevent potential XSS attacks via entry previews. Decap CMS made the same change in version 3.13.0, so this only affects you if you’re migrating from Netlify CMS or an earlier version of Decap CMS. We recommend keeping this option enabled unless disabling it fixes a broken preview and you fully trust all users of your CMS.
+- In Sveltia CMS, the `sanitize_preview` option for the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type is set to `true` by default to prevent potential XSS attacks via entry previews. Decap CMS made the same change in version 3.13.0, so this only affects sites migrating from Netlify CMS or an earlier version of Decap CMS. We recommend keeping this option enabled unless disabling it fixes a broken preview and you fully trust all users of the CMS.
 - In Sveltia CMS, the `show_in_header` option for the [custom logo](https://sveltiacms.app/en/docs/customization#custom-logo) defaults to `true`, so the logo appears in the header of the admin interface. In Decap CMS, it’s hidden unless the option is set to `true`. To hide it, set `show_in_header: false` explicitly.
 - In Sveltia CMS, the `create` option for [entry collections](https://sveltiacms.app/en/docs/collections/entries) defaults to `true` because, in 99.99% of cases, users want to create new entries and adding `create: true` to every collection is redundant. To disable entry creation, set `create: false` explicitly.
 - We provide only one npm package, `@sveltia/cms`, which includes all necessary code, while Netlify/Decap CMS provides [many packages](https://github.com/decaporg/decap-cms/tree/main/packages). This means `import` statement migration is not always straightforward. See the [migration steps](#migration-steps) below for details.
@@ -273,7 +273,7 @@ From Decap CMS:
 
 Next, let’s [test Sveltia CMS on your local machine](https://sveltiacms.app/en/docs/workflows/local). If everything looks good, push the change to your repository.
 
-You can now open `https://[hostname]/admin/` as usual to start editing. There is even no authentication process if you’re already signed in with a backend on Netlify/Decap CMS because Sveltia CMS uses your auth token stored in the browser. Simple enough!
+You can now open `https://[hostname]/admin/` as usual to start editing. There is even no authentication process if you’re already signed in with a backend on Netlify/Decap CMS because Sveltia CMS uses the auth token stored in the browser. Simple enough!
 
 ##### Using Package Manager
 
@@ -403,7 +403,7 @@ Sveltia CMS is partially compatible with [Static CMS](https://github.com/StaticJ
 
 ### Compatibility
 
-Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/decap-migration-guide) while Sveltia CMS mostly follows Netlify/Decap CMS, so you should review your configuration carefully.
+Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/decap-migration-guide) while Sveltia CMS mostly follows Netlify/Decap CMS, so the configuration should be reviewed carefully.
 
 #### Configuration Options
 

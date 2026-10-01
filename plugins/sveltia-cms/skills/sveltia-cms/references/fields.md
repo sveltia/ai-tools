@@ -82,7 +82,7 @@ An exception is the Hidden field type that only supports `name`, `widget`, `defa
 
 The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields`, and so on.
 
-The naming convention for field names is typically `snake_case` or `camelCase` — it’s up to you to choose a consistent style. However, it cannot contain spaces, periods (`.`), asterisks (`*`), colons (`:`) or angle brackets (`<`, `>`).
+The naming convention for field names is typically `snake_case` or `camelCase` — the choice is yours, but keep the style consistent. However, it cannot contain spaces, periods (`.`), asterisks (`*`), colons (`:`) or angle brackets (`<`, `>`).
 
 There are two special field names to be aware of:
 

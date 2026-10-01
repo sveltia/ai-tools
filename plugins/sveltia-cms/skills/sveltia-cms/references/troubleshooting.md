@@ -111,11 +111,11 @@ Source: https://sveltiacms.app/en/docs/troubleshooting
 
 ## Security
 
-Security is a top priority for Sveltia CMS so that you can manage your content with confidence. This document outlines the security features and practices of Sveltia CMS. It also provides best practices for securing your CMS installation.
+Security is a top priority for Sveltia CMS so that content can be managed with confidence. This document outlines the security features and practices of Sveltia CMS. It also provides best practices for securing your CMS installation.
 
 ### Our Approach
 
-Sveltia CMS employs multiple layers of security measures to protect your data and ensure a safe content management experience. Our security approach includes the following features and practices:
+Sveltia CMS employs multiple layers of security measures to protect data and ensure a safe content management experience. Our security approach includes the following features and practices:
 
 #### Security Features
 

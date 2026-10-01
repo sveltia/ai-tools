@@ -231,7 +231,7 @@ To collaborate with others, you need to invite them to your repository on the ba
 
 Then, share the admin interface URL with them so they can access Sveltia CMS.
 
-Several people can edit content at the same time. Sveltia CMS notices when someone else has changed an entry you have open and asks before letting you save over their change. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
+Several people can edit content at the same time. Sveltia CMS notices when someone else has changed an entry that is open and asks before letting the user save over their change. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
 
 #### Iterate and Improve
 
@@ -277,7 +277,7 @@ Headless CMSs vary in framework support. Some integrate with specific frameworks
 
 CMSs are offered as SaaS solutions with provider-managed hosting and subscription pricing, or as self-hosted options for greater control but requiring more expertise.
 
-**Sveltia CMS** is semi-self-hosted: the CMS is served from a CDN (no maintenance needed), but each project has its own instance with content stored in your Git repository for full control.
+**Sveltia CMS** is semi-self-hosted: the CMS is served from a CDN (no maintenance needed), but each project has its own instance with content stored in the project’s Git repository for full control.
 
 #### Web vs. Desktop
 
@@ -334,15 +334,15 @@ Since the CDN always serves the latest version, you never need to manually updat
 
 #### Single-Page Application
 
-When you open the HTML file in your browser, Sveltia CMS initializes completely client-side as a [single-page application](https://developer.mozilla.org/en-US/docs/Glossary/SPA) (SPA) using [hash routing](https://developer.mozilla.org/en-US/docs/Glossary/Hash_routing) for navigation. All content processing and user interface rendering happen in your browser without needing a backend server (authentication with GitHub is the only exception).
+When the HTML file is opened in a browser, Sveltia CMS initializes completely client-side as a [single-page application](https://developer.mozilla.org/en-US/docs/Glossary/SPA) (SPA) using [hash routing](https://developer.mozilla.org/en-US/docs/Glossary/Hash_routing) for navigation. All content processing and user interface rendering happen in the browser without needing a backend server (authentication with GitHub is the only exception).
 
 #### YAML Configuration
 
-On startup, Sveltia CMS automatically reads `config.yml` from the same directory as your HTML file — no path specification needed. This configuration file defines your backend, media folders, and content collections.
+On startup, Sveltia CMS automatically reads `config.yml` from the same directory as the HTML file — no path specification needed. This configuration file defines your backend, media folders, and content collections.
 
 #### Git Backend
 
-Once you authenticate with your Git service provider, you can access and manage content through a user-friendly interface. End-users never need to interact with Git directly; all operations are handled through the provider’s API behind the scenes.
+Once a user authenticates with the Git service provider, they can access and manage content through a user-friendly interface. End-users never need to interact with Git directly; all operations are handled through the provider’s API behind the scenes.
 
 #### All Files in One Place
 
