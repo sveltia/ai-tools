@@ -1,12 +1,12 @@
 # Migration Guides
 
-Migrating from Netlify CMS, Decap CMS or Static CMS, and upgrading from earlier Sveltia CMS versions.
+Migrating from Netlify CMS, Decap CMS, Static CMS or Pages CMS, and upgrading from earlier Sveltia CMS versions.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Migration Guides
 
-This document provides guidance on migrating from other CMS platforms to Sveltia CMS. Specific instructions are provided for Netlify/Decap CMS.
+This document provides guidance on migrating from other CMS platforms to Sveltia CMS. Specific instructions are provided for Netlify/Decap CMS, Static CMS and Pages CMS.
 
 ### Migrating from Other Platforms
 
@@ -34,8 +34,9 @@ Static CMS was a community fork of Netlify CMS that introduced several unique fe
 
 Pages CMS was also inspired by Netlify CMS and shares similar concepts and configurations. Sveltia CMS offers more features, flexibility, and frequent releases than Pages CMS, but a hosted solution is not yet available.
 
-While we don’t have a dedicated migration guide for Pages CMS yet, you can ask your AI assistant to convert your Pages CMS configuration to Sveltia CMS format. Check out the [Start Guide](https://sveltiacms.app/en/docs/start) for more information on how to get started with Sveltia CMS.
+Our migration guide explains the differences between the two platforms and how to convert a Pages CMS configuration file to the Sveltia CMS format.
 
+- [Migrating from Pages CMS](https://sveltiacms.app/en/docs/migration/pages-cms)
 - [Examples of sites migrated from Pages CMS](https://sveltiacms.app/en/showcase?migrated-from=pages-cms)
 
 #### Other Headless CMSs
@@ -394,6 +395,440 @@ You don’t need to manually update your existing content — the CMS automatica
 Sveltia CMS comes with a minimum default preview style to ensure better readability. If you have [custom preview styles](https://sveltiacms.app/en/docs/api/preview-styles) for Netlify/Decap CMS, you could remove them or adapt them to Sveltia CMS, which shows field labels in the preview by default.
 
 Source: https://sveltiacms.app/en/docs/migration/netlify-decap-cms
+
+---
+
+## Migrating from Pages CMS
+
+[Pages CMS](https://pagescms.org/) is a Git-based CMS for static sites that was inspired by Netlify CMS. Its content model is close to that of Sveltia CMS: content is stored as Markdown, YAML, JSON or TOML files in a Git repository, and the content structure is defined in a configuration file. This makes the migration relatively straightforward, as existing content files can be kept as they are in most cases.
+
+This guide explains the differences between the two platforms and how to convert a Pages CMS configuration file to the Sveltia CMS format. It’s based on Pages CMS 2.x.
+
+**Stable Version Not Yet Available**
+
+Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
+
+### Examples
+
+See the following examples of sites that have been migrated from Pages CMS to see how other users have successfully transitioned to Sveltia CMS.
+
+- [Examples of sites migrated from Pages CMS](https://sveltiacms.app/en/showcase?migrated-from=pages-cms)
+
+### Key Differences
+
+#### Architecture
+
+Pages CMS is a Next.js application. Users sign in to the hosted app at [app.pagescms.org](https://app.pagescms.org/) or to a self-hosted instance, which accesses repositories through a GitHub App and keeps a cache in a PostgreSQL database.
+
+Sveltia CMS is a single-page application that runs entirely in the browser and talks to the Git hosting service directly. It’s installed on the site itself, typically at `/admin/`, and there is no hosted app, database or GitHub App to set up. See [Architecture](https://sveltiacms.app/en/docs/architecture) for details.
+
+As a result, the migration involves the following changes:
+
+- **Installation**: Instead of installing a GitHub App, add an `admin/index.html` file to the site. See the [Start Guide](https://sveltiacms.app/en/docs/start#manual-installation).
+- **Configuration**: The configuration file is `admin/config.yml` instead of `.pages.yml` at the root of the repository. The structure is different, so it must be converted. See [below](#converting-the-configuration).
+- **Authentication**: Users sign in with their GitHub account using an OAuth client or a personal access token. See [GitHub Backend](https://sveltiacms.app/en/docs/backends/github#authentication) for the available methods.
+- **Git hosting services**: Pages CMS supports GitHub only, while Sveltia CMS also supports [GitLab](https://sveltiacms.app/en/docs/backends/gitlab), [Gitea and Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo). This gives you the option to move the repository to another service later.
+
+#### Collaborators
+
+Pages CMS allows repository owners to invite collaborators by email, so people without a GitHub account can edit content through the GitHub App. Sveltia CMS doesn’t have an equivalent feature yet, as it requires each user to have an account with write access to the repository on the Git hosting service. Invite your collaborators to the repository on GitHub instead. See [Invite Team Members](https://sveltiacms.app/en/docs/start#invite-team-members).
+
+We plan to support user management and roles with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/roadmap#v1-0), our free server-side component.
+
+#### Features Not Available in Sveltia CMS
+
+The following Pages CMS features have no direct equivalent in Sveltia CMS:
+
+- **Branch switching**: Pages CMS reads `.pages.yml` from the branch being edited and lets users switch branches. Sveltia CMS works on the single branch specified with the `branch` [backend option](https://sveltiacms.app/en/docs/backends). The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) can be used to review changes in separate branches before publishing them.
+- **Actions**: Pages CMS can run GitHub Actions workflows from buttons with custom inputs. When automatic deployments are disabled, Sveltia CMS can trigger a deployment with the [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button, which sends a `repository_dispatch` event to GitHub Actions or calls a webhook, but it doesn’t support other workflows or inputs.
+- **Commit identity**: Pages CMS can commit as the GitHub App. Sveltia CMS always commits as the signed-in user.
+- **Raw and datagrid editors**: Pages CMS provides a plain text editor for files without fields and a spreadsheet-like editor for CSV files. Sveltia CMS can manage such files with the [`raw` format](https://sveltiacms.app/en/docs/collections/entries/formats#format) and a single [Code](https://sveltiacms.app/en/docs/fields/code) or [Text](https://sveltiacms.app/en/docs/fields/text) field named `body`, but there is no table editor.
+- **Rich text in HTML**: The `format: html` option of the `rich-text` field type is not supported yet, as the [RichText](https://sveltiacms.app/en/docs/fields/richtext) field type currently outputs Markdown only. HTML output is planned for a future release.
+- **Random filenames**: The `rename: random` media option is not supported. The `rename: safe` option is supported as `slugify_filename`.
+- **Nested sidebar groups**: The `group` content type is not supported. Use [dividers](https://sveltiacms.app/en/docs/collections#dividers) to separate the collection list, or put related files into one [file collection](https://sveltiacms.app/en/docs/collections/files).
+
+On the other hand, Sveltia CMS offers many features that are not available in Pages CMS, including [internationalization](https://sveltiacms.app/en/docs/i18n), [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), [entry previews](https://sveltiacms.app/en/docs/ui/content-editor), [external media storage](https://sveltiacms.app/en/docs/media#external-storage), [image optimization](https://sveltiacms.app/en/docs/media#image-optimization), [local development](https://sveltiacms.app/en/docs/workflows/local) without a server and [GitLab, Gitea and Forgejo](https://sveltiacms.app/en/docs/backends) support. See [Features](https://sveltiacms.app/en/docs/features) for the full list.
+
+### Converting the Configuration
+
+Pages CMS and Sveltia CMS use different option names, but most of the concepts map directly to each other. This section lists the equivalents. You can also ask your AI assistant to convert the `.pages.yml` file using this guide; see [Working with AI](https://sveltiacms.app/en/docs/working-with-ai) for tools that help it write a valid configuration.
+
+#### Example
+
+Here is a typical Pages CMS configuration:
+
+```yaml
+media:
+  input: public/images
+  output: /images
+content:
+  - name: posts
+    label: Posts
+    type: collection
+    path: content/posts
+    filename: '{year}-{month}-{day}-{primary}.md'
+    view:
+      fields: [title, date]
+      sort: [date, title]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: date, label: Date, type: date }
+      - { name: draft, label: Draft, type: boolean }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: cover, label: Cover Image, type: image }
+      - { name: body, label: Body, type: rich-text }
+  - name: settings
+    label: Site Settings
+    type: file
+    path: data/settings.json
+    fields:
+      - { name: title, label: Site Title, type: string }
+      - { name: description, label: Description, type: text }
+```
+
+And here is the equivalent Sveltia CMS configuration:
+
+```yaml
+backend:
+  name: github
+  repo: owner/repo
+  branch: main
+media_folder: /public/images
+public_folder: /images
+collections:
+  - name: posts
+    label: Posts
+    folder: /content/posts
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title}} ({{date}})'
+    sortable_fields:
+      fields: [date, title]
+      default: { field: date, direction: descending }
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, type: date, default: '{{now}}', required: false }
+      - { name: draft, label: Draft, widget: boolean, required: false }
+      - { name: tags, label: Tags, widget: list, required: false }
+      - { name: cover, label: Cover Image, widget: image, required: false }
+      - { name: body, label: Body, widget: richtext, required: false }
+  - name: settings
+    label: Site Settings
+    files:
+      - name: settings
+        label: Site Settings
+        file: /data/settings.json
+        fields:
+          - { name: title, label: Site Title, required: false }
+          - { name: description, label: Description, widget: text, required: false }
+```
+
+Note the following differences:
+
+- The `backend` option is required to tell Sveltia CMS where the content is stored.
+- Paths can start with a slash, and entry filenames are defined with the `slug` option without the extension.
+- The `type` field option becomes `widget`, which defaults to `string`.
+- Fields are required by default in Sveltia CMS, while they are optional in Pages CMS. Add `required: false` to fields that were not `required: true`.
+
+#### Media
+
+The `media` option is converted as follows. See [Internal Media Storage](https://sveltiacms.app/en/docs/media/internal) for details.
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `media: media` (string) | `media_folder: /media` and `public_folder: /media` |
+| `input` | `media_folder` |
+| `output` | `public_folder` |
+| `extensions`, `categories` | The [`accept`](https://sveltiacms.app/en/docs/fields/file#accept) option of each File/Image field, e.g. `accept: .pdf,.docx` or `image/*` |
+| `rename: true` or `rename: safe` | `slugify_filename: true` under [`media_libraries.default.config`](https://sveltiacms.app/en/docs/media#slugification-of-filenames) |
+| `rename: random` | Not supported |
+| Multiple named media sources | [Asset collections](https://sveltiacms.app/en/docs/media/internal#asset-collections) |
+| `media` and `path` options of a field | [Field-level `media_folder` and `public_folder`](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) |
+
+#### Content Types
+
+A Pages CMS `collection` is an [entry collection](https://sveltiacms.app/en/docs/collections/entries), and a `file` is a file in a [file collection](https://sveltiacms.app/en/docs/collections/files) or a [singleton](https://sveltiacms.app/en/docs/collections/singletons). Singletons are a good fit if your Pages CMS configuration has many standalone files.
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `name`, `label` | `name`, `label` |
+| `path` (collection) | `folder` |
+| `path` (file) | `file` in a `files` item |
+| `filename` | [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs) for the template, plus [`extension`](https://sveltiacms.app/en/docs/collections/entries/formats#extension) |
+| `filename.field: false` | `slug.editable: false` |
+| `filename.field: create` | `slug.editable: [create]` |
+| `filename.field: true` | `slug.editable: true` (default) |
+| `format` | [`format`](https://sveltiacms.app/en/docs/collections/entries/formats#format). The values `yaml-frontmatter`, `json-frontmatter`, `toml-frontmatter`, `yaml`, `json`, `toml` and `raw` are the same. Use `raw` for `code` and `datagrid` |
+| `delimiters` | [`frontmatter_delimiter`](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter) |
+| `subfolders: true` | [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested) or the [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option |
+| `list: true` on a file | A [top-level List field](https://sveltiacms.app/en/docs/fields/list#top-level-list), or a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file) for a JSON file |
+| `exclude` | No filename-based option. Use [`filter`](https://sveltiacms.app/en/docs/collections/entries/listings#filtering-entries) to filter entries by field value |
+| `operations.create`, `operations.delete` | [`create`, `delete`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) |
+| `operations.rename` | `slug.editable` |
+| `group` | Not supported. See [above](#features-not-available-in-sveltia-cms) |
+
+##### Filename Templates
+
+The `filename` template tags are converted to `slug` template tags as follows:
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `{primary}`, `{slug}` | `{{slug}}`, which uses the `title` field or the field specified with [`identifier_field`](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field). Pages CMS falls back to the first field if there is no `title` field, so set `identifier_field` in that case |
+| `{year}`, `{month}`, `{day}`, `{hour}`, `{minute}`, `{second}` | `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}` |
+| `{fields.name}`, `{name}` | `{{fields.name}}`, `{{name}}` |
+
+The file extension is not part of the template. For example, `filename: '{year}-{month}-{day}-{primary}.md'` becomes `slug: '{{year}}-{{month}}-{{day}}-{{slug}}'`, and the `md` extension is used by default.
+
+Pages CMS uses the default filename `{year}-{month}-{day}-{primary}.md` when the option is omitted, while Sveltia CMS uses `{{slug}}`. Set the `slug` option explicitly to keep the same naming convention for new entries.
+
+The date and time tags use the local time in Pages CMS and UTC in Sveltia CMS by default. Set the `timezone` [global slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) to `local` to use the local time.
+
+Pages CMS converts field values in filenames to lowercase ASCII letters, numbers and hyphens, while Sveltia CMS keeps Unicode characters by default. Set the `encoding` global slug option to `ascii` and `clean_accents` to `true` for similar filenames.
+
+##### Views
+
+The `view` options are converted as follows. See [Entry Listings](https://sveltiacms.app/en/docs/collections/entries/listings) and [Entry Views](https://sveltiacms.app/en/docs/collections/entries/views) for details.
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `view.primary` | [`identifier_field`](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field) |
+| `view.fields` | [`summary`](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) template, e.g. `'{{title}} ({{date}})'` |
+| `view.sort` | [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting) |
+| `view.default.sort`, `view.default.order` | `sortable_fields.default.field`, `sortable_fields.default.direction` (`ascending` or `descending`) |
+| `view.search` | Not needed, as all entries are searchable |
+| `view.layout: tree`, `view.node` | [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested) |
+
+#### Fields
+
+The common field options are converted as follows. See [Fields](https://sveltiacms.app/en/docs/fields#common-options) for details.
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `name`, `label` | `name`, `label` |
+| `type` | [`widget`](https://sveltiacms.app/en/docs/fields#widget) |
+| `description` | [`hint`](https://sveltiacms.app/en/docs/fields#hint) |
+| `required` (default: `false`) | [`required`](https://sveltiacms.app/en/docs/fields#required) (default: `true`) |
+| `readonly` | [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) |
+| `pattern: '^[a-z]+$'` | `pattern: ['^[a-z]+$', 'Error message']`. See [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) |
+| `pattern: { regex, message }` | `pattern: [regex, message]` |
+| `hidden: true` | `widget: hidden` with a `default` value. See [Hidden](https://sveltiacms.app/en/docs/fields/hidden) |
+| `default` | `default` |
+| `list: true` | A [List](https://sveltiacms.app/en/docs/fields/list) field. See [below](#lists) |
+| `component` | YAML [anchors and aliases](https://sveltiacms.app/en/docs/config-basics#anchors-and-aliases). See [below](#components) |
+
+The field types are converted as follows:
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `string` | [`string`](https://sveltiacms.app/en/docs/fields/string) (default) |
+| `text` | [`text`](https://sveltiacms.app/en/docs/fields/text) |
+| `rich-text` | [`richtext`](https://sveltiacms.app/en/docs/fields/richtext) (Markdown only) |
+| `code` | [`code`](https://sveltiacms.app/en/docs/fields/code) |
+| `number` | [`number`](https://sveltiacms.app/en/docs/fields/number) |
+| `boolean` | [`boolean`](https://sveltiacms.app/en/docs/fields/boolean) |
+| `date` | [`datetime`](https://sveltiacms.app/en/docs/fields/datetime) |
+| `select` | [`select`](https://sveltiacms.app/en/docs/fields/select) |
+| `reference` | [`relation`](https://sveltiacms.app/en/docs/fields/relation) |
+| `image` | [`image`](https://sveltiacms.app/en/docs/fields/image) |
+| `file` | [`file`](https://sveltiacms.app/en/docs/fields/file) |
+| `object` | [`object`](https://sveltiacms.app/en/docs/fields/object) |
+| `block` | [`list`](https://sveltiacms.app/en/docs/fields/list#variable-type) or [`object`](https://sveltiacms.app/en/docs/fields/object#variable-type) with the `types` option |
+| `uuid` | [`uuid`](https://sveltiacms.app/en/docs/fields/uuid) |
+| Custom field types | [Custom field types](https://sveltiacms.app/en/docs/api/field-types) |
+
+The `minlength`, `maxlength`, `min`, `max` and `step` options work the same way where supported. Other type-specific options are described below.
+
+##### Code
+
+The Code field in Sveltia CMS saves an object containing the code and the language by default. To save the code as a plain string, as in Pages CMS, set `output_code_only: true`. The `options.format` option becomes `default_language`.
+
+```yaml
+- name: snippet
+  label: Snippet
+  widget: code
+  default_language: javascript
+  output_code_only: true
+  allow_language_selection: false
+```
+
+##### Number
+
+The Number field in Sveltia CMS accepts integers only by default. Set `value_type: float` to allow decimal numbers.
+
+##### Date
+
+The `date` field type is converted to the DateTime field type:
+
+- Without `options.time`, add `type: date`. The value is saved as `YYYY-MM-DD`, as in Pages CMS.
+- With `options.time: true`, the value is saved in ISO 8601 format with seconds, such as `2025-08-15T14:30:00`. Pages CMS saves `2025-08-15T14:30` by default. Use the `format` option if your site needs the same format.
+- The `options.format` option becomes `format`, but Pages CMS uses [date-fns tokens](https://date-fns.org/docs/format) while Sveltia CMS uses [Day.js tokens](https://day.js.org/docs/en/display/format). For example, `yyyy-MM-dd'T'HH:mm` becomes `YYYY-MM-DD[T]HH:mm`.
+- Pages CMS sets new entries to the current date by default. Add `default: '{{now}}'` to do the same.
+
+```yaml
+- name: date
+  label: Date
+  widget: datetime
+  type: date
+  default: '{{now}}'
+```
+
+##### Select
+
+The `options.values` option becomes `options`. Objects with `name` and `label` properties become objects with `value` and `label` properties. The `multiple`, `min` and `max` options work the same way. The `placeholder` option is not supported.
+
+```yaml
+- name: status
+  label: Status
+  widget: select
+  options:
+    - { label: Draft, value: draft }
+    - { label: Published, value: published }
+```
+
+##### Reference
+
+The `reference` field type is converted to the Relation field type:
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `options.collection` | [`collection`](https://sveltiacms.app/en/docs/fields/relation#collection) |
+| `options.value` | [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) |
+| `options.label` | [`display_fields`](https://sveltiacms.app/en/docs/fields/relation#display-fields) |
+| `options.search` | [`search_fields`](https://sveltiacms.app/en/docs/fields/relation#search-fields), as an array |
+| `options.multiple`, `options.min`, `options.max` | `multiple`, `min`, `max` |
+
+The template tags are similar, but they are enclosed in double curly braces, e.g. `{{fields.name}}`.
+
+Pages CMS saves the full path of the referenced file by default, such as `content/authors/jane.md`, while Sveltia CMS saves the entry slug, such as `jane`. If your existing content contains file paths, set `value_field` to a field that has the same value, or update the content to use slugs. The `{primary}` tag becomes the name of the identifier field, e.g. `{{title}}`.
+
+##### Image and File
+
+The `options.multiple` option becomes `multiple`, and `options.multiple.max` becomes `max`. The `options.extensions` and `options.categories` options become the `accept` option, e.g. `accept: .pdf` or `accept: image/*`. The `options.media` and `options.path` options become [field-level `media_folder` and `public_folder`](https://sveltiacms.app/en/docs/media/internal#field-level-configuration).
+
+##### UUID
+
+The `options.editable: true` option becomes `readonly: false`, as the UUID field is read-only by default.
+
+##### Lists
+
+A field with `list: true` becomes a List field. For a list of strings, use a List field without subfields. For a list of other types, specify the subfield with the `field` option. The `list.min` and `list.max` options become `min` and `max`.
+
+```yaml
+# Pages CMS
+- { name: tags, label: Tags, type: string, list: true }
+- { name: photos, label: Photos, type: image, list: { max: 10 } }
+- name: links
+  label: Links
+  type: object
+  list: { collapsible: { collapsed: true, summary: '{fields.title}' } }
+  fields:
+    - { name: title, label: Title, type: string }
+    - { name: url, label: URL, type: string }
+
+# Sveltia CMS
+- { name: tags, label: Tags, widget: list }
+- name: photos
+  label: Photos
+  widget: list
+  max: 10
+  field: { name: photo, label: Photo, widget: image }
+- name: links
+  label: Links
+  widget: list
+  collapsed: true
+  summary: '{{title}}'
+  fields:
+    - { name: title, label: Title }
+    - { name: url, label: URL }
+```
+
+Note that a List field with the `fields` option, like `links` above, is an object list. See the [List field](https://sveltiacms.app/en/docs/fields/list) documentation for the data output of each configuration.
+
+##### Blocks
+
+A `block` field with `list: true` becomes a List field with the `types` option. Each block becomes a type. The property that stores the block name is `_block` by default in Pages CMS and `type` in Sveltia CMS, so set the `typeKey` option to `_block`, or to the `blockKey` value if you have customized it.
+
+```yaml
+# Pages CMS
+- name: sections
+  label: Sections
+  type: block
+  list: true
+  blocks:
+    - name: hero
+      label: Hero
+      fields:
+        - { name: heading, type: string }
+    - name: text
+      label: Text
+      fields:
+        - { name: body, type: rich-text }
+
+# Sveltia CMS
+- name: sections
+  label: Sections
+  widget: list
+  typeKey: _block
+  types:
+    - name: hero
+      label: Hero
+      fields:
+        - { name: heading, label: Heading }
+    - name: text
+      label: Text
+      fields:
+        - { name: body, label: Body, widget: richtext }
+```
+
+A `block` field without `list: true` becomes an Object field with the `types` option.
+
+##### Components
+
+Sveltia CMS doesn’t have a `components` option, but YAML anchors and aliases can be used to reuse field definitions. Define a field with an anchor (`&name`) once, then reference it with an alias (`*name`). The merge key (`<<`) allows you to override some options, like the `component` option in Pages CMS.
+
+```yaml
+collections:
+  - name: pages
+    label: Pages
+    folder: /content/pages
+    fields:
+      - &seo
+        name: seo
+        label: SEO
+        widget: object
+        fields:
+          - { name: title, label: Title }
+          - { name: description, label: Description, widget: text }
+  - name: posts
+    label: Posts
+    folder: /content/posts
+    fields:
+      - <<: *seo
+        label: Meta
+```
+
+#### Settings
+
+| Pages CMS | Sveltia CMS |
+| --- | --- |
+| `settings.content.merge` | Not needed. Sveltia CMS always keeps the properties that are not defined in the configuration, placing them after the configured fields. |
+| `settings.commit.templates` | [`commit_messages`](https://sveltiacms.app/en/docs/backends#commit-messages) backend option. The template tags are different, e.g. `{{collection}}`, `{{slug}}` and `{{path}}` |
+| `settings.commit.identity` | Not supported. Commits are always made by the signed-in user |
+| `settings.hide` | Not needed, as there is no settings page |
+
+### Migration Steps
+
+1. Review the [key differences](#key-differences) above to make sure there are no blockers.
+2. Follow the [Start Guide](https://sveltiacms.app/en/docs/start) to add Sveltia CMS to your site, including the `admin/index.html` file and the [backend configuration](https://sveltiacms.app/en/docs/backends/github).
+3. Convert `.pages.yml` to `admin/config.yml` using the [mapping](#converting-the-configuration) above. Enable [JSON schema validation](https://sveltiacms.app/en/docs/config-basics#json-schema) in your code editor to catch mistakes early.
+4. Test the configuration with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local). Open some existing entries and save them to make sure the data output is unchanged, as there might be differences in formatting. Use the [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output) to adjust the output if needed.
+5. Deploy the site and [set up authentication](https://sveltiacms.app/en/docs/backends/github#authentication) for production.
+6. Invite your Pages CMS collaborators to the GitHub repository, and share the admin URL with them.
+7. Once everything works as expected, delete `.pages.yml` from the repository and uninstall the Pages CMS GitHub App from your account or organization.
+
+If you encounter any issues during the migration, feel free to ask in our [Discussions](https://github.com/sveltia/sveltia-cms/discussions) or [report a bug](https://github.com/sveltia/sveltia-cms/issues/new?type=bug).
+
+Source: https://sveltiacms.app/en/docs/migration/pages-cms
 
 ---
 

@@ -488,16 +488,30 @@ The `media_folder` option specifies the folder in the repository where media fil
 
 Here’s a quick reference for various frameworks:
 
-| Framework / SSG                                  | Static Folder Name  |
-| ------------------------------------------------ | ------------------- |
-| Eleventy, GitBook, Jekyll                        | `/` (root)          |
-| Pelican                                          | `/content`          |
-| MkDocs, Docsify                                  | `/docs`             |
-| Astro, Next.js, Nuxt, Remix, UmiJS, VitePress    | `/public`           |
-| Hexo, Slate                                      | `/source`           |
-| mdBook                                           | `/src`              |
-| Docusaurus, Fresh, Gatsby, Hugo, SvelteKit, Zola | `/static`           |
-| VuePress                                         | `/.vuepress/public` |
+| Framework / SSG | Static Folder Name |
+| --- | --- |
+| Eleventy, Jekyll, Lume | `/` (root) |
+| Pelican, Quartz | `/content` |
+| Docsify, MkDocs | `/docs` |
+| Rspress, VitePress | `/docs/public`¹ |
+| Nikola | `/files` |
+| Angular, Astro, Fumadocs, HonoX, Next.js, Nextra, Nuxt, Qwik, React Router (Remix), SolidStart, TanStack Start, UmiJS, Vite | `/public` |
+| Hexo, Middleman | `/source` |
+| Bridgetown, mdBook | `/src` |
+| Analog | `/src/public` |
+| Docusaurus, Fresh, Gatsby, Gridsome, Hugo, Nuxt 2, SvelteKit, Zola | `/static` |
+| VuePress | `/docs/.vuepress/public`¹ |
+
+¹ The `public` folder is placed under the source folder, which is often named `docs`. If your site’s Markdown files are in the root folder, use `/public` (VitePress) or `/.vuepress/public` (VuePress) instead.
+
+Some frameworks process HTML or YAML files in these folders instead of copying them as is, so the admin folder needs extra configuration:
+
+- **Eleventy**: Add `eleventyConfig.addPassthroughCopy('admin')` to the configuration file. Otherwise, `index.html` is rendered as a template and `config.yml` is not copied at all.
+- **Hexo**: Add `skip_render: admin/**` to `_config.yml` so the theme layout is not applied to the admin page.
+- **Lume**: Add `site.copy('admin')` to `_config.ts`.
+- **Middleman**: Add `page '/admin/*', layout: false` to `config.rb` so the site layout is not applied to the admin page.
+- **Pelican**: Add `'admin'` to `STATIC_PATHS`, and to `ARTICLE_EXCLUDES` and `PAGE_EXCLUDES`, so the admin page is copied instead of being read as an article.
+- **Sphinx**: Put the admin folder in a folder listed in the `html_extra_path` option, such as `_extra`, so it’s copied to the root of the output folder.
 
 If you’re unsure about your framework’s static files folder, please refer to its official documentation.
 

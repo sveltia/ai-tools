@@ -1,6 +1,6 @@
 # Installation and Framework Setup
 
-How to install Sveltia CMS and wire it into a static site generator.
+How to install Sveltia CMS, how it loads, and the list of framework guides. For a specific framework, see `frameworks-js.md` or `frameworks-other.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -8,7 +8,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 This guide will help you get Sveltia CMS up and running in your project. Follow the steps below to install, configure, test, and deploy Sveltia CMS.
 
-Already using **Netlify CMS**, **Decap CMS** or **Static CMS**? Check out the [Migration Guides](https://sveltiacms.app/en/docs/migration) for specific instructions.
+Already using **Netlify CMS**, **Decap CMS**, **Static CMS** or **Pages CMS**? Check out the [Migration Guides](https://sveltiacms.app/en/docs/migration) for specific instructions.
 
 **Stable Version Not Yet Available**
 
@@ -70,16 +70,30 @@ Sveltia CMS requires a static files folder to serve the admin interface, configu
 
 Here’s a quick reference for various frameworks:
 
-| Framework / SSG                                  | Static Folder Name  |
-| ------------------------------------------------ | ------------------- |
-| Eleventy, GitBook, Jekyll                        | `/` (root)          |
-| Pelican                                          | `/content`          |
-| MkDocs, Docsify                                  | `/docs`             |
-| Astro, Next.js, Nuxt, Remix, UmiJS, VitePress    | `/public`           |
-| Hexo, Slate                                      | `/source`           |
-| mdBook                                           | `/src`              |
-| Docusaurus, Fresh, Gatsby, Hugo, SvelteKit, Zola | `/static`           |
-| VuePress                                         | `/.vuepress/public` |
+| Framework / SSG | Static Folder Name |
+| --- | --- |
+| Eleventy, Jekyll, Lume | `/` (root) |
+| Pelican, Quartz | `/content` |
+| Docsify, MkDocs | `/docs` |
+| Rspress, VitePress | `/docs/public`¹ |
+| Nikola | `/files` |
+| Angular, Astro, Fumadocs, HonoX, Next.js, Nextra, Nuxt, Qwik, React Router (Remix), SolidStart, TanStack Start, UmiJS, Vite | `/public` |
+| Hexo, Middleman | `/source` |
+| Bridgetown, mdBook | `/src` |
+| Analog | `/src/public` |
+| Docusaurus, Fresh, Gatsby, Gridsome, Hugo, Nuxt 2, SvelteKit, Zola | `/static` |
+| VuePress | `/docs/.vuepress/public`¹ |
+
+¹ The `public` folder is placed under the source folder, which is often named `docs`. If your site’s Markdown files are in the root folder, use `/public` (VitePress) or `/.vuepress/public` (VuePress) instead.
+
+Some frameworks process HTML or YAML files in these folders instead of copying them as is, so the admin folder needs extra configuration:
+
+- **Eleventy**: Add `eleventyConfig.addPassthroughCopy('admin')` to the configuration file. Otherwise, `index.html` is rendered as a template and `config.yml` is not copied at all.
+- **Hexo**: Add `skip_render: admin/**` to `_config.yml` so the theme layout is not applied to the admin page.
+- **Lume**: Add `site.copy('admin')` to `_config.ts`.
+- **Middleman**: Add `page '/admin/*', layout: false` to `config.rb` so the site layout is not applied to the admin page.
+- **Pelican**: Add `'admin'` to `STATIC_PATHS`, and to `ARTICLE_EXCLUDES` and `PAGE_EXCLUDES`, so the admin page is copied instead of being read as an article.
+- **Sphinx**: Put the admin folder in a folder listed in the `html_extra_path` option, such as `_extra`, so it’s copied to the root of the output folder.
 
 If you’re unsure about your framework’s static files folder, please refer to its official documentation.
 
@@ -409,6 +423,7 @@ Here are some resources to help you get started with Sveltia CMS in various fram
 - [Middleman](https://sveltiacms.app/en/docs/frameworks/middleman)
 - [Next.js](https://sveltiacms.app/en/docs/frameworks/next)
 - [Nuxt](https://sveltiacms.app/en/docs/frameworks/nuxt)
+- [Starlight](https://sveltiacms.app/en/docs/frameworks/starlight)
 - [SvelteKit](https://sveltiacms.app/en/docs/frameworks/sveltekit)
 - [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress)
 - [Zola](https://sveltiacms.app/en/docs/frameworks/zola)
@@ -456,212 +471,6 @@ Source: https://sveltiacms.app/en/docs/frameworks
 
 ---
 
-## Astro Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Astro](https://astro.build/), a modern static site builder.
-
-### Starter Templates
-
-Here are some starter templates built by the community using Astro:
-
-- [Astros](https://github.com/majesticooss/astros) by [zanhk](https://github.com/zanhk)
-- [Astro i18n Starter](https://github.com/yacosta738/astro-cms) by [yacosta738](https://github.com/yacosta738)
-- [astro-sveltia-cms](https://github.com/knolljo/astro-sveltia-cms) by [knolljo](https://github.com/knolljo)
-
-**Disclaimer**
-
-These third-party resources are not necessarily reviewed by the Sveltia CMS team. We are not responsible for their maintenance or support. Please contact the respective authors for any issues or questions.
-
-### Examples
-
-See real-world examples of Astro integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=astro). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Astro.
-
-### Support for Astro
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Astro:
-
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [Starlight](https://starlight.astro.build/) docs folder tree in the sidebar with the `subfolders: false` mode, where every file under [`src/content/docs/`](https://starlight.astro.build/guides/project-structure/) is a page at its own path and editors can create new folders as needed.
-- The [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) Relation field option can contain a locale prefix like `{{locale}}/{{slug}}`, which will be replaced with the current locale. It’s intended to support i18n in Astro. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/302))
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
-- [Omitting empty optional fields](https://sveltiacms.app/en/docs/data-output#controlling-data-output): Set the `omit_empty_optional_fields` output option to `true` so that content with unfilled optional fields passes [content collection schema](https://docs.astro.build/en/guides/content-collections/#defining-the-collection-schema) validation. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/241))
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Astro in the near future. In the meantime, feel free to explore the starter templates and showcase examples for guidance.
-
-Source: https://sveltiacms.app/en/docs/frameworks/astro
-
----
-
-## Docusaurus Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Docusaurus](https://docusaurus.io/), a popular static site generator focused on documentation websites.
-
-### Examples
-
-See real-world examples of Docusaurus integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=docusaurus). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Docusaurus.
-
-### Support for Docusaurus
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Docusaurus:
-
-- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [docs folder tree](https://docusaurus.io/docs/create-doc) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Docusaurus in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/docusaurus/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/docusaurus
-
----
-
-## Eleventy Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Eleventy](https://www.11ty.dev/) (11ty), a simple and flexible static site generator.
-
-### Starter Templates
-
-Here are some starter templates built by the community using Eleventy:
-
-- [Eleventy starter template](https://github.com/danurbanowicz/eleventy-sveltia-cms-starter) by [danurbanowicz](https://github.com/danurbanowicz)
-- [ZeroPoint](https://getzeropoint.com/) by [MWDelaney](https://github.com/MWDelaney)
-- [Huwindty](https://github.com/aloxe/huwindty) by [aloxe](https://github.com/aloxe)
-- [One Starter](https://github.com/buildawesome-one/starter) by [buildawesome-one](https://github.com/buildawesome-one)
-
-**Disclaimer**
-
-These third-party resources are not necessarily reviewed by the Sveltia CMS team. We are not responsible for their maintenance or support. Please contact the respective authors for any issues or questions.
-
-### Examples
-
-See real-world examples of Eleventy integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=eleventy). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Eleventy.
-
-### Support for Eleventy
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Eleventy:
-
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of pages in the sidebar with the `subfolders: false` mode, where every file is a page at its own [path-based permalink](https://www.11ty.dev/docs/permalinks/) and editors can create new folders as needed.
-- [Directory data files](https://sveltiacms.app/en/docs/collections/entries/listings#managing-eleventy-s-directory-data-file): Manage a folder’s [directory data file](https://www.11ty.dev/docs/data-template-dir/), like `posts/posts.json`, beside the Markdown entries it applies to, using the `index_file` option with an `extension` or `format` of its own.
-- [Editor components](https://sveltiacms.app/en/docs/api/editor-components#styled-separator): An example of a custom component that inserts an Eleventy [shortcode](https://www.11ty.dev/docs/shortcodes/) into Markdown content.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Eleventy in the near future. In the meantime, feel free to explore the starter templates and showcase examples for guidance.
-
-Source: https://sveltiacms.app/en/docs/frameworks/eleventy
-
----
-
-## Hugo Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Hugo](https://gohugo.io/), a popular static site generator.
-
-### Starter Templates
-
-Here are some starter templates built by the community using Hugo:
-
-- [Hugo module](https://github.com/privatemaker/headless-cms) by [privatemaker](https://github.com/privatemaker)
-- [Hugolify](https://www.hugolify.io/) by [sebousan](https://github.com/sebousan)
-
-**Disclaimer**
-
-These third-party resources are not necessarily reviewed by the Sveltia CMS team. We are not responsible for their maintenance or support. Please contact the respective authors for any issues or questions.
-
-### Examples
-
-See real-world examples of Hugo integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=hugo). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Hugo.
-
-### Support for Hugo
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Hugo:
-
-- [Entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders): Store media files in folders relative to their associated entries, which is a common practice in Hugo projects called [page bundles](https://gohugo.io/content-management/page-bundles/).
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://gohugo.io/content-management/sections/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
-- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Hugo’s [`aliases` front matter property](https://gohugo.io/content-management/urls/#aliases), which is updated when the entry slug is changed in Sveltia CMS.
-- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://gohugo.io/methods/page/weight/) to entries for controlling their order in Hugo.
-- [Index file inclusion](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file): Manage Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) for section entries.
-- [Translation by content directory](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement): Put the `{{locale}}` placeholder in a collection’s `folder` option, e.g. `content/{{locale}}/posts`, to match a [multilingual Hugo site](https://gohugo.io/content-management/multilingual/#translation-by-content-directory) with a `contentDir` per language, section index files included.
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for [multilingual Hugo sites](https://gohugo.io/content-management/multilingual/) using the `translationKey` property of entries.
-- [Editor components](https://sveltiacms.app/en/docs/api/editor-components#examples): Examples of custom components that insert Hugo [shortcodes](https://gohugo.io/content-management/shortcodes/) into Markdown content, such as an image with a caption and a YouTube embed.
-- [Time formatting](https://sveltiacms.app/en/docs/data-output#general-conventions): A standard time is saved as `HH:mm:ss` instead of `HH:mm` for compatibility with Hugo.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Hugo in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/hugo/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/hugo
-
----
-
-## Jekyll Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Jekyll](https://jekyllrb.com/), a popular static site generator.
-
-### Starter Templates
-
-Here are some starter templates built by the community using Jekyll:
-
-- [Jekyll Blades](https://github.com/anyblades/jekyll-blades) by [anyblades](https://github.com/anyblades)
-
-**Disclaimer**
-
-These third-party resources are not necessarily reviewed by the Sveltia CMS team. We are not responsible for their maintenance or support. Please contact the respective authors for any issues or questions.
-
-### Examples
-
-See real-world examples of Jekyll integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=jekyll). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Jekyll.
-
-### Support for Jekyll
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Jekyll:
-
-- [ASCII slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options): Set the `encoding` slug option to `ascii` to transliterate non-ASCII characters, which can otherwise break Jekyll builds. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/544))
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of [pages](https://jekyllrb.com/docs/pages/) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
-- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#customizing-the-redirect-property): Use the `aliases_field` option to store previous paths in the `redirect_from` property expected by the [`jekyll-redirect-from`](https://github.com/jekyll/jekyll-redirect-from) plugin, which is updated when the entry slug is changed in Sveltia CMS.
-- [Top-level List field](https://sveltiacms.app/en/docs/fields/list#top-level-list): Use the `root` option to edit a [data file](https://jekyllrb.com/docs/datafiles/) whose top level is a list, such as a list of members.
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for multilingual Jekyll sites, using the `ref` property as the canonical slug key.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Jekyll in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/jekyll/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/jekyll
-
----
-
-## Middleman Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Middleman](https://middlemanapp.com/), a static site generator using Ruby.
-
-### Examples
-
-See real-world examples of Middleman integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=middleman). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Middleman.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Middleman in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/middleman/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/middleman
-
----
-
-## Next.js Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Next.js](https://nextjs.org/), a popular React framework for building server-side rendered and static websites.
-
-### Examples
-
-See real-world examples of Next.js integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=next). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Next.js.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Next.js in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/nextjs/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/next
-
----
-
 ## Vanilla JavaScript Integration Guide
 
 Sveltia CMS works seamlessly with vanilla JavaScript projects — no framework required. This guide shows you how to manage content through Sveltia CMS and consume it directly in your JavaScript applications.
@@ -689,156 +498,3 @@ Use a library like [Marked](https://marked.js.org/) to parse Markdown files. The
 Check out [real-world examples](https://sveltiacms.app/en/showcase?framework=vanilla) in our Showcase demonstrating vanilla JavaScript setups with Sveltia CMS. These implementations can help you get started with your own project.
 
 Source: https://sveltiacms.app/en/docs/frameworks/none
-
----
-
-## Nuxt Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Nuxt](https://nuxt.com/), a popular Vue.js framework for building server-side rendered and static websites.
-
-### Examples
-
-See real-world examples of Nuxt integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=nuxt). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Nuxt.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Nuxt in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/nuxt/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/nuxt
-
----
-
-## SvelteKit Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [SvelteKit](https://svelte.dev/docs/kit/introduction), a framework for building web applications using Svelte.
-
-### Examples
-
-See real-world examples of SvelteKit integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=sveltekit). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with SvelteKit.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with SvelteKit in the near future. In the meantime, feel free to explore the showcase examples for guidance.
-
-#### Serving the CMS as a SvelteKit Route
-
-The standard setup is to place `index.html` and `config.yml` in the `static/admin` folder as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide, but if you’re using the [NPM package](https://sveltiacms.app/en/docs/api#using-the-npm-package), you can also serve the CMS from a regular SvelteKit route. This is useful when you want to bundle the CMS with your site instead of loading it from a CDN, or define the [configuration in JavaScript/TypeScript](https://sveltiacms.app/en/docs/api/initialization) so it can be shared with your site’s content schemas or switched between a real and a test repository depending on the environment.
-
-Sveltia CMS is a client-side single-page application that needs the `window` and `document` objects, so it can’t be rendered on the server. Disable SSR for the admin route by exporting `ssr = false` from its `+page.js` (or `+page.ts`) file; otherwise you’ll see an error like “Cannot read properties of undefined (reading 'bind')” during server-side rendering. The rest of your site can still be server-rendered or built as static pages as usual.
-
-`src/routes/admin/+page.ts`:
-
-```ts
-export const ssr = false;
-```
-
-`src/routes/admin/+page.svelte`:
-
-```svelte
-<script lang="ts">
-  import CMS from '@sveltia/cms';
-  import { config } from '$lib/cms-config';
-
-  CMS.init({ config: { load_config_file: false, ...config } });
-</script>
-
-<svelte:head>
-  <meta name="robots" content="noindex" />
-  <title>Sveltia CMS</title>
-</svelte:head>
-
-<div id="nc-root"></div>
-```
-
-`src/lib/cms-config.ts`:
-
-```ts
-import type { CmsConfig } from '@sveltia/cms';
-
-export const config: CmsConfig = {
-  backend: {
-    name: 'github',
-    repo: 'owner/repo',
-  },
-  media_folder: 'static/uploads',
-  public_folder: '/uploads',
-  collections: [
-    // ...
-  ],
-};
-```
-
-Some notes on this setup:
-
-- `load_config_file: false` tells the CMS not to fetch `config.yml`, since the configuration is passed directly to `init()`. Omit it if you’d rather keep `config.yml` in the `static` folder and only override some options.
-- The `<div id="nc-root">` is a [custom mount element](https://sveltiacms.app/en/docs/customization#custom-mount-element). It keeps the CMS scoped to the page so your site’s layout doesn’t interfere with it. If the admin route has its own [layout group](https://svelte.dev/docs/kit/advanced-routing#Advanced-layouts-group) that doesn’t load any of your site’s CSS, JavaScript or HTML, you can drop the wrapper and let the CMS mount to `<body>` as it normally does.
-- The `noindex` meta tag prevents the admin page from being indexed by search engines.
-
-This approach was shared in a [community discussion](https://github.com/sveltia/sveltia-cms/discussions/665) and should work similarly with other frameworks that let you turn off SSR per page, such as Astro.
-
-#### Loading Content
-
-A key step in integrating Sveltia CMS with SvelteKit is using Vite’s [glob import](https://vite.dev/guide/features#glob-import) to load all your content files at once in [`+layout.js`](https://svelte.dev/docs/kit/load#Layout-data) or somewhere else in your SvelteKit app. Since SvelteKit uses Vite under the hood, you can take advantage of the `import.meta.glob` function without additional configuration. This allows you to easily access and manage your content within the SvelteKit framework.
-
-Source: https://sveltiacms.app/en/docs/frameworks/sveltekit
-
----
-
-## VitePress Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [VitePress](https://vitepress.dev/), a static site generator powered by Vite and Vue.
-
-### Examples
-
-See real-world examples of VitePress integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=vitepress). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with VitePress.
-
-### Support for VitePress
-
-We have implemented specific features to enhance the integration of Sveltia CMS with VitePress:
-
-- The [`folder` option](https://sveltiacms.app/en/docs/collections/entries#creating-an-entry-collection) for an entry collection can be an empty string (or `.` or `/`) if you want to store entries in the root folder. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
-- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [folder tree of pages](https://vitepress.dev/guide/routing#source-directory) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with VitePress in the near future. In the meantime, you can refer to the [Decap CMS documentation](https://decapcms.org/docs/vitepress/), as the basic concepts are similar.
-
-Source: https://sveltiacms.app/en/docs/frameworks/vitepress
-
----
-
-## Zola Integration Guide
-
-This guide provides resources and information for integrating Sveltia CMS with [Zola](https://www.getzola.org/), a fast static site generator written in Rust.
-
-### Starter Templates
-
-Here are some starter templates built by the community using Zola:
-
-- [Zola Sveltia Source](https://github.com/unicornfantasian/zola-sveltia-source) by [husenunicorn](https://github.com/husenunicorn)
-
-**Disclaimer**
-
-These third-party resources are not necessarily reviewed by the Sveltia CMS team. We are not responsible for their maintenance or support. Please contact the respective authors for any issues or questions.
-
-### Examples
-
-See real-world examples of Zola integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=zola). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Zola.
-
-### Support for Zola
-
-We have implemented specific features to enhance the integration of Sveltia CMS with Zola:
-
-- [Entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders): Store media files in folders relative to their associated entries, following Zola’s [asset colocation](https://www.getzola.org/documentation/content/overview/#asset-colocation) convention.
-- [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://www.getzola.org/documentation/content/section/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
-- [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.
-- [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
-- The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
-- The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n/options#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
-
-### Development Guide
-
-We’ll be adding a detailed development guide for integrating Sveltia CMS with Zola in the near future. In the meantime, feel free to explore the starter templates and showcase examples for guidance.
-
-Source: https://sveltiacms.app/en/docs/frameworks/zola

@@ -84,18 +84,21 @@ Always include the schema reference line. It gives the user autocomplete and inl
 
 Put the `admin` folder inside the framework's static folder, so the page is served at `/admin/`.
 
-| Framework                                        | Static folder       |
-| ------------------------------------------------ | ------------------- |
-| Eleventy, GitBook, Jekyll                        | `/` (repo root)     |
-| Astro, Next.js, Nuxt, Remix, UmiJS, VitePress    | `/public`           |
-| Docusaurus, Fresh, Gatsby, Hugo, SvelteKit, Zola | `/static`           |
-| Pelican                                          | `/content`          |
-| MkDocs, Docsify                                  | `/docs`             |
-| Hexo, Slate                                      | `/source`           |
-| mdBook                                           | `/src`              |
-| VuePress                                         | `/.vuepress/public` |
+| Framework | Static folder |
+| --- | --- |
+| Eleventy, Jekyll, Lume | `/` (repo root) |
+| Angular, Astro, Fumadocs, HonoX, Next.js, Nextra, Nuxt, Qwik, React Router, SolidStart, TanStack Start, UmiJS, Vite | `/public` |
+| Docusaurus, Fresh, Gatsby, Gridsome, Hugo, Nuxt 2, SvelteKit, Zola | `/static` |
+| Pelican, Quartz | `/content` |
+| Docsify, MkDocs | `/docs` |
+| Rspress, VitePress | `<source folder>/public`, e.g. `/docs/public` |
+| Hexo, Middleman | `/source` |
+| Bridgetown, mdBook | `/src` |
+| Analog | `/src/public` |
+| Nikola | `/files` |
+| VuePress | `<source folder>/.vuepress/public` |
 
-Check the framework's own documentation if it is not listed. Some frameworks need the folder excluded from content processing — see `references/setup.md`.
+Check the framework's own documentation if it is not listed. Eleventy, Hexo, Lume, Middleman, Pelican and Sphinx need extra configuration so the admin files are copied as is — see `references/setup.md`. Some dev servers (Astro, SvelteKit, VitePress) and Next.js don't serve `/admin/` as `/admin/index.html`, and client-side routers can intercept links to the admin page — see the framework guides in `references/frameworks-js.md` and `references/frameworks-other.md`.
 
 ## Validate the configuration
 
@@ -117,7 +120,9 @@ Read the file that covers the area before writing options. Each is plain Markdow
 
 | Working on | Read |
 | --- | --- |
-| Installing, framework integration, how the CMS loads | `references/setup.md` |
+| Installing, static folders, how the CMS loads | `references/setup.md` |
+| Astro, Docusaurus, Eleventy, Next.js, Nuxt, Starlight, SvelteKit, VitePress | `references/frameworks-js.md` |
+| Hugo, Jekyll, Middleman, Zola | `references/frameworks-other.md` |
 | Global options, config file formats, output and slug options | `references/config.md` |
 | `backend`, OAuth clients, authentication | `references/backends.md` |
 | Collection types, file collections, singletons, content modeling | `references/collections.md` |

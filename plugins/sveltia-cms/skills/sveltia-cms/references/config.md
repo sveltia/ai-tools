@@ -20,7 +20,7 @@ Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration fi
 
 #### Pages CMS
 
-Pages CMS was inspired by Netlify CMS and shares a similar configuration structure. While we don’t provide a direct migration path from Pages CMS to Sveltia CMS, you can use your existing `.pages.yml` file as a reference when creating a new configuration for Sveltia CMS. Ask your AI agent to convert the configuration file to Sveltia CMS format. There are [AI tools](https://sveltiacms.app/en/docs/working-with-ai) available to assist with this process.
+Pages CMS was inspired by Netlify CMS and shares a similar configuration structure. The `.pages.yml` file can’t be used as is, but most of its options have a direct equivalent in Sveltia CMS. See the [migration guide](https://sveltiacms.app/en/docs/migration/pages-cms) for how to convert it. There are also [AI tools](https://sveltiacms.app/en/docs/working-with-ai) available to assist with this process.
 
 ### Supported Formats
 
