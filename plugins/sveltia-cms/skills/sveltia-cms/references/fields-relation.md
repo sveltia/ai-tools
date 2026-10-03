@@ -21,6 +21,13 @@ Radio buttons (single select) or checkboxes (multi select) for choosing related 
 
 For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
 
+The options are listed in the following order:
+
+- List items in a file, with the [`file`](#file) option: the order of the items in the list.
+- Entries in an entry collection with the [`reorder`](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) option: the manual order of the entries. Entries without an order value, such as the ones just created with the [**Add**](#creating-related-entries) button, come last.
+- Entries in a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file): the order of the entries in the array.
+- Entries in any other entry collection: alphabetical order of the labels.
+
 #### Creating Related Entries
 
 When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry being edited, so users don’t have to save their work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
