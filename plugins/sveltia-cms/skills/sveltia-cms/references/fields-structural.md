@@ -197,14 +197,14 @@ Whether the entire list is minimized when collapsed. If set to `auto`, the list 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow adding new items to the list. If set to `false`, the Add button will be hidden.
+Whether to allow adding new items to the list. If set to `false`, the Add button will be hidden, and so will the options to duplicate an item or add one above or below it. Restore Default is also disabled for the field, as it could add items.
 
 ##### `allow_remove`
 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden.
+Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden. Clear and Restore Default are also disabled for the field, as they could remove items, and the Clear All option in the pane and editor menus leaves the list as it is.
 
 ##### `allow_duplicate`
 

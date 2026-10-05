@@ -96,6 +96,7 @@ Currently, the following languages are available:
 - Portuguese (Brazil)
 - Portuguese (Portugal)
 - Russian
+- Slovak
 - Spanish (Colombia)
 - Swedish
 - Turkish
@@ -120,7 +121,6 @@ The following languages are available in Decap CMS but not yet available in Svel
 - Norwegian Nynorsk
 - [Romanian](https://github.com/sveltia/sveltia-cms/issues/711)
 - Serbian (Cyrillic)
-- Slovak
 - Slovenian
 - [Spanish (Spain)](https://github.com/sveltia/sveltia-cms/issues/281)
 - Thai
@@ -387,7 +387,7 @@ They apply to different parts of the entry depending on the menu:
 
 Because the pane and editor menus change many fields at once, they ask for confirmation first. A field can be reverted to undo a restore or clear, until the entry is saved.
 
-Restoring and clearing leave alone the values a user doesn’t enter: [Hidden](https://sveltiacms.app/en/docs/fields/hidden), [UUID](https://sveltiacms.app/en/docs/fields/uuid) and [Compute](https://sveltiacms.app/en/docs/fields/compute) fields, read-only fields, and the type of a variable type Object field. An optional Object field that is collapsed stays collapsed. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, restoring or clearing a field in the default locale does the same in the other locales where the field is duplicated, while in another locale only the fields that can be translated there are changed.
+Restoring and clearing leave alone the values a user doesn’t enter: [Hidden](https://sveltiacms.app/en/docs/fields/hidden), [UUID](https://sveltiacms.app/en/docs/fields/uuid) and [Compute](https://sveltiacms.app/en/docs/fields/compute) fields, read-only fields, and the type of a variable type Object field. The items of a [List](https://sveltiacms.app/en/docs/fields/list) field with the `allow_remove: false` option are kept as well, since clearing or restoring could remove them, and so are those of a List field with the `allow_add: false` option when restoring, which could add items. An optional Object field that is collapsed stays collapsed. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, restoring or clearing a field in the default locale does the same in the other locales where the field is duplicated, while in another locale only the fields that can be translated there are changed.
 
 #### Slug Panel
 

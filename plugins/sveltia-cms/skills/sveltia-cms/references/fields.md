@@ -398,7 +398,7 @@ Single-line text input field for entering short to medium-length strings. It sup
 
 Additional text can be displayed before or after the input field using the `before_input` and `after_input` options.
 
-A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements.
+A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements. The counter only counts what the user types: the `prefix` and `suffix` are not included.
 
 Emoji autocomplete is enabled by default, unless the `type` option is `url` or `email`. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
 
@@ -421,7 +421,8 @@ A string. If the `required` option is set to `false` and the field is left empty
 ### Data Validation
 
 - If the `required` option is set to `true`, the string must not be empty.
-- If `minlength` and/or `maxlength` options are specified, the string length must be within the defined limits.
+- If `minlength` and/or `maxlength` options are specified, the string length must be within the defined limits. The length doesn’t include the `prefix` and `suffix`, or leading and trailing whitespace, and an emoji counts as a single character.
+- If the `type` option is `url` or `email`, the string must be a valid URL or email address, checked without the `prefix` and `suffix`. An email address must also have a dot in its domain name.
 - If the `pattern` option is provided, the string must match the specified regular expression pattern.
 
 ### Options
@@ -449,7 +450,7 @@ The default value for the field when creating a new entry.
 - Type: `string`
 - **Default**: `""`
 
-The value type, either `url` or `email`. This option changes the input type attribute accordingly for better mobile keyboard support, and also enables basic validation for URL or email format.
+The value type, either `url` or `email`. This option shows the matching keyboard on mobile devices, and also enables basic validation for URL or email format.
 
 ##### `prefix`
 
@@ -470,14 +471,14 @@ Strings to be appended to the value when saving or displaying it. If the value i
 - **Type**: `integer`
 - **Default**: `0`
 
-Minimum length of the string. This enables character counter in the UI and validation.
+Minimum length of the string, not counting the `prefix` and `suffix`. This enables character counter in the UI and validation.
 
 ##### `maxlength`
 
 - **Type**: `integer`
 - **Default**: `Infinity`
 
-Maximum length of the string. This enables character counter in the UI and validation.
+Maximum length of the string, not counting the `prefix` and `suffix`. This enables character counter in the UI and validation.
 
 ##### `before_input`
 
@@ -2066,7 +2067,7 @@ TOML does not support `null` values, so avoid using `null` as the default value 
 
 A string `default` value supports the following template tags, which are filled in when a new entry draft is created:
 
-- `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, e.g. `en` or `fr`.
+- `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, e.g. `en` or `fr`. The tag requires i18n support for the collection or file; otherwise, a configuration error is reported, since there is no locale to fill it with.
 - `{{datetime}}`: The current date/time in [ISO 8601 format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).
 - `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags).
 - `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/en/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) because the user is not authenticated via a Git backend.

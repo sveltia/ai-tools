@@ -360,7 +360,7 @@ slugify_filename = true
 }
 ```
 
-Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options).
+Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). The same applies to a file renamed in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), or in a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field before the entry is saved: the resulting filename is shown below the input, so `Blog Photo 1.jpg` is saved as `blog-photo-1.jpg`.
 
 #### Renaming Uploaded Files
 
