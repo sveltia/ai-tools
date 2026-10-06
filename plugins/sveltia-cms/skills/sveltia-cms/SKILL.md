@@ -140,8 +140,10 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Blank page, auth failures, build errors, CSP, FAQs | `references/troubleshooting.md` |
 | Local development, editorial workflow, open authoring, deploy previews | `references/workflows.md` |
 | The admin UI editors work in: content library, editor, asset library | `references/admin-ui.md` |
-| `CMS.init()`, events, custom field types, file formats | `references/api.md` |
-| Custom editor components, preview templates, preview styles | `references/api-customization.md` |
+| `CMS.init()`, events, custom file formats | `references/api.md` |
+| Custom field types (widgets) | `references/api-field-types.md` |
+| Custom RichText editor components, Markdown rendering | `references/api-editor-components.md` |
+| Preview templates, preview styles, UI customization | `references/api-previews.md` |
 
 For anything not covered, fetch the live documentation at <https://sveltiacms.app> — the index is at <https://sveltiacms.app/llms.txt> and the full text at <https://sveltiacms.app/llms-full.txt> (large; prefer a specific page).
 

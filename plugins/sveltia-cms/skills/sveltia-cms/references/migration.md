@@ -194,7 +194,6 @@ The following features will not be implemented in Sveltia CMS due to various rea
 
 We don’t implement features not described in the Netlify/Decap CMS documentation.
 
-- The undocumented `getAsset` and `fields` parameters for the `toPreview` function of [custom editor components](https://sveltiacms.app/en/docs/api/editor-components): Sveltia CMS does not support these parameters because it automatically replaces image paths with blob URLs in the preview.
 - [Undocumented methods](https://github.com/sveltia/sveltia-cms/blob/57562472e29c4090506000f7767df5179a450adb/src/lib/services/api/compatibility.js#L15-L35) exposed on the `CMS` object: This includes custom backends and custom media storage providers, if any. We may support these features in the future, but our implementation would likely be incompatible with Netlify/Decap CMS.
 - Any other undocumented features and options. Exceptions apply.
 

@@ -1,6 +1,6 @@
 # Field Types: Rich Text and Code
 
-The RichText/Markdown and Code field types. For custom editor components, see `api-customization.md`.
+The RichText/Markdown and Code field types. For custom editor components, see `api-editor-components.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 

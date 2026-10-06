@@ -153,10 +153,10 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | --- | --- | --- |
 | `access_key_id` | Yes | AWS Access Key ID (safe to store in config). |
 | `bucket` | Yes | The S3 bucket name. |
-| `region` | Yes | AWS region, e.g. `us-east-1`, `eu-west-1`. |
+| `region` | Yes | AWS region, e.g. `us-east-1`, `eu-west-1`. With a custom `endpoint`, the region of your server; see [Self-Hosted Storage](#self-hosted-storage) below. |
 | `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `force_path_style` | No | Use path-style URLs (`s3.region.amazonaws.com/bucket`) instead of virtual-hosted-style (`bucket.s3.region.amazonaws.com`). Defaults to `false`. Has no effect with `endpoint`, which always uses path-style URLs. |
-| `endpoint` | No | Custom endpoint URL for another S3-compatible service, such as [MinIO](https://www.min.io/), e.g. `https://minio.example.com`. Objects are addressed as `{endpoint}/{bucket}/{key}`. |
+| `endpoint` | No | Custom endpoint URL for another S3-compatible service, such as [Garage](https://garagehq.deuxfleurs.fr/) or [MinIO](https://www.min.io/), e.g. `https://s3.example.com`. Objects are addressed as `{endpoint}/{bucket}/{key}`. See [Self-Hosted Storage](#self-hosted-storage) below. |
 | `public_url` | No | Custom domain for asset URLs (e.g. a CloudFront distribution). See [Custom Domain](#custom-domain) below. |
 
 ### Custom Domain
@@ -168,6 +168,70 @@ public_url: 'https://media.example.com'
 ```
 
 The S3 API endpoint is still used for listing and uploading — only the asset URLs shown in the CMS change. See the [Route 53 getting-started guide](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/getting-started-s3.html) for setting up a custom domain with S3.
+
+### Self-Hosted Storage
+
+The Amazon S3 integration also works with a self-hosted, S3-compatible object storage server, such as [Garage](https://garagehq.deuxfleurs.fr/) or [MinIO](https://www.min.io/), for organizations that must keep their assets on their own infrastructure. Set `endpoint` to the URL of the server’s S3 API:
+
+<!-- cSpell:disable -->
+
+```yaml [YAML]
+media_libraries:
+  aws_s3:
+    endpoint: https://s3.example.com
+    region: garage
+    access_key_id: GK31c2f218a2e44f485b94239e
+    bucket: my-website-assets
+    public_url: https://my-website-assets.web.example.com # Optional, see below
+```
+
+```toml [TOML]
+[media_libraries.aws_s3]
+endpoint = "https://s3.example.com"
+region = "garage"
+access_key_id = "GK31c2f218a2e44f485b94239e"
+bucket = "my-website-assets"
+public_url = "https://my-website-assets.web.example.com"
+```
+
+```json [JSON]
+{
+  "media_libraries": {
+    "aws_s3": {
+      "endpoint": "https://s3.example.com",
+      "region": "garage",
+      "access_key_id": "GK31c2f218a2e44f485b94239e",
+      "bucket": "my-website-assets",
+      "public_url": "https://my-website-assets.web.example.com"
+    }
+  }
+}
+```
+
+```js [JavaScript]
+{
+  media_libraries: {
+    aws_s3: {
+      endpoint: 'https://s3.example.com',
+      region: 'garage',
+      access_key_id: 'GK31c2f218a2e44f485b94239e',
+      bucket: 'my-website-assets',
+      public_url: 'https://my-website-assets.web.example.com', // Optional, see below
+    },
+  },
+}
+```
+
+<!-- cSpell:enable -->
+
+Keep the following in mind:
+
+- **Path-style URLs:** With a custom `endpoint`, objects are always addressed as `{endpoint}/{bucket}/{key}`, so the server doesn’t need a wildcard DNS record or a TLS certificate for bucket subdomains. `force_path_style` has no effect.
+- **Region:** The region isn’t part of the URL, but it’s used to sign every request, so it must match the region the server is configured with: the `s3_region` option for Garage (`garage` in the sample configuration) or `us-east-1` for MinIO unless you’ve changed it. A mismatch makes every request fail with a signature error.
+- **CORS:** The server must allow cross-origin requests from the CMS origin, as described in [CORS](#cors) above. With Garage, apply the same policy to the bucket through its S3 API, e.g. with `aws s3api put-bucket-cors --endpoint-url https://s3.example.com`. MinIO allows any origin by default; if you’ve restricted it, add the CMS origin to its `cors_allow_origin` setting.
+- **Public read access:** Asset preview and download URLs are unsigned, so objects must be readable without credentials. On MinIO, allow anonymous downloads on the bucket, e.g. with `mc anonymous set download`. Garage doesn’t serve anonymous requests on its S3 API; enable [website access](https://garagehq.deuxfleurs.fr/documentation/cookbook/exposing-websites/) on the bucket instead and set `public_url` to the bucket’s web endpoint or a reverse proxy in front of it.
+- **HTTPS:** If the CMS is served over HTTPS, browsers block requests to a plain `http://` endpoint as mixed content, except for `localhost`. Put the server behind a reverse proxy with a TLS certificate.
+- **Content Security Policy:** Add the `endpoint` origin, and the `public_url` origin if any, to `connect-src` and `img-src`. See [Content Security Policy](#content-security-policy) below.
 
 ### Content Security Policy
 
