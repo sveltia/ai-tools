@@ -533,7 +533,7 @@ Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be consi
 
 Sveltia CMS was created before Decap CMS, and was never intended to replace or compete with it. However, as Decap CMS has been neglected and many issues remain unresolved, Sveltia CMS can be considered the de facto successor to Decap CMS as well. It’s a more reliable and actively maintained alternative for users looking to migrate from Decap CMS.
 
-In fact, one-third of Sveltia CMS users have switched from Decap CMS, as our [community insights](https://github.com/sveltia/sveltia-cms/discussions/809) show, and the number is growing.
+In fact, as our [Showcase](https://sveltiacms.app/en/showcase) shows, around 30% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS is also downloaded more than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
 
 See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
 

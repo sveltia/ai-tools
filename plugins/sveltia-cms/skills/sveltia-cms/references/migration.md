@@ -47,9 +47,8 @@ If your current CMS is Git-based, the migration process should be relatively str
 
 See our [Showcase](https://sveltiacms.app/en/showcase) for examples of sites that have successfully migrated from other headless CMS platforms to Sveltia CMS.
 
-- [Examples of sites migrated from DatoCMS](https://sveltiacms.app/en/showcase?migrated-from=datocms)
-- [Examples of sites migrated from Keystatic](https://sveltiacms.app/en/showcase?migrated-from=keystatic)
 - [Examples of sites migrated from TinaCMS](https://sveltiacms.app/en/showcase?migrated-from=tinacms)
+- [Examples of sites migrated from Keystatic](https://sveltiacms.app/en/showcase?migrated-from=keystatic)
 
 #### Traditional CMSs
 

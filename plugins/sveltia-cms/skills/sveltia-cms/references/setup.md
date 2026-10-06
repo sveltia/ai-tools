@@ -27,6 +27,8 @@ While we don’t have official starter templates yet, the community has created 
 - [Astros](https://github.com/majesticooss/astros) by [zanhk](https://github.com/zanhk)
 - [Astro i18n Starter](https://github.com/yacosta738/astro-cms) by [yacosta738](https://github.com/yacosta738)
 - [astro-sveltia-cms](https://github.com/knolljo/astro-sveltia-cms) by [knolljo](https://github.com/knolljo)
+- [Nebulix](https://nebulix.unfolding.io/) by [Unfolding.io](https://github.com/unfolding-io)
+- [StarFunnel](https://starfunnel.unfolding.io/) by [Unfolding.io](https://github.com/unfolding-io)
 
 ##### Eleventy
 
@@ -415,6 +417,8 @@ Sveltia CMS is designed to be framework-agnostic, allowing you to integrate it w
 
 Here are some resources to help you get started with Sveltia CMS in various frameworks:
 
+<div class="list-columns">
+
 - [Astro](https://sveltiacms.app/en/docs/frameworks/astro)
 - [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus)
 - [Eleventy](https://sveltiacms.app/en/docs/frameworks/eleventy)
@@ -428,6 +432,8 @@ Here are some resources to help you get started with Sveltia CMS in various fram
 - [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress)
 - [Zola](https://sveltiacms.app/en/docs/frameworks/zola)
 
+</div>
+
 More framework guides will be added over time.
 
 Our [Showcase](https://sveltiacms.app/en/showcase) section features real-world examples of Sveltia CMS integrated with various frameworks, including links to their source code repositories. This can be a valuable resource for providing inspiration and practical insights for your own projects.
@@ -438,24 +444,24 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 627 sites in the showcase, sorted by popularity:
+Framework distribution across 632 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 234 | 37.3% |
-| Vanilla JavaScript | 96 | 15.3% |
-| Eleventy | 82 | 13.1% |
-| Hugo | 57 | 9.1% |
-| Custom Tooling | 40 | 6.4% |
+| Astro | 236 | 37.3% |
+| Vanilla JavaScript | 98 | 15.5% |
+| Eleventy | 82 | 13.0% |
+| Hugo | 57 | 9.0% |
+| Custom Tooling | 40 | 6.3% |
 | Jekyll | 32 | 5.1% |
 | Next.js | 31 | 4.9% |
 | SvelteKit | 14 | 2.2% |
 | React | 10 | 1.6% |
 | React Router | 7 | 1.1% |
 | Nuxt | 4 | 0.6% |
+| VitePress | 4 | 0.6% |
 | MkDocs | 3 | 0.5% |
 | Zola | 3 | 0.5% |
-| VitePress | 3 | 0.5% |
 | Vue | 2 | 0.3% |
 | Middleman | 1 | 0.2% |
 | Docusaurus | 1 | 0.2% |

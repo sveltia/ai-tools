@@ -70,7 +70,7 @@ The CMS interface is available in various languages. The language setting is **A
 
 Currently, the following languages are available:
 
-<div class="lang-list">
+<div class="list-columns">
 
 - Arabic
 - Bulgarian
@@ -111,7 +111,7 @@ If a user has picked a specific language and the browser’s language later beco
 
 The following languages are available in Decap CMS but not yet available in Sveltia CMS:
 
-<div class="lang-list">
+<div class="list-columns">
 
 - [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
 - [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)
