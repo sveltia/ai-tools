@@ -6,9 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## RichText Field
 
-The RichText field type provides a rich text editor that supports Markdown content. It allows content editors to format text, add links, images, and other media, making it a versatile choice for creating rich content.
-
-<!-- The RichText field type provides a rich text editor that supports both Markdown and HTML content. It allows content editors to format text, add links, images, and other media, making it a versatile choice for creating rich content. -->
+The RichText field type provides a rich text editor that supports both Markdown and HTML content. It allows content editors to format text, add links, images, and other media, making it a versatile choice for creating rich content.
 
 **Note for Netlify/Decap CMS users**
 
@@ -20,7 +18,9 @@ For backward compatibility with Netlify/Decap CMS, the [Markdown](https://svelti
 
 A [Lexical](https://lexical.dev/)-based rich text editor, including headings, lists, links, images, code blocks, and more. It provides a user-friendly interface for writing and formatting content.
 
-The built-in toolbar includes buttons for common formatting options, which can be customized using the `buttons` option. The editor also supports different modes, including a raw Markdown editing mode, which can be configured using the `modes` option. Additional editor components can be added to enhance the editing experience using the `editor_components` option.
+The built-in toolbar includes buttons for common formatting options, which can be customized using the `buttons` option. The editor also supports different modes, including a raw Markdown or HTML editing mode, which can be configured using the `modes` option. Additional editor components can be added to enhance the editing experience using the `editor_components` option.
+
+Links are edited in a floating link editor. Placing the cursor in a link shows its URL along with buttons to edit or remove the link, and selecting text and clicking the Link button or pressing `Ctrl+K`/`Command+K` opens the editor to enter a URL for the text. Without a selection, the Link button opens a dialog to insert a link along with its text.
 
 Local/remote images can be pasted or dropped into the editor to insert them. Note: pasting multiple images is [not supported in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=864052).
 
@@ -40,19 +40,17 @@ A read-only view of the rich text content, rendered as HTML.
 
 ### Data Type
 
-A Markdown string. See the [Data Output](https://sveltiacms.app/en/docs/data-output#markdown-syntax) documentation for details on the Markdown syntax used by Lexical.
-
-<!-- If the `format` option is set to `markdown`, the value will be a Markdown string. If it is set to `html`, the value will be an HTML string. -->
+If the [`format`](#format) option is set to `markdown` (default), the value will be a Markdown string. See the [Data Output](https://sveltiacms.app/en/docs/data-output#markdown-syntax) documentation for details on the Markdown syntax used by Lexical. If it is set to `html`, the value will be an HTML string.
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string.
 
-<!-- When using the Markdown format, you need to parse the Markdown string using a Markdown parser in your framework to convert it to HTML for rendering on your website. Some frameworks have built-in support for Markdown, while others may require additional libraries. Please refer to your framework’s documentation on how to handle Markdown content. See also the [how-to](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) for advice on handling line breaks in Markdown. -->
+When using the Markdown format, you need to parse the Markdown string using a Markdown parser in your framework to convert it to HTML for rendering on your website. Some frameworks have built-in support for Markdown, while others may require additional libraries. Please refer to your framework’s documentation on how to handle Markdown content. See also the [how-to](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) for advice on handling line breaks in Markdown.
 
-You need to parse the Markdown string using a Markdown parser in your framework to convert it to HTML for rendering on your website. Some frameworks have built-in support for Markdown, while others may require additional libraries. Please refer to your framework’s documentation on how to handle Markdown content. See also the [how-to](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) for advice on handling line breaks in Markdown.
+When using the HTML format, the value can be rendered on your website as is. Make sure to sanitize it first if untrusted users can edit the content.
 
 **Future Plans**
 
-We plan to add support for HTML output in future releases. It will provide additional features specific to HTML content, including text alignment, link targets, and more.
+We plan to add features specific to HTML content in future releases, including text alignment, link targets, and more.
 
 ### Data Validation
 
@@ -80,21 +78,26 @@ Sveltia CMS has changed the default value of the `sanitize_preview` option to `t
 
 Also, Sveltia CMS does not support the deprecated camelCase `editorComponents` option. Use `editor_components` instead.
 
-<!--
 ##### `format`
 
 - **Type**: `string`
 - **Default**: `markdown`
 
-Specifies the data format of the content. Possible values are `markdown` and `html`.
--->
+Specifies the data format of the content. Possible values are `markdown` and `html`. This option is not available for the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type, which always saves Markdown.
+
+With the `html` format, the editor works as follows:
+
+- The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons are hidden in this mode, as they insert Markdown.
+- [Editor components](#editor-components), including the built-in `image` component, are not available, as they are defined with Markdown syntax. The `code-block` component, which is implemented as a block type, is still available. Images cannot be pasted or dropped into the editor either.
+- HTML containing an element the rich text editor cannot handle, such as `<img>`, can only be edited in the `raw` mode.
+- An existing value is kept as is until the content is changed in the rich text mode. Then the editor writes HTML in its own style, such as `<strong>` for `<b>`, and attributes it doesn’t use, such as `class`, are dropped.
 
 ##### `default`
 
 - **Type**: `string`
 - **Default**: `""`
 
-The default content for the field, written in Markdown.
+The default content for the field, written in Markdown or HTML depending on the [`format`](#format) option.
 
 ##### `minimal`
 
@@ -108,9 +111,7 @@ Whether to limit the editor height. When set to `true`, the editor height is lim
 - **Type**: `array`
 - **Default**: `[rich_text, raw]`
 
-The modes available in the editor. Possible values are `rich_text` and `raw`. The `raw` mode allows users to edit the raw Markdown text.
-
-<!-- The modes available in the editor. Possible values are `rich_text` and `raw`. The `raw` mode allows users to edit the raw Markdown or HTML text. -->
+The modes available in the editor. Possible values are `rich_text` and `raw`. The `raw` mode allows users to edit the raw Markdown or HTML text.
 
 The following configurations are possible:
 
@@ -121,7 +122,7 @@ The following configurations are possible:
 
 If multiple modes are enabled, the first one is selected initially, and users can switch between them using a mode selector in the editor toolbar.
 
-The `raw` mode comes with syntax highlighting for Markdown, including the code in fenced code blocks, while keeping the Markdown syntax characters visible. The toolbar buttons and editor components also work in this mode, inserting Markdown into the text. See the [`buttons`](#buttons) and [`editor_components`](#editor-components) options below for details.
+The `raw` mode comes with syntax highlighting for Markdown, including the code in fenced code blocks, while keeping the Markdown syntax characters visible. The toolbar buttons and editor components also work in this mode, inserting Markdown into the text. See the [`buttons`](#buttons) and [`editor_components`](#editor-components) options below for details. With the `html` [format](#format), the `raw` mode shows the HTML source with syntax highlighting instead.
 
 ##### `buttons`
 
@@ -236,6 +237,7 @@ You can define default options for all RichText and [Markdown](https://sveltiacm
 
 The following options can be defined globally:
 
+- `format` (RichText field type only)
 - `default`
 - `minimal`
 - `modes`
@@ -323,8 +325,7 @@ widget = "richtext"
 }
 ```
 
-<!--
-#### Standard HTML field
+#### Standard HTML Field
 
 This example shows a rich text editor that saves content in HTML format.
 
@@ -360,8 +361,6 @@ format = "html"
   format: "html",
 }
 ```
-
--->
 
 #### Basic Markdown Field with Limited Buttons
 
@@ -459,7 +458,7 @@ The `widget` property for this field type is `markdown`.
 
 See the [RichText field documentation](https://sveltiacms.app/en/docs/fields/richtext) for details on the UI, data type, and available options.
 
-<!-- Note that the `format` option is not available for the Markdown field type since it is fixed to `markdown`. -->
+Note that the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) option is not available for the Markdown field type since it is fixed to `markdown`. Use the RichText field type to save HTML.
 
 ### Examples
 

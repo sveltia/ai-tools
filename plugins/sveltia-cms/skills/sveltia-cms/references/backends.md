@@ -18,7 +18,7 @@ Sveltia CMS supports the following Git-based backends:
 
 For testing purposes, you can also use the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
 
-Some features only work with specific backends. For example, [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) currently only works with the GitHub and GitLab backends.
+Some features only work with specific backends.
 
 **Breaking changes from Netlify/Decap CMS**
 
@@ -429,7 +429,7 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 - Gitea 1.24, Forgejo 12.0 or later.
 - A Gitea or Forgejo account.
 - A Gitea or Forgejo repository to store the content.
-- Write access to the repository. Users with read-only access can’t sign in.
+- Write access to the repository. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them contribute from a fork.
 - Sveltia CMS installed in your project.
 
 If the configured branch is [protected](https://docs.gitea.com/usage/access-control/protected-branches) and doesn’t allow a user to push, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own, but the Publish button is only shown to users who are allowed to merge into the branch.
@@ -582,6 +582,8 @@ If you or a small team of developers are the only users of your CMS instance, yo
 
 Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on Gitea/Forgejo with the required scopes pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
 
+The scopes depend on your configuration: `read:repository`, `write:repository` and `read:user` are always requested, and `read:issue` and `write:issue` are added when the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled, because the workflow labels its pull requests and labels live under the issue scope. If you turn the workflow on after generating a token, generate a new one, or saving an entry fails with a permission error.
+
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 
 #### PKCE Authorization (Recommended) {#pkce-authorization}
@@ -655,10 +657,8 @@ The following [content management workflows](https://sveltiacms.app/en/docs/work
 
 - [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
-
-**Future Plans**
-
-Support for the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) will be added in the near future.
+- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
+- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
 
 ### Deployment
 
@@ -1262,6 +1262,7 @@ The following [content management workflows](https://sveltiacms.app/en/docs/work
 - [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
+- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
 
 ### Deployment
 

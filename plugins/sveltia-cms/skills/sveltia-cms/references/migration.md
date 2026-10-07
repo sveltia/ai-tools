@@ -441,7 +441,6 @@ The following Pages CMS features have no direct equivalent in Sveltia CMS:
 - **Actions**: Pages CMS can run GitHub Actions workflows from buttons with custom inputs. When automatic deployments are disabled, Sveltia CMS can trigger a deployment with the [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button, which sends a `repository_dispatch` event to GitHub Actions or calls a webhook, but it doesn’t support other workflows or inputs.
 - **Commit identity**: Pages CMS can commit as the GitHub App. Sveltia CMS always commits as the signed-in user.
 - **Raw and datagrid editors**: Pages CMS provides a plain text editor for files without fields and a spreadsheet-like editor for CSV files. Sveltia CMS can manage such files with the [`raw` format](https://sveltiacms.app/en/docs/collections/entries/formats#format) and a single [Code](https://sveltiacms.app/en/docs/fields/code) or [Text](https://sveltiacms.app/en/docs/fields/text) field named `body`, but there is no table editor.
-- **Rich text in HTML**: The `format: html` option of the `rich-text` field type is not supported yet, as the [RichText](https://sveltiacms.app/en/docs/fields/richtext) field type currently outputs Markdown only. HTML output is planned for a future release.
 - **Random filenames**: The `rename: random` media option is not supported. The `rename: safe` option is supported as `slugify_filename`.
 - **Nested sidebar groups**: The `group` content type is not supported. Use [dividers](https://sveltiacms.app/en/docs/collections#dividers) to separate the collection list, or put related files into one [file collection](https://sveltiacms.app/en/docs/collections/files).
 
@@ -620,7 +619,7 @@ The field types are converted as follows:
 | --- | --- |
 | `string` | [`string`](https://sveltiacms.app/en/docs/fields/string) (default) |
 | `text` | [`text`](https://sveltiacms.app/en/docs/fields/text) |
-| `rich-text` | [`richtext`](https://sveltiacms.app/en/docs/fields/richtext) (Markdown only) |
+| `rich-text` | [`richtext`](https://sveltiacms.app/en/docs/fields/richtext) |
 | `code` | [`code`](https://sveltiacms.app/en/docs/fields/code) |
 | `number` | [`number`](https://sveltiacms.app/en/docs/fields/number) |
 | `boolean` | [`boolean`](https://sveltiacms.app/en/docs/fields/boolean) |
@@ -647,6 +646,17 @@ The Code field in Sveltia CMS saves an object containing the code and the langua
   default_language: javascript
   output_code_only: true
   allow_language_selection: false
+```
+
+##### Rich Text
+
+The `options.format` option becomes [`format`](https://sveltiacms.app/en/docs/fields/richtext#format). If a field has `options.format: html`, set `format: html` to keep saving HTML. Note that editor components, including images, are not available in the rich text editor with the HTML format; HTML containing images can only be edited in the raw mode.
+
+```yaml
+- name: body
+  label: Body
+  widget: richtext
+  format: html
 ```
 
 ##### Number
