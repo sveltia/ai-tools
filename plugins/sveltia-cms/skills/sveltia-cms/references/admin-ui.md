@@ -282,6 +282,16 @@ Subfolder browsing applies to any global, collection or [asset collection](https
 
 When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), a folder that is left empty by a move or deletion is removed from the disk, so the local checkout matches what a Git commit would leave. [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, as those changes are committed straight to the branch.
 
+##### Read-Only Folders
+
+The files in a folder named `admin` or `cms`, at any depth, are listed but read-only, because the CMS itself is usually served from such a folder. With a media folder at the root of the public folder, such as `static` or `public`, the CMS’s own admin page and configuration file — `static/admin/index.html` and `static/admin/config.yml`, for example — would otherwise appear as assets, and replacing them would hand the next user’s sign-in to whoever wrote the new page.
+
+- The files can’t be replaced, edited, renamed, moved or deleted.
+- Nothing can be uploaded to such a folder, and no folder can be created in it.
+- The folder itself can’t be renamed or deleted, and a new or renamed folder can’t be called `admin` or `cms`.
+
+The same applies to the picker of the [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields, and to the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#checks-before-publishing): a pull request that changes a file in such a folder as an asset isn’t published from the CMS. Make changes to the admin page in the repository directly. Deployment configuration files such as `_redirects` aren’t affected, and can still be edited through a file collection; see [Editing Site Deployment Configuration Files](https://sveltiacms.app/en/docs/how-tos#editing-site-deployment-configuration-files).
+
 ##### Folders on External Locations
 
 [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and the S3-compatible providers, as well as [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage), store files at paths, so they are browsed folder by folder the same way, with the same breadcrumb, Info pane, **New Folder** button and folder menu. As object storage has no folders of its own, the CMS keeps an empty folder with a zero-byte placeholder object named after the folder with a trailing slash, which is what the consoles of these services do, and it reads the other folders off the file paths. Renaming a folder copies each file to its new path and deletes the original, one file at a time, since the services can’t move a file, and deleting a folder deletes each file in it. Keep in mind that the entries link to the files on these services by URL, so a rename changes those URLs and the entries using them aren’t updated. The search box in the location’s toolbar looks through every folder, listing the matches with their paths.
@@ -629,9 +639,9 @@ Several people can work on a site at the same time. Sveltia CMS keeps an eye on 
 - **When a user saves**, the branch is checked once more. If the entry has been changed or deleted since it was opened, a dialog says so, and nothing is written until the user chooses Save Anyway. Saving over a change replaces it with theirs; saving a deleted entry creates it again.
 - **On GitHub**, the commit also names the branch head it expects, so a commit against a branch that moved in the last moment is refused by GitHub rather than applied. Sveltia CMS then explains what happened, and saving again picks the other change up first.
 
-Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), each unpublished entry lives on its own branch that nobody else writes to, so these checks don’t apply there; a conflict with the main branch, if any, is dealt with when the entry is published.
+Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry lives on a branch named after the entry, not after the editor, so two people working on the same entry share it. That branch is checked when the entry is saved: if the entry has been changed on it since the draft was opened, the same dialog appears, and nothing is written until the user chooses Save Anyway. On GitHub, the commit names the commit the entry was loaded or saved at, so a push to the branch in the last moment is refused by GitHub in the same way. A conflict with the configured branch itself, if any, is dealt with when the entry is published, which also checks that the pull request holds nothing the CMS hasn’t shown; see [Checks Before Publishing](https://sveltiacms.app/en/docs/workflows/editorial#checks-before-publishing).
 
-Only entries on the configured branch are watched. Changes to a colleague’s draft, or to the same entry in the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), aren’t detected.
+The checks made while an entry is open watch the configured branch only, so a colleague’s commit to a shared workflow branch is caught at the point of saving rather than reported in the editor beforehand. Changes made to the same entry in the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) aren’t detected at all.
 
 ### Preview Pane
 

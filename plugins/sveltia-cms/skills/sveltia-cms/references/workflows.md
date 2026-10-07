@@ -330,6 +330,31 @@ On GitLab the same applies, with merge requests in place of pull requests.
 
 Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), where the CMS writes to your local files instead.
 
+#### Sharing a Branch
+
+A workflow branch is named after the entry, not after the editor, so two people working on the same entry work on the same branch, and anyone with push access can commit to it.
+
+- **Saving** compares the branch with the draft first. If the entry has been changed on the branch since it was opened, a dialog says who changed it and when, and nothing is written until the user chooses Save Anyway. On GitHub, the commit also names the commit the entry was loaded or saved at, so a push that lands in the last moment makes GitHub refuse the save rather than have it built on top of something the user hasn’t seen. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
+- **Saving an entry that has no pull request yet** onto a branch that already exists starts the branch over from the configured branch, so whatever an earlier pull request left on it — one merged without deleting the branch, or closed on GitHub or GitLab rather than discarded in the CMS — isn’t carried into the new one. If a pull request is still open from that branch, though, the save is refused, with a message giving the pull request’s number. That’s a pull request the board doesn’t show: one that has lost its status label, one that goes to another branch, or one the CMS didn’t open. The CMS won’t commit onto it, because whatever else it holds would then be published along with the entry. Close it on GitHub or GitLab, or, if it’s one the CMS opened, add its status label back to put it on the board again.
+- **Publishing** checks the pull request first; see [Checks Before Publishing](#checks-before-publishing).
+
+Only a pull request that goes from a branch of the repository to the configured branch is taken for an entry’s own, and only if it holds one of the entry’s files, or a file the entry had before it was renamed. If its base branch is changed to something else, the CMS stops treating it as the entry’s and leaves it alone, rather than relabeling or merging it in the entry’s name; the entry is then listed as it was before the pull request existed. Likewise, a pull request from the entry’s branch that holds a different entry isn’t offered in the entry’s editor.
+
+#### Checks Before Publishing
+
+The board and the editor show an entry, but publishing merges the whole pull request, with everything on its branch. So right before merging, the CMS reads the pull request again and publishes the entry only if:
+
+- the pull request still goes from a branch of the repository to the configured branch;
+- its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw;
+- every file it changes is one the CMS accounts for: the entry’s own files, and those of its published version that a rename removes; assets added or replaced along with it, which are only removed when the entry is moved or deleted; the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites; and the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it. A file the merge would leave exactly as the configured branch already has it passes as well;
+- every file it leaves behind is a regular file, rather than a symbolic link or a Git submodule;
+- no file in an `admin` or `cms` folder is among its assets, as the CMS itself is usually served from there; see [Read-Only Folders](https://sveltiacms.app/en/docs/ui/asset-library#read-only-folders);
+- the list of files it changes is complete, rather than cut short by GitHub or GitLab on a very large pull request.
+
+Otherwise the publish is refused, saying why. If the branch has moved on, the message asks the user to reload the page and review the latest version. If the pull request holds anything else — a change to the site’s code, a CI workflow, configuration, another entry — the message says it comes with changes the CMS can’t show, and it has to be reviewed and merged on GitHub or GitLab instead, where every change it holds is visible.
+
+Once the checks pass, the merge is pinned to the commit that was checked, so a push made in the meantime makes the merge fail rather than go along with it.
+
 #### Saving and Sending for Review
 
 Saving an entry doesn’t hand it to anyone — it stays a draft until someone moves it on. So when a user saves an entry that’s still in the Draft status, the CMS asks what to do next:
@@ -861,6 +886,8 @@ There’s no Ready stage, because marking an entry ready to publish is only mean
 **Different from Editorial Workflow**
 
 Editorial Workflow records the status in a [pull request label](https://sveltiacms.app/en/docs/workflows/editorial#statuses). Labeling requires write access to the repository, which a contributor doesn’t have, so their status is read from the pull request itself instead. Nothing has to be configured for this — the CMS picks the right approach based on the signed-in user.
+
+Only a pull request the contributor opened themselves counts. Anyone can open a pull request from a branch of a public fork, and one opened by someone else from the contributor’s branch is ignored, so its title doesn’t end up on their entry.
 
 A contributor’s pull request carries no CMS label, so it doesn’t appear on your own Editorial Workflow board. Review and merge it on GitHub, the same as any other community contribution. See [Reviewing Contributions](#reviewing-contributions) below.
 
