@@ -87,9 +87,9 @@ Specifies the data format of the content. Possible values are `markdown` and `ht
 
 With the `html` format, the editor works as follows:
 
-- The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons are hidden in this mode, as they insert Markdown.
-- [Editor components](#editor-components), including the built-in `image` component, are not available, as they are defined with Markdown syntax. The `code-block` component, which is implemented as a block type, is still available. Images cannot be pasted or dropped into the editor either.
-- HTML containing an element the rich text editor cannot handle, such as `<img>`, can only be edited in the `raw` mode.
+- The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons and editor components are hidden in this mode, as they insert Markdown.
+- Only the [editor components](#editor-components) that support HTML are available. The built-in `code-block` and `image` components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
+- HTML containing an element the rich text editor cannot handle, such as `<video>` without a component for it, can only be edited in the `raw` mode.
 - An existing value is kept as is until the content is changed in the rich text mode. Then the editor writes HTML in its own style, such as `<strong>` for `<b>`, and attributes it doesn’t use, such as `class`, are dropped.
 
 ##### `default`
@@ -166,7 +166,9 @@ Sveltia CMS includes the following built-in editor components for the RichText f
 
 Both are enabled by default. You can disable them by omitting them from the `editor_components` option.
 
-Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text.
+Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text. This is not available with the `html` [format](#format).
+
+With the `html` format, the built-in `image` component is saved as an `<img>` element, wrapped with an `<a>` element if it’s linked, and custom components need to [support HTML](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) to be available.
 
 **Multiple Images**
 

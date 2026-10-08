@@ -398,7 +398,7 @@ Source: https://sveltiacms.app/en/docs/migration/netlify-decap-cms
 
 ## Migrating from Pages CMS
 
-[Pages CMS](https://pagescms.org/) is a Git-based CMS for static sites that was inspired by Netlify CMS. Its content model is close to that of Sveltia CMS: content is stored as Markdown, YAML, JSON or TOML files in a Git repository, and the content structure is defined in a configuration file. This makes the migration relatively straightforward, as existing content files can be kept as they are in most cases.
+[Pages CMS](https://pagescms.org/) is a Git-based CMS for static sites that was inspired by Netlify CMS. Its content model is close to that of Sveltia CMS: content is stored as Markdown, YAML, JSON or TOML files in a Git repository, and the content structure is defined in a YAML configuration file. This makes the migration relatively straightforward, as existing content files can be kept as they are in most cases.
 
 This guide explains the differences between the two platforms and how to convert a Pages CMS configuration file to the Sveltia CMS format. It’s based on Pages CMS 2.x.
 
@@ -504,7 +504,14 @@ collections:
       default: { field: date, direction: descending }
     fields:
       - { name: title, label: Title }
-      - { name: date, label: Date, widget: datetime, type: date, default: '{{now}}', required: false }
+      - {
+          name: date,
+          label: Date,
+          widget: datetime,
+          type: date,
+          default: '{{now}}',
+          required: false,
+        }
       - { name: draft, label: Draft, widget: boolean, required: false }
       - { name: tags, label: Tags, widget: list, required: false }
       - { name: cover, label: Cover Image, widget: image, required: false }
@@ -650,7 +657,7 @@ The Code field in Sveltia CMS saves an object containing the code and the langua
 
 ##### Rich Text
 
-The `options.format` option becomes [`format`](https://sveltiacms.app/en/docs/fields/richtext#format). If a field has `options.format: html`, set `format: html` to keep saving HTML. Note that editor components, including images, are not available in the rich text editor with the HTML format; HTML containing images can only be edited in the raw mode.
+The `options.format` option becomes [`format`](https://sveltiacms.app/en/docs/fields/richtext#format). If a field has `options.format: html`, set `format: html` to keep saving HTML. Images are saved as `<img>` elements, as in Pages CMS.
 
 ```yaml
 - name: body

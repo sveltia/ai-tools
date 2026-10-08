@@ -40,8 +40,10 @@ Registering a component with the same `id` again replaces the previous one. The 
 - `trigger` (string): The trigger UI of the component, either `menuitem` (default) or `button`. A menu item is placed under the Insert menu, while a button is placed directly on the toolbar.
 - `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, or if it returns another type of value, no preview is shown. The function also receives a `getAsset` function and the component’s `fields` as the second and third arguments, like Netlify/Decap CMS; see [Displaying Assets](#displaying-assets).
 - `mode` (string): Editing mode for the component. `block` (default) renders the component within the rich text editor as an expandable field list. `dialog` renders a compact placeholder that opens a dialog when clicked.
-- `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Like the Object field’s `summary` option, it supports nested field names and transformations. Falls back to the first String or Text field value, then to the component label.
+- `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Like the Object field’s `summary` option, it supports nested field names and transformations. Text without placeholders is shown as is. If the summary is empty, the placeholder falls back to the first String or Text field value, then to the component label.
+- `thumbnail` (string): The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) field whose image is displayed as a small thumbnail in the placeholder when `mode` is `dialog`, e.g. `icon`. A nested field can be named with a key path like `media.src`. The thumbnail is displayed next to the summary. If there is no text to show, only the thumbnail is displayed, without the component label. The label is shown instead if the field is empty, the file is not an image, or the image fails to load. See [Icon with Thumbnail](#icon-with-thumbnail-dialog-mode) below.
 - `collapsed` (boolean): If true, the component's fields panel is collapsed by default when inserted (`block` mode only).
+- `htmlSelector` (string), `fromBlockHTML` (function) and `toBlockHTML` (function): The HTML counterparts of `pattern`, `fromBlock` and `toBlock`, which make the component available in a RichText field with the [`html` format](https://sveltiacms.app/en/docs/fields/richtext#format). All three are required to support HTML. See [Supporting HTML](#supporting-html) below.
 
 #### Preview Output
 
@@ -88,9 +90,70 @@ The third argument is the component’s `fields` as an [Immutable.js](https://im
 
 `getAsset` returns the asset object right away, so the `url` property is the file’s public path while the file is being retrieved from the repository. Once it has been retrieved, `toPreview` is called again, and the new preview replaces the previous one, which receives the [`Unmount` event](#using-a-framework-component-for-preview) if it’s a DOM element.
 
+#### Supporting HTML
+
+A RichText field with the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) option set to `html` saves its content as HTML, so the Markdown syntax defined with `pattern`, `fromBlock` and `toBlock` doesn’t apply there. A component is only available in such a field if it also defines its HTML syntax with the following properties:
+
+- `htmlSelector` (string): A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors) to identify existing instances of the component in the HTML content, such as `aside.note`. The outermost matching element is the component, including its content.
+  - Each selector in a selector list has to name the element type it matches, such as `figure` or `a:has(> img), img`, because the editor finds the component by those types. A selector like `.note` is invalid.
+  - An element of those types that isn’t an instance of the component, such as an `<aside>` without the class for `aside.note`, is handled as if there was no component: the editor imports it if it can, such as a link for `a`, or the field can only be edited in `raw` mode otherwise.
+- `fromBlockHTML` (function): A function that takes a matching element and returns an object mapping field names to their values, for example by reading attributes with `getAttribute()`, which returns decoded values, or text with `textContent`. It can return `undefined` if the element is not an instance of the component after all, which a selector cannot always tell, like a link that has text besides an image.
+- `toBlockHTML` (function): A function that takes an object mapping field names to their values and returns a single element matching `htmlSelector`. It can return either an HTML string or an [`HTMLElement`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement) created with `document.createElement()`. We recommend the latter, because values set with `setAttribute()` or `textContent` don’t have to be escaped, while you must escape the values yourself in a string. The output is also used when the component is copied to the clipboard in the editor, in a Markdown field as well.
+
+The `toPreview` function works the same way in an HTML field. If it’s omitted, the component’s HTML itself is shown in the preview.
+
+**Security Risk**
+
+The element passed to `fromBlockHTML` comes from content edited by users, so treat it as data: read values from it, but don’t insert the element itself or its HTML into the page, for example in a DOM element preview. Doing so would bypass the preview sanitization and could expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks.
+
+Whether a component is a block or inline one is still determined by `pattern`, so make sure it matches the element: a block element like `<figure>` needs a block component, or the editor puts it in a paragraph. Here is the [Image with Caption](#image-with-caption) example below with the HTML syntax added, as well as the `m` flag and anchors in `pattern` to make it a block component:
+
+```js
+/**
+ * Create a figure element. The values are set as text and attributes, so they don’t have to be
+ * escaped.
+ */
+const createFigure = ({ src = '', caption = '' }) => {
+  const figure = document.createElement('figure');
+  const img = document.createElement('img');
+  const figcaption = document.createElement('figcaption');
+
+  img.setAttribute('src', src);
+  img.setAttribute('alt', '');
+  figcaption.textContent = caption;
+  figure.append(img, figcaption);
+
+  return figure;
+};
+
+CMS.registerEditorComponent({
+  id: 'figure',
+  label: 'Image with Caption',
+  icon: 'photo',
+  fields: [
+    { name: 'src', label: 'Image', widget: 'image' },
+    { name: 'caption', label: 'Caption' },
+  ],
+  // Markdown syntax
+  pattern: /^{{< image src="(?<src>.*?)" caption="(?<caption>.*?)" >}}$/m,
+  toBlock: ({ src = '', caption = '' }) => `{{< image src="${src}" caption="${caption}" >}}`,
+  // HTML syntax
+  htmlSelector: 'figure',
+  fromBlockHTML: (element) => ({
+    src: element.querySelector('img')?.getAttribute('src') ?? '',
+    caption: element.querySelector('figcaption')?.textContent ?? '',
+  }),
+  toBlockHTML: createFigure,
+  // The same element works as the preview, which is displayed as is
+  toPreview: createFigure,
+});
+```
+
+In an HTML field, the component is saved as `<figure><img src="/images/photo.jpg" alt=""><figcaption>A photo</figcaption></figure>`, with any special characters in the caption escaped by the browser. Since the element is built with text and attributes only, it’s also safe to display as the preview, which isn’t sanitized as a DOM element, and the image source is replaced with a URL that works as described in [Displaying Assets](#displaying-assets). The `<img>` element within the `<figure>` is part of the component, so the built-in `image` component doesn’t take it.
+
 ### Using Components
 
-Once registered, custom editor components can be used in any [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field. By default, all built-in and custom components are included. You can restrict which components are available by adding their `id` to the field’s `editor_components` array in the collection configuration.
+Once registered, custom editor components can be used in any [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field, while a RichText field with the `html` format only offers the components that [support HTML](#supporting-html). By default, all built-in and custom components are included. You can restrict which components are available by adding their `id` to the field’s `editor_components` array in the collection configuration.
 
 For example, to allow only the built-in `image` component and custom `callout` and `youtube` components:
 
@@ -389,6 +452,26 @@ CMS.registerEditorComponent({
 ```
 
 In this example, the “Custom Link” component renders as a small inline chip in the editor showing the link text and URL. Clicking it opens a dialog where the user can fill in or update the fields. The `summary` template controls what text is shown in the placeholder — here it shows the link text and URL separated by an em dash. When neither the summary nor any string field value is available (e.g. for a freshly inserted component), the component `label` is shown as a fallback.
+
+#### Icon with Thumbnail (Dialog Mode)
+
+The `thumbnail` option displays an image in the placeholder of a `dialog` mode component, which helps identify an inline element like an icon at a glance. This example creates a Hugo shortcode for an SVG icon:
+
+```js
+CMS.registerEditorComponent({
+  id: 'icon',
+  label: 'Icon',
+  icon: 'star',
+  mode: 'dialog',
+  thumbnail: 'icon',
+  fields: [{ name: 'icon', label: 'Icon', widget: 'image', accept: 'image/svg+xml' }],
+  pattern: /{{< symbol icon="(?<icon>.*?)" >}}/,
+  toBlock: ({ icon = '' }) => `{{< symbol icon="${icon}" >}}`,
+  toPreview: ({ icon = '' }) => `<img class="icon" width="24" height="24" src="${icon}" alt="">`,
+});
+```
+
+In this example, the “Icon” component renders as a small inline chip in the editor showing the selected icon. As the component has no `summary` and no String or Text field, the chip shows only the image rather than the component label. Add a `summary`, such as `summary: 'Icon'` or `summary: '{{icon}}'`, to display text next to the image.
 
 #### Using React for Preview
 
