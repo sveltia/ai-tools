@@ -102,6 +102,74 @@ branch = "develop"
 }
 ```
 
+#### Monorepos
+
+If your repository holds more than one site, or the site lives in a subdirectory along with other code, set the `root_dir` option to the directory of the site. Sveltia CMS then treats that directory as the root of the repository: every path in the configuration, such as a collection’s `folder` or the `media_folder`, is relative to it, and nothing outside it shows up in the CMS. The option is available for all the Git-based backends and the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
+
+For example, with a site in `apps/blog`, a collection whose files live in `apps/blog/content/posts` is configured with `folder: content/posts`:
+
+```yaml [YAML]{4}
+backend:
+  name: github
+  repo: user/repo
+  root_dir: apps/blog
+collections:
+  - name: posts
+    folder: content/posts
+```
+
+```toml [TOML]{4}
+[backend]
+name = "github"
+repo = "user/repo"
+root_dir = "apps/blog"
+
+[[collections]]
+name = "posts"
+folder = "content/posts"
+```
+
+```json [JSON]{5}
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "root_dir": "apps/blog"
+  },
+  "collections": [{ "name": "posts", "folder": "content/posts" }]
+}
+```
+
+```js [JavaScript]{5}
+{
+  backend: {
+    name: "github",
+    repo: "user/repo",
+    root_dir: "apps/blog",
+  },
+  collections: [{ name: "posts", folder: "content/posts" }],
+}
+```
+
+The path is relative to the repository root, and it can’t climb out of the repository with `..`. Likewise, the other paths in the configuration can’t lead outside the directory with `..`, as the CMS doesn’t list the files there. If the directory doesn’t exist on the branch, the CMS says so after you sign in. With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the path also becomes part of branch names, so no part of it can start with a dot, end with `.lock` or contain a space or any of `~^:?*[\` or `@{`, which Git doesn’t allow in a branch name.
+
+Each site in the monorepo can have its own CMS with its own `root_dir`, and they don’t get in each other’s way:
+
+- Only the files in the directory are listed when the CMS loads, which saves listing the whole of a big monorepo.
+- A commit made to another part of the repository doesn’t make the CMS reload its content: only the directory is checked for changes. The [deployment status](https://sveltiacms.app/en/docs/deployments) also stays on the last commit that changed the directory, as a build for such a commit is usually skipped.
+- With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the directory is part of the branch name, e.g. `cms/apps/blog/posts/hello-world`, so two sites with a collection of the same name don’t share branches or list each other’s unpublished entries. An entry saved before you set the option keeps its branch and stays on the board, as long as all its files are in the directory. An entry whose pull request also changes a file outside the directory can’t be published from the CMS, as the change can’t be shown.
+- Each site gets a local cache of its own in the browser.
+
+Commits are still made to the repository as a whole: the `{{path}}` [template tag](#available-template-tags) in commit messages is the path from the repository root, e.g. `apps/blog/content/posts/hello-world.md`. To tell the sites apart in the Git history, you can also put the site name in the [commit messages](#commit-messages).
+
+With the [local workflow](https://sveltiacms.app/en/docs/workflows/local), select the root directory of the repository, not the directory of the site, when the CMS asks for it. The CMS finds the site’s directory within it.
+
+If the sites are deployed separately, for example as several Netlify sites built from the same repository, set the [`preview_context`](https://sveltiacms.app/en/docs/workflows/deploy-previews#specifying-a-status-context) option so the CMS links to the right [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews). A build that was canceled or skipped because the commit didn’t touch the site is ignored either way.
+
+**Warning**
+
+The `root_dir` option only limits what the CMS shows and edits. Users still need write access to the whole repository, and the Git hosting service doesn’t stop them from changing other parts of it. To restrict access to a site, keep it in a repository of its own.
+
 #### Authentication Methods
 
 By default, Sveltia CMS allows users to sign in using either OAuth or an access token. You can restrict the available sign-in methods by setting the `auth_methods` option to an array containing only the methods to allow:
@@ -354,7 +422,7 @@ You can use the following template tags in commit messages:
 
 - `{{collection}}`: The `label_singular` or `label` of the collection.
 - `{{slug}}`: The slug of the entry.
-- `{{path}}`: The file path of the entry or media asset.
+- `{{path}}`: The file path of the entry or media asset, relative to the repository root, even with the [`root_dir`](#monorepos) option.
 - `{{message}}`: The commit message generated for the change, wrapped by the `openAuthoring` template.
 - `{{author-email}}`: The email of the signed-in user, if available.
 - `{{author-login}}`: The login name of the signed-in user, if available.

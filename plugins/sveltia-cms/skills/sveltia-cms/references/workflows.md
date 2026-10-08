@@ -326,6 +326,8 @@ Nothing an editor does in the CMS touches the configured branch until the change
 
 On GitLab the same applies, with merge requests in place of pull requests. Gitea and Forgejo call them pull requests, like GitHub.
 
+With the [`root_dir`](https://sveltiacms.app/en/docs/backends#monorepos) option, the directory comes after `cms/` in the branch name, e.g. `cms/apps/blog/posts/hello-world`, so the sites of a monorepo keep their branches apart.
+
 **Pull CMS Changes to Your Local Repository**
 
 Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), where the CMS writes to your local files instead.
@@ -929,7 +931,7 @@ The content they see is always read from the configured repository, so they’re
 
 | Contributor action | What happens in Git |
 | --- | --- |
-| Save a new entry | A branch named `cms/[FORK_OWNER]/[FORK_NAME]/[COLLECTION_NAME]/[SLUG]` is created in their fork and the entry files are committed to it. No pull request is opened yet |
+| Save a new entry | A branch named `cms/[FORK_OWNER]/[FORK_NAME]/[COLLECTION_NAME]/[SLUG]` is created in their fork and the entry files are committed to it, with the [`root_dir`](https://sveltiacms.app/en/docs/backends#monorepos) directory after the fork name if it’s set. No pull request is opened yet |
 | Save an existing draft | Another commit is added to the same branch |
 | Move an entry to In Review | A pull request is opened from that branch to your configured branch |
 | Move an entry back to Draft | The pull request is marked as a draft, which keeps it — and any discussion on it — out of your review queue. GitHub uses a [draft pull request](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/changing-the-stage-of-a-pull-request); GitLab and Gitea/Forgejo have no separate state, so the CMS adds the title prefix each recognizes — [`Draft:`](https://docs.gitlab.com/user/project/merge_requests/drafts/) and [`WIP:`](https://docs.gitea.com/usage/pull-request#work-in-progress-pull-requests) respectively |
