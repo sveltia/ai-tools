@@ -234,13 +234,32 @@ If you’re using any [features that are not going to be implemented](#features-
 
 Sveltia CMS does not support the deprecated Git Gateway backend. If you don’t care about user management with Netlify Identity, you can use the [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend instead.
 
-To allow other people to edit content, simply invite them to your GitHub repository with the write role assigned.
+If your site is still deployed to Netlify, the switch is easier than you might think. Netlify can handle the GitHub or GitLab sign-in for you, so you don’t need to install [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) or any other OAuth client. Here are the steps, using GitHub as an example:
 
-Once you have migrated from the Git Gateway and Netlify Identity combo, you can remove the Netlify Identity Widget script tag from your HTML:
+1. Register an OAuth app on GitHub and add it to your site in the Netlify dashboard, as explained in the [GitHub backend](https://sveltiacms.app/en/docs/backends/github#using-netlify) documentation. The setting is found under **Project configuration** > **Security** > **OAuth**, not under **Identity**. For GitLab, see the [GitLab backend](https://sveltiacms.app/en/docs/backends/gitlab#using-netlify) documentation instead.
+1. Update the `backend` option in your configuration file. Change the `name` to `github` and add the `repo` option with the format `owner/repo`. Remove options that are specific to Git Gateway, such as `identity_url`, `gateway_url` and `use_large_media_transforms_in_media_library`, if any. Don’t add `base_url`, which would point the CMS to another OAuth client instead of Netlify.
+   ```diff
+    backend:
+   -  name: git-gateway
+   +  name: github
+   +  repo: owner/repo
+      branch: main
+   ```
+1. Remove the Netlify Identity Widget script tag from your HTML, along with any code that uses the `netlifyIdentity` global object, such as a redirect to the admin page after signing in:
+   ```diff
+   -<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+   ```
+1. Deploy the changes and open the CMS. Click **Sign In with GitHub** on the login screen to authenticate.
 
-```diff
--<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-```
+Note that Netlify Identity users can’t sign in to the CMS with their Identity email and password anymore. Each editor needs their own GitHub account with write access to the repository. To allow other people to edit content, invite them to your GitHub repository as collaborators with the Write role or higher. See the [requirements](https://sveltiacms.app/en/docs/backends/github#requirements) for details.
+
+**Warning**
+
+Changes are now committed with each editor’s own GitHub account. If your repository is private, Netlify’s [Deploy Request Policy](https://docs.netlify.com/deploy/deploy-overview/#deploy-permissions) only builds commits from recognized authors, so a deploy triggered by an editor who isn’t a member of your Netlify team may stay pending until a Team Owner approves it. To avoid this, add the editors to your Netlify team as Git Contributors or enable auto-approval for deploy requests.
+
+Once everyone can sign in with GitHub, you can disable Git Gateway and Netlify Identity in the Netlify dashboard if you don’t use them for anything else.
+
+If your site is deployed to a different hosting service, you need to set up an OAuth client yourself or use another authentication method. See the [GitHub backend](https://sveltiacms.app/en/docs/backends/github#authentication) or [GitLab backend](https://sveltiacms.app/en/docs/backends/gitlab#authentication) documentation for the options.
 
 If you want to stay with Git Gateway and Netlify Identity, unfortunately you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [in the future](https://sveltiacms.app/en/docs/roadmap).
 

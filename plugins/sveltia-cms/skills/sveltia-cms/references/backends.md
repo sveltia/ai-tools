@@ -939,7 +939,17 @@ Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use 
 
 For backward compatibility with Netlify CMS, Sveltia CMS supports the authorization code flow using Netlify as an OAuth client. It’s the default authentication method if you don’t configure authentication explicitly, and you don’t need to set up a backend server yourself.
 
-If you’re a Netlify customer, follow the [official guide](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/) to register a new OAuth app on GitHub and link it to your Netlify site. No configuration changes are needed in Sveltia CMS.
+If your site is hosted on Netlify, you don’t need to install Sveltia CMS Authenticator or any other OAuth client. Instead, register a new OAuth app on GitHub and link it to your Netlify site. Here’s how:
+
+1. Open the [Register a new OAuth app page](https://github.com/settings/applications/new) on GitHub. To create the app under an organization instead of your personal account, go to the organization’s **Settings** > **Developer settings** > **OAuth Apps**.
+1. Fill in the **Application name** and **Homepage URL** with anything you like, such as your site name and URL.
+1. Set the **Authorization callback URL** to `https://api.netlify.com/auth/done`.
+1. Click **Register application**.
+1. Copy the **Client ID**, then click **Generate a new client secret** and copy the **Client Secret**. The secret won’t be shown again.
+1. Open the Netlify dashboard for your site and go to **Project configuration** > **Security** > **OAuth**. Note that this is not the **Identity** section, which is only used for Git Gateway and Netlify Identity.
+1. Under **Authentication Providers**, click **Install Provider**, select **GitHub**, enter the Client ID and Client Secret, and save.
+
+No configuration changes are needed in Sveltia CMS. Just make sure `base_url` is not set in your configuration file, so the CMS uses Netlify as the OAuth client. See Netlify’s [official guide](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/) for more details.
 
 Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
@@ -1220,14 +1230,15 @@ Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use 
 
 For backward compatibility with Netlify CMS, Sveltia CMS supports the authorization code flow using Netlify as an OAuth client. It’s the default authentication method if you don’t configure authentication explicitly, and you don’t need to set up a backend server yourself.
 
-To set it up, you need to register a new OAuth app on GitLab and update your Sveltia CMS configuration file accordingly. Here’s how:
+If your site is hosted on Netlify, you don’t need to install Sveltia CMS Authenticator or any other OAuth client. Instead, register a new OAuth app on GitLab and link it to your Netlify site. Here’s how:
 
 1. Follow the instructions in the [GitLab documentation](https://docs.gitlab.com/integration/oauth_provider/) to create a new OAuth application.
 1. Set the **Redirect URI** to `https://api.netlify.com/auth/done`.
 1. Select the `api` scope.
-1. Open the Netlify site dashboard and [provide the Client ID and Client Secret](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings) of your registered OAuth app.
+1. Open the Netlify dashboard for your site and go to **Project configuration** > **Security** > **OAuth**. Note that this is not the **Identity** section, which is only used for Git Gateway and Netlify Identity.
+1. Under **Authentication Providers**, click **Install Provider**, select **GitLab**, and [provide the Client ID and Client Secret](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings) of your registered OAuth app.
 
-No configuration changes are needed in Sveltia CMS.
+No changes are needed in Sveltia CMS, as long as `auth_type` and `base_url` are not set in your configuration file.
 
 Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
 
