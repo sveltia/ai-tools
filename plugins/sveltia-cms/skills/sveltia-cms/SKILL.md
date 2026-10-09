@@ -125,7 +125,8 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Hugo, Jekyll, Middleman, Zola | `references/frameworks-other.md` |
 | Global options, config file formats, output and slug options | `references/config.md` |
 | `backend`, OAuth clients, authentication | `references/backends.md` |
-| Collection types, file collections, singletons, content modeling | `references/collections.md` |
+| Collection types, file collections, singletons | `references/collections.md` |
+| Planning collections; complete example configs for common site types | `references/content-modeling.md` |
 | Entry collection paths, slugs, sorting, filtering, nested collections | `references/entries.md` |
 | Shared field options; String, Text, Number, Boolean, Select, Color | `references/fields.md` |
 | List, Object, KeyValue fields | `references/fields-structural.md` |
