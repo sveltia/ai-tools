@@ -1285,6 +1285,8 @@ The UUID field type provides a read-only field that automatically generates and 
 
 Read-only display of a [UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID) (Universally Unique Identifier) value. The UUID is automatically generated when a new entry is created and can’t be modified by default, because the [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) option defaults to `true` for this field type. Set it to `false` to make the value editable.
 
+A duplicated entry gets a new UUID. With [i18n](https://sveltiacms.app/en/docs/i18n), a field with the `i18n: duplicate` option, or one inside a List or Object field with that option, has the same UUID in every locale, while a field with `i18n: true` gets a different one for each locale.
+
 #### Preview
 
 A read-only view of the UUID value.

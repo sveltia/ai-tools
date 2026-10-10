@@ -42,7 +42,7 @@ Also, Sveltia CMS does not support the undocumented custom media storage provide
 
 **Future Plans**
 
-More integration options, such as Cloudflare Images, will be added in the future.
+More integration options may be added in the future.
 
 ### Configuration
 
@@ -596,7 +596,9 @@ If `public_folder` is not specified, it will default to the value of the collect
 
 The collection-level and field-level `media_folder` option must start with a slash (`/`) to indicate an absolute path from the root of the repository, while a leading slash can be omitted in the top-level `media_folder` option.
 
-If you use a relative path, Sveltia CMS will treat it as relative to the collection `folder` (and `path`, if defined). See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
+If you use a relative path, Sveltia CMS will treat it as relative to the collection `folder` (and `path`, if defined). In a [file collection](https://sveltiacms.app/en/docs/collections/files), which has no folder of its own, it’s relative to the folder of each file that doesn’t have a `media_folder` option of its own: with `media_folder: images`, the media for `content/pages/about.md` goes to `content/pages/images`. See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
+
+If a collection’s `folder` is the root of the repository, as with `folder: .`, only the files in the relative media folder, such as `images` and the folders below it, are listed as the collection’s assets, so the rest of the repository isn’t mistaken for media. A relative media folder that can’t be told apart from the other files in the repository — the root itself (`media_folder: ''`), or one starting with a placeholder like `{{slug}}` — lists no assets for such a collection.
 
 We recommend using absolute paths for better clarity and to avoid confusion, unless you specifically want to organize media files within the content folders.
 
@@ -943,6 +945,8 @@ public_folder = "/uploads/about"
 ```
 
 The same [placeholder variables](#using-placeholders) mentioned above can be used in file-level `media_folder` and `public_folder` options.
+
+A file without a `media_folder` option of its own inherits the collection’s. A relative collection-level `media_folder` is then resolved against that file’s own folder, along with the collection’s `public_folder`. Each such file appears as its own folder in the Asset Library.
 
 #### Field-Level Configuration
 
