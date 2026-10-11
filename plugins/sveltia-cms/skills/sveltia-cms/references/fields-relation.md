@@ -141,6 +141,8 @@ When using template strings, keep the following in mind:
 
 A plain field name or dot-notation path without the curly brackets, such as `title`, `name.first` or `cities.*.id`, is treated as if it were enclosed in `{{…}}`. The same applies to `display_fields` and `search_fields`. The exception is a bare `slug`, which refers to the field named `slug` (`{{fields.slug}}`), not the entry slug; use `{{slug}}` for the latter.
 
+The stored value comes from the referenced field’s value as saved in the related entry, not as it’s displayed: a number without thousands separators, the value of a Select field option rather than its label, a date in its stored format, and so on. An entry where any field in the value field template is empty is not offered as an option, because the stored value couldn’t identify it.
+
 The value field must be unique across all entries in the related collection to avoid conflicts. For example, using `{{title}}` as the value field is not recommended unless you can guarantee that all titles are unique. That’s why the default is `{{slug}}`, which is unique by design.
 
 ##### `display_fields`
@@ -149,6 +151,8 @@ The value field must be unique across all entries in the related collection to a
 - **Default**: `["title"]` if `value_field` is `{{slug}}`, otherwise the value of `value_field` option
 
 The fields from the related collection to display in the Relation field UI when selecting related entries. This should be an array of field names. The values of these fields will be concatenated and shown as the label for each related entry.
+
+An empty field is shown as empty in the label. Only when the whole label comes out empty is the entry’s summary, or its slug, shown instead.
 
 String templates can be used to customize the display format. For example, to show both first and last names from separate fields, you can use either of the following:
 
@@ -840,6 +844,8 @@ Must be set to `compute`.
 The value can be computed using a template string that references other fields. It supports:
 
 - A value template that defines how to compute the field’s value. It can include references to other fields using the syntax `{{fields.name}}`, where `name` is the name of the field to reference. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied.
+  - A Number field is referenced by its stored value, e.g. `1234.5`, rather than its localized display value, e.g. `1,234.5`. String transformations are also applied to the stored value of the referenced field, so a `ternary` transformation, for example, works on a Boolean field’s `true` or `false`.
+  - In a Compute field defined in a [rich text editor component](https://sveltiacms.app/en/docs/api/editor-components), a reference like `{{fields.title}}` refers to the component’s own field of that name. If the component has no such field, it refers to the entry’s field instead.
 - The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list).
 - The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
 
@@ -1285,7 +1291,7 @@ The UUID field type provides a read-only field that automatically generates and 
 
 Read-only display of a [UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID) (Universally Unique Identifier) value. The UUID is automatically generated when a new entry is created and can’t be modified by default, because the [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) option defaults to `true` for this field type. Set it to `false` to make the value editable.
 
-A duplicated entry gets a new UUID. With [i18n](https://sveltiacms.app/en/docs/i18n), a field with the `i18n: duplicate` option, or one inside a List or Object field with that option, has the same UUID in every locale, while a field with `i18n: true` gets a different one for each locale.
+A duplicated entry gets a new UUID, and so does a duplicated List item. With [i18n](https://sveltiacms.app/en/docs/i18n), a field with the `i18n: duplicate` option, or one inside a List or Object field with that option, has the same UUID in every locale, while a field with `i18n: true` gets a different one for each locale, including a locale enabled later for an existing entry.
 
 #### Preview
 

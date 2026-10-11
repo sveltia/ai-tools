@@ -24,7 +24,7 @@ The List field type has four different UI modes, depending on the configuration:
 ##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
-- Each item comes with a menu that allows users to duplicate the item, insert a new item above/below it, or remove it.
+- Each item comes with a menu that allows users to duplicate the item, insert a new item above/below it, or remove it. A duplicated item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
 - Each item can be reordered using the drag handle in the middle of its header:
   - Dragging the handle moves the item.
@@ -1810,6 +1810,8 @@ Each type definition is an object with the following properties:
 
 The default value for the object field: an object whose keys are the subfield names. For an object with `types`, it must also include the [`typeKey`](#typekey) property (`type` by default) to identify the variable type, and its other keys are the names of that type’s subfields.
 
+The default doesn’t have to cover every subfield. A subfield it leaves out gets its own `default` value, if any, just like in a new List item.
+
 A property that isn’t a subfield name, a missing type key or a type name that isn’t one of the `types` is reported as a config validation error on the login screen, because it would otherwise be saved to the entry as-is or leave the object empty.
 
 ##### `collapsed`
@@ -2397,7 +2399,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 ### Data Validation
 
 - If the `required` option is set to `true`, at least one key-value pair must be present. A blank pair, with neither a key nor a value, doesn’t count.
-- Keys must be unique and non-empty strings. Keys cannot contain dots (`.`) as they may interfere with nested data structures.
+- Keys must be unique and non-empty strings. A key can contain dots (`.`), such as `example.com`; it’s saved as it is rather than being split into nested objects.
 - If `min` and/or `max` options are specified, the number of key-value pairs must be within the defined limits.
 
 ### Options

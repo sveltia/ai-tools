@@ -315,6 +315,12 @@ extension = "markdown"
 
 You can use any valid file extension, such as `html`, `txt`, or `mdx`. Just make sure that the file format and extension are compatible. If there is an obvious mismatch, Sveltia CMS will raise a validation error. For example, if you use `json` format with `md` extension, it will result in an error because JSON files should have a `json` extension.
 
+The front matter formats (`yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter` and `frontmatter`) work with any extension that isn’t tied to another format, such as `html`, `liquid`, `njk` or `txt`, just like in Netlify/Decap CMS, where the `format` option takes precedence over the extension. The exceptions are the following:
+
+- `yml`, `yaml`, `toml` and `json` only work with the front matter format of the same language, e.g. `toml-frontmatter` with `toml`.
+- `astro` doesn’t work with any of them, because the front matter of an Astro component is JavaScript, not YAML. Use the `raw` format instead.
+- The Markdown extensions, such as `md` and `markdown`, can’t be used with the `yaml`, `toml` and `json` formats.
+
 ### Default Format and Extension
 
 The `format` and `extension` options are both optional. When one or both of them are omitted, Sveltia CMS determines the missing values as follows:
@@ -1699,7 +1705,7 @@ The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slug
 
 - `{{slug}}`: the entire slug of the entry, not just the slugified entry identifier.
 - `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different top-level DateTime field. If no DateTime field is found, the `preview_path` option will be ignored, and a configuration warning is shown so the missing link doesn’t go unexplained. A field that exists but is left empty on an entry has the same effect on that entry.
-- `{{dirname}}`: the directory name of the entry file relative to the collection `folder`. This is useful when using the `path` option to create subfolders.
+- `{{dirname}}`: the directory name of the entry file relative to the collection `folder`, without the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale. This is useful when using the `path` option to create subfolders.
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.
 - `{{locale}}`: the locale code of the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths). This is useful when you want to include the locale in the preview URL.

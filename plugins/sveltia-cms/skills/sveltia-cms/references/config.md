@@ -146,7 +146,7 @@ To specify a custom configuration file path, add a `<link>` tag in your HTML’s
 <link href="/cms/config.yaml" type="application/yaml" rel="cms-config-url" />
 ```
 
-The MIME type for YAML files is `application/yaml` (standardized) or `text/yaml` (legacy). Both are supported.
+The MIME type for YAML files is `application/yaml` (standardized), or `text/yaml` or `application/x-yaml` (legacy). All of them are supported.
 
 #### TOML or JSON Configuration File
 
@@ -259,9 +259,9 @@ Two sets of checks run. The first validates the whole configuration against the 
 The second covers the rules a schema can’t express — mostly mistakes that wouldn’t fail at all otherwise, but would quietly give you an empty collection, a random slug or a validation rule that never runs:
 
 - Backend: a missing, unsupported or misspelled backend name, with a pointer to the supported backends; a missing `repo`, or one that isn’t in the `owner/repo` format; a missing OAuth client ID (`app_id`) for GitLab PKCE or Gitea/Forgejo, the unsupported implicit flow, or an empty `auth_methods` list that would leave no way to sign in; Open Authoring without Editorial Workflow or without an `auth_scope`
-- Site-wide options: a `site_url` that isn’t an absolute URL, which would silently drop every preview link, a missing `media_folder` or a `public_folder` that isn’t an absolute path, a `sanitize_replacement` slug option that itself contains a character slugs can’t have, an empty `i18n.locales` list, a `default_locale` or `initial_locales` entry that isn’t one of the `locales`, or a collection or file `i18n` option with no site-level i18n to build on
+- Site-wide options: a `site_url` that isn’t an absolute URL, which would silently drop every preview link, a missing `media_folder` or a `public_folder` that isn’t an absolute path, template tags in the top-level `media_folder`, which can’t be resolved without an entry, a `sanitize_replacement` slug option that itself contains a character slugs can’t have, an empty `i18n.locales` list, a `default_locale` or `initial_locales` entry that isn’t one of the `locales`, or a collection or file `i18n` option with no site-level i18n to build on
 - Internationalization: an `i18n` option that leaves nothing to translate — a site-level configuration that no collection or singleton enables with its own `i18n` option, an entry collection or collection file with i18n enabled but no field with `i18n: true` (or `translate`) or `i18n: duplicate`, or a file collection with i18n enabled but none of its files
-- Collections: duplicate, empty or invalid collection, file, field and variable type names (e.g. names containing `.` or `*`), a collection with none of `folder`, `files` or `divider` or more than one of them, a collection without fields, a configuration where every collection is hidden, a mismatch between `format` and `extension`, and a `{{locale}}` placeholder in a file path without i18n
+- Collections: duplicate, empty or invalid collection, file, field and variable type names (e.g. names containing `.` or `*`, or the reserved name `__proto__`), a collection with none of `folder`, `files` or `divider` or more than one of them, a collection without fields, a configuration where every collection is hidden, a mismatch between `format` and `extension`, a `body` field that can’t hold text in a front matter format, as the file body is plain text, a template tag that a collection or field `media_folder` or `public_folder` doesn’t support, and a `{{locale}}` placeholder in a file path without i18n
 - Entry naming: an `identifier_field` that names no field, a collection with neither a `title` field nor an `identifier_field` or `slug` option, a `slug` template containing slashes, and `slug`, `path`, `summary`, `thumbnail` and `preview_path` options that refer to fields that don’t exist, or that use date tags without a DateTime field to read them from
 - Entry lists: a `filter` on an undefined field, with neither a `value` nor a `pattern`, or with a pattern that isn’t a valid regular expression; `sortable_fields`, `view_groups` and `view_filters` that refer to undefined fields; a `view_groups` or `view_filters` `default` that names no group or filter; a `reorder` group that isn’t defined
 - Fields: widget-specific options, such as a `search_fields` list written as a string, mutually exclusive options such as `field`, `fields` and `types` on List fields, an explicitly empty `fields` or `types` list on a List or Object field (omitting `fields` in a variable type remains valid), a validation `pattern` that isn’t a valid regular expression, a `min` above the `max` or a `minlength` above the `maxlength`, a Number `step` of zero or less, Select fields with no options or duplicate option values, and conflicting DateTime timezone options or an invalid IANA timezone identifier
@@ -561,6 +561,28 @@ preview_path = "/{{fields.slug | default('{{fields.title}}')}}/"
 }
 ```
 
+A nested template can also combine several field values with other text:
+
+```yaml [YAML]
+summary: "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
+```
+
+```toml [TOML]
+summary = "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
+```
+
+```json [JSON]
+{
+  "summary": "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
+}
+```
+
+```js [JavaScript]
+{
+  summary: "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}",
+}
+```
+
 #### `ternary`
 
 Choose between two values based on the truthiness of the original value.
@@ -633,6 +655,28 @@ summary = "{{title}} {{published | ternary('', '(DRAFT)')}}"
 }
 ```
 
+Like the `default` transformation, the `true_value` and `false_value` can contain nested templates to use other field values. For example, show the subtitle after the title only when it’s available:
+
+```yaml [YAML]
+summary: "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
+```
+
+```toml [TOML]
+summary = "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
+```
+
+```json [JSON]
+{
+  "summary": "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
+}
+```
+
+```js [JavaScript]
+{
+  summary: "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}",
+}
+```
+
 #### `date`
 
 Format a date string, with an optional timezone.
@@ -649,7 +693,7 @@ The `format` argument specifies the desired date format using [Day.js formatting
 
 The optional `timezone` argument allows you to specify the time zone for formatting. It only supports `utc` for Coordinated Universal Time. If no timezone is provided, the local timezone will be used.
 
-If an invalid date is provided, an empty string will be returned.
+If the value comes from a [DateTime](https://sveltiacms.app/en/docs/fields/datetime) field with a custom `format` option, such as `DD/MM/YYYY` or `X` (Unix timestamp), it’s parsed in that format. If an invalid date is provided, an empty string will be returned.
 
 Configuration examples:
 
@@ -889,7 +933,14 @@ Here are some key aspects of data output in Sveltia CMS:
 - **Field Ordering**: Fields are always saved in the order they are defined in the configuration, with key-value pairs, making Git commits clean and consistent. Some [exceptions](#understanding-exceptions) apply.
 - **Time Formatting**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility, including Hugo.
 - **File Formatting**: Line breaks are LF (`\n`) across all formats. A newline is added at the end of the file to prevent unnecessary changes.
-- **Text Processing**: Leading and trailing whitespaces in text-type field values are automatically removed when an entry is saved. No configuration option is required for this behavior.
+- **Text Processing**: Unnecessary whitespace in string values is automatically removed when an entry is saved. No configuration option is required for this behavior.
+  - [Code](https://sveltiacms.app/en/docs/fields/code) field values are saved as they are, because any whitespace, such as the indentation of the first line or a final newline, can be significant in code.
+  - [Text](https://sveltiacms.app/en/docs/fields/text), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [rich text](https://sveltiacms.app/en/docs/fields/richtext) field values keep their leading whitespace, such as the indentation of a code block on the first line. Only trailing whitespace is removed.
+  - Leading and trailing whitespace is removed from any other string value.
+- **Preserving Existing Data**: Values the CMS reads from an existing file are written back unchanged unless they are edited:
+  - Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
+  - Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
+  - Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file, as long as the value isn’t edited.
 - **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array, or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
   - `required: false` makes data input optional, but doesn't make data output optional.
   - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
@@ -898,9 +949,9 @@ Here are some key aspects of data output in Sveltia CMS:
 
 - **YAML String Folding**: YAML string folding (maximum line width) is disabled for improved framework compatibility.
 - **Indentation**: Indentation is 2 spaces for YAML and JSON by default (configurable).
-- **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted, or double-quoted (configurable).
+- **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted, or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted, so that tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers values like `yes`, `no`, `on`, `off`, `y` and `n` in any of their usual capitalizations, numbers with underscores or commas like `1_000`, and sexagesimal numbers like `1:20`, which a YAML 1.1 parser reads as `80`. Dates are not quoted, so they are still read as dates.
 - **JSON and YAML Formatting Options**: Fully configurable in the [output options](#controlling-data-output).
-- **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings.
+- **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format, unless the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
 
 #### Markdown Syntax
 
@@ -909,9 +960,24 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 - **Indentation**: 4 spaces for nested lists and code blocks instead of 2 spaces.
 - **Unordered List Markers**: Hyphens (`-`) are used for unordered list markers instead of asterisks (`*`).
 - **Bold Text**: Double asterisks (`**`) are used for bold text instead of double underscores (`__`).
-- **Italic Text**: Underscores (`_`) are used for italics instead of asterisks (`*`).
+- **Italic Text**: Underscores (`_`) are used for italics instead of asterisks (`*`), except within a word, like `a*b*c`, where underscores don’t work.
+- **Headings**: Hash signs (`#`) are used for headings. Headings underlined with `===` or `---` are converted to this style.
+- **Code Blocks**: Backticks (`` ` ``) are used to fence code blocks. Code blocks fenced with tildes (`~~~`) are converted to this style, and a code block without a language is given the `plain` language.
 - **Horizontal Rules**: Three asterisks (`***`) are used for horizontal rules instead of three hyphens (`---`).
 - **Line Breaks**: Soft line breaks (single line breaks) are used instead of hard line breaks (two or more spaces, escaped line breaks `\`, or HTML `<br>` tags). In your framework, you may need to [enable the appropriate option](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) to render soft line breaks as hard line breaks.
+- **Tight Lists**: Blank lines between list items are removed, so a loose list becomes a tight one.
+- **Escapes**: Backslash escapes that aren’t needed are removed, like the one in `snake\_case`. Escaped square brackets (`\[`, `\]`) and angle brackets (`\<`, `\>`) are written without the backslash.
+- **Character References**: Numeric character references, like `&#169;`, are written as the characters they stand for, like `©`. Named ones, like `&copy;`, are kept.
+
+The rich text editor doesn’t support some Markdown syntax. Content using it can be edited, but it’s changed as follows once the content is saved in the rich text mode. To keep such content as is, edit it in the `raw` mode instead:
+
+- **Table Column Alignment**: The alignment in the delimiter row of a table, like `:--` or `:-:`, is dropped, so all columns use the default alignment.
+- **Nested Block Quotes**: A block quote within another one, like `> > text`, as well as a list within a block quote, is turned into text, with the `>` or list marker escaped.
+- **Ordered Lists with Parentheses**: An ordered list using a closing parenthesis, like `1)`, is turned into text, with the parenthesis escaped. Use a period, like `1.`, instead.
+- **Code Blocks in List Items**: A fenced code block within a list item is moved out of the list.
+- **Single-Tilde Strikethrough**: Strikethrough with single tildes, like `~text~`, is turned into text, with the tildes escaped. Use double tildes, like `~~text~~`, instead.
+- **Adjacent Lists**: Consecutive lists that only differ in their markers, like a `-` list followed by a `*` list, are merged into one list.
+- **Bold Links**: Bold text around a link, like `**[text](url)**`, is moved inside the link, like `[**text**](url)`.
 
 ### Controlling Data Output
 

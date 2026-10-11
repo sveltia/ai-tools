@@ -84,6 +84,7 @@ The `config` object includes the Cloudinary [Media Library widget options](https
 - `default_transformations`: Transformations to apply to all uploaded images. Only the first transformation in the array will be applied to uploaded media in Sveltia CMS. See the [Image transformations](#image-transformations) section below for more details on defining transformations.
 - `max_files`: The maximum number of assets that can be selected at once. The field’s [`max`](https://sveltiacms.app/en/docs/fields/file#max) option takes precedence if set. Defaults to `20`.
 - `multiple`: Whether to allow selecting multiple assets. The field’s [`multiple`](https://sveltiacms.app/en/docs/fields/file#multiple) option takes precedence.
+- `folder`: The folder to open in the widget, with its `path` and, optionally, a `resource_type` to show only one type of asset. Without a `resource_type`, the widget shows images only for an [Image](https://sveltiacms.app/en/docs/fields/image) field and every type of asset, including videos and raw files, for a [File](https://sveltiacms.app/en/docs/fields/file) field.
 - Some options are not applicable in Sveltia CMS and will be ignored if provided, such as `button_caption`.
 
 **Warning**
@@ -92,7 +93,7 @@ Do not write your Cloudinary API secret in the configuration file, as it should 
 
 There are two Sveltia CMS-specific configuration options that can be added alongside the `config` object. Both are optional:
 
-- `output_filename_only`: When set to `true`, only the filename will be stored in the CMS instead of the full URL. Defaults to `false`.
+- `output_filename_only`: When set to `true`, only the asset’s public ID, which includes its folder, will be stored in the CMS with the file extension, e.g. `blog/photo.jpg`, instead of the full URL, just like in Netlify/Decap CMS. Defaults to `false`.
 - `use_transformations`: Whether to use derived transformation URLs for uploaded media. Defaults to `true`. No effect if `output_filename_only` is `true`.
 
 **Breaking change from Netlify/Decap CMS**
@@ -331,7 +332,7 @@ Cloudinary also appears under **External Locations** in the [Asset Library](http
 
 ### Using Transformations in Page Templates
 
-When the `output_filename_only` option is set to `true`, only the filename is stored in your entry data files. To generate the full URL with transformations in your site’s page templates, you can use the [JavaScript SDK](https://cloudinary.com/documentation/javascript_integration) or hardcode [transformed URLs](https://cloudinary.com/documentation/image_transformations) based on your Cloudinary account details. Check the Cloudinary documentation for more information on how to construct URLs with transformations.
+When the `output_filename_only` option is set to `true`, only the public ID with the file extension, e.g. `blog/photo.jpg`, is stored in your entry data files. To generate the full URL with transformations in your site’s page templates, you can use the [JavaScript SDK](https://cloudinary.com/documentation/javascript_integration) or hardcode [transformed URLs](https://cloudinary.com/documentation/image_transformations) based on your Cloudinary account details. Check the Cloudinary documentation for more information on how to construct URLs with transformations.
 
 Source: https://sveltiacms.app/en/docs/media/cloudinary
 
@@ -908,6 +909,8 @@ By default, curated images from each provider are available for quick access. Yo
 Once the desired image is found, simply select it, and it will be inserted into the content just like any other media asset. The CMS may show a dialog where you can copy the image credit information to comply with attribution requirements.
 
 Note that some providers require hotlinking to the image’s original URL, while others rather disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies, and downloads the image to the media storage if necessary.
+
+When an Unsplash photo is inserted, Sveltia CMS also notifies Unsplash of the download using your API key, as the [Unsplash API guidelines](https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download) require.
 
 **Multi-user setups**
 

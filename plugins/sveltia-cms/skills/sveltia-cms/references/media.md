@@ -269,6 +269,7 @@ In case you’re not aware, [WebP](https://developers.google.com/speed/webp) off
 - File processing is a bit slow on Safari because [native WebP encoding](https://caniuse.com/mdn-api_htmlcanvaselement_toblob_type_parameter_webp) is [not supported](https://bugs.webkit.org/show_bug.cgi?id=183257) and the [jSquash](https://github.com/jamsinclair/jSquash) library is used instead.
 - AVIF conversion is not supported because no browser has native AVIF encoding support ([Chromium won’t fix it](https://issues.chromium.org/issues/40848792)) and the third-party library (and AVIF encoding in general) is very slow.
 - This feature is not intended for creating image variants in different formats and sizes. It should be done with a framework during the build process. Popular frameworks like [Astro](https://docs.astro.build/en/guides/images/), [Eleventy](https://www.11ty.dev/docs/plugins/image/), [Hugo](https://gohugo.io/content-management/image-processing/), [Next.js](https://nextjs.org/docs/pages/api-reference/components/image) and [SvelteKit](https://svelte.dev/docs/kit/images) have built-in image processing capabilities.
+- Animated GIF, WebP and PNG images are uploaded as they are, without conversion or resizing, because only their first frame would be kept otherwise.
 - Exif metadata is stripped from raster images to reduce file size. If you want to keep it, upload the original files without optimization and use the framework to process them later.
 
 ##### HEIC Photos
@@ -610,7 +611,7 @@ The absolute path setup is not documented in the official Netlify/Decap CMS docu
 
 The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags):
 
-- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`.
+- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
 - `{{filename}}`: The entry file name without the extension. (Not the media file name.)
 - `{{extension}}`: The entry file extension. (Not the media file extension.)
 - `{{media_folder}}`: Refers to the top-level `media_folder` setting.
@@ -669,6 +670,8 @@ public_folder = "{{public_folder}}/products"
 Some frameworks and static site generators support organizing content and media files together in the same folder. One example is [Hugo’s page bundles](https://gohugo.io/content-management/page-bundles/), where each content entry can have its own folder containing the content file and associated media files.
 
 Assets stored in entry-relative folders are only accessible by the associated entry and not available for other entries. Therefore, Sveltia CMS automatically deletes these assets when the associated entry is deleted. When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the empty enclosing folder is also deleted.
+
+This only applies when the entry has a folder of its own, for example with a `path` option like `{{slug}}/index`. When entries are files sharing one folder, the media files in that folder can belong to any of them, so they are left alone when an entry is deleted.
 
 In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 

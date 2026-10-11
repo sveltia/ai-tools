@@ -1000,7 +1000,7 @@ Additional text can be displayed before or after the input field using the `befo
 
 #### Preview
 
-A localized string representation of the number, formatted according to the preview locale.
+A localized string representation of the number, formatted according to the preview locale. All the decimal places of the value are shown, without rounding.
 
 ### Data Type
 
@@ -1013,6 +1013,7 @@ If `value_type` is other than `int` or `float`, the value will be stored as a st
 - If the `required` option is set to `true`, the number value must not be `null` (i.e., the field must not be left empty).
 - The number value must be within the range defined by the `min` and `max` options, if specified.
 - The number value must conform to the type defined by the `value_type` option.
+- The input must be a number the field can store. Text that isn’t a number, such as `abc`, an infinite number and, with `value_type: int`, an integer beyond the range JavaScript can represent exactly (2<sup>53</sup>) are reported as invalid rather than being saved as an empty value.
 
 ### Options
 

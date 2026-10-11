@@ -146,6 +146,8 @@ The following keyboard shortcuts are available in the Sveltia CMS UI:
 - Search for entries and assets: `Ctrl+F` (Windows/Linux) or `Command+F` (macOS)
 - Create a new entry: `Ctrl+E` (Windows/Linux) or `Command+E` (macOS)
 
+Shortcuts are ignored while text is being composed with an input method editor (IME), so pressing Enter or Escape to confirm or cancel a conversion doesn’t trigger them. On macOS, the Option key held in a text field types a special character, so `Alt` shortcuts like `Alt+1` don’t work while a text field has focus.
+
 #### Mobile Support
 
 The Sveltia CMS UI is fully responsive and optimized for mobile devices, providing a seamless experience across different screen sizes, including smartphones and tablets.
@@ -247,7 +249,9 @@ The user is prompted for the service’s secret key or SAS token the first time,
 | [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) | Yes | Yes | No | No |
 | [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) | Cloudinary’s own Media Library widget is opened instead |  |  |  |
 
-The controls for operations a service doesn’t support are hidden. Renaming a file on an S3-compatible service or Azure Blob Storage copies it to the new name and then deletes the original. Make sure the bucket’s CORS policy allows the `DELETE` method and all request headers, and that the credential has the delete permission — see the setup instructions of each service for details. Unlike repository assets, entries referencing a renamed or deleted external file are not updated, because the file URL is stored as is.
+The controls for operations a service doesn’t support are hidden. Renaming a file on an S3-compatible service or Azure Blob Storage copies it to the new name and then deletes the original. Make sure the bucket’s CORS policy allows the `DELETE` method and all request headers, and that the credential has the delete permission — see the setup instructions of each service for details. Unlike repository assets, entries referencing a renamed or deleted external file are not updated, because the file URL is stored as is. The Rename dialog therefore warns the user when entries link to the file, or to files in the folder being renamed, and says how many of them will be left with a broken link.
+
+The file list of a large bucket or container is fetched in pages, up to a limit. If the service holds more files than are listed, a notice says that some of them are left out.
 
 **Info**
 
@@ -403,7 +407,7 @@ Restoring and clearing leave alone the values a user doesn’t enter: [Hidden](h
 
 An entry’s slug is the identifier that appears in its file name and, in most setups, in its URL on the live site. It’s usually [generated from a template](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs), such as the entry’s title, and is shown in the Slug panel of the [sidebar](#sidebar), which can also be opened with the Edit Slug option in the 3-dot menu.
 
-The slug is shown as read-only text, with a pencil button to edit it. While it’s being edited, it’s checked as the user types: a slug cannot contain slashes or whitespace, cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and must match the collection’s [`pattern` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) if any. Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever is typed is normalized with the site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
+The slug is shown as read-only text, with a pencil button to edit it. While it’s being edited, it’s checked as the user types: a slug cannot contain slashes or whitespace, cannot already be in use by another entry in the same collection, including entries awaiting review under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) and any other file stored in the collection folder, such as an entry the collection’s [`filter`](https://sveltiacms.app/en/docs/collections/entries/listings#filtering-entries) option leaves out or one belonging to another collection sharing the folder, and must match the collection’s [`pattern` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) if any. Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever is typed is normalized with the site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
 
 If entry slugs are [localized](https://sveltiacms.app/en/docs/i18n/slugs), the panel has a section for each locale, like the Validation panel. Otherwise, there’s a single slug shared by every locale.
 

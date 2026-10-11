@@ -374,7 +374,7 @@ widget = "richtext"
 }
 ```
 
-When the `hide` option is set to `true`, the collection will not appear in the Sveltia CMS interface, and editors will not be able to access or modify its entries.
+When the `hide` option is set to `true`, the collection will not appear in the Sveltia CMS interface, and editors will not be able to access or modify its entries. Its entries are also left out of the global search results and of the list of entries using an asset in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library).
 
 ### Reordering Entries
 
@@ -692,7 +692,7 @@ summary = "{{title}} - {{date | date('DD MMM YYYY')}} {{published | ternary('', 
 
 The following template tags are supported in the `summary` option, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) except date-related ones:
 
-- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`.
+- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
 - `{{filename}}`: The entry file name without the extension.
 - `{{extension}}`: The entry file extension.
 - `{{commit_author}}`: The last commit author of the entry file from Git history (if available).
@@ -1196,7 +1196,7 @@ This option takes an object with two properties:
 - `value` or `pattern`: The value that the field must match for an entry to be included.
   - The `value` property checks for exact matches, while the `pattern` property allows for regular expression matching.
   - The `value` can be a single value or an array of values. If an array is provided, entries matching any of the values will be included. If `null` is provided as a value, entries where the field is not set will be included.
-  - The `pattern` property should be a string representing a valid regular expression.
+  - The `pattern` property should be a string representing a valid regular expression. An entry where the field is not set never matches a pattern.
 
 The example below shows how to create two separate collections for English and French blog posts, filtering entries based on the `lang` field:
 
@@ -1345,6 +1345,8 @@ You can customize the sortable fields using the `sortable_fields` option. It acc
 - `commit_author`: Sort entries by the author of the last commit that modified the entry file.
 
 The `commit_date` and `commit_author` keys are only shown when Git commit information is available for the collection’s entries; otherwise, they are ignored. Even with `sortable_fields` defined, Sveltia CMS adds them automatically when the information is available and the list doesn’t include `date` or `author`, respectively.
+
+Entries without a value for the sort field, such as an empty date, are always listed last, whether the order is ascending or descending and whatever the field type.
 
 The example below shows how to enable sorting by custom fields such as `category` and nested fields like `author.name`:
 
