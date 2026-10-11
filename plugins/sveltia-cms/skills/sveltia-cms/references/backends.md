@@ -735,6 +735,8 @@ Both Gitea and Forgejo support CI/CD pipelines that can be used to automate the 
 - [Gitea Actions](https://docs.gitea.com/usage/actions/overview)
 - [Forgejo Actions](https://forgejo.org/docs/latest/user/actions/reference/)
 
+Entries can link to the [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews) built for their pull request, and report whether the build has finished, when the workflow posts the preview address as a commit status. See [Reporting a Preview from Gitea/Forgejo Actions](https://sveltiacms.app/en/docs/workflows/deploy-previews#gitea-forgejo-actions).
+
 Source: https://sveltiacms.app/en/docs/backends/gitea-forgejo
 
 ---

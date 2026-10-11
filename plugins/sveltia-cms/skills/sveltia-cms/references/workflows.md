@@ -45,17 +45,13 @@ This works in both production workflows, with a different meaning in each:
 
 ### Requirements
 
-- A [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend.
+- A [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend.
 - A CI/CD provider connected to the repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
 - A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, from where the page can be found manually, and a published entry has no link.
 
 **Date tags need a date field**
 
 When `preview_path` uses `{{year}}`, `{{month}}` or another date tag, the CMS reads it from the first DateTime field of the collection, or of the file in a file collection — or the top-level DateTime field named by `preview_path_date_field`. If no such field exists, a configuration warning says so, because the preview link would otherwise go missing with no explanation. A field that exists but is left empty on an entry has the same effect, and can only be spotted on the entry itself.
-
-**Future Plans**
-
-Support for the [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend may be added in the future. Until then, entries on that backend link to the live site as before, with no build state reported.
 
 ### Configuration
 
@@ -86,14 +82,16 @@ Providers report a deployment in one of three ways, and Sveltia CMS reads all of
 | Source | Known to use it |
 | --- | --- |
 | **Deployments** (GitHub) and **environments** (GitLab) | Vercel, GitHub Pages, GitLab Review Apps |
-| **Commit statuses** | Vercel, and CI services that post a build status |
+| **Commit statuses** | Vercel, Gitea/Forgejo Actions, and CI services that post a build status |
 | **Check runs** (GitHub only) | Cloudflare Pages, AWS Amplify |
+
+Gitea and Forgejo have commit statuses alone, so on that backend a provider has to post one to be seen. See [Reporting a Preview from Gitea/Forgejo Actions](#gitea-forgejo-actions).
 
 All three are read whichever provider is used, so one that isn’t listed still works as long as it reports through any of them. Equally, a provider that reports nowhere the Git host can see — several publish only to their own dashboard, or to a pull request comment — can’t be detected at all. If you’re unsure which applies, open a recent commit on your Git host and see whether anything is attached to it.
 
-When more than one reports on the same commit, the CMS first sets aside the ones that don’t look like a deployment: a commit status or check run whose name doesn’t mention a known provider or a word like “deploy”, “preview” or “pages” is most likely a test suite or a linter. GitLab posts a commit status for every CI job, and CI services like CircleCI do the same on GitHub. Such a candidate is still reported if nothing else is there, so a provider these rules have never heard of still works, but a finished test suite can’t stand in for a deploy preview that’s still building. Among the rest, the CMS prefers a finished build with a page to open, then the source whose URL is most reliable — a deployment’s environment URL is always the site, while a commit status URL is sometimes a build log. It then prefers an environment whose name matches what it’s looking for, so a `production` environment isn’t passed over for a `preview` one on the live branch. Ties go to the newest.
+When more than one reports on the same commit, the CMS first sets aside the ones that don’t look like a deployment: a commit status or check run whose name doesn’t mention a known provider or a word like “deploy”, “preview” or “pages” is most likely a test suite or a linter. GitLab posts a commit status for every CI job, as do Gitea and Forgejo for every Actions job, and CI services like CircleCI do the same on GitHub. Such a candidate is still reported if nothing else is there, so a provider these rules have never heard of still works, but a finished test suite can’t stand in for a deploy preview that’s still building. Among the rest, the CMS prefers a finished build with a page to open, then the source whose URL is most reliable — a deployment’s environment URL is always the site, while a commit status URL is sometimes a build log. It then prefers an environment whose name matches what it’s looking for, so a `production` environment isn’t passed over for a `preview` one on the live branch. Ties go to the newest.
 
-An address is only taken from a finished build. Several providers hand out a placeholder while they work — Cloudflare Pages reports its own dashboard until the build succeeds, then replaces it with the preview address — so nothing is offered until there’s a page behind it. A URL leading back to the Git host is ignored for the same reason: that’s a job log, which every GitLab CI job reports.
+An address is only taken from a finished build. Several providers hand out a placeholder while they work — Cloudflare Pages reports its own dashboard until the build succeeds, then replaces it with the preview address — so nothing is offered until there’s a page behind it. A URL leading back to the Git host is ignored for the same reason: that’s a job log, which every GitLab CI job and every Gitea/Forgejo Actions job reports.
 
 A build that was canceled or skipped is ignored, even when the provider reports it as successful. This happens in a monorepo, where a site that the commit didn’t touch still reports a result, and its URL leads to the build log rather than a page.
 
@@ -127,7 +125,7 @@ A published entry is never made to wait, whatever its build is doing: the live s
 
 When no CI/CD provider reports anything — because none is connected, or because it reports in a way the backend doesn’t expose — nothing is lost. The same live-site link as before is shown.
 
-While a build is running, the CMS checks again every 5 seconds, so a preview is offered as soon as it exists. On GitHub each check is a single request; on GitLab it costs one shared call plus one per commit being watched. It gives up after 10 minutes: the icon stops turning, the link comes back, and a **Check for Preview** action appears in the entry editor’s options menu. Reopening the entry starts a fresh round of checks, so a build longer than that isn’t lost.
+While a build is running, the CMS checks again every 5 seconds, so a preview is offered as soon as it exists. On GitHub each check is a single request; on GitLab it costs one shared call plus one per commit being watched, and on Gitea/Forgejo one per commit being watched. It gives up after 10 minutes: the icon stops turning, the link comes back, and a **Check for Preview** action appears in the entry editor’s options menu. Reopening the entry starts a fresh round of checks, so a build longer than that isn’t lost.
 
 #### Checking Whether the Page Is Live
 
@@ -140,6 +138,27 @@ This check only runs when the page is on the same origin as the CMS — the usua
 - In the entry editor toolbar, for the default locale.
 - In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths).
 - On the cards of the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
+
+### Reporting a Preview from Gitea/Forgejo Actions {#gitea-forgejo-actions}
+
+Gitea and Forgejo Actions post a commit status for each job, but it links to the job log, not to anything the job deployed. A workflow that publishes a deploy preview has to report the address itself, by posting a commit status of its own on the head of the pull request once the preview is up:
+
+```yaml
+- name: Report the deploy preview
+  env:
+    TOKEN: ${{ github.token }}
+    PREVIEW_URL: https://preview.example.com/pr-${{ github.event.pull_request.number }}/
+    STATUS_URL: ${{ github.server_url }}/api/v1/repos/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }}
+  run: |
+    curl --fail -X POST "$STATUS_URL" \
+      -H "Authorization: token $TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "{\"context\": \"pages/preview\", \"state\": \"success\", \"target_url\": \"$PREVIEW_URL\"}"
+```
+
+Posting a status takes write access to the repository. The automatic token has it by default in a pull request from a branch of the same repository, which is where Editorial Workflow saves entries, unless Gitea’s Actions settings restrict the token to read access for the repository or its organization. A pull request from a fork, as in [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), gets a read-only token by default. In either case, the preview needs an access token with write access, stored as a secret, or it goes unreported.
+
+The context, `pages/preview` here, can be anything, but a name with “preview”, “deploy” or “pages” in it is recognized as a deployment without configuration. The CMS then prefers it to the Actions job’s own status, whose link is a log. If the job that posts it is itself named like a deployment — `Preview / preview (pull_request)`, say — its status still reports the build as running until the address arrives, which is what you want; set [`preview_context`](#specifying-a-status-context) to the context you post if you’d rather the job were left out entirely.
 
 ### Specifying a Status Context
 
@@ -188,6 +207,7 @@ Setting this option narrows the search deliberately, so if nothing matches, the 
 - On GitHub, a workflow that deploys the site but reports no deployment, no commit status and no check run can’t be detected. Publishing to GitHub Pages with the official actions creates a deployment, so it works; a hand-rolled workflow that only uploads files may not.
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/) publishes its preview URL in a pull request comment, which no API surfaces alongside the commit. Its check run still reports whether the build succeeded, so the build state is available without a preview link. Cloudflare Pages, which writes the address into its check output, works fully.
 - Reading a preview URL out of a check run’s output means reading what that provider chose to write. If the format changes, the address is no longer found and the entry falls back to its live-site link — degraded rather than broken.
+- On Gitea/Forgejo, nothing reports a deploy preview unless a workflow or an external service posts it as a commit status. The statuses Actions posts for its jobs give the build state without an address.
 - On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to the branch. A project that deploys more often than that may push a Review App out of range, in which case its commit status still covers it.
 - A preview behind access control, such as Vercel’s Deployment Protection, answers the liveness check with an authentication error rather than a page. The CMS treats that as “can’t tell” and leaves the link alone, since it works for anyone signed in.
 

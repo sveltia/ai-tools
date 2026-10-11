@@ -1064,6 +1064,8 @@ The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Number) says
 
 The minimum allowed value for the field. This enables validation to ensure that users enter a value greater than or equal to this minimum.
 
+Setting it to `0` or higher also brings up a numeric keypad on mobile devices. Without it, the full keyboard is shown, because the numeric keypad on iOS has no minus key for entering a negative number.
+
 ##### `max`
 
 - **Type**: `number`
@@ -1077,6 +1079,8 @@ The maximum allowed value for the field. This enables validation to ensure that 
 - **Default**: `1`
 
 The increment/decrement step for the input field. This determines the amount by which the value changes when using the up and down arrows.
+
+Set it to `-1` to hide the up and down buttons and disable stepping with the arrow keys. This is useful for a number that isn’t meant to be stepped, like an ID copied from another system.
 
 ##### `before_input`
 
