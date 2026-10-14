@@ -1,6 +1,6 @@
 # Collections
 
-Collection types, file collections and singletons. For entry collection options and slugs, see `entries.md`. For planning collections and complete example configurations, see `content-modeling.md`.
+Collection types, file collections and singletons. For entry collection options and slugs, see `entries.md` and `entries-structure.md`. For planning collections and complete example configurations, see `content-modeling.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
