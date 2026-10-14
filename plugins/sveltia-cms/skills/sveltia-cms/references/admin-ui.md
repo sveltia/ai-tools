@@ -52,7 +52,7 @@ The account menu is accessible from the user avatar in the navigation bar. It pr
 
 Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled in the Developer tab, which enables certain features and displays the CMS version number. When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the Developer tab also lets you turn on [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits).
 
-The Advanced tab has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in the user’s browser, including unsaved drafts, settings and the sign-in state. Neither affects anything already saved to the repository.
+The Data Management tab has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in the user’s browser, including unsaved drafts, settings and the sign-in state. Neither affects anything already saved to the repository.
 
 ### General Features
 

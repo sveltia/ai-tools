@@ -848,6 +848,7 @@ To control this, set the `slug` option to an object instead of a template string
 - `hint`: A short description shown in the Slug panel, e.g. to explain what the slug is used for.
 - `pattern`: A regular expression the slug has to match, along with an error message, e.g. `['^[a-z-]+$', 'Use lowercase letters and hyphens only']`. It works like the [`pattern` field option](https://sveltiacms.app/en/docs/fields#pattern) and applies to a slug typed in by the user.
 - `i18n`: Whether each locale has a slug of its own. See [Localizing Entry Slugs](https://sveltiacms.app/en/docs/i18n/slugs#making-slugs-editable).
+- `auto_increment`: Whether to number new entries automatically instead of filling the template. See [Numbering Slugs Automatically](#numbering-slugs-automatically).
 
 For example, to let users give a new blog post a slug of its own while keeping saved posts at their original URLs:
 
@@ -986,6 +987,90 @@ label = "Native Name"
 Without the `editable` option, a collection without a `template` generates the slug from the identifier field as usual, and users can still change it in the Slug panel if they like.
 
 A slug can also be given to a new entry with the `_slug` query parameter when [linking to the Content Editor](https://sveltiacms.app/en/docs/ui/content-editor#entry-slug).
+
+##### Numbering Slugs Automatically
+
+For entries named after a sequential number, such as `1.md`, `2.md` and `3.md`, set the `auto_increment` option to `true`. A new entry’s slug is then the integer after the highest one among the slugs of the collection’s entries, like an `AUTO_INCREMENT` column in a relational database. Unlike the Number field’s [`auto_increment`](https://sveltiacms.app/en/docs/fields/number#auto-increment) option, it doesn’t need a field to hold the number.
+
+- The first entry is numbered `1`. Only slugs made of digits count, so an entry named `about` doesn’t affect the numbering.
+- The unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) count too, as do the slugs of every locale.
+- The number is assigned when the entry is saved, so the Slug panel shows the next number while a new entry is being edited.
+- When the slug is editable on creation, users can type a slug of their own in the Slug panel, which takes over from the number. The `pattern` option applies to it.
+- With [localized slugs](https://sveltiacms.app/en/docs/i18n/slugs), every locale shares the number unless a slug is typed in for it.
+- The `template` option is ignored, and a warning is shown if it’s set.
+
+For example, a collection of articles numbered automatically, whose slugs can only be changed to another number:
+
+```yaml [YAML]{5-8}
+collections:
+  - name: articles
+    label: Articles
+    folder: /content/articles
+    slug:
+      auto_increment: true
+      hint: A sequential number used as the article slug, e.g. 1
+      pattern: ['^[0-9]+$', 'Must contain only numbers']
+    fields:
+      - { name: title, label: Title }
+```
+
+```toml [TOML]{6-9}
+[[collections]]
+name = "articles"
+label = "Articles"
+folder = "/content/articles"
+
+[collections.slug]
+auto_increment = true
+hint = "A sequential number used as the article slug, e.g. 1"
+pattern = ["^[0-9]+$", "Must contain only numbers"]
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+```
+
+```json [JSON]{7-11}
+{
+  "collections": [
+    {
+      "name": "articles",
+      "label": "Articles",
+      "folder": "/content/articles",
+      "slug": {
+        "auto_increment": true,
+        "hint": "A sequential number used as the article slug, e.g. 1",
+        "pattern": ["^[0-9]+$", "Must contain only numbers"]
+      },
+      "fields": [{ "name": "title", "label": "Title" }]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7-11}
+{
+  collections: [
+    {
+      name: "articles",
+      label: "Articles",
+      folder: "/content/articles",
+      slug: {
+        auto_increment: true,
+        hint: "A sequential number used as the article slug, e.g. 1",
+        pattern: ["^[0-9]+$", "Must contain only numbers"],
+      },
+      fields: [{ name: "title", label: "Title" }],
+    },
+  ],
+}
+```
+
+**Warning**
+
+As with the Number field option, Sveltia CMS doesn’t keep a counter: the next number is worked out in the browser from the entries that exist when an entry is saved. If the entry with the highest number is deleted, the next new entry is given the same number, and two users saving new entries at the same moment may get the same number. Any slug made of digits also counts, so a date-like slug such as `20260114` makes the numbering continue from there.
+
+The option is ignored in a collection that stores all its entries in a [single file](https://sveltiacms.app/en/docs/collections/entries/single-file), whose entries have no slugs.
 
 **Deprecation Notice**
 

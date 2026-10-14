@@ -197,7 +197,7 @@ The rows and columns can be inserted and deleted with the table menu, which is o
 - Insert Column Left, Insert Column Right
 - Delete Row, Delete Column, Delete Table
 
-Tables are saved in the [GitHub Flavored Markdown](https://github.github.com/gfm/#tables-extension-) syntax, or as `<table>` elements with the `html` format. A Markdown table always has a single header row on top, so the first row becomes the header row when a row is inserted above it or the header row is deleted. A Markdown table cell can only have inline content, so the block type selector and the other editor components are not available in a cell. In `raw` mode, the Insert Table button inserts an empty Markdown table.
+Tables are saved in the [GitHub Flavored Markdown](https://github.github.com/gfm/#tables-extension-) syntax, or as `<table>` elements with the `html` format. A Markdown table always has a single header row on top, so the first row becomes the header row when a row is inserted above it or the header row is deleted. A Markdown table cell can only have inline content, so the block type selector, horizontal rules and block-level editor components are not available in a cell. Inline components, including the built-in `image` component and [custom components](https://sveltiacms.app/en/docs/api/editor-components) whose `pattern` matches a single line, can be inserted into a cell and are kept when the table is saved. A pipe (`|`) in their Markdown is escaped as `\|` so it doesn’t end the cell. In `raw` mode, the Insert Table button inserts an empty Markdown table.
 
 Merged cells and cell background colors are not supported. Tables can be read from Markdown and HTML even without the `table` component, but they can only be edited cell by cell then.
 

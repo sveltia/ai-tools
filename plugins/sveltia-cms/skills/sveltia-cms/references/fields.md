@@ -1152,6 +1152,8 @@ Whether to number the entries automatically when they’re saved, like an `AUTO_
 - A duplicated entry is given a new number.
 - With `value_type: int/string`, the number is stored as a string.
 
+If the number is only used as the slug and doesn’t need to be stored in the entry, use the collection’s [`slug.auto_increment`](https://sveltiacms.app/en/docs/collections/entries/slugs#numbering-slugs-automatically) option instead.
+
 The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/en/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component.
 
 **Warning**

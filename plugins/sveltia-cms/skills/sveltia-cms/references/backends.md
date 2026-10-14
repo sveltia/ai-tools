@@ -1474,7 +1474,7 @@ The manifest is a JSON file listing the paths of the files to be copied to the v
 
 In the above example, `content/posts/hello-world.md` is fetched from `/seed/content/posts/hello-world.md`.
 
-When a seed manifest is linked, the sign-in button reads Start Demo instead of Work with Test Repository. The files are copied when the user signs in for the first time. Once the virtual file system exists, it’s left untouched, so the user’s changes are kept across reloads. If the user deletes the virtual file system with the Clear File Cache or Erase All Data button in the Advanced panel of the Settings dialog, the content is seeded again on the next sign-in.
+When a seed manifest is linked, the sign-in button reads Start Demo instead of Work with Test Repository. The files are copied when the user signs in for the first time. Once the virtual file system exists, it’s left untouched, so the user’s changes are kept across reloads. If the user deletes the virtual file system with the Clear File Cache or Erase All Data button in the Data Management tab of the Settings dialog, the content is seeded again on the next sign-in.
 
 A file that cannot be fetched is skipped with a warning in the browser console. Paths containing empty, `.` or `..` segments are ignored.
 

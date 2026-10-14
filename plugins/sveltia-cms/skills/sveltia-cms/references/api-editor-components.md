@@ -26,7 +26,7 @@ Registering a component with the same `id` again replaces the previous one. The 
 - `fields` (array of field definitions): An array defining the [fields](https://sveltiacms.app/en/docs/fields) to be displayed in the component.
 - `pattern` (RegExp): A regular expression used to identify existing instances of the component in the Markdown content.
   - It’s recommended to use [named capture groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group) corresponding to the field names so that `fromBlock` can be omitted if no additional processing is needed.
-  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern. Otherwise, the component is treated as an inline component that matches text within a paragraph.
+  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern. Otherwise, the component is treated as an inline component that matches text within a paragraph. Only an inline component can be inserted into a Markdown [table](https://sveltiacms.app/en/docs/fields/richtext#tables) cell.
   - The `g` (global) flag is ignored.
 - `fromBlock` (function): A function that takes a regex match array and returns an object mapping field names to their values.
   - This property can be omitted if the `pattern` regular expression contains named capture groups corresponding to the field names, and no additional processing like type conversion is needed.
