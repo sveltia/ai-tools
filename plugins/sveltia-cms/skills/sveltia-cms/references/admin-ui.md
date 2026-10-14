@@ -50,9 +50,9 @@ The account menu is accessible from the user avatar in the navigation bar. It pr
 
 #### Settings Dialog
 
-Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled, which enables certain features and displays the CMS version number.
+Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled in the Developer tab, which enables certain features and displays the CMS version number. When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the Developer tab also lets you turn on [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits).
 
-The Advanced tab also has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in the user’s browser, including unsaved drafts, settings and the sign-in state. Neither affects anything already saved to the repository.
+The Advanced tab has a Clear Data section. Clear File Cache deletes the locally cached file contents and image thumbnails, while Erase All Data removes everything the CMS keeps in the user’s browser, including unsaved drafts, settings and the sign-in state. Neither affects anything already saved to the repository.
 
 ### General Features
 
@@ -168,7 +168,7 @@ If the site uses a strict Content Security Policy (CSP), you may need to add the
 
 #### Developer Mode
 
-Developer Mode can be enabled from the Settings panel. When enabled, it provides additional features useful for developers, such as:
+Developer Mode can be enabled in the Developer tab of the Settings dialog. When enabled, it provides additional features useful for developers, such as:
 
 - Displays the Help menu in the navigation bar, including a link to the release notes with the current CMS version number.
 - Additional debugging information in the browser console.
@@ -204,7 +204,15 @@ We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/
 
 ### Supported Browsers
 
-Sveltia CMS works with all modern browsers, but there are a few limitations because it utilizes some new web technologies:
+Sveltia CMS works with all modern browsers. It relies on some recent JavaScript features, so the following versions or later are required:
+
+- Chrome and Edge 140
+- Firefox 133
+- Safari 18.4
+
+An older browser is detected when the CMS loads, and an error message asking the user to update the browser is shown instead of the sign-in page.
+
+There are also a few limitations because Sveltia CMS utilizes some new web technologies:
 
 - The [local workflow](https://sveltiacms.app/en/docs/workflows/local) requires a Chromium-based browser, including Chrome, Edge and Brave.
 - Safari: The [Test backend](https://sveltiacms.app/en/docs/backends/test) requires version 26 or later; [image optimization](https://sveltiacms.app/en/docs/media#image-optimization) is slower than in other browsers.
@@ -374,7 +382,7 @@ The Content Editor includes a sidebar that provides additional information and t
 
 - **Slug**: Shows the entry’s slug and lets users edit it. See [Slug Panel](#slug-panel) for details.
 - **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. When a user clicks on an error, the corresponding field in the editor will be highlighted. Results appear when an entry is saved, and the Validate button in the panel header checks it at any time — against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without, so users can see what’s still missing before the entry can be published.
-- **History**: Shows the commit history of the current content file. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
+- **History**: Shows the commit history of the current content file. Each commit is listed with its author and date, and with the first line of its message when the [`prompt_commit_messages`](https://sveltiacms.app/en/docs/backends#prompting-for-commit-messages) option is enabled. Without it, the messages the CMS writes for an entry are all the same, so they’re not shown. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
 - **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). Clicking a backlink opens the referenced content file in the editor. For example, users can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
 
 More panels will be added in the future.
@@ -892,7 +900,7 @@ To customize the information displayed for each entry in the Entry List, a [summ
 
 ##### View Modes
 
-Users can switch between list and grid views for better visualization of entries. The grid view is especially useful when entries have associated images. If no Image field is present, only the list view is available.
+Users can switch between table, list and grid views for better visualization of entries. The [table view](https://sveltiacms.app/en/docs/collections/entries/views#table-view), the default on a large screen, shows the values of several fields in columns, which can be sorted by clicking their headers. The grid view is especially useful when entries have associated images. If no Image field is present, the grid view is not available.
 
 ##### Sorting, Filtering and Grouping
 

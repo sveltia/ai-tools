@@ -1,6 +1,6 @@
 # JavaScript API
 
-Manual initialization, events and custom file formats. For custom field types, see `api-field-types.md`; for editor components, see `api-editor-components.md`; for preview customization, see `api-previews.md`.
+Manual initialization, events, custom file formats, custom string transformations and custom pages. For custom field types, see `api-field-types.md`; for editor components, see `api-editor-components.md`; for preview customization, see `api-previews.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -91,6 +91,8 @@ Currently, the following methods are available on the `CMS` object:
 - [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components): `registerEditorComponent`
 - [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types): `registerFieldType` (alias: `registerWidget`), `getFieldType` (alias: `getWidget`)
 - [Custom File Formats](https://sveltiacms.app/en/docs/api/file-formats): `registerCustomFormat`
+- [Custom String Transformations](https://sveltiacms.app/en/docs/api/string-transformations): `registerStringTransformation`
+- [Custom Pages](https://sveltiacms.app/en/docs/api/custom-pages): `registerCustomPage`
 - [Event Hooks](https://sveltiacms.app/en/docs/api/events): `registerEventListener`
 - [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown): `renderRichText`
 
@@ -104,7 +106,7 @@ The methods other than those listed above are not supported in Sveltia CMS. This
 
 ### Writing React Components
 
-For [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates), [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components) and [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types), you can use React components to create rich, interactive previews and editor interfaces. Sveltia CMS supports three ways to write the markup of these components, and the examples throughout the documentation show all of them:
+For [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates), [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components), [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types) and [Custom Pages](https://sveltiacms.app/en/docs/api/custom-pages), you can use React components to create rich, interactive previews and editor interfaces. Sveltia CMS supports three ways to write the markup of these components, and the examples throughout the documentation show all of them:
 
 - [HTM](#using-htm) — HTML-like markup in a tagged template literal. It works without a build step, so it’s the recommended way.
 - [JSX](#using-jsx) — The familiar React syntax, which requires a build step.
@@ -298,7 +300,7 @@ For NPM installations, you don’t need this step; manual initialization is the 
 
 The `register*` methods, such as `registerPreviewTemplate` and `registerFieldType`, can be called before or after `init()`. Registered items are looked up when they are needed, and the configuration is loaded asynchronously after `init()` is called, so anything registered in the same script is picked up either way.
 
-However, field type [schemas](https://sveltiacms.app/en/docs/api/field-types#field-schema), [editor component](https://sveltiacms.app/en/docs/api/editor-components) fields and [custom file formats](https://sveltiacms.app/en/docs/api/file-formats) are processed when the configuration or the content is loaded. Register them synchronously rather than in a delayed callback, so they are available by then.
+However, field type [schemas](https://sveltiacms.app/en/docs/api/field-types#field-schema), [editor component](https://sveltiacms.app/en/docs/api/editor-components) fields, [custom file formats](https://sveltiacms.app/en/docs/api/file-formats) and [custom string transformations](https://sveltiacms.app/en/docs/api/string-transformations) are used when the configuration or the content is loaded. Register them synchronously rather than in a delayed callback, so they are available by then.
 
 #### Typing the Configuration Object
 
@@ -932,3 +934,319 @@ widget = "richtext"
 Real-world examples of custom file formats can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=file-formats).
 
 Source: https://sveltiacms.app/en/docs/api/file-formats
+
+---
+
+## Custom String Transformations
+
+Sveltia CMS comes with built-in [string transformations](https://sveltiacms.app/en/docs/string-transformations) like `upper`, `truncate` and `date`, which format values in template tags such as `{{title | upper}}`. You can also register your own transformations with JavaScript and use them in the same way.
+
+### Overview
+
+To register a custom string transformation, use the `registerStringTransformation` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+
+```js
+CMS.registerStringTransformation(name, transform);
+```
+
+#### Parameters
+
+- `name` (string): The name of the transformation, used in template tags like `{{title | name}}`. It can contain letters, digits and underscores, and cannot start with a digit. The names of the built-in transformations, such as `upper` and `default`, are reserved and cannot be used. Registering a transformation with the same name again replaces the previous one.
+- `transform` (function): A function that transforms a value. See below for details.
+
+An error is thrown if the name is invalid or reserved, or if `transform` is not a function.
+
+#### Transform Function
+
+The `transform` function receives two arguments and returns the transformed string:
+
+```js
+const transform = (value, { args, locale }) => {
+  // Return the transformed value
+};
+```
+
+- `value`: The value of the template tag, or the output of the previous transformation if transformations are chained. It’s usually the field’s display value, such as the label of a selected option in a [Select](https://sveltiacms.app/en/docs/fields/select) or [Relation](https://sveltiacms.app/en/docs/fields/relation) field, but it’s not always a string: a [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field value may come as a boolean, and a missing value as `undefined`. Convert it with `String(value)` if you need a string.
+- `args`: An array of the arguments given to the transformation in the template tag. A quoted argument comes as a string, and an unquoted one as a number. For example, `{{title | pad(10, '-')}}` gives `[10, '-']`. The array is empty if no arguments are given.
+- `locale`: The locale code of the entry content being processed, such as `en` or `ja`, which is useful for locale-aware formatting. It’s `undefined` if [internationalization](https://sveltiacms.app/en/docs/i18n) is not enabled for the collection.
+
+The function must return the result synchronously; async functions are not supported. A return value other than a string is converted to a string, with `null` and `undefined` resulting in an empty string.
+
+If the function throws an error or returns a Promise, the original value is used as is, so a broken transformation doesn’t break the CMS. The error is logged to the browser console the first time it happens for each transformation.
+
+### Using Custom Transformations
+
+Once registered, a custom transformation can be used in [all the contexts](https://sveltiacms.app/en/docs/string-transformations#available-contexts) where the built-in ones are supported, including the collection `summary`, `slug`, `path` and `preview_path` options, and the Compute field’s `value` option. The same [syntax rules](https://sveltiacms.app/en/docs/string-transformations#syntax) apply:
+
+- String arguments must be enclosed in single quotes, while numeric arguments should not be quoted. Other kinds of arguments, such as `true` or a field name without quotes, are not supported; the transformation is ignored if it has any of them.
+- Custom transformations can be chained with each other and with the built-in ones, e.g. `{{title | reverse | upper | truncate(20)}}`.
+
+Like the `default` and `ternary` transformations, a string argument can contain [nested template tags](https://sveltiacms.app/en/docs/string-transformations#default) to use other field values, e.g. `{{title | wrap('[', ' {{fields.subtitle}}]')}}`.
+
+A transformation that isn’t registered is ignored, and the value is used as is.
+
+#### Missing Values
+
+Like the built-in `default` transformation, a custom transformation also runs when the field has no value, so it can provide a fallback value. In entry slugs and file paths, a template tag without a value is usually replaced with a random ID, and in the `preview_path` option, the preview link is not shown. With a custom transformation, its result is used instead, unless it’s an empty string.
+
+In List and Object field summaries and editor component summaries, however, a missing value results in an empty string without running any transformations.
+
+#### When to Register
+
+Register custom transformations before or right after the CMS is initialized, in the same script, so they are available when entry summaries and field values are first rendered. Entry summaries are cached, so a transformation registered later, e.g. after a delayed callback, may not be applied to the entries that have already been displayed.
+
+### Examples
+
+#### Simple Transformation
+
+The following example registers a `reverse` transformation that reverses the characters of a string:
+
+```js
+CMS.registerStringTransformation('reverse', (value) => [...String(value)].reverse().join(''));
+```
+
+It can be used like this:
+
+```yaml
+summary: '{{title | reverse}}'
+```
+
+#### Transformation with Arguments
+
+The following example registers a `replace` transformation that replaces all occurrences of a string with another string:
+
+```js
+CMS.registerStringTransformation('replace', (value, { args: [search, replacement] }) =>
+  String(value).replaceAll(search, replacement),
+);
+```
+
+For example, use it to show a slug-like field value with spaces in the entry summary:
+
+```yaml
+summary: "{{fields.code | replace('-', ' ') | upper}}"
+```
+
+#### Locale-Aware Formatting
+
+The following example registers a `locale_upper` transformation that converts a string to uppercase using the rules of the entry locale. Unlike the built-in `upper` transformation, it converts the Turkish `i` to `İ` rather than `I` when the locale is `tr`:
+
+```js
+CMS.registerStringTransformation('locale_upper', (value, { locale }) =>
+  String(value).toLocaleUpperCase(locale),
+);
+```
+
+```yaml
+summary: '{{title | locale_upper}}'
+```
+
+#### Fallback Value
+
+The following example registers a `fallback` transformation that works like the built-in `default` transformation, but also treats a value consisting only of whitespace as empty:
+
+```js
+CMS.registerStringTransformation(
+  'fallback',
+  (value, { args: [fallbackValue] }) => String(value ?? '').trim() || fallbackValue,
+);
+```
+
+```yaml
+slug: "{{fields.slug | fallback('{{fields.title}}')}}"
+```
+
+#### Compute Field
+
+Custom transformations are especially useful in the [Compute](https://sveltiacms.app/en/docs/fields/compute) field’s `value` option to save a derived value. The following example saves the initials of the `name` field value:
+
+```js
+CMS.registerStringTransformation('initials', (value) =>
+  String(value ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => word[0].toUpperCase())
+    .join(''),
+);
+```
+
+```yaml
+fields:
+  - name: name
+    label: Name
+  - name: initials
+    label: Initials
+    widget: compute
+    value: '{{fields.name | initials}}'
+```
+
+Source: https://sveltiacms.app/en/docs/api/string-transformations
+
+---
+
+## Custom Pages
+
+A custom page lets you add your own page to the CMS, next to the Contents, Assets and Editorial Workflow pages. It can show a dashboard built with a React component, embed another web page, such as your analytics or deployment status, or simply link to an external site.
+
+### Overview
+
+To register a custom page, use the `registerCustomPage` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+
+```js
+CMS.registerCustomPage(definition);
+```
+
+#### Parameters
+
+- `definition` (object, required): The page definition, with the following properties:
+  - `id` (string, required): A unique identifier for the page, consisting of alphanumeric characters, hyphens and underscores. The page is opened at `#/pages/{id}`, so you can link to it directly. Registering a page with the same ID again replaces the previous one in place.
+  - `label` (string, required): The label of the page, displayed as the page title and as the tooltip of the page’s button.
+  - `icon` (string, optional): The name of a [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon displayed on the page’s button, e.g. `monitoring`. Defaults to `extension`.
+  - `component` (React component): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) rendering the page content. The component receives no props. You can write it with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls.
+  - `url` (string): The URL of a web page to show. A relative URL is resolved against the current page URL. Only `http` and `https` URLs are supported.
+  - `newTab` (boolean, optional): Whether to open the `url` in a new browser tab instead of embedding it in the CMS. Defaults to `false`. Can only be used with `url`.
+
+Either `component` or `url` must be given, but not both. An invalid definition throws a `TypeError`.
+
+### Where Pages Appear
+
+On desktop, custom pages are listed in the global toolbar after the built-in pages, in the order of registration, and can be opened with the <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>9</kbd> keyboard shortcuts along with the built-in pages. A page opening in a new tab is shown as a separate button after the page buttons.
+
+On mobile, the bottom navigation has little room, so custom pages are listed in the Pages section of the Menu page instead.
+
+Pages can be registered before or after the CMS is initialized. A page registered later appears right away, and a link to `#/pages/{id}` shows the page as soon as it’s registered.
+
+### Examples
+
+#### React Component
+
+The following page greets the user and counts their clicks, using the `useState` hook. A component can use any [hook](https://sveltiacms.app/en/docs/api#using-hooks) taken from `CMS.React`.
+
+```js [HTM]
+const { useState } = CMS.React;
+
+const Dashboard = () => {
+  const [count, setCount] = useState(0);
+
+  return html`
+    <div style="padding: 16px">
+      <h3>Welcome back!</h3>
+      <p>You’ve clicked the button ${count} times.</p>
+      <button type="button" onClick=${() => setCount(count + 1)}>Click Me</button>
+    </div>
+  `;
+};
+
+CMS.registerCustomPage({
+  id: 'dashboard',
+  label: 'Dashboard',
+  icon: 'dashboard',
+  component: Dashboard,
+});
+```
+
+```jsx [JSX]
+const { useState } = CMS.React;
+
+const Dashboard = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div style={{ padding: 16 }}>
+      <h3>Welcome back!</h3>
+      <p>You’ve clicked the button {count} times.</p>
+      <button type="button" onClick={() => setCount(count + 1)}>
+        Click Me
+      </button>
+    </div>
+  );
+};
+
+CMS.registerCustomPage({
+  id: 'dashboard',
+  label: 'Dashboard',
+  icon: 'dashboard',
+  component: Dashboard,
+});
+```
+
+```js [h()]
+const { useState } = CMS.React;
+
+const Dashboard = () => {
+  const [count, setCount] = useState(0);
+
+  return h(
+    'div',
+    { style: { padding: 16 } },
+    h('h3', null, 'Welcome back!'),
+    h('p', null, `You’ve clicked the button ${count} times.`),
+    h('button', { type: 'button', onClick: () => setCount(count + 1) }, 'Click Me'),
+  );
+};
+
+CMS.registerCustomPage({
+  id: 'dashboard',
+  label: 'Dashboard',
+  icon: 'dashboard',
+  component: Dashboard,
+});
+```
+
+The page area has no padding, so your component can fill it, e.g. with a full-size chart. Add your own padding as needed.
+
+#### Embedded Web Page
+
+To show another web page within the CMS, provide its URL. The page is embedded in an iframe that fills the page area.
+
+```js
+CMS.registerCustomPage({
+  id: 'analytics',
+  label: 'Analytics',
+  icon: 'monitoring',
+  url: 'https://plausible.io/share/example.com?auth=XXXXXXXX',
+});
+```
+
+A relative URL is resolved against the CMS admin page URL, so a page of your own site can be embedded as well:
+
+```js
+CMS.registerCustomPage({
+  id: 'style-guide',
+  label: 'Style Guide',
+  icon: 'palette',
+  url: '/style-guide/',
+});
+```
+
+**Embedding restrictions**
+
+Many sites prevent their pages from being embedded in an iframe with the `X-Frame-Options` or `Content-Security-Policy` response header. Such a page appears blank or shows an error in the CMS. Use the `newTab` option for these sites instead.
+
+**Security note**
+
+A page embedded from the same origin as the CMS, e.g. a page on your own site when the CMS is served from the same domain, has full access to the CMS, including the signed-in user’s access token stored in the browser. Only embed pages you trust.
+
+#### Link Opening in a New Tab
+
+To add a shortcut to an external site, such as your hosting dashboard or a style guide, set the `newTab` option to `true`. The URL is opened in a new browser tab, and the user stays where they are in the CMS.
+
+```js
+CMS.registerCustomPage({
+  id: 'netlify',
+  label: 'Netlify Dashboard',
+  icon: 'cloud',
+  url: 'https://app.netlify.com/sites/example/overview',
+  newTab: true,
+});
+```
+
+### Migrating from Static CMS
+
+Static CMS provided a similar feature with the `CMS.registerAdditionalLink()` method. As Static CMS has been archived, Sveltia CMS doesn’t support the method. Use `CMS.registerCustomPage()` instead:
+
+- `id` and `title` correspond to `id` and `label`, respectively.
+- `data` corresponds to `component` for a React component, or `url` for a link. Add `newTab: true` to open the link in a new tab, or omit it to embed the page in the CMS.
+- `options.iconName` corresponds to `icon`, which takes a Material Symbols icon name rather than the name of an icon registered with `CMS.registerIcon()`.
+
+Source: https://sveltiacms.app/en/docs/api/custom-pages

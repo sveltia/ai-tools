@@ -24,18 +24,18 @@ The List field type has four different UI modes, depending on the configuration:
 ##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
-- Each item comes with a menu that allows users to duplicate the item, insert a new item above/below it, or remove it. A duplicated item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one.
+- Each item comes with a menu that allows users to duplicate the item or insert a new item above/below it, and a Remove button. A duplicated item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
-- Each item can be reordered using the drag handle in the middle of its header:
-  - Dragging the handle moves the item.
-  - With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list.
-  - On a touch screen, Move Up and Move Down buttons are shown in place of the handle, because drag and drop requires a mouse.
+- Each item can be reordered in its header:
+  - The Move Up and Move Down buttons, next to the item menu, move the item one position. They are disabled on the first and last items respectively.
+  - With a mouse, the drag handle in the middle of the header also moves the item when dragged. With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list. The handle is not shown on a touch screen, because drag and drop requires a mouse.
+- With a mouse, the Move Up, Move Down, menu and Remove buttons of an item are shown when the pointer is over the item or the item has focus, to reduce clutter.
 
 ##### Simple list field
 
 - Pressing Enter in an item’s input adds a new item below it. The Add button below the list appends one to the end.
 - Each item comes with a Remove button.
-- Each item can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as a complex list field.
+- Each item can be reordered using the drag handle at the start of its row, by dragging it or with the same keys as a complex list field. On a touch screen, Move Up and Move Down buttons are shown in place of the handle.
 - The list always keeps one row, so that an empty list still offers somewhere to type. The Remove and reorder controls are disabled when a single item is left.
 - Blank rows are ignored. The stored value is the list of the remaining items, each trimmed of surrounding spaces.
 
@@ -165,6 +165,8 @@ These options are effective only when the `field`, `fields`, or `types` option i
 
 A template string used to generate a summary for each item in the collapsed view. It can include subfield values using the `{{subfield_name}}` syntax. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option. If omitted, the summary will be automatically generated based on the first textual subfield found.
 
+If the single subfield defined with the `field` option is of a [custom field type](https://sveltiacms.app/en/docs/api/field-types) that comes with a [summary component](https://sveltiacms.app/en/docs/api/field-types#summary-component), the component is drawn instead of the text.
+
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
 ##### `thumbnail`
@@ -218,7 +220,7 @@ Whether to allow duplicating items in the list. If set to `false`, the Duplicate
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow reordering of items in the list by dragging the handle in each item’s header, by using the keyboard while the handle is focused, or by using the Move Up and Move Down buttons shown on a touch screen. If set to `false`, the reorder controls will be hidden.
+Whether to allow reordering of items in the list by using the Move Up and Move Down buttons in each item’s header, by dragging the handle, or by using the keyboard while the handle is focused. In a simple list field, the Move Up and Move Down buttons are shown in place of the handle on a touch screen only. If set to `false`, the reorder controls will be hidden.
 
 ##### `add_to_top`
 

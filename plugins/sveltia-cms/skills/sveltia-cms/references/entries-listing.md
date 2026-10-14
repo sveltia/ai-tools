@@ -610,6 +610,205 @@ A few things to keep in mind:
 - Order values are still assigned as a single sequence starting from `1`, numbered group by group. They do not restart at `1` in each group, so the first entry of the second group continues from where the first group ended.
 - If the named group is not defined in `view_groups`, Sveltia CMS raises a configuration error on startup.
 
+### Bulk Editing Entries
+
+When the `bulk_edit` option is set to `true`, users can change the simple fields of many entries at once in a spreadsheet-like table, instead of opening and saving each entry one by one. This is useful for chores like turning a `draft` flag on or off, moving posts to another category or fixing titles across a collection.
+
+```yaml [YAML]{5}
+collections:
+  - name: posts
+    label: Blog Posts
+    folder: /content/posts
+    bulk_edit: true
+    fields:
+      - { name: title, label: Title }
+      - { name: draft, label: Draft, widget: boolean }
+      - { name: category, label: Category, widget: select, options: [news, blog] }
+      - { name: body, label: Body, widget: richtext }
+```
+
+```toml [TOML]{5}
+[[collections]]
+name = "posts"
+label = "Blog Posts"
+folder = "/content/posts"
+bulk_edit = true
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "draft"
+label = "Draft"
+widget = "boolean"
+
+[[collections.fields]]
+name = "category"
+label = "Category"
+widget = "select"
+options = ["news", "blog"]
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+```
+
+```json [JSON]{7}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog Posts",
+      "folder": "/content/posts",
+      "bulk_edit": true,
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "draft", "label": "Draft", "widget": "boolean" },
+        { "name": "category", "label": "Category", "widget": "select", "options": ["news", "blog"] },
+        { "name": "body", "label": "Body", "widget": "richtext" }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog Posts",
+      folder: "/content/posts",
+      bulk_edit: true,
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "draft", label: "Draft", widget: "boolean" },
+        { name: "category", label: "Category", widget: "select", options: ["news", "blog"] },
+        { name: "body", label: "Body", widget: "richtext" },
+      ],
+    },
+  ],
+}
+```
+
+With this option enabled, an **Edit** button appears in the collection toolbar. Clicking it turns the entry list into a table with a row for each entry and a column for each field that can be edited in bulk, holding the same control as the content editor: a text box, a switch, a dropdown list, a date picker and so on. The entry titles stay in view as the table is scrolled sideways. In the example above, the table has Title, Draft and Category columns; the Body field is left out, as a rich text editor doesn’t fit in a table cell.
+
+The toolbar shows how many values have been changed, and the changed cells are highlighted. Click **Save** to write all the changes in a single commit, or **Cancel** to discard them; you’re asked to confirm if there are unsaved changes.
+
+The table lists the entries shown before clicking **Edit**, in the same order and groups. To edit only some of the entries, such as the posts in one category, [filter](https://sveltiacms.app/en/docs/collections/entries/views#filtering) the list first. The sorting, filtering and grouping menus are hidden while editing, so the rows stay where they are.
+
+#### Choosing the Fields
+
+By default, every field that can be edited in bulk becomes a column, in the configured order. To show only some of them, or in a different order, provide an object with a `fields` property listing the field names instead:
+
+```yaml [YAML]{5-6}
+collections:
+  - name: posts
+    label: Blog Posts
+    folder: /content/posts
+    bulk_edit:
+      fields: [draft, title]
+    fields:
+      - { name: title, label: Title }
+      - { name: draft, label: Draft, widget: boolean }
+      - { name: category, label: Category, widget: select, options: [news, blog] }
+      - { name: body, label: Body, widget: richtext }
+```
+
+```toml [TOML]{5}
+[[collections]]
+name = "posts"
+label = "Blog Posts"
+folder = "/content/posts"
+bulk_edit = { fields = ["draft", "title"] }
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "draft"
+label = "Draft"
+widget = "boolean"
+
+[[collections.fields]]
+name = "category"
+label = "Category"
+widget = "select"
+options = ["news", "blog"]
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+```
+
+```json [JSON]{7}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog Posts",
+      "folder": "/content/posts",
+      "bulk_edit": { "fields": ["draft", "title"] },
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "draft", "label": "Draft", "widget": "boolean" },
+        { "name": "category", "label": "Category", "widget": "select", "options": ["news", "blog"] },
+        { "name": "body", "label": "Body", "widget": "richtext" }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog Posts",
+      folder: "/content/posts",
+      bulk_edit: { fields: ["draft", "title"] },
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "draft", label: "Draft", widget: "boolean" },
+        { name: "category", label: "Category", widget: "select", options: ["news", "blog"] },
+        { name: "body", label: "Body", widget: "richtext" },
+      ],
+    },
+  ],
+}
+```
+
+If a listed field doesn’t exist at the top level of the collection, or can’t be edited in bulk, Sveltia CMS raises a configuration error on startup.
+
+#### Supported Fields
+
+Only a top-level field holding a single simple value can be edited in bulk — the same field types as an [editor component in the inline mode](https://sveltiacms.app/en/docs/api/editor-components#status-select-inline-mode):
+
+- [Boolean](https://sveltiacms.app/en/docs/fields/boolean)
+- [Color](https://sveltiacms.app/en/docs/fields/color)
+- [DateTime](https://sveltiacms.app/en/docs/fields/datetime)
+- [Number](https://sveltiacms.app/en/docs/fields/number)
+- [Relation](https://sveltiacms.app/en/docs/fields/relation)
+- [Select](https://sveltiacms.app/en/docs/fields/select)
+- [String](https://sveltiacms.app/en/docs/fields/string)
+
+A field of these types is still left out if it has the `multiple` or `readonly` option enabled, or if its value is set automatically on save: a Number field with the `auto_increment` option or a DateTime field with the `auto_now` option. Other fields, such as Text, Rich Text, List and Object fields, can only be edited in the content editor.
+
+#### How Changes Are Saved
+
+- The values are checked against the field options, such as `required`, `pattern`, `min` and `max`, before anything is saved, as they are in the content editor. An invalid value is highlighted with an error message, and nothing is saved until it’s fixed. A `unique` field is checked against all the pending changes together, so two entries can swap their values.
+- Only the entries with changed values are saved. A DateTime field with the `auto_now` option is updated in each of them, as it would be in the content editor.
+- With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the table shows the values in the default locale. A field with `i18n: duplicate` gets the new value in every locale, while a translatable field only changes in the default locale; the other locales can be updated in the content editor.
+- The changes are applied to the entries as they are in the repository when you click **Save**, so a change someone else has made to another field of the same entry in the meantime is kept.
+- The collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) and [read-only](#making-content-read-only) entries are not listed.
+
+Like [reordering](#reordering-entries), bulk editing writes the changes to the configured branch directly, even if [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled, as it doesn’t go through the review of each entry. For the same reason, the **Edit** button is not available to [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors, or to users who can’t push to the branch. An entry with unpublished changes is edited in its published version, so publishing those changes later may revert the bulk edit. The button is also not available on small screens, where a table doesn’t fit.
+
 Source: https://sveltiacms.app/en/docs/collections/entries/operations
 
 ---
@@ -1329,6 +1528,142 @@ Source: https://sveltiacms.app/en/docs/collections/entries/listings
 ## Entry Views
 
 Sveltia CMS provides several options to customize how entries are displayed in the listing view. Users can sort, group, and filter entries based on specific fields to improve navigation and organization.
+
+### Table View
+
+The entry list can be shown in three views: a table, a list and a grid of thumbnails. The table view is the default, until a user picks another view with the buttons in the toolbar. A collection opened before the table view was introduced keeps the view it was shown in then, usually the list view, until the user picks the table. It shows a column for each piece of information that tells the entries apart, such as the date, the author and the category, while the list view only shows the [entry summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries). The grid view is only available when the entries have [thumbnails](https://sveltiacms.app/en/docs/collections/entries/listings#thumbnails).
+
+The table view is shown on a large screen, where the columns fit. On a smaller screen, the list view is shown instead. In [reorder mode](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries), the entries are always shown in a list.
+
+The table is read-only: click a row to open the entry, as in the list view. To change the values of many entries at once, use [bulk editing](https://sveltiacms.app/en/docs/collections/entries/operations#bulk-editing-entries).
+
+By default, the table shows the entry summary, followed by a column for each field the entries can be [sorted](#sorting) by, as they are the fields that tell the entries apart. The identifier field, usually `title`, is left out, as the summary already shows it. You can choose the columns with the `table_columns` option instead. It accepts a list of field names, which can include nested fields in dot notation like `author.name`, as well as the special keys `_summary` for the entry summary, `slug`, `commit_date` and `commit_author`. To give a column a header other than the field’s label, use an object with the `field` and `label` properties:
+
+```yaml [YAML]{11-15}
+collections:
+  - name: posts
+    label: Blog posts
+    folder: /content/posts
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Published Date, widget: datetime }
+      - { name: author, label: Author, widget: object, fields: [{ name: name, label: Name }] }
+      - { name: draft, label: Draft, widget: boolean }
+      - { name: body, label: Body, widget: richtext }
+    table_columns:
+      - title
+      - date
+      - { field: author.name, label: Author }
+      - draft
+```
+
+```toml [TOML]{5-10}
+[[collections]]
+name = "posts"
+label = "Blog posts"
+folder = "/content/posts"
+table_columns = [
+  "title",
+  "date",
+  { field = "author.name", label = "Author" },
+  "draft",
+]
+
+[[collections.fields]]
+name = "title"
+label = "Title"
+
+[[collections.fields]]
+name = "date"
+label = "Published Date"
+widget = "datetime"
+
+[[collections.fields]]
+name = "author"
+label = "Author"
+widget = "object"
+fields = [{ name = "name", label = "Name" }]
+
+[[collections.fields]]
+name = "draft"
+label = "Draft"
+widget = "boolean"
+
+[[collections.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+```
+
+```json [JSON]{14-19}
+{
+  "collections": [
+    {
+      "name": "posts",
+      "label": "Blog posts",
+      "folder": "/content/posts",
+      "fields": [
+        { "name": "title", "label": "Title" },
+        { "name": "date", "label": "Published Date", "widget": "datetime" },
+        { "name": "author", "label": "Author", "widget": "object", "fields": [{ "name": "name", "label": "Name" }] },
+        { "name": "draft", "label": "Draft", "widget": "boolean" },
+        { "name": "body", "label": "Body", "widget": "richtext" }
+      ],
+      "table_columns": [
+        "title",
+        "date",
+        { "field": "author.name", "label": "Author" },
+        "draft"
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{14-19}
+{
+  collections: [
+    {
+      name: "posts",
+      label: "Blog posts",
+      folder: "/content/posts",
+      fields: [
+        { name: "title", label: "Title" },
+        { name: "date", label: "Published Date", widget: "datetime" },
+        { name: "author", label: "Author", widget: "object", fields: [{ name: "name", label: "Name" }] },
+        { name: "draft", label: "Draft", widget: "boolean" },
+        { name: "body", label: "Body", widget: "richtext" },
+      ],
+      table_columns: [
+        "title",
+        "date",
+        { field: "author.name", label: "Author" },
+        "draft",
+      ],
+    },
+  ],
+}
+```
+
+A column can also show a template, written the same way as the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries), with the same tags and [transformations](https://sveltiacms.app/en/docs/string-transformations). This lets the table show entry metadata such as `{{locales}}` for the enabled locales, `{{dirname}}`, `{{filename}}` and `{{extension}}`, or combine several values in one column:
+
+```yaml
+table_columns:
+  - title
+  - '{{locales}}'
+  - { field: '{{filename}}.{{extension}}', label: File }
+  - { field: "{{date | date('YYYY-MM-DD')}}", label: Published }
+```
+
+A template made of a single tag, such as `{{locales}}` or `{{commit_date}}`, gets a header named after it, and its column can be sorted if the tag is one of the [sortable fields](#sorting). Give a longer template a `label`, or its header shows the template itself.
+
+Each cell shows the field’s value the way a [summary template](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) would: a date in the user’s format, a Select field’s option by its label, a Relation field’s referenced entry by its display value, a list as comma-separated values and a rich text field without its formatting. A Boolean field is shown as a check mark when it’s on. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the values are taken from the default locale. If a listed field isn’t defined in the collection, Sveltia CMS raises a configuration error on startup.
+
+A column whose field is also one of the [sortable fields](#sorting) has a clickable header that sorts the entries by it, the same way the **Sort** menu does; click it again to reverse the order.
+
+**Static CMS compatibility**
+
+The `summary_fields` option of Static CMS, a list of field names where `summary` stands for the entry summary, is supported as an alias of `table_columns`. It’s ignored if `table_columns` is also defined.
 
 ### Sorting
 

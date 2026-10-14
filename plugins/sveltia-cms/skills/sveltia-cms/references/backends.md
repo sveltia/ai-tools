@@ -436,13 +436,66 @@ The following table summarizes which tags are supported for each commit type:
 | `uploadMedia`, `deleteMedia` | `path`, `author-email`, `author-login`, `author-name` |
 | `openAuthoring` | `message`, `author-email`, `author-login`, `author-name` |
 
+##### Prompting for Commit Messages
+
+The messages generated from the templates are often the same for every change to an entry, which makes the Git history hard to follow. Set the `prompt_commit_messages` option to ask users for a commit message every time they save, for example to describe the change or to tie it to an issue in your project tracker:
+
+- `true`: Users can write the whole message. The text box is filled in with the message generated from the template, so they can edit it or keep it as is.
+- `prefix`: Users can enter a note, such as an issue number, that is added before the generated message, with a space in between. A preview shows the message as it will be recorded.
+- `suffix`: Same as `prefix`, but the note is added after the generated message.
+
+```yaml [YAML]{4}
+backend:
+  name: github
+  repo: user/repo
+  prompt_commit_messages: prefix
+```
+
+```toml [TOML]{4}
+[backend]
+name = "github"
+repo = "user/repo"
+prompt_commit_messages = "prefix"
+```
+
+```json [JSON]{5}
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "prompt_commit_messages": "prefix"
+  }
+}
+```
+
+```js [JavaScript]{5}
+{
+  backend: {
+    name: 'github',
+    repo: 'user/repo',
+    prompt_commit_messages: 'prefix',
+  },
+}
+```
+
+With the above configuration, a user who enters `JIRA-123:` when updating a blog post commits the change as `JIRA-123: Update Post "hello-world"`.
+
+How the prompt works:
+
+- Users are asked every time a change is committed: when an entry is saved, deleted or reordered, and when assets or folders are uploaded, deleted, renamed or moved.
+- The text box can be left empty, in which case the generated message is used as is.
+- With `prefix` and `suffix`, the note entered last is filled in again for the next commit, as several changes in a row often belong to the same issue. It’s kept until the page is reloaded.
+- Canceling the dialog cancels the save, deletion or upload, and nothing is committed. In the Content Editor, the changes are kept so you can save them again.
+- With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the message is also used as the title of the pull request when it’s opened, and the merge commit takes that title when the entry is published. Deleting several entries at once asks only once.
+- The [`openAuthoring`](#commit-messages) template and the [`[skip ci]` prefix](#skipping-ci-cd) are applied to the message the user enters as well.
+- The [History panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) of the Content Editor shows the first line of each commit’s message, so the history of an entry can be followed at a glance.
+- With the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), users are only asked when [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits) are turned on.
+
+The default is `false`, which commits the generated messages without asking. The option is not available with the [Test backend](https://sveltiacms.app/en/docs/backends/test).
+
 ##### Skipping CI/CD
 
 It’s also possible to add the `[skip ci]` prefix to commit messages to prevent triggering CI/CD pipelines. See the [deployments guide](https://sveltiacms.app/en/docs/deployments) for more details.
-
-**Future Plans**
-
-We plan to add an option that prompts users to enter custom commit messages in the UI before saving changes.
 
 #### Including Credentials in API Requests
 
@@ -1361,6 +1414,8 @@ Source: https://sveltiacms.app/en/docs/backends/gitlab
 
 The Test backend is a simple backend for testing and local development. It stores entries and assets in a virtual file system in the browser, allowing developers to test the Sveltia CMS setup without needing a repository.
 
+The Test backend also powers our [demo site](https://demo.sveltiacms.app/), where anyone can try Sveltia CMS with sample content, without an account or a repository.
+
 ### Configuration
 
 The configuration for the Test backend is straightforward. You only need to specify the backend name in your Sveltia CMS configuration file. No repository name or authentication details are required.
@@ -1395,7 +1450,39 @@ name = "test-repo"
 
 The Test backend saves entries and assets in the browser’s [origin private file system](https://web.dev/articles/origin-private-file-system) (OPFS) so that changes are not discarded when the browser tab is closed or reloaded. The persistent storage support works with [all modern browsers](https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle/createWritable#browser_compatibility). Safari requires version 26 or later.
 
-Since it’s not connected to any remote or local repository, the Test backend does not read existing content on initialization. Instead, it starts with an empty state, allowing you to create new entries and assets from scratch.
+Since it’s not connected to any remote or local repository, the Test backend does not read existing content on initialization. Instead, it starts with an empty state, allowing you to create new entries and assets from scratch, unless you provide seed content as described below.
+
+### Seeding Content
+
+To make the Test backend start with some entries and assets, for example on a demo site, add a `<link>` element pointing to a seed manifest to the `<head>` of the admin page:
+
+```html
+<link rel="cms-seed-url" href="/seed/manifest.json" />
+```
+
+The manifest is a JSON file listing the paths of the files to be copied to the virtual file system. Each path is relative to the repository root, and the file is fetched from the same path relative to the manifest. Text and binary files, such as images, are both supported.
+
+```json
+{
+  "files": [
+    "content/posts/hello-world.md",
+    "content/posts/second-post.md",
+    "static/images/hello-world.jpg"
+  ]
+}
+```
+
+In the above example, `content/posts/hello-world.md` is fetched from `/seed/content/posts/hello-world.md`.
+
+When a seed manifest is linked, the sign-in button reads Start Demo instead of Work with Test Repository. The files are copied when the user signs in for the first time. Once the virtual file system exists, it’s left untouched, so the user’s changes are kept across reloads. If the user deletes the virtual file system with the Clear File Cache or Erase All Data button in the Advanced panel of the Settings dialog, the content is seeded again on the next sign-in.
+
+A file that cannot be fetched is skipped with a warning in the browser console. Paths containing empty, `.` or `..` segments are ignored.
+
+This is how our [demo site](https://demo.sveltiacms.app/) gets its sample posts, pages and images.
+
+**Note for Netlify/Decap CMS users**
+
+The `window.repoFiles` object used to populate the Test backend in Netlify/Decap CMS is not supported. Use the seed manifest instead.
 
 If you want to test the CMS with a local Git repository, you can use the [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local) instead. It lets you make changes to local files with Sveltia CMS while it’s running on a local development server.
 

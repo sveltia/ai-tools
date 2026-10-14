@@ -34,6 +34,10 @@ Astro serves static files from the [`public` folder](https://docs.astro.build/en
 
 The Astro development server doesn’t serve `index.html` for a folder path in `public`, so open `/admin/index.html` instead of `/admin/` during development. On the built site, most hosting services serve the admin page at `/admin/` as usual.
 
+**Don’t Use an Astro Page**
+
+Don’t load Sveltia CMS from an Astro page, such as `src/pages/admin.astro` or `src/pages/admin/index.astro`, even if you import it from the [npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package). The Astro development server reloads such a page every time a file changes, which can interrupt saving when you [work with a local repository](https://sveltiacms.app/en/docs/workflows/local), leaving a file empty or a temporary `.sveltia-tmp-*` file behind. Sveltia CMS shows a warning at the top of the page in this case. A static HTML file in the `public` folder is not reloaded.
+
 If your site uses the [`<ClientRouter />`](https://docs.astro.build/en/guides/view-transitions/) component for view transitions, add the `data-astro-reload` attribute to links to the admin page, so they are opened as regular pages instead of being handled by the router:
 
 ```html

@@ -173,7 +173,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
 - **Decap Turbo**: It’s a managed hosting service, not a core feature. Some notes:
   - Performance: Sveltia CMS uses the GraphQL API to retrieve multiple files at once, so it’s already fast. Using a proxy is a bad idea!
   - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature.
-  - User management, roles and credentials: We plan to implement these features with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/roadmap#v1-0), our free server-side component.
+  - User management, roles and credentials: We plan to implement these features with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component.
   - Deploy status: Sveltia CMS partially implements it as part of [deploy previews](https://sveltiacms.app/en/docs/workflows/deploy-previews).
 - [Gatsby plugin](https://github.com/decaporg/gatsby-plugin-decap-cms): In light of Gatsby’s [uncertainty](https://github.com/gatsbyjs/gatsby/discussions/39062), we won’t be investing time in developing a plugin for it. Gatsby users can still create `index.html` themselves. Note: We don’t support Netlify Identity Widget; the favicon can be specified with the `logo.src` option.
 - Performance-related options: Sveltia CMS has [drastically improved performance](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-performance) with GraphQL enabled by default, so these are no longer relevant:
@@ -450,7 +450,7 @@ As a result, the migration involves the following changes:
 
 Pages CMS allows repository owners to invite collaborators by email, so people without a GitHub account can edit content through the GitHub App. Sveltia CMS doesn’t have an equivalent feature yet, as it requires each user to have an account with write access to the repository on the Git hosting service. Invite your collaborators to the repository on GitHub instead. See [Invite Team Members](https://sveltiacms.app/en/docs/start#invite-team-members).
 
-We plan to support user management and roles with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/roadmap#v1-0), our free server-side component.
+We plan to support user management and roles with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component.
 
 #### Features Not Available in Sveltia CMS
 
@@ -517,7 +517,7 @@ collections:
     label: Posts
     folder: /content/posts
     slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
-    summary: '{{title}} ({{date}})'
+    table_columns: [title, date]
     sortable_fields:
       fields: [date, title]
       default: { field: date, direction: descending }
@@ -615,7 +615,7 @@ The `view` options are converted as follows. See [Entry Listings](https://svelti
 | Pages CMS | Sveltia CMS |
 | --- | --- |
 | `view.primary` | [`identifier_field`](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field) |
-| `view.fields` | [`summary`](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) template, e.g. `'{{title}} ({{date}})'` |
+| `view.fields` | [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#table-view), e.g. `[title, date]`, for the columns of the table view, the default view of the entry list. A column can also be a template like `'{{locales}}'`. For the list view, which shows a single line per entry, a [`summary`](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) template like `'{{title}} ({{date}})'` can combine the fields as well |
 | `view.sort` | [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting) |
 | `view.default.sort`, `view.default.order` | `sortable_fields.default.field`, `sortable_fields.default.direction` (`ascending` or `descending`) |
 | `view.search` | Not needed, as all entries are searchable |
@@ -877,6 +877,7 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 #### Configuration Options
 
 - Sveltia CMS supports the [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting), [`view_filters`](https://sveltiacms.app/en/docs/collections/entries/views#filtering) and [`view_groups`](https://sveltiacms.app/en/docs/collections/entries/views#grouping) options with the new `default` option. We still support the legacy Netlify/Decap CMS format as well, so you can use either format for these options.
+- The `summary_fields` option is supported as an alias of [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#table-view), which chooses the columns of the entry list’s table view. As in Static CMS, `summary` stands for the entry summary. Sveltia CMS’s own `table_columns` option also accepts custom column labels and templates like `{{locales}}`.
 - Directory navigation is supported in the Asset Library and the Select File/Image dialog. If you define [collection-specific `media_folder`s](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration), these folders are displayed as separate locations. The [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) within a configured folder are listed and can be browsed in both places, created from either, and renamed or deleted in the Asset Library. Folders are enabled by default, so the `folder_support` option for `media_library` is not supported, nor is the `display_in_navigation` option.
 - The `logo_link` global option will not be supported. Use `display_url` or `site_url` instead.
 - The `yaml` global option will not be supported, as Sveltia CMS does not expose underlying `yaml` library options for forward compatibility reasons. However, we do have some [data output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output), including YAML indentation and quotes.
@@ -897,6 +898,7 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 
 #### Customization
 
+- `CMS.registerAdditionalLink()` is not supported. Use [`CMS.registerCustomPage()`](https://sveltiacms.app/en/docs/api/custom-pages#migrating-from-static-cms) instead, which supports React components, embedded web pages and links.
 - `CMS.registerIcon()` will not be supported, as Sveltia CMS includes the Material Symbols font for [custom collection icons](https://sveltiacms.app/en/docs/collections#icons) that doesn’t require manual registration.
 
 Source: https://sveltiacms.app/en/docs/migration/static-cms

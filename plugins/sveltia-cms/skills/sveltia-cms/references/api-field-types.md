@@ -26,7 +26,19 @@ To register a custom field type, use the `registerFieldType` method on the [`CMS
 CMS.registerFieldType(name, control, [preview], [schema]);
 ```
 
-For backward compatibility with Netlify/Decap CMS, the `registerWidget` method is available as an alias with the same signature.
+Alternatively, pass a single definition object, which also accepts a [summary component](#summary-component):
+
+```js
+CMS.registerFieldType({
+  name,
+  controlComponent,
+  previewComponent, // optional
+  summaryComponent, // optional
+  schema, // optional
+});
+```
+
+For backward compatibility with Netlify/Decap CMS, the `registerWidget` method is available as an alias with the same signatures.
 
 #### Parameters
 
@@ -34,6 +46,16 @@ For backward compatibility with Netlify/Decap CMS, the `registerWidget` method i
 - `control` (React component or string, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here; the field shows no control and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
 - `preview` (React component, optional): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines how the field’s value is previewed in the CMS preview pane. If not provided, no preview will be shown.
 - `schema` (object, optional): A [JSON schema](https://json-schema.org/) (draft-07) object that defines the configuration options for the field type. See [Field Schema](#field-schema) below.
+
+The definition object takes the same options under the following names:
+
+- `name` (string, required): Same as the `name` parameter.
+- `controlComponent` (React component or string, required): Same as the `control` parameter.
+- `previewComponent` (React component, optional): Same as the `preview` parameter.
+- `summaryComponent` (React component, optional): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that draws a collapsed List field item. See [Summary Component](#summary-component) below.
+- `schema` (object, optional): Same as the `schema` parameter.
+
+When a definition object is given, any other arguments are ignored. The format is the same as the one undocumented Netlify/Decap CMS `registerWidget` method accepts, so existing code works as is, except that the Netlify/Decap CMS-specific `globalStyles` and `allowMapValue` options are ignored.
 
 You can write the components with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
 
@@ -212,6 +234,44 @@ The preview component receives the following props:
 - `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. The path can also be a temporary `blob:` URL returned from the [`addFile`](#uploading-files) or [`pickFile`](#picking-files) prop. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
 - `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by the field’s key path, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
+#### Summary Component
+
+When a [List](https://sveltiacms.app/en/docs/fields/list) field has a single subfield, defined with the `field` option, a collapsed item shows the item’s value as text by default, or the text made from the List field’s `summary` option. That’s fine for a plain string, but a custom field type that stores a file path or an ID can draw something more meaningful, such as a small picture and a title.
+
+To do so, register the field type with a `summaryComponent` in a [definition object](#registering-a-custom-field-type). The component receives the same [props as a preview component](#preview-component-props), with `value` being the value of the item, and is drawn in place of the summary text whenever the item is collapsed:
+
+```js
+const PhotoSummary = ({ value, getAsset }) => html`
+  <span style="display: flex; align-items: center; gap: 8px;">
+    <img src=${getAsset(value)?.url} alt="" style="width: 32px; height: 32px; object-fit: cover;" />
+    ${value?.split('/').pop()}
+  </span>
+`;
+
+CMS.registerFieldType({
+  name: 'photo',
+  controlComponent: PhotoControl,
+  previewComponent: PhotoPreview,
+  summaryComponent: PhotoSummary,
+});
+```
+
+```yaml
+fields:
+  - name: photos
+    label: Photos
+    widget: list
+    field:
+      name: photo
+      widget: photo # custom field type name
+```
+
+A few notes:
+
+- The component is only used for a List field with a single subfield of your field type. A List field with multiple subfields or variable types, and an Object field, still show the text made from the `summary` option.
+- A thumbnail made from the List field’s [`thumbnail` option](https://sveltiacms.app/en/docs/fields/list#thumbnail), if any, is still shown beside the component.
+- The summary text is still used where plain text is needed, such as the label of an item being dragged.
+
 #### Field Schema
 
 The `schema` parameter is a [JSON schema](https://json-schema.org/) (draft-07) object that defines the configuration options for your field type. When users include your custom field type in their collection config, they can set these configuration options. For example:
@@ -260,6 +320,7 @@ The method returns an object with the following properties, or `undefined` if th
 
 - `control` (React component): The control component of the field type.
 - `preview` (React component): The preview component of the field type, if any.
+- `summary` (React component): The [summary component](#summary-component) of the field type, if any. Built-in field types don’t provide a summary component.
 - `schema` (object): The field schema, if any. Built-in field types don’t provide a schema.
 
 This is mainly useful for building a custom field type on top of an existing one, so you don’t have to reimplement a control from scratch. For example, you can reuse the built-in [Select](https://sveltiacms.app/en/docs/fields/select) control while providing your own dynamically generated options. See the [Dependent Select](#dependent-select) example below.

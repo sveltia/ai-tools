@@ -1628,7 +1628,7 @@ The file doesn’t have to exist yet: it’s created when the first entry is sav
 - The entries can always be [reordered](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) with the drag-and-drop UI, without the `reorder` option. The objects are moved within the array, and no `order` field is written.
 - Saving an entry rewrites the whole file, but only the object of that entry changes. Items that aren’t objects, and properties that aren’t defined as fields, are kept as they are.
 
-Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`, `filter`, `summary`, `sortable_fields`, `view_filters`, `view_groups` and `media_folder`, work as usual. A relative `media_folder` is relative to the folder of the file. As all the entries share that folder and can use any image in it, images are not deleted along with an entry.
+Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`, `filter`, `summary`, `sortable_fields`, `view_filters`, `view_groups`, `bulk_edit` and `media_folder`, work as usual. A relative `media_folder` is relative to the folder of the file. As all the entries share that folder and can use any image in it, images are not deleted along with an entry.
 
 ### Unsupported Options
 

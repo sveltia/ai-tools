@@ -139,7 +139,8 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Multilingual content, `i18n` options, translation services | `references/i18n.md` |
 | Moving from Netlify CMS, Decap CMS or Static CMS; version upgrades | `references/migration.md` |
 | Blank page, auth failures, build errors, CSP, FAQs | `references/troubleshooting.md` |
-| Local development, editorial workflow, open authoring, deploy previews | `references/workflows.md` |
+| Local development, simple workflow, deploy previews | `references/workflows.md` |
+| Editorial workflow, open authoring | `references/workflows-editorial.md` |
 | The admin UI editors work in: content library, editor, asset library | `references/admin-ui.md` |
 | `CMS.init()`, events, custom file formats | `references/api.md` |
 | Custom field types (widgets) | `references/api-field-types.md` |

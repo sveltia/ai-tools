@@ -39,7 +39,7 @@ Registering a component with the same `id` again replaces the previous one. The 
 - `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name to display on the toolbar button.
 - `trigger` (string): The trigger UI of the component, either `menuitem` (default) or `button`. A menu item is placed under the Insert menu, while a button is placed directly on the toolbar.
 - `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, or if it returns another type of value, no preview is shown. The function also receives a `getAsset` function and the component’s `fields` as the second and third arguments, like Netlify/Decap CMS; see [Displaying Assets](#displaying-assets).
-- `mode` (string): Editing mode for the component. `block` (default) renders the component within the rich text editor as an expandable field list. `dialog` renders a compact placeholder that opens a dialog when clicked.
+- `mode` (string): Editing mode for the component. `block` (default) renders the component within the rich text editor as an expandable field list. `dialog` renders a compact placeholder that opens a dialog when clicked. `inline` renders the field’s own control, such as a select box or a date picker, right within the text, without a label or dialog. See [Status Select](#status-select-inline-mode) below.
 - `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Like the Object field’s `summary` option, it supports nested field names and transformations. Text without placeholders is shown as is. If the summary is empty, the placeholder falls back to the first String or Text field value, then to the component label.
 - `thumbnail` (string): The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) field whose image is displayed as a small thumbnail in the placeholder when `mode` is `dialog`, e.g. `icon`. A nested field can be named with a key path like `media.src`. The thumbnail is displayed next to the summary. If there is no text to show, only the thumbnail is displayed, without the component label. The label is shown instead if the field is empty, the file is not an image, or the image fails to load. See [Icon with Thumbnail](#icon-with-thumbnail-dialog-mode) below.
 - `collapsed` (boolean): If true, the component's fields panel is collapsed by default when inserted (`block` mode only).
@@ -472,6 +472,34 @@ CMS.registerEditorComponent({
 ```
 
 In this example, the “Icon” component renders as a small inline chip in the editor showing the selected icon. As the component has no `summary` and no String or Text field, the chip shows only the image rather than the component label. Add a `summary`, such as `summary: 'Icon'` or `summary: '{{icon}}'`, to display text next to the image.
+
+#### Status Select (Inline Mode)
+
+The `inline` mode is ideal for a value that’s edited right where it appears in the text. The component renders the control of its field within the line, like the date chip in the [Lexical Playground](https://playground.lexical.dev/), with no label and no dialog. This example creates a status shortcode that appears as a select box:
+
+```js
+CMS.registerEditorComponent({
+  id: 'status',
+  label: 'Status',
+  icon: 'flag',
+  mode: 'inline',
+  fields: [
+    { name: 'value', label: 'Status', widget: 'select', options: ['draft', 'review', 'done'] },
+  ],
+  pattern: /\[status:(?<value>\w+)\]/,
+  toBlock: ({ value = 'draft' }) => `[status:${value}]`,
+  toPreview: ({ value = 'draft' }) => `<span class="status">${value}</span>`,
+});
+```
+
+The `inline` mode has the following requirements:
+
+- The `fields` option must have a single field of one of the following types: [Boolean](https://sveltiacms.app/en/docs/fields/boolean), [Color](https://sveltiacms.app/en/docs/fields/color), [DateTime](https://sveltiacms.app/en/docs/fields/datetime), [Number](https://sveltiacms.app/en/docs/fields/number), [Relation](https://sveltiacms.app/en/docs/fields/relation), [Select](https://sveltiacms.app/en/docs/fields/select) or [String](https://sveltiacms.app/en/docs/fields/string). A Relation or Select field can’t have the `multiple` option enabled. Otherwise, a configuration error is displayed when the CMS starts. A component registered after the configuration is loaded falls back to the `block` mode instead.
+- The `pattern` should match a single line, so the component is inline in Markdown as well, rather than a block of its own.
+
+A Select or Relation field always shows a dropdown list in the `inline` mode, as radio buttons wouldn’t fit in a line. The field’s label, hint and validation message are not displayed, while an invalid value is still highlighted.
+
+The component can be removed with the Backspace key when the cursor is right after it, like a character, or when the component itself is focused.
 
 #### Using React for Preview
 

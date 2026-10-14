@@ -20,7 +20,9 @@ A [Lexical](https://lexical.dev/)-based rich text editor, including headings, li
 
 The built-in toolbar includes buttons for common formatting options, which can be customized using the `buttons` option. The editor also supports different modes, including a raw Markdown or HTML editing mode, which can be configured using the `modes` option. Additional editor components can be added to enhance the editing experience using the `editor_components` option.
 
-Links are edited in a floating link editor. Placing the cursor in a link shows its URL along with buttons to edit or remove the link, and selecting text and clicking the Link button or pressing `Ctrl+K`/`Command+K` opens the editor to enter a URL for the text. Without a selection, the Link button opens a dialog to insert a link along with its text.
+Links are edited in a floating link editor. Placing the cursor in a link shows its URL along with buttons to edit or remove the link, and selecting text and clicking the Link button or pressing `Ctrl+K`/`Command+K` opens the editor to enter a URL for the text. Without a selection, the Link button opens a dialog to insert a link along with its text. With the `html` [format](#format), both the floating link editor and the dialog offer an “Open in New Tab” option, which adds `target="_blank"` to the link.
+
+Tables can be inserted and edited with the [`table`](#editor-components) editor component, and text can be aligned with the [`align`](#buttons) button in HTML content. Both are disabled by default.
 
 Local/remote images can be pasted or dropped into the editor to insert them. Note: pasting multiple images is [not supported in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=864052).
 
@@ -48,9 +50,10 @@ When using the Markdown format, you need to parse the Markdown string using a Ma
 
 When using the HTML format, the value can be rendered on your website as is. Make sure to sanitize it first if untrusted users can edit the content.
 
-**Future Plans**
+The following features are only available with the HTML format, as Markdown has no syntax for them:
 
-We plan to add features specific to HTML content in future releases, including text alignment, link targets, and more.
+- **Text alignment**: Paragraphs, headings, block quotes and list items can be aligned to the left, center or right, or justified, with the [`align`](#buttons) button. The alignment is saved as a `style` attribute, like `<p style="text-align: center;">`, which is the only style kept in the HTML.
+- **Link targets**: A link can be set to open in a new tab, which is saved as `target="_blank"`. A link with another target, like `_top`, keeps it unless the option is changed.
 
 ### Data Validation
 
@@ -88,7 +91,8 @@ Specifies the data format of the content. Possible values are `markdown` and `ht
 With the `html` format, the editor works as follows:
 
 - The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons and editor components are hidden in this mode, as they insert Markdown.
-- Only the [editor components](#editor-components) that support HTML are available. The built-in `code-block` and `image` components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
+- Only the [editor components](#editor-components) that support HTML are available. All the built-in components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
+- The [`align`](#buttons) button and the “Open in New Tab” option of the link editor are available. See [Data Type](#data-type) for details.
 - HTML containing an element the rich text editor cannot handle, such as `<video>` without a component for it, can only be edited in the `raw` mode.
 - An existing value is kept as is until the content is changed in the rich text mode. Then the editor writes HTML in its own style, such as `<strong>` for `<b>`, and attributes it doesn’t use, such as `class`, are dropped.
 
@@ -127,7 +131,7 @@ The `raw` mode comes with syntax highlighting for Markdown, including the code i
 ##### `buttons`
 
 - **Type**: `array`
-- **Default**: all available buttons (see below)
+- **Default**: all available buttons except `align` (see below)
 
 The button names to display in the editor toolbar.
 
@@ -135,8 +139,11 @@ The following `buttons` are available in the rich text editor toolbar:
 
 - Inline formatting: `bold`, `italic`, `strikethrough`, `code`, `link`
 - Block types: `heading-one`, `heading-two`, `heading-three`, `heading-four`, `heading-five`, `heading-six`, `bulleted-list`, `numbered-list`, `quote`
+- Text alignment: `align`
 
-By default, all buttons are enabled. You can customize the toolbar by specifying the desired buttons in the `buttons` option.
+By default, all buttons except `align` are enabled. You can customize the toolbar by specifying the desired buttons in the `buttons` option.
+
+The `align` button shows a menu to align the selected paragraphs, headings, block quotes or list items to the left, center or right, or to justify them. The button shows the current alignment. It’s only available with the `html` [format](#format), as Markdown has no syntax for alignment, so it’s not displayed in a Markdown field even if it’s listed. See the [example](#text-alignment-in-html) below.
 
 **Note for Netlify/Decap CMS users**
 
@@ -153,7 +160,7 @@ These edits can be undone with the browser’s standard undo command, just like 
 ##### `editor_components`
 
 - **Type**: `array`
-- **Default**: `[code-block, image]` plus the names of all the registered [custom components](https://sveltiacms.app/en/docs/api/editor-components)
+- **Default**: `[code-block, image]` plus the names of all the registered [custom components](https://sveltiacms.app/en/docs/api/editor-components). The `table` and `hr` components are not included.
 
 The editor component names to include in the rich text editor.
 
@@ -163,8 +170,10 @@ Sveltia CMS includes the following built-in editor components for the RichText f
 
 - `code-block`: Allows users to insert and format code blocks with syntax highlighting.
 - `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option.
+- `table`: Allows users to insert and edit tables. See [Tables](#tables) below for details.
+- `hr`: Allows users to insert a horizontal rule (thematic break), saved as `***` in Markdown or `<hr>` in HTML. A horizontal rule can be selected with a click and removed with the Backspace or Delete key.
 
-Both are enabled by default. You can disable them by omitting them from the `editor_components` option.
+The `code-block` and `image` components are enabled by default. You can disable them by omitting them from the `editor_components` option. The `table` and `hr` components are disabled by default. To enable them, list them in the option along with the other components you want. See the [example](#enabling-tables-and-horizontal-rules) below.
 
 Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text. This is not available with the `html` [format](#format).
 
@@ -178,9 +187,19 @@ The built-in `image` component is designed for single-file selection. There is n
 
 Unlike Netlify/Decap CMS, the `code-block` component in Sveltia CMS is implemented as a block type. Users can insert it using the block type selector rather than the insert button. Also, the `image` component is displayed as a separate button in the toolbar for easier access.
 
-**Future Plans**
+###### Tables
 
-More built-in editor components may be added in future releases, such as `table`.
+The `table` component adds an Insert Table button to the toolbar, which opens a dialog to choose the number of rows and columns. The new table has a header row, with the cursor in its first cell. The Tab and Shift+Tab keys move between the cells, several cells can be selected at once, and a wide table can be scrolled horizontally.
+
+The rows and columns can be inserted and deleted with the table menu, which is opened with the button on the cell where the cursor is, or with the table button on the toolbar. The menu offers:
+
+- Insert Row Above, Insert Row Below
+- Insert Column Left, Insert Column Right
+- Delete Row, Delete Column, Delete Table
+
+Tables are saved in the [GitHub Flavored Markdown](https://github.github.com/gfm/#tables-extension-) syntax, or as `<table>` elements with the `html` format. A Markdown table always has a single header row on top, so the first row becomes the header row when a row is inserted above it or the header row is deleted. A Markdown table cell can only have inline content, so the block type selector and the other editor components are not available in a cell. In `raw` mode, the Insert Table button inserts an empty Markdown table.
+
+Merged cells and cell background colors are not supported. Tables can be read from Markdown and HTML even without the `table` component, but they can only be edited cell by cell then.
 
 Developers can create [custom editor components](https://sveltiacms.app/en/docs/api/editor-components) to extend the functionality of the rich text editor. Custom components can be registered globally in Sveltia CMS.
 
@@ -443,6 +462,84 @@ editor_components = ["image"]
   label: "Content",
   widget: "richtext",
   editor_components: ["image"],
+}
+```
+
+#### Enabling Tables and Horizontal Rules
+
+This example enables the `table` and `hr` editor components along with the default ones.
+
+```yaml [YAML]
+- name: content
+  label: Content
+  widget: richtext
+  editor_components: [code-block, image, table, hr]
+```
+
+```toml [TOML]
+[[fields]]
+name = "content"
+label = "Content"
+widget = "richtext"
+editor_components = ["code-block", "image", "table", "hr"]
+```
+
+```json [JSON]
+{
+  "name": "content",
+  "label": "Content",
+  "widget": "richtext",
+  "editor_components": ["code-block", "image", "table", "hr"]
+}
+```
+
+```js [JavaScript]
+{
+  name: "content",
+  label: "Content",
+  widget: "richtext",
+  editor_components: ["code-block", "image", "table", "hr"],
+}
+```
+
+#### Text Alignment in HTML
+
+This example enables the `align` button in an HTML field, along with a few other buttons.
+
+```yaml [YAML]
+- name: content
+  label: Content
+  widget: richtext
+  format: html
+  buttons: [bold, italic, link, heading-two, bulleted-list, align]
+```
+
+```toml [TOML]
+[[fields]]
+name = "content"
+label = "Content"
+widget = "richtext"
+format = "html"
+buttons = ["bold", "italic", "link", "heading-two", "bulleted-list", "align"]
+```
+
+```json [JSON]
+{
+  "name": "content",
+  "label": "Content",
+  "widget": "richtext",
+  "format": "html",
+  "buttons": ["bold", "italic", "link", "heading-two", "bulleted-list", "align"]
+}
+```
+
+```js [JavaScript]
+{
+  name: "content",
+  label: "Content",
+  widget: "richtext",
+  format: "html",
+  buttons: ["bold", "italic", "link", "heading-two", "bulleted-list", "align"],
 }
 ```
 

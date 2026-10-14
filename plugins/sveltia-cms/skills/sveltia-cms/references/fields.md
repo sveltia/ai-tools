@@ -182,6 +182,57 @@ pattern = [ "^[A-Za-z0-9]+$", "Only alphanumeric characters are allowed." ]
 pattern: [/^[A-Za-z0-9]+$/, 'Only alphanumeric characters are allowed.'];
 ```
 
+##### `unique`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+Whether the field’s value must be different from the value of the same field in every other entry of the collection, like a `UNIQUE` constraint in a relational database. An entry whose value is already used by another entry can’t be saved until the value is changed. This is useful for a product code, an ISBN or an email address that has to be distinct.
+
+The option is available for the [String](https://sveltiacms.app/en/docs/fields/string), [Text](https://sveltiacms.app/en/docs/fields/text), [Number](https://sveltiacms.app/en/docs/fields/number), [Color](https://sveltiacms.app/en/docs/fields/color), [DateTime](https://sveltiacms.app/en/docs/fields/datetime), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [RichText](https://sveltiacms.app/en/docs/fields/richtext) fields, as well as the [File](https://sveltiacms.app/en/docs/fields/file), [Image](https://sveltiacms.app/en/docs/fields/image), [Relation](https://sveltiacms.app/en/docs/fields/relation) and [Select](https://sveltiacms.app/en/docs/fields/select) fields taking a single value.
+
+```yaml [YAML]
+- name: sku
+  label: SKU
+  unique: true
+```
+
+```toml [TOML]
+[[fields]]
+name = "sku"
+label = "SKU"
+unique = true
+```
+
+```json [JSON]
+{
+  "name": "sku",
+  "label": "SKU",
+  "unique": true
+}
+```
+
+```js [JavaScript]
+{
+  name: 'sku',
+  label: 'SKU',
+  unique: true,
+}
+```
+
+How values are compared:
+
+- The value is compared with the value of the same field in the same locale of the other entries in the collection, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The entries the collection’s [`filter`](https://sveltiacms.app/en/docs/collections/entries/listings#filtering-entries) option leaves out don’t count.
+- Leading and trailing whitespace is ignored, and the comparison is case-sensitive, except for a Color field, where `#FF0000` and `#ff0000` are the same color. A Number field value is compared numerically, so `1` and `01` are the same number.
+- An empty value is never a duplicate. A field with `required: false` can therefore be left empty in any number of entries.
+- A file just uploaded to a File or Image field is a new file, so it’s never a duplicate.
+
+The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/en/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field taking multiple values or a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component, which can appear more than once in an entry.
+
+**Tip**
+
+If entries already share a value when the option is added, each of them has to be given a distinct value before it can be saved again.
+
 ##### `readonly`
 
 - **Type**: `boolean`
@@ -209,6 +260,7 @@ All visible fields support various validation options to ensure data integrity. 
 
 - By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration).
 - String-type and some other simple array-type fields support the `pattern` option, which allows you to define a regular expression that the field’s value must match. This is useful for enforcing specific formats.
+- String, Number and several other single-value fields support the [`unique`](#unique) option, which makes sure the value isn’t used in the same field of any other entry in the collection.
 - Some fields support minimum and maximum values/items/lengths or value types, depending on the field type. For example:
   - The [String](https://sveltiacms.app/en/docs/fields/string) field supports `minlength` and `maxlength` options as well as the `type` option that can enforce formats like `email` or `url`.
   - The [Number](https://sveltiacms.app/en/docs/fields/number) field supports `min`, `max` and `value_type` options.
@@ -998,6 +1050,8 @@ Text input field that only accepts numeric values. It includes up and down arrow
 
 Additional text can be displayed before or after the input field using the `before_input` and `after_input` options.
 
+A field with the [`auto_increment`](#auto-increment) option is read-only, as its value is assigned automatically. The field is hidden while a new entry is being created.
+
 #### Preview
 
 A localized string representation of the number, formatted according to the preview locale. All the decimal places of the value are shown, without rounding.
@@ -1014,6 +1068,9 @@ If `value_type` is other than `int` or `float`, the value will be stored as a st
 - The number value must be within the range defined by the `min` and `max` options, if specified.
 - The number value must conform to the type defined by the `value_type` option.
 - The input must be a number the field can store. Text that isn’t a number, such as `abc`, an infinite number and, with `value_type: int`, an integer beyond the range JavaScript can represent exactly (2<sup>53</sup>) are reported as invalid rather than being saved as an empty value.
+- If the [`unique`](https://sveltiacms.app/en/docs/fields#unique) option is set to `true`, the number must not be used in the same field of any other entry in the collection.
+
+A field with the [`auto_increment`](#auto-increment) option is not validated, as its value is assigned automatically.
 
 ### Options
 
@@ -1081,6 +1138,28 @@ The maximum allowed value for the field. This enables validation to ensure that 
 The increment/decrement step for the input field. This determines the amount by which the value changes when using the up and down arrows.
 
 Set it to `-1` to hide the up and down buttons and disable stepping with the arrow keys. This is useful for a number that isn’t meant to be stepped, like an ID copied from another system.
+
+##### `auto_increment`
+
+- **Type**: `boolean`
+- **Default**: `false`
+
+Whether to number the entries automatically when they’re saved, like an `AUTO_INCREMENT` column in a relational database. This is useful for an invoice number, a podcast episode number or any other sequential ID. See the [example](#sequential-number) below.
+
+- A new entry is given the integer after the highest number any entry in the collection has, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The first entry is numbered `1`, or the [`min`](#min) value if it’s set, so `min: 1000` starts the numbering from `1000`.
+- The number is assigned when the entry is saved, before its slug is created, so it can be used in the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs) template.
+- An existing entry keeps its number. An entry saved before the option was enabled is given one the next time it’s saved.
+- A duplicated entry is given a new number.
+- With `value_type: int/string`, the number is stored as a string.
+
+The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/en/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component.
+
+**Warning**
+
+Unlike a database, Sveltia CMS doesn’t keep a counter: the next number is worked out in the browser from the entries that exist when an entry is saved. This has two consequences:
+
+- Deleted entries aren’t tracked, so a number can be reused. If the entry with the highest number is deleted, the next new entry is given the same number, even though it’s a different entry. Avoid deleting numbered entries if the numbers must never be reused, e.g. when they’re referenced from outside the site.
+- If two users save new entries at the same moment, the entries may end up with the same number.
 
 ##### `before_input`
 
@@ -1205,6 +1284,122 @@ price = 19.99
 ```json [JSON]
 {
   "price": 19.99
+}
+```
+
+#### Sequential Number
+
+This example numbers invoices automatically, starting from `1000`, and names each invoice file after its number, e.g. `content/invoices/1000.md`:
+
+```yaml [YAML]
+collections:
+  - name: invoices
+    label: Invoices
+    folder: content/invoices
+    create: true
+    slug: '{{number}}'
+    identifier_field: customer
+    fields:
+      - name: number
+        label: Invoice Number
+        widget: number
+        auto_increment: true
+        min: 1000
+      - name: customer
+        label: Customer
+```
+
+```toml [TOML]
+[[collections]]
+name = "invoices"
+label = "Invoices"
+folder = "content/invoices"
+create = true
+slug = "{{number}}"
+identifier_field = "customer"
+
+[[collections.fields]]
+name = "number"
+label = "Invoice Number"
+widget = "number"
+auto_increment = true
+min = 1000
+
+[[collections.fields]]
+name = "customer"
+label = "Customer"
+```
+
+```json [JSON]
+{
+  "collections": [
+    {
+      "name": "invoices",
+      "label": "Invoices",
+      "folder": "content/invoices",
+      "create": true,
+      "slug": "{{number}}",
+      "identifier_field": "customer",
+      "fields": [
+        {
+          "name": "number",
+          "label": "Invoice Number",
+          "widget": "number",
+          "auto_increment": true,
+          "min": 1000
+        },
+        {
+          "name": "customer",
+          "label": "Customer"
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+collections: [
+  {
+    name: 'invoices',
+    label: 'Invoices',
+    folder: 'content/invoices',
+    create: true,
+    slug: '{{number}}',
+    identifier_field: 'customer',
+    fields: [
+      {
+        name: 'number',
+        label: 'Invoice Number',
+        widget: 'number',
+        auto_increment: true,
+        min: 1000,
+      },
+      {
+        name: 'customer',
+        label: 'Customer',
+      },
+    ],
+  },
+],
+```
+
+Output example of the first invoice:
+
+```yaml [YAML]
+number: 1000
+customer: Acme
+```
+
+```toml [TOML]
+number = 1000
+customer = "Acme"
+```
+
+```json [JSON]
+{
+  "number": 1000,
+  "customer": "Acme"
 }
 ```
 

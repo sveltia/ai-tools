@@ -638,13 +638,13 @@ Yes. Sveltia CMS comes with first-class internationalization (i18n) support, whi
 
 #### Can I use Sveltia CMS with local repositories?
 
-Yes. Sveltia CMS is a local-first CMS that works seamlessly with local Git repositories. Its [local development workflow](https://sveltiacms.app/en/docs/workflows/local) utilizes the [File System Access API](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access), allowing you to manage content directly on your local machine without connecting to a remote Git service. This is particularly useful for developers who prefer to make bulk changes locally before pushing them to a remote repository.
+Yes. Sveltia CMS is a local-first CMS that works seamlessly with local Git repositories. Its [local development workflow](https://sveltiacms.app/en/docs/workflows/local) utilizes the [File System Access API](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access), allowing you to manage content directly on your local machine without connecting to a remote Git service. This is particularly useful for developers who prefer to make bulk changes locally before pushing them to a remote repository. The CMS can also [commit your changes](https://sveltiacms.app/en/docs/workflows/local#git-commits) to the local repository every time you save.
 
 #### Can I invite multiple users to collaborate on content?
 
 Yes, but with some limitations.
 
-Sveltia CMS does not have built-in user management features at the moment. You need to ask users to create an account with your chosen Git service provider (e.g., GitHub) and invite them to your repository for collaboration. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them. In the near future, we plan to introduce built-in user management features to simplify collaboration.
+Sveltia CMS does not have built-in user management features at the moment. You need to ask users to create an account with your chosen Git service provider (e.g., GitHub) and invite them to your repository for collaboration. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them. In the near future, we plan to introduce [built-in user management features](https://sveltiacms.app/en/docs/additions) to simplify collaboration.
 
 When several people edit content at the same time, Sveltia CMS checks the repository as an entry is opened, while it’s being edited and before it’s saved, so a change someone else has pushed is noticed and never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution) for details.
 
