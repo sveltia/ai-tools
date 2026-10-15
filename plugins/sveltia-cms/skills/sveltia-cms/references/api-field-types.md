@@ -83,17 +83,34 @@ const url = await this.props.addFile(file, options);
 
 - `file` (`File` or `Blob`, required): The file to be added.
 - `options.name` (string): The file name, including the extension. It’s required when a `Blob` is given, given that a `Blob` has no name of its own. When a `File` is given, the option overrides its name.
+- `options.replace` (boolean): Whether the file replaces an existing file with the same name in the target folder, rather than being saved with a unique name next to it. See [Replacing Files](#replacing-files) below. Default: `false`.
 
 The function resolves to a temporary `blob:` URL. Store it in the field value with `onChange`, either as the value itself or anywhere within an object or array value, just like the [Image with Derived Files](#image-with-derived-files) example below does. The URL can also be used to display the file in the control and the preview pane while the entry is being edited.
 
 When the entry is saved, the CMS replaces each URL in the value with the public path of the uploaded file, and commits the file along with the entry. Everything works the same way as a file selected in a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field:
 
-- The file is saved to the field’s own `media_folder` if the option is defined on the field, otherwise to the collection-level or top-level folder. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). The file name is sanitized and, if another file in the folder already has the same name, made unique.
+- The file is saved to the field’s own `media_folder` if the option is defined on the field, otherwise to the collection-level or top-level folder. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). The file name is sanitized and, if another file in the folder already has the same name, made unique, unless the `replace` option is enabled.
 - The [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features), such as `max_file_size` and `transformations`, are applied. If the file exceeds the size limit or cannot be decoded, the Promise is rejected with an error, so wrap the call in `try`/`catch` to show a message to the user.
 - A file identical to one already uploaded, or already added to the draft, is not uploaded twice; the existing path or URL is returned instead.
 - The file is included in the same commit as the entry, so the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) and [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) work as usual. A file that is no longer referenced in the value when the entry is saved is simply discarded.
 
 The function is only available while an entry is being edited; it rejects otherwise.
+
+###### Replacing Files
+
+A control often regenerates a file whenever the entry changes: a thumbnail rendered from the entry, an Open Graph image drawn from the title, or an image a framework expects under a fixed name, such as `featured.jpg` in a Hugo page bundle. By default, each new version is saved next to the previous one as `thumb-1.webp`, `thumb-2.webp` and so on, leaving the old files behind. Enable the `replace` option to overwrite the existing file instead:
+
+```js
+const url = await this.props.addFile(blob, { name: 'thumb.webp', replace: true });
+```
+
+With the option, the file is always saved under the given name:
+
+- If a file with the same name exists in the target folder, it’s updated in the same commit as the entry. The names are compared without regard to case, so `Thumb.webp` is overwritten by `thumb.webp` instead of clashing with it on a case-insensitive file system.
+- If there is no such file, the file is created as usual.
+- The `filename_template` option of the [internal media storage](https://sveltiacms.app/en/docs/media/internal#additional-features) is not applied, but the name is still sanitized. A [transformation](https://sveltiacms.app/en/docs/media/internal#additional-features) that converts the file to another format changes its extension.
+- An identical file is reused only if it has the same name. If the file is unchanged from the one already in the folder, nothing is committed.
+- If two files with the same name are added to the same folder, only the first one replaces the existing file; the other is saved with a unique name.
 
 **Keep the URL intact**
 

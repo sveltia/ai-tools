@@ -849,8 +849,12 @@ There are two ways to register custom preview styles in Sveltia CMS: by providin
 
 - `filePath` (string): The path to the CSS file containing the custom styles. This file should be accessible from the CMS admin interface. It can be a relative path, which is resolved against the current page URL, or an absolute URL.
 - `cssString` (string): A string containing the raw CSS styles to be applied to the preview pane.
-- `options` (object, optional): An options object that can contain the following property:
+- `options` (object, optional): An options object that can contain the following properties:
   - `raw` (boolean): Set this to `true` if you are providing a raw CSS string. Defaults to `false`.
+  - `collection` (string): The name of the collection whose entries the style applies to. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). If omitted, the style applies to all collections.
+  - `file` (string): The name of the file the style applies to, in the file collection or singleton collection given with the `collection` option. If omitted, the style applies to all the files in the collection. This option requires `collection`.
+
+The function throws a `TypeError` if a parameter is invalid, e.g. if `filePath` is not a valid URL or file path, or if `file` is given without `collection`.
 
 ### Examples
 
@@ -887,6 +891,23 @@ CMS.registerPreviewStyle('/path/to/second-style.css');
 
 This allows you to layer styles and create complex customizations for the entry preview.
 
+#### Applying Preview Styles to Specific Collections or Files
+
+By default, a preview style applies to the entries of all collections. To apply it to the entries of a specific collection only, use the `collection` option. To apply it to a specific file in a [file collection](https://sveltiacms.app/en/docs/collections/files) or a [singleton](https://sveltiacms.app/en/docs/collections/singletons), use the `file` option along with `collection`.
+
+```js
+// All entries
+CMS.registerPreviewStyle('/path/to/common-style.css');
+// Entries in the `posts` entry collection
+CMS.registerPreviewStyle('/path/to/post-style.css', { collection: 'posts' });
+// The `about` file in the `pages` file collection
+CMS.registerPreviewStyle('/path/to/about-style.css', { collection: 'pages', file: 'about' });
+// The `home` singleton
+CMS.registerPreviewStyle('/path/to/home-style.css', { collection: '_singletons', file: 'home' });
+```
+
+The styles that apply to an entry are combined in the order they were registered, so in this example, the preview of the `about` file uses both `common-style.css` and `about-style.css`. An entry that no preview style applies to is previewed with the built-in styles only.
+
 ### Styling Specific Fields
 
 The default preview marks each field with three attributes that identify it, which your preview styles can use to target specific fields:
@@ -911,7 +932,7 @@ The default preview marks each field with three attributes that identify it, whi
 
 A [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#linking-to-the-edit-pane) has these attributes only where it adds them itself, apart from the field previews that `widgetFor` and `widgetsFor` return.
 
-The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. The preview is rendered in an iframe once you register a preview style, so your admin page styles don’t affect it, and your preview styles don’t affect the Edit Pane.
+The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. The preview is rendered in an iframe once a preview style applies to the entry, so your admin page styles don’t affect it, and your preview styles don’t affect the Edit Pane.
 
 The attributes are primarily for internal use, and the rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
 
