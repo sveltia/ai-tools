@@ -462,7 +462,7 @@ The following entry collection options assume one file per entry, so they can’
 - `index_file`
 - `reorder`, as the entries can always be reordered
 
-Editorial Workflow is not supported either. The collection can’t use the `editorial_workflow` [publish mode](https://sveltiacms.app/en/docs/workflows/editorial), and Open Authoring can’t be enabled. If Editorial Workflow is enabled for the whole site, set the collection’s `publish_mode` option to `simple`. For the same reason, a Relation field in the collection can’t refer to a collection that uses Editorial Workflow, as renaming or deleting an entry there would update the references to it in a pull request.
+Editorial Workflow is not supported either. The collection can’t use the `editorial_workflow` or `preview` [publish mode](https://sveltiacms.app/en/docs/workflows/editorial), and Open Authoring can’t be enabled. If Editorial Workflow is enabled for the whole site, set the collection’s `publish_mode` option to `simple`. For the same reason, a Relation field in the collection can’t refer to a collection that uses Editorial Workflow, as renaming or deleting an entry there would update the references to it in a pull request.
 
 ### Internationalization
 

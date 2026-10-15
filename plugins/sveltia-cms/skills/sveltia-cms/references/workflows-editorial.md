@@ -1,6 +1,6 @@
-# Publishing Workflows: Editorial Workflow and Open Authoring
+# Publishing Workflows: Editorial Workflow, Preview Workflow and Open Authoring
 
-The editorial workflow that saves drafts as pull requests and moves them through review, and open authoring, which extends it to contributors without write access. For local development, the simple workflow and deploy previews, see `workflows.md`.
+The editorial workflow that saves drafts as pull requests and moves them through review, the preview workflow that does the same without review stages, and open authoring, which extends them to contributors without write access. For local development, the simple workflow and deploy previews, see `workflows.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -49,7 +49,7 @@ publish_mode = "editorial_workflow"
 }
 ```
 
-The option accepts `editorial_workflow` or `simple`, the default. An empty string is treated as `simple`.
+The option accepts `simple`, the default, [`preview`](https://sveltiacms.app/en/docs/workflows/preview) or `editorial_workflow`. An empty string is treated as `simple`. It also takes an object, with the publish mode as `type` along with the [options](#options) below.
 
 #### Enabling the Workflow per Collection
 
@@ -120,6 +120,78 @@ Either option can be omitted: a collection without its own `publish_mode` follow
 - An entry that already has a pull request stays in the workflow until it’s published or discarded, even if its collection has since been switched to the `simple` mode. Saving it commits to the pull request rather than to the configured branch, so nothing that hasn’t been reviewed slips through.
 - With [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), the collection-level option only applies to maintainers who have write access to the repository. A contributor working on a fork always goes through a pull request, whatever the collection says.
 
+### Options
+
+The object form of the `publish_mode` option fine-tunes the workflow:
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `type` | `simple` | Publish mode: `simple`, `preview` or `editorial_workflow`. A collection without it inherits the top-level publish mode. |
+| `stages` | `[draft, pending_review, pending_publish]` | [Review stages](#review-stages) an entry moves through. Editorial Workflow only. |
+| `direct_publish` | `false` | Whether an entry can be [saved and published in one go](#direct-publishing), bypassing the review. |
+| `allow_incomplete_drafts` | `true` | Whether a draft can be saved with its [required fields](#required-fields) left empty. |
+
+```yaml [YAML]
+publish_mode:
+  type: editorial_workflow
+  stages: [draft, pending_publish]
+  direct_publish: true
+  allow_incomplete_drafts: false
+```
+
+```toml [TOML]
+[publish_mode]
+type = "editorial_workflow"
+stages = ["draft", "pending_publish"]
+direct_publish = true
+allow_incomplete_drafts = false
+```
+
+```json [JSON]
+{
+  "publish_mode": {
+    "type": "editorial_workflow",
+    "stages": ["draft", "pending_publish"],
+    "direct_publish": true,
+    "allow_incomplete_drafts": false
+  }
+}
+```
+
+```js [JavaScript]
+{
+  publish_mode: {
+    type: 'editorial_workflow',
+    stages: ['draft', 'pending_publish'],
+    direct_publish: true,
+    allow_incomplete_drafts: false,
+  },
+}
+```
+
+A collection-level `publish_mode` overrides the top-level one option by option: anything the collection doesn’t set is inherited, including `type` when the collection’s option is an object without it. For example, a collection with `publish_mode: { stages: [draft] }` keeps the top-level publish mode and its other options, but lets an entry be published right after it’s saved. A string, such as `publish_mode: preview`, only replaces the publish mode.
+
+#### Review Stages
+
+The `stages` option lists the [statuses](#statuses) an entry moves through, in order. It must start with `draft`, and an entry can be published once it reaches the last stage. Use it to drop a step your team doesn’t need:
+
+- `[draft, pending_publish]` leaves out In Review. A saved draft can be marked ready straight away, which is all it takes before publishing.
+- `[draft, pending_review]` leaves out Ready, so an entry can be published as soon as it has been sent for review.
+- `[draft]` lets an entry be published right after it’s saved, which is what [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview) does.
+
+The Editorial Workflow page shows a column for each stage that any collection uses. A pull request labeled with a stage its collection doesn’t use — because the option was changed, or the label was set by another CMS — is shown in the nearest earlier stage, so it never skips a step. Its label is left alone until the entry is moved. An entry can’t be dragged to a column its collection doesn’t use.
+
+#### Direct Publishing
+
+With `direct_publish: true`, the Save button in the entry editor turns into a split button. Save keeps the entry as a draft for review, as usual, while **Save and Publish** in its menu puts the change live right away. That’s handy for a quick fix, such as correcting a phone number, that doesn’t need a review or a deploy preview.
+
+- If the entry has no pull request, the change is committed straight to the configured branch, as with the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple). No branch or pull request is created. The commit triggers a deployment even when [automatic deployments are disabled](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) with the `skip_ci` option, as the change is meant to go live.
+- If the entry already has a pull request, the change is saved to it, and the pull request is then merged. A draft pull request is marked ready first, as the Git service won’t merge a draft. Anything saved to the pull request earlier is published along with it. If the merge fails, the change stays saved to the pull request and the error is shown.
+
+The Publish Entry button is also available at every stage, in the entry editor and on the Editorial Workflow page, so a draft saved earlier can be published without changing anything or moving it through the stages first.
+
+Required fields have to be filled in either way, as the entry goes live. The option isn’t offered for a collection with [`publish: false`](#restricting-publishing-and-deletion), to an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, or to a user who can’t push to the configured branch or merge the pull request.
+
 ### How It Works
 
 Nothing an editor does in the CMS touches the configured branch until the change is published. Each entry with unsaved work lives on its own branch with an open pull request, so making a change and releasing it are two separate steps.
@@ -175,6 +247,8 @@ Saving an entry doesn’t hand it to anyone — it stays a draft until someone m
 - **Send for Review** moves the entry to In Review straight away, ready for someone to look at.
 - **Later** leaves it as a draft. It can be sent whenever the user likes, using the status button in the entry editor or by dragging its card between columns on the Editorial Workflow page.
 
+When the In Review stage is left out with the [`stages`](#review-stages) option, the prompt offers **Mark as Ready** instead, which moves the entry to Ready. With [direct publishing](#direct-publishing), Save and Publish doesn’t ask anything, as there’s nothing left to do.
+
 The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone, and it’s withheld while the entry still has required fields to fill in, because there’s nothing worth handing over yet.
 
 #### Required Fields
@@ -182,6 +256,8 @@ The prompt only appears while an entry is still a draft. Saving one that’s alr
 A draft is work in progress, so an entry in the Draft status can be saved with its [required fields](https://sveltiacms.app/en/docs/fields#required) left empty. Nothing is marked as an error, and the entry keeps its pull request like any other draft.
 
 Required fields are enforced as soon as the entry leaves the drafting stage. Moving it to In Review or Ready and publishing it are all refused while a required field is empty, in the entry editor and on the Editorial Workflow page alike, and the fields that need attention are marked so that they are easy to find.
+
+To require the fields in drafts as well, set the [`allow_incomplete_drafts`](#options) option to `false`. A draft then can’t be saved until its required fields are filled in, like any other entry.
 
 Every other validation rule applies to a draft save as it always has: a value that breaks a `pattern`, `minlength`, `min` or `max` option is still rejected. Only being empty is excused, and only while the entry is a draft.
 
@@ -200,6 +276,8 @@ An unpublished entry moves through three stages, shown as columns on the Editori
 | Draft     | `sveltia-cms/draft`           | Work in progress                |
 | In Review | `sveltia-cms/pending_review`  | Ready for someone to look at    |
 | Ready     | `sveltia-cms/pending_publish` | Approved and ready to be merged |
+
+The [`stages`](#review-stages) option can leave out In Review or Ready.
 
 A pending deletion carries a fourth label, `sveltia-cms/pending_deletion`. It isn’t a stage — there’s no review to move it through, only the deletion itself to carry out or call off — so it doesn’t appear as a column. See [Deleting Entries](#deleting-entries).
 
@@ -338,7 +416,7 @@ Decap CMS has a separate Unpublish action, and its Delete button removes the ent
 
 Two collection options let you limit what editors can do. Both are set on the collection, not on the backend:
 
-- `publish: false` hides the publishing controls, so editors can move an entry through the review stages but someone else has to publish it.
+- `publish: false` hides the publishing controls, including Save and Publish with [direct publishing](#direct-publishing), so editors can move an entry through the review stages but someone else has to publish it.
 - `delete: false` prevents entries from being deleted. Discarding unpublished changes is still allowed, because that leaves the published version untouched.
 
 ```yaml [YAML]
@@ -400,6 +478,105 @@ Source: https://sveltiacms.app/en/docs/workflows/editorial
 
 ---
 
+## Preview Workflow
+
+This is a remote workflow for editors who want to see their changes on a deploy preview before they go live, without a formal review process. It sits between the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), where a save goes live right away, and the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), where a change moves through review stages before it can be published.
+
+Saving an entry commits it to a branch of its own and opens a pull request, just like Editorial Workflow. Hosting services such as [Netlify](https://docs.netlify.com/deploy/deploy-types/deploy-previews/), [Vercel](https://vercel.com/docs/deployments/environments#preview-environment-pre-production) and [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/preview-deployments/) build each pull request into a deploy preview, which the CMS [links to](https://sveltiacms.app/en/docs/workflows/deploy-previews) from the entry. Once you’re happy with the result, publish the entry to merge its pull request. There are no statuses to move it through.
+
+### Use Cases
+
+- Individual bloggers or small teams who want to check a change on a real build before it goes live.
+- Sites whose pages are hard to judge from the editor’s preview pane alone, such as ones with complex layouts or data pulled from elsewhere.
+- Teams that want to save work in progress without publishing it, but have no one to review it.
+
+### Requirements
+
+The requirements are the same as for [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#requirements): the [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend, and a sign-in that covers pull requests. A hosting service that builds deploy previews from pull requests is what makes the workflow worthwhile, though the CMS doesn’t require one.
+
+### Configuration
+
+Set the top-level `publish_mode` option to `preview`:
+
+```yaml [YAML]
+publish_mode: preview
+```
+
+```toml [TOML]
+publish_mode = "preview"
+```
+
+```json [JSON]
+{
+  "publish_mode": "preview"
+}
+```
+
+```js [JavaScript]
+{
+  publish_mode: 'preview',
+}
+```
+
+Like the other publish modes, `preview` can also be set on a collection, overriding the top-level setting. See [Enabling the Workflow per Collection](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection).
+
+The object form of the option takes the [`direct_publish`](https://sveltiacms.app/en/docs/workflows/editorial#direct-publishing) and [`allow_incomplete_drafts`](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) options too. For example, to let editors skip the preview for a quick fix:
+
+```yaml [YAML]
+publish_mode:
+  type: preview
+  direct_publish: true
+```
+
+```toml [TOML]
+[publish_mode]
+type = "preview"
+direct_publish = true
+```
+
+```json [JSON]
+{
+  "publish_mode": {
+    "type": "preview",
+    "direct_publish": true
+  }
+}
+```
+
+```js [JavaScript]
+{
+  publish_mode: {
+    type: 'preview',
+    direct_publish: true,
+  },
+}
+```
+
+### How It Works
+
+Preview Workflow is Editorial Workflow with a single stage, Draft, so everything described under [How It Works](https://sveltiacms.app/en/docs/workflows/editorial#how-it-works) for Editorial Workflow applies, including the checks made before publishing. The differences are:
+
+- An entry can be published as soon as it’s saved, with the Publish Entry button in the entry editor or on the Drafts page.
+- The entry editor shows a Draft badge rather than a status menu, and the CMS doesn’t ask to send a saved entry for review.
+- The Editorial Workflow page is called **Drafts**, and lays the unpublished entries out in a single column. If another collection uses Editorial Workflow with more than one stage, the page is a board with a column for each stage again, and an Open Authoring contributor always gets the board.
+- Every pull request counts as a draft, whatever its label says. One labeled In Review or Ready by Editorial Workflow, by [Decap CMS](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) or by hand can be published straight away, and its label is left alone.
+
+Pull requests are labeled `sveltia-cms/draft` and kept as [draft pull requests](https://sveltiacms.app/en/docs/workflows/editorial#statuses), which the Git service won’t merge. Publishing an entry therefore marks its pull request ready first, relabeling it `sveltia-cms/pending_publish`, and then merges it. If the merge fails, the entry stays unpublished with the new label.
+
+Switching between Preview Workflow and Editorial Workflow keeps every unpublished entry. Deleting a published entry opens a pull request that removes it, as with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-entries).
+
+#### Required Fields
+
+A draft can be saved with its [required fields](https://sveltiacms.app/en/docs/fields#required) left empty, but they have to be filled in before the entry is published. See [Required Fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) for details, including how to turn this off.
+
+### Open Authoring
+
+[Open Authoring](https://sveltiacms.app/en/docs/workflows/open) works with Preview Workflow as well. A contributor working on a fork still sends their entry for review when it’s ready, as they can’t publish it themselves. A maintainer then sees it as a draft that can be published right away.
+
+Source: https://sveltiacms.app/en/docs/workflows/preview
+
+---
+
 ## Open Authoring
 
 Open Authoring is a workflow that allows contributors to propose changes to a project without requiring direct write access to the repository. This is typically done through fork-and-pull request mechanisms, enabling a wider range of contributors to participate in content creation and editing.
@@ -416,7 +593,7 @@ It builds on top of [Editorial Workflow](https://sveltiacms.app/en/docs/workflow
 ### Requirements
 
 - The [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend must be used.
-- The [`editorial_workflow` publish mode](https://sveltiacms.app/en/docs/workflows/editorial#configuration) must be enabled. Without it, the CMS reports a configuration error, because there would be nowhere for a contribution to go.
+- The [`editorial_workflow`](https://sveltiacms.app/en/docs/workflows/editorial#configuration) or [`preview`](https://sveltiacms.app/en/docs/workflows/preview) publish mode must be enabled. Without it, the CMS reports a configuration error, because there would be nowhere for a contribution to go.
 - The repository must allow forks, and contributors must be able to read it. A public repository needs nothing set up; a private one has requirements that differ between the backends, described below.
 
 #### GitHub
@@ -474,7 +651,7 @@ Gitea and Forgejo don’t say why a fork couldn’t be created, so the CMS can o
 
 ### Configuration
 
-Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` publish mode at the top level. A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here: it only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
+Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` or `preview` publish mode at the top level. A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here: it only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
 
 ```yaml [YAML]
 backend:

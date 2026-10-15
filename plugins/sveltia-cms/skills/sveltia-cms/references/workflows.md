@@ -1,6 +1,6 @@
 # Publishing Workflows
 
-Local development, the simple publishing workflow and deploy previews. For the editorial workflow and open authoring, see `workflows-editorial.md`.
+Local development, the simple publishing workflow and deploy previews. For the editorial workflow, the preview workflow and open authoring, see `workflows-editorial.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -14,9 +14,10 @@ Sveltia CMS supports several workflows to accommodate different content manageme
 
 ### Production
 
-There are two main workflows for production use:
+There are three main workflows for production use:
 
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple): no review process, editors can directly commit changes to the main branch.
+- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview): each change is saved to a pull request, so it can be checked on a deploy preview before it’s published, without a review process.
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial): includes a review and approval process before changes are merged into the main branch.
 
 Additionally, the following features enhance the content management experience:
@@ -25,10 +26,6 @@ Additionally, the following features enhance the content management experience:
 - [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews): links each entry to the build made for it, and shows whether that build has finished.
 
 These production workflows can be used locally or remotely. Not all workflows are supported by every backend; refer to the specific workflow documentation for details.
-
-**Future Plans**
-
-We’re planning to introduce **Preview Workflow** in the future, which will allow editors to preview their changes before publishing them live. It would be a simplified version of Editorial Workflow, enabling content previews by creating a preview branch (pull/merge request) without a formal review process. Major hosting services like [Vercel](https://vercel.com/docs/deployments/environments#preview-environment-pre-production) and [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/preview-deployments/) support preview deployments from pull/merge requests, making this workflow feasible.
 
 Source: https://sveltiacms.app/en/docs/workflows
 

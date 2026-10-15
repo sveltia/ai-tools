@@ -85,16 +85,18 @@ TypeScript types are included in the package, so if you edit your project with a
 
 Currently, the following methods are available on the `CMS` object:
 
-- [Manual Initialization](https://sveltiacms.app/en/docs/api/initialization): `init`
-- [Custom Preview Styles](https://sveltiacms.app/en/docs/api/preview-styles): `registerPreviewStyle`
-- [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates): `registerPreviewTemplate`
-- [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components): `registerEditorComponent`
-- [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types): `registerFieldType` (alias: `registerWidget`), `getFieldType` (alias: `getWidget`)
-- [Custom File Formats](https://sveltiacms.app/en/docs/api/file-formats): `registerCustomFormat`
-- [Custom String Transformations](https://sveltiacms.app/en/docs/api/string-transformations): `registerStringTransformation`
-- [Custom Pages](https://sveltiacms.app/en/docs/api/custom-pages): `registerCustomPage`
-- [Event Hooks](https://sveltiacms.app/en/docs/api/events): `registerEventListener`
-- [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown): `renderRichText`
+| Feature | Methods |
+| --- | --- |
+| [Manual Initialization](https://sveltiacms.app/en/docs/api/initialization) | `init` |
+| [Custom Preview Styles](https://sveltiacms.app/en/docs/api/preview-styles) | `registerPreviewStyle` |
+| [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates) | `registerPreviewTemplate` |
+| [Custom Editor Components](https://sveltiacms.app/en/docs/api/editor-components) | `registerEditorComponent` |
+| [Custom Field Types](https://sveltiacms.app/en/docs/api/field-types) | `registerFieldType` (alias: `registerWidget`)<br />`getFieldType` (alias: `getWidget`) |
+| [Custom File Formats](https://sveltiacms.app/en/docs/api/file-formats) | `registerCustomFormat` |
+| [Custom String Transformations](https://sveltiacms.app/en/docs/api/string-transformations) | `registerStringTransformation` |
+| [Custom Pages](https://sveltiacms.app/en/docs/api/custom-pages) | `registerCustomPage` |
+| [Event Hooks](https://sveltiacms.app/en/docs/api/events) | `registerEventListener` |
+| [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown) | `renderRichText` |
 
 **Breaking changes from Netlify/Decap CMS**
 
