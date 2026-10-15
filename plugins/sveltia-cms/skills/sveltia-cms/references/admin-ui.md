@@ -88,6 +88,7 @@ Currently, the following languages are available:
 - French
 - German
 - Greek
+- Hebrew
 - Italian
 - Japanese
 - Korean
@@ -113,7 +114,6 @@ The following languages are available in Decap CMS but not yet available in Svel
 
 <div class="list-columns">
 
-- [Hebrew](https://github.com/sveltia/sveltia-cms/issues/870)
 - [Hungarian](https://github.com/sveltia/sveltia-cms/issues/315)
 - Lithuanian
 - Macedonian
