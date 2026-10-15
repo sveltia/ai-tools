@@ -665,7 +665,7 @@ Use `[create]` for a creation date and `true` for a last modified date.
 
 Unlike `default: '{{now}}'`, which fills in the current date and time when a new entry draft is created, this option sets the value at the time of saving. The value is stored in the same format as other values, with the other options such as `format`, `input_timezone` and `output_utc` applied, but it includes seconds. All the fields and locales saved together get the same value.
 
-The field is read-only: its value is shown as text rather than an input, and it’s not validated. The field is hidden while a new entry is being created, as it has no value until the entry is saved. The value is not localized, so the same value is used for all locales.
+The field is read-only: its value is shown as text rather than an input, and it’s not validated. The field is hidden while a new entry is being created, as it has no value until the entry is saved. All locales get the same date and time, written in each locale’s language with the [`localize_format`](#localize-format) option.
 
 **Limitations**
 
@@ -773,6 +773,28 @@ A custom format for displaying and storing the date and/or time using [Day.js fo
 **Format Recommendation**
 
 For data portability, we recommend saving date/time values in ISO 8601 format by omitting the `format` option. Formatting is better handled in your application code. Using custom formats is generally discouraged unless you have a specific need for it, e.g., integrating with a framework that doesn’t support date formatting or requires a specific format.
+
+##### `localize_format`
+
+- **Type**: `boolean` or `string`
+- **Default**: `false`
+
+Whether to write the locale-dependent parts of a custom [`format`](#format), such as month names (`MMMM`, `MMM`) and the AM/PM marker (`A`, `a`), in a language other than English. Accepted values:
+
+- `false` (default): English is used, as with Netlify/Decap CMS.
+- `true`: The locale of the content is used. With [i18n support](https://sveltiacms.app/en/docs/i18n) enabled, each locale gets the value in its own language, e.g. `1 March 2026` in English and `1 März 2026` in German.
+- A locale code, e.g. `de` or `pt-BR`: That locale is used for every value. This also works without i18n support, e.g. on a German-only site.
+
+Values are read in the same locale, so an existing value is shown in the date/time picker as usual. With `true`, a value copied to another locale, as with the `duplicate` [i18n strategy](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration), when a locale is enabled for an entry, or with bulk editing, is written again in that locale. The locale also applies to the `date` [string transformation](https://sveltiacms.app/en/docs/string-transformations), entry summaries, sorting and filtering.
+
+The option has no effect without a custom format, as an ISO 8601 value doesn’t depend on the locale. A locale code Day.js doesn’t [support](https://github.com/iamkun/dayjs/tree/dev/src/locale) falls back to English. Both cases are reported as a warning in the browser console, as is `true` in a collection without i18n support.
+
+The locale data is loaded from the UNPKG CDN when the CMS starts, or bundled with the [NPM package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package). If it can’t be loaded, values are written in English.
+
+**Limitations**
+
+- Day.js can’t read weekday names (`dddd`, `ddd` and `dd`) in any language, including English. A value written in a format with them can’t be read back, so the date/time picker is left empty.
+- A value with a UTC offset (`Z` or `ZZ`) copied to another locale is written in UTC. It refers to the same moment, written differently.
 
 ##### `date_format`
 
@@ -1147,6 +1169,67 @@ eventDateTime = "08/15/2025 14:30"
   "eventDateTime": "08/15/2025 14:30"
 }
 ```
+
+#### Localized Format
+
+Use the `localize_format` option to write month names in the language of each locale. For example, with English and German enabled in the [i18n options](https://sveltiacms.app/en/docs/i18n), the `duplicate` strategy copies a date picked in English to the German content, written in German:
+
+```yaml [YAML]
+- name: eventDate
+  label: Event Date
+  widget: datetime
+  type: date
+  format: D MMMM YYYY
+  localize_format: true
+  i18n: duplicate
+```
+
+```toml [TOML]
+[[fields]]
+name = "eventDate"
+label = "Event Date"
+widget = "datetime"
+type = "date"
+format = "D MMMM YYYY"
+localize_format = true
+i18n = "duplicate"
+```
+
+```json [JSON]
+{
+  "name": "eventDate",
+  "label": "Event Date",
+  "widget": "datetime",
+  "type": "date",
+  "format": "D MMMM YYYY",
+  "localize_format": true,
+  "i18n": "duplicate"
+}
+```
+
+```js [JavaScript]
+{
+  name: "eventDate",
+  label: "Event Date",
+  widget: "datetime",
+  type: "date",
+  format: "D MMMM YYYY",
+  localize_format: true,
+  i18n: "duplicate",
+}
+```
+
+Output example in English and German:
+
+```yaml [English]
+eventDate: 1 March 2026
+```
+
+```yaml [German]
+eventDate: 1 März 2026
+```
+
+To write the value in a single language on a site without i18n support, set the option to a locale code instead, e.g. `localize_format: de`.
 
 #### Date with Constraints
 

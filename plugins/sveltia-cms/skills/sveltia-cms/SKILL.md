@@ -129,7 +129,8 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Planning collections; complete example configs for common site types | `references/content-modeling.md` |
 | Entry collection paths, slugs, sorting, filtering, nested collections | `references/entries.md` |
 | Shared field options; String, Text, Number, Boolean, Select, Color | `references/fields.md` |
-| List, Object, KeyValue fields | `references/fields-structural.md` |
+| List field | `references/fields-list.md` |
+| Object, KeyValue fields | `references/fields-structural.md` |
 | RichText/Markdown, Code fields | `references/fields-richtext.md` |
 | Image, File, DateTime, Map fields | `references/fields-media.md` |
 | Relation, Compute, UUID fields | `references/fields-relation.md` |

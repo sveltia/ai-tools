@@ -375,7 +375,7 @@ The two-pane interface includes the following features:
 - **Swappable Panes**: The small swap button in the middle of the divider switches the two panes around, so the Preview Pane can be on the left and the Edit Pane on the right. The arrangement is remembered per collection, along with the pane widths, and stays in effect until the panes are swapped back. If the panes appear on the “wrong” side, this is why — click the button again to restore the default order.
 - **Scroll Synchronization**: When editing long entries, Sveltia CMS synchronizes the scroll position between the Edit Pane and the Preview Pane. This helps users see how the content will look as they write, without having to manually scroll both sections.
 - **Click-to-Highlight**: Clicking on a field in the Preview Pane highlights the corresponding field in the Edit Pane. If the field is collapsed in the Edit Pane, it will automatically expand when clicked in the Preview Pane. This feature makes it easy to locate and edit specific fields based on their appearance in the preview.
-- **Optional Second Pane**: Users who prefer to edit at full width can hide the second pane with the Show Second Pane option in the editor menu. The pane layout is remembered and restored when the pane is shown again. See [User Settings](#user-settings) for details.
+- **Optional Second Pane**: Users who prefer to edit at full width can hide the second pane with the Show Second Pane option in the editor menu. The preview is still available then, as a Preview tab in the pane header. The pane layout is remembered and restored when the pane is shown again. See [User Settings](#user-settings) for details. Developers can also turn the second pane off for everyone; see [Disabling the Second Pane](#disabling-the-second-pane).
 
 #### Sidebar
 
@@ -656,6 +656,90 @@ Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editoria
 
 The checks made while an entry is open watch the configured branch only, so a colleague’s commit to a shared workflow branch is caught at the point of saving rather than reported in the editor beforehand. Changes made to the same entry in the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) aren’t detected at all.
 
+### Disabling the Second Pane
+
+By default, the Content Editor shows a [second pane](#two-pane-interface) next to the Edit Pane whenever there’s something to put in it: the preview, or another locale’s Edit Pane when [i18n support](#i18n-support) is enabled. To keep the editor to a single pane for everyone, set the `second_pane` option to `false`. Users then can’t turn the second pane on with the Show Second Pane option in the editor menu.
+
+The preview, unless [disabled](#disabling-previews), stays available in the single pane: a Preview tab appears in the pane header, after the locale tabs, or next to an Edit tab if the entry has a single locale. Other locales are edited by switching the pane to them with the [language switcher](#i18n-support).
+
+To turn off the second pane globally, add the following configuration to the top level of the `config.yml` file:
+
+```yaml [YAML]
+editor:
+  second_pane: false
+```
+
+```toml [TOML]
+[editor]
+second_pane = false
+```
+
+```json [JSON]
+{
+  "editor": {
+    "second_pane": false
+  }
+}
+```
+
+```js [JavaScript]
+{
+  editor: {
+    second_pane: false,
+  },
+}
+```
+
+Like the [`preview` option](#disabling-previews), `second_pane` can also be set on a specific collection, a file in a file collection or a [Hugo index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), where it overrides the option set at a higher level. For example, the following configuration turns the second pane off for the `blog` collection only:
+
+```yaml [YAML]
+collections:
+  - name: blog
+    label: Blog
+    folder: /content/blog
+    editor:
+      second_pane: false
+```
+
+```toml [TOML]
+[[collections]]
+name = "blog"
+label = "Blog"
+folder = "/content/blog"
+[collections.editor]
+second_pane = false
+```
+
+```json [JSON]
+{
+  "collections": [
+    {
+      "name": "blog",
+      "label": "Blog",
+      "folder": "/content/blog",
+      "editor": {
+        "second_pane": false
+      }
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  collections: [
+    {
+      name: "blog",
+      label: "Blog",
+      folder: "/content/blog",
+      editor: {
+        second_pane: false,
+      },
+    },
+  ],
+}
+```
+
 ### Preview Pane
 
 Developers can enhance the content editing experience by providing real-time previews of how the content will appear on the live site. Sveltia CMS offers several options for customizing and controlling the preview feature.
@@ -863,13 +947,13 @@ Sveltia CMS does not plan to support WYSIWYG live site previews that fetch data 
 
 End-users can control the editor layout in the CMS UI using the menu located at the top-right corner of the editor interface. These preferences are saved in the browser, allowing users to maintain their preferred layout across sessions.
 
-- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale. The pane layout, including any width set by dragging the divider and whether the panes have been swapped, is remembered per collection and restored when the option is turned back on.
-- **Show Preview**: Chooses whether the second pane shows the preview. When [i18n support](#i18n-support) is enabled, turning it off puts another locale’s Edit Pane in the second pane instead.
+- **Show Second Pane**: Shows or hides the [second pane](#two-pane-interface), giving the Edit Pane the full width of the editor when it’s off. The option is unavailable when there’s nothing to put in the second pane, that is, when the entry has neither a preview nor a second locale, or when the second pane is [disabled](#disabling-the-second-pane) in the configuration. The pane layout, including any width set by dragging the divider and whether the panes have been swapped, is remembered per collection and restored when the option is turned back on.
+- **Show Preview**: Chooses whether the preview is shown. It appears in the second pane, or as a Preview tab in the pane header while the second pane is hidden. When [i18n support](#i18n-support) is enabled, turning it off puts another locale’s Edit Pane in the second pane instead.
 - **Sync Scrolling**: Turns scroll synchronization between the two panes on or off. This is enabled by default.
 
-Show Preview and Sync Scrolling only take effect while the second pane is visible, so both are unavailable when Show Second Pane is turned off.
+Sync Scrolling only takes effect while the second pane is visible, so it’s unavailable when Show Second Pane is turned off.
 
-These are display preferences only. To disable previews for everyone, use the configuration options described under [Disabling Previews](#disabling-previews).
+These are display preferences only. To disable previews or the second pane for everyone, use the configuration options described under [Disabling Previews](#disabling-previews) and [Disabling the Second Pane](#disabling-the-second-pane).
 
 Source: https://sveltiacms.app/en/docs/ui/content-editor
 

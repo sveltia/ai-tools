@@ -105,6 +105,12 @@ A field type. It’s one of the lowercase names of the [built-in field types](#b
 
 The human-readable label for the field. It’s displayed in the UI as the field’s title.
 
+##### `label_localized`
+
+- **Type**: `object`
+
+Labels for specific locales, keyed by locale code, taking precedence over `label`. See [Localized Field Options](https://sveltiacms.app/en/docs/i18n/options#localized-field-options) for details.
+
 ##### `comment`
 
 - **Type**: `string`
@@ -135,6 +141,12 @@ Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/objec
 - **Default**: `""`
 
 A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, strikethrough, links, and inline code. A line break can be given as a literal backslash followed by `n`, e.g. `\n` in a plain or single-quoted YAML string; in JSON or a double-quoted YAML/TOML string, escape the backslash (`\\n`). A real newline is rendered as a space. The hint is not displayed while the field is [read-only](#readonly).
+
+##### `hint_localized`
+
+- **Type**: `object`
+
+Hints for specific locales, keyed by locale code, taking precedence over `hint`. See [Localized Field Options](https://sveltiacms.app/en/docs/i18n/options#localized-field-options) for details.
 
 ##### `required`
 
@@ -252,7 +264,7 @@ Whether to show a preview of the field’s value in the entry’s preview pane. 
 - **Type**: `boolean`, `translate`, `duplicate` or `none`
 - **Default**: `false`, or `duplicate` for a subfield of a field using `duplicate`
 
-Indicates whether the field supports internationalization (i18n). `true` (or `translate`) enables the field in all locales, while `false` (or `none`) enables it in the default locale only. `duplicate` makes the field read-only in non-default locales and copies the default locale’s value to them. A subfield without its own `i18n` option follows its parent’s `duplicate` strategy, while under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
+Indicates whether the field supports internationalization (i18n). `true` (or `translate`) enables the field in all locales, while `false` (or `none`) enables it in the default locale only. `duplicate` makes the field read-only in non-default locales and copies the default locale’s value to them. `duplicate_if_empty` copies the default locale’s value only to the non-default locales where the field is empty, while the field can still be edited there; it’s available for the Code, DateTime, File, Image, Number, RichText, String and Text field types. A subfield without its own `i18n` option follows its parent’s `duplicate` strategy, while under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 

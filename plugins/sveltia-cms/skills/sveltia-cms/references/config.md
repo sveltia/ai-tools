@@ -739,7 +739,7 @@ summary = "{{publish_date | date('YYYY-MM-DD', 'utc')}}"
 
 **Breaking change from Netlify/Decap CMS**
 
-Sveltia CMS (and Decap CMS 3.1.1) has replaced the Moment.js library with Day.js for date formatting and parsing. Since [Day.js tokens](https://day.js.org/docs/en/display/format) are not 100% compatible with [Moment.js tokens](https://momentjs.com/docs/#/displaying/format/), this could be a breaking change in certain cases. Check your date/time format if you’re migrating from Netlify CMS or earlier versions of Decap CMS.
+Sveltia CMS (and Decap CMS 3.1.1) replaced the Moment.js library with Day.js for date formatting and parsing. Since [Day.js tokens](https://day.js.org/docs/en/display/format) are not 100% compatible with [Moment.js tokens](https://momentjs.com/docs/#/displaying/format/), this could be a breaking change in certain cases. Check your date/time format if you’re migrating from Netlify CMS or earlier versions of Decap CMS.
 
 ### Custom Transformations
 

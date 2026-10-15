@@ -416,6 +416,7 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 - Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js), [Leaflet](https://github.com/Leaflet/Leaflet), and [SVGO](https://github.com/SVG/svgo)
 - Retrieve the WebAssembly decoder for [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) when image optimization is enabled
 - Retrieve [Shiki](https://shiki.style/) language definitions and themes for syntax highlighting in code editors
+- Retrieve [Day.js](https://day.js.org/) locale data for DateTime fields with the [`localize_format`](https://sveltiacms.app/en/docs/fields/datetime#localize-format) option
 
 The NPM package doesn’t use UNPKG for any of these. See below.
 

@@ -374,7 +374,7 @@ A file collection supports the following options:
 - `format`, `frontmatter_delimiter`, `body_field`: The default file format options for the files in the collection. Optional. Each file can override them. [See below](#file-format-and-extension) for details.
 - `media_folder`, `public_folder`: Media folder options for the collection. Optional. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration).
 - `i18n`: I18n options for the collection. Optional. Each file also needs its own `i18n` option to be localized. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#collection-level-configuration).
-- `editor`: Content Editor options, such as `preview: false` to disable the preview pane. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#collection-level).
+- `editor`: Content Editor options, such as `preview: false` to disable the preview pane and `second_pane: false` to keep the editor to a single pane. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#collection-level) and [Disabling the Second Pane](https://sveltiacms.app/en/docs/ui/content-editor#disabling-the-second-pane).
 - `publish_mode`: The publish mode for the collection, overriding the top-level option. Optional. See [Enabling the Workflow per Collection](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection).
 - `publish`: Set to `false` to hide the publishing controls in Editorial Workflow. Optional. See [Restricting Publishing and Deletion](https://sveltiacms.app/en/docs/workflows/editorial#restricting-publishing-and-deletion).
 - `readonly`: Set to `true` to make every file in the collection read-only. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
@@ -395,7 +395,7 @@ A file definition within a file collection supports the following options:
 - `fields`: An array of field definitions for the file content. Required.
 - `media_folder`, `public_folder`: Media folder options for the file, overriding the top-level and collection-level options. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/media/internal#file-level-configuration).
 - `i18n`: I18n options for the file. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#file-level-configuration).
-- `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#file-level).
+- `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#file-level) and [Disabling the Second Pane](https://sveltiacms.app/en/docs/ui/content-editor#disabling-the-second-pane).
 - `readonly`: Set to `true` to make the file read-only, while the other files in the collection stay editable. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
 - `preview_path`, `preview_path_date_field`: The file’s URL path on the live site. Optional. [See below](#preview-path) for details.
 
