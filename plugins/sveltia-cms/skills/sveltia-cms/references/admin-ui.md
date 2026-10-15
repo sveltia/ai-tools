@@ -82,6 +82,7 @@ Currently, the following languages are available:
 - Danish
 - Dutch
 - English (Canada)
+- English (South Africa)
 - English (UK)
 - English (US)
 - Finnish

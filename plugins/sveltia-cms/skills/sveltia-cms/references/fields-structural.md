@@ -24,12 +24,28 @@ The List field type has four different UI modes, depending on the configuration:
 ##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
-- Each item comes with a menu that allows users to duplicate the item or insert a new item above/below it, and a Remove button. A duplicated item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one.
+- Each item comes with a menu that allows users to copy the item, paste a copied item in place of it or above/below it, duplicate the item or insert a new item above/below it, and a Remove button. A duplicated or pasted item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one. See [Copying and pasting items](#copying-and-pasting-items) below.
+- A removed item is replaced with a notice and a Restore button, which brings the item back to the same position with all its values, in every locale it was removed from. The notice is shown until the entry editor is closed, or until the list is changed in another way that leaves it out of place, e.g. by reverting the field. Restore is disabled while the list has reached its [`max`](#max) number of items.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
 - Each item can be reordered in its header:
   - The Move Up and Move Down buttons, next to the item menu, move the item one position. They are disabled on the first and last items respectively.
   - With a mouse, the drag handle in the middle of the header also moves the item when dragged. With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list. The handle is not shown on a touch screen, because drag and drop requires a mouse.
 - With a mouse, the Move Up, Move Down, menu and Remove buttons of an item are shown when the pointer is over the item or the item has focus, to reduce clutter.
+
+###### Copying and pasting items
+
+An item of a complex list field can be copied and pasted into the same list or any other list that takes it, in another entry or collection, or even on another site managed with Sveltia CMS.
+
+- **Copy**: Select Copy in the item menu. The item is copied to the system clipboard, so it can be pasted in another browser tab as well. Copy is available even in a read-only list or a list that doesn’t allow adding items.
+- **Paste**: Select Paste Item Above, Paste Item Below or Paste to Replace in the menu of another item, or click the Paste Item button next to the Add button, which adds the item to the end of the list, or to the top with the [`add_to_top`](#add-to-top) option. The button is also how to paste an item into an empty list. Paste to Replace replaces the item, so it’s available even when the list has reached its [`max`](#max) number of items.
+- The browser may ask for permission to read the clipboard. If the permission is denied, an item copied in the same tab can still be pasted.
+- The copied item doesn’t have to come from a list with the same configuration. The values are matched to the subfields by name:
+  - A value is left out if the list doesn’t have a subfield of the same name, or if the subfield doesn’t take that kind of value, e.g. text pasted into a Boolean field. A notification tells how many values were left out.
+  - A subfield that the item doesn’t have gets its default value.
+  - In a [variable type](#types) list, the list needs a type with the same name as the copied item’s type.
+  - If none of the values fit, the item isn’t pasted, and a notification says so.
+- File and image paths are updated to work in the entry the item is pasted into. If a file stored next to the source entry, e.g. in a Hugo page bundle, can’t be referenced from the target entry, it’s copied to the target field’s media folder when the entry is saved, just like a file picked for the field. A notification tells if a file can’t be found, e.g. when the item comes from another site.
+- In a list whose items are paired across locales, the item is copied and pasted in every locale. Otherwise, the item is copied in the locale it’s copied from, and its values are pasted in the locale being edited.
 
 ##### Simple list field
 
@@ -49,12 +65,15 @@ An array. The elements can be strings or objects, depending on the configuration
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty array.
 
+With the [`map_key_field`](#map-key-field) option, the list is stored as an object instead, mapping the key of each item to the item. An empty list is then an empty object.
+
 ### Data Validation
 
 - If the `required` option is set to `true`, the list must contain at least one item.
 - If the `min` and/or `max` options are specified, the number of items in the list must be within the defined limits.
 - For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list rather than against each item, so a pattern that describes a single item has to allow for the commas: use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$` to accept lowercase words only.
 - Each item in the list is validated according to the subfield definitions, if applicable.
+- With the [`map_key_field`](#map-key-field) option, the key of each item is required, even in an [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) draft, must be unique within the list, and can’t be a whole number such as `1` or `2024`.
 
 ### Options
 
@@ -126,7 +145,7 @@ Whether to store the list at the root level of the output file, without a parent
 The `root` option is ignored in the following cases:
 
 - The collection or file contains other fields. You can still have subfields under the List field.
-- The file format is TOML, because TOML doesn’t support top-level arrays.
+- The file format is TOML, because TOML doesn’t support top-level arrays. A list with the [`map_key_field`](#map-key-field) option is stored as an object, so it can be at the top level of a TOML file too.
 
 See the [Top-Level List](#top-level-list) example below for details.
 
@@ -151,6 +170,8 @@ Each type definition is an object with the following properties:
 - `name` (string, required): The unique identifier for the type.
 - `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
+- `description` (string, optional): A short description of the type, displayed below its label in the Add button’s dropdown menu. Markdown is not supported.
+- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/en/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
 - `summary` (string, optional): A template for the summary shown on a collapsed item of this type. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
@@ -199,14 +220,14 @@ Whether the entire list is minimized when collapsed. If set to `auto`, the list 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow adding new items to the list. If set to `false`, the Add button will be hidden, and so will the options to duplicate an item or add one above or below it. Restore Default is also disabled for the field, as it could add items.
+Whether to allow adding new items to the list. If set to `false`, the Add and Paste Item buttons will be hidden, and so will the options to paste, duplicate or add an item in the item menu. Only the Copy option is left. Restore Default is also disabled for the field, as it could add items.
 
 ##### `allow_remove`
 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden. Clear and Restore Default are also disabled for the field, as they could remove items, and the Clear All option in the pane and editor menus leaves the list as it is.
+Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden, and so will the Paste to Replace option in the item menu. Clear and Restore Default are also disabled for the field, as they could remove items, and the Clear All option in the pane and editor menus leaves the list as it is.
 
 ##### `allow_duplicate`
 
@@ -227,7 +248,7 @@ Whether to allow reordering of items in the list by using the Move Up and Move D
 - **Type**: `boolean`
 - **Default**: `false`
 
-Whether to add new items to the top of the list instead of the bottom. If set to `true`, the Add button will appear at the top of the list.
+Whether to add new items to the top of the list instead of the bottom. If set to `true`, the Add and Paste Item buttons will appear at the top of the list.
 
 ##### `typeKey`
 
@@ -241,6 +262,36 @@ You cannot use a key that conflicts with any of the subfield names defined in th
 **Tip**
 
 Unlike most of other config options, `typeKey` is camelCased.
+
+##### `map_key_field`
+
+- **Type**: `string`
+- **Default**: `""`
+
+This option requires the `fields` or `types` option; using it without them, or naming a subfield that doesn’t exist, is reported as a config validation error on the login screen. It names the subfield whose value becomes the key of each item, so that the list is stored as an object mapping the keys to the items, rather than as an array. The subfield itself is left out of each item. This is useful for editing a file format where each item has a unique key, like a [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) bibliography or a map of translations.
+
+For example, with `map_key_field: key`, a list with the items `{ key: harry, title: Harry Potter }` and `{ key: darwin, title: On the Origin of Species }` is stored as:
+
+```yaml
+harry:
+  title: Harry Potter
+darwin:
+  title: On the Origin of Species
+```
+
+In the editor, the key is a regular subfield, so it can be placed anywhere among the subfields, used in the [`summary`](#summary) template and given a [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) or a [`hint`](https://sveltiacms.app/en/docs/fields#hint). The items are kept in the order of the object, and reordering them changes the order of the keys.
+
+The following rules apply. A configuration that breaks one of the first three is reported as a config validation error, and a key that breaks one of the last two is shown as a validation error in the editor:
+
+- The subfield must be a [String](https://sveltiacms.app/en/docs/fields/string) field. With `types`, every variable type must have it.
+- The subfield must be required, so it can’t have the `required` option set to `false` or to a list of locales.
+- The subfield can’t have `i18n: false`, as the items need a key in every locale. Use `i18n: duplicate` to share the keys across locales.
+- Each key must be unique within the list.
+- A key can’t be a whole number such as `1` or `2024`, because JavaScript moves such keys in an object to the front in ascending order, so the items wouldn’t keep their order. A key like `01`, `-1` or `2024a` is fine. A file that already has such a key is loaded, but it has to be renamed before the entry can be saved.
+
+A list still stored as an array, e.g. one saved before the option was added, is loaded as is, and saved as an object the next time the entry is saved.
+
+The option works with [`root`](#root), which stores the object at the top level of the file. See the [Keyed List](#keyed-list) example below for details.
 
 ### Examples
 
@@ -584,7 +635,7 @@ widget = "image"
 
 #### Variable Type
 
-The following example defines a variable type List field named `items` with two types: `text_item` and `image_item`. User can add either type of item to the list. These types can be mixed in any order.
+The following example defines a variable type List field named `items` with two types: `text_item` and `image_item`. User can add either type of item to the list. These types can be mixed in any order. Each type’s `description` is shown in the Add button’s dropdown menu, and the `hint` of the `image_item` type is shown above its subfields.
 
 ```yaml [YAML]
 - name: items
@@ -593,12 +644,15 @@ The following example defines a variable type List field named `items` with two 
   types:
     - name: text_item
       label: Text Item
+      description: A paragraph of text
       fields:
         - name: text
           label: Text
           widget: string
     - name: image_item
       label: Image Item
+      description: An image with a caption
+      hint: Use a **landscape** image.
       fields:
         - name: url
           label: Image URL
@@ -616,6 +670,7 @@ widget = "list"
 [[fields.types]]
 label = "Text Item"
 name = "text_item"
+description = "A paragraph of text"
 [[fields.types.fields]]
 name = "text"
 label = "Text"
@@ -623,6 +678,8 @@ widget = "string"
 [[fields.types]]
 label = "Image Item"
 name = "image_item"
+description = "An image with a caption"
+hint = "Use a **landscape** image."
 [[fields.types.fields]]
 name = "url"
 label = "Image URL"
@@ -642,6 +699,7 @@ widget = "string"
     {
       "label": "Text Item",
       "name": "text_item",
+      "description": "A paragraph of text",
       "fields": [
         {
           "name": "text",
@@ -653,6 +711,8 @@ widget = "string"
     {
       "label": "Image Item",
       "name": "image_item",
+      "description": "An image with a caption",
+      "hint": "Use a **landscape** image.",
       "fields": [
         {
           "name": "url",
@@ -679,6 +739,7 @@ widget = "string"
     {
       label: "Text Item",
       name: "text_item",
+      description: "A paragraph of text",
       fields: [
         {
           name: "text",
@@ -690,6 +751,8 @@ widget = "string"
     {
       label: "Image Item",
       name: "image_item",
+      description: "An image with a caption",
+      hint: "Use a **landscape** image.",
       fields: [
         {
           name: "url",
@@ -1432,7 +1495,224 @@ Output example:
 ]
 ```
 
-As you can see, the list is stored directly at the root level of the output file, without a parent key (`members`). We don’t have a TOML example here because TOML format cannot represent top-level arrays; thus, the `root` option is ignored for TOML files.
+As you can see, the list is stored directly at the root level of the output file, without a parent key (`members`). We don’t have a TOML example here because TOML format cannot represent top-level arrays; thus, the `root` option is ignored for TOML files, unless the list is stored as an object with the [`map_key_field`](#map-key-field) option, as in the [Keyed List](#keyed-list) example below.
+
+#### Keyed List
+
+A list can be stored as an object mapping the key of each item to the item, using the [`map_key_field`](#map-key-field) option. The configuration below edits a [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) bibliography file, which maps a citation key to each reference, with the `root` option to store the object at the top level of the file:
+
+```yaml [YAML]
+collections:
+  - name: data
+    label: Data Files
+    files:
+      - name: bibliography
+        label: Bibliography
+        file: refs.yml
+        icon: menu_book
+        fields:
+          - name: references
+            label: References
+            label_singular: Reference
+            widget: list
+            root: true
+            map_key_field: key
+            summary: '{{key}}: {{title}}'
+            fields:
+              - name: key
+                label: Citation Key
+                pattern: ['^[\w-]+$', 'Use letters, digits, hyphens and underscores only']
+              - name: type
+                label: Type
+                widget: select
+                options: [Article, Book, Web]
+              - name: title
+                label: Title
+              - name: author
+                label: Author
+                required: false
+```
+
+```toml [TOML]
+[[collections]]
+name = "data"
+label = "Data Files"
+[[collections.files]]
+name = "bibliography"
+label = "Bibliography"
+file = "refs.yml"
+icon = "menu_book"
+[[collections.files.fields]]
+name = "references"
+label = "References"
+label_singular = "Reference"
+widget = "list"
+root = true
+map_key_field = "key"
+summary = "{{key}}: {{title}}"
+[[collections.files.fields.fields]]
+name = "key"
+label = "Citation Key"
+pattern = ['^[\w-]+$', "Use letters, digits, hyphens and underscores only"]
+[[collections.files.fields.fields]]
+name = "type"
+label = "Type"
+widget = "select"
+options = ["Article", "Book", "Web"]
+[[collections.files.fields.fields]]
+name = "title"
+label = "Title"
+[[collections.files.fields.fields]]
+name = "author"
+label = "Author"
+required = false
+```
+
+```json [JSON]
+{
+  "collections": [
+    {
+      "name": "data",
+      "label": "Data Files",
+      "files": [
+        {
+          "name": "bibliography",
+          "label": "Bibliography",
+          "file": "refs.yml",
+          "icon": "menu_book",
+          "fields": [
+            {
+              "name": "references",
+              "label": "References",
+              "label_singular": "Reference",
+              "widget": "list",
+              "root": true,
+              "map_key_field": "key",
+              "summary": "{{key}}: {{title}}",
+              "fields": [
+                {
+                  "name": "key",
+                  "label": "Citation Key",
+                  "pattern": ["^[\\w-]+$", "Use letters, digits, hyphens and underscores only"]
+                },
+                {
+                  "name": "type",
+                  "label": "Type",
+                  "widget": "select",
+                  "options": ["Article", "Book", "Web"]
+                },
+                {
+                  "name": "title",
+                  "label": "Title"
+                },
+                {
+                  "name": "author",
+                  "label": "Author",
+                  "required": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  collections: [
+    {
+      name: "data",
+      label: "Data Files",
+      files: [
+        {
+          name: "bibliography",
+          label: "Bibliography",
+          file: "refs.yml",
+          icon: "menu_book",
+          fields: [
+            {
+              name: "references",
+              label: "References",
+              label_singular: "Reference",
+              widget: "list",
+              root: true,
+              map_key_field: "key",
+              summary: "{{key}}: {{title}}",
+              fields: [
+                {
+                  name: "key",
+                  label: "Citation Key",
+                  pattern: ["^[\\w-]+$", "Use letters, digits, hyphens and underscores only"],
+                },
+                {
+                  name: "type",
+                  label: "Type",
+                  widget: "select",
+                  options: ["Article", "Book", "Web"],
+                },
+                {
+                  name: "title",
+                  label: "Title",
+                },
+                {
+                  name: "author",
+                  label: "Author",
+                  required: false,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}
+```
+
+Output example:
+
+```yaml [YAML]
+harry:
+  type: Book
+  title: Harry Potter and the Order of the Phoenix
+  author: Rowling, J. K.
+darwin:
+  type: Book
+  title: On the Origin of Species
+  author: Darwin, Charles
+```
+
+```toml [TOML]
+[harry]
+type = "Book"
+title = "Harry Potter and the Order of the Phoenix"
+author = "Rowling, J. K."
+
+[darwin]
+type = "Book"
+title = "On the Origin of Species"
+author = "Darwin, Charles"
+```
+
+```json [JSON]
+{
+  "harry": {
+    "type": "Book",
+    "title": "Harry Potter and the Order of the Phoenix",
+    "author": "Rowling, J. K."
+  },
+  "darwin": {
+    "type": "Book",
+    "title": "On the Origin of Species",
+    "author": "Darwin, Charles"
+  }
+}
+```
+
+The citation keys are the keys of the object, not properties of the references. In the editor, each reference has a Citation Key field like any other subfield. Without the `root` option, the object is stored under the `references` key instead, which also works in the front matter of an entry, or in a List field nested in another field.
 
 #### Default Values
 
@@ -1756,6 +2036,8 @@ The Object field type has two different UI modes, depending on the configuration
 - With the `fields` option: A group of subfield editors is shown within a collapsible section. If `required` is set to `false`, a checkbox to add or remove the object is displayed.
 - With the `types` option: A type selector is shown, along with the corresponding subfield editors for the selected type. This configuration is called a **variable type** object. It’s useful for creating flexible content structures like page builders.
 
+When an optional object is removed with its checkbox, or a variable type object with its Remove button, a notice with a Restore button is shown in its place. Restore brings back the subfield values as they were, in every locale they were removed from. Adding the object again discards the removed values.
+
 #### Preview
 
 A read-only view of the object’s content, displaying the values of its nested fields in a structured format.
@@ -1800,6 +2082,8 @@ Each type definition is an object with the following properties:
 - `name` (string, required): The unique identifier for the type.
 - `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
+- `description` (string, optional): A short description of the type, displayed below its label in the Add button’s dropdown menu. Markdown is not supported.
+- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/en/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
 - `summary` (string, optional): A template for the summary shown when the object of this type is collapsed. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
