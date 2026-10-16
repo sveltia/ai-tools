@@ -816,6 +816,8 @@ A read-only display of the computed value.
 
 A string representing the computed value.
 
+If the [`value_type`](#value-type) option is set to `int` or `float`, the value is a number. If it’s set to `int/string` or `float/string`, the value is the number stored as a string. If the value can’t be computed, for example because a referenced field is empty, the value is `null`, or an empty string for the string types, just like an empty [Number field](https://sveltiacms.app/en/docs/fields/number).
+
 If the template consists of the `{{index}}` variable alone, the value will be a number representing the current index of the item in the list. Combined with other text or variables, it’s part of a string.
 
 If the template contains a UUID variable, the generated UUID is preserved in the saved value across edits.
@@ -841,17 +843,59 @@ Must be set to `compute`.
 
 - **Type**: `string`
 
-The value can be computed using a template string that references other fields. It supports:
+The value can be computed using a template string that references other fields. If the [`value_type`](#value-type) option is set to a number type, it’s an [arithmetic expression](#arithmetic-expressions) instead. A template supports:
 
 - A value template that defines how to compute the field’s value. It can include references to other fields using the syntax `{{fields.name}}`, where `name` is the name of the field to reference. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied.
   - A Number field is referenced by its stored value, e.g. `1234.5`, rather than its localized display value, e.g. `1,234.5`. String transformations are also applied to the stored value of the referenced field, so a `ternary` transformation, for example, works on a Boolean field’s `true` or `false`.
   - In a Compute field defined in a [rich text editor component](https://sveltiacms.app/en/docs/api/editor-components), a reference like `{{fields.title}}` refers to the component’s own field of that name. If the component has no such field, it refers to the entry’s field instead.
+  - In a Compute field within a [List field](https://sveltiacms.app/en/docs/fields/list), a `*` in a reference stands for the current item. For example, `{{fields.lines.*.name}}` in a field of the `lines` list refers to the `name` field of the same item. This also works for nested lists, like `{{fields.orders.*.lines.*.name}}`. A `*` for a list the Compute field isn’t in resolves to nothing, and is reported as a configuration warning.
 - The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list).
 - The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
 
 **Warning**
 
 To be kept, a UUID variable has to be at either end of the template, or only be separated from the ends by literal text and other UUID variables, like `{{fields.slug}}-{{uuid_short}}`. A UUID variable sitting between two field references, such as `{{fields.a}}{{uuid}}{{fields.b}}`, can’t be told apart from the values around it once saved, so a new UUID is generated whenever the entry is opened. The same applies when a string transformation changes the shape of the UUID, e.g. `truncate`; `upper` and `lower` are fine.
+
+#### Optional Options
+
+##### `value_type`
+
+- **Type**: `string`
+- **Default**: `string`
+
+The type of value to store. Can be one of the following:
+
+- `string`: The [`value`](#value) option is a template, and the result is stored as a string.
+- `int`: The `value` option is an [arithmetic expression](#arithmetic-expressions), and the result is rounded to the nearest integer and stored as a number.
+- `float`: The `value` option is an arithmetic expression, and the result is stored as a floating-point number.
+- `int/string`: Same as `int`, but the result is stored as a string.
+- `float/string`: Same as `float`, but the result is stored as a string.
+
+### Arithmetic Expressions
+
+If the [`value_type`](#value-type) option is set to anything other than `string`, the `value` option is an arithmetic expression that computes a number from other fields, like `{{fields.price}} * {{fields.quantity}}`. An expression can contain:
+
+- Numbers, like `100` or `0.5`.
+- References to other fields using the syntax `{{fields.name}}`, as well as the `{{index}}` variable in a [List field](https://sveltiacms.app/en/docs/fields/list). [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied, so `{{fields.discount | default('0')}}` treats an empty field as zero. The UUID variables can’t be used.
+- The `+` (addition), `-` (subtraction or negation), `*` (multiplication), `/` (division) and `%` (remainder) operators. Multiplication, division and remainder are evaluated before addition and subtraction.
+- Parentheses to group operations, like `({{fields.a}} + {{fields.b}}) / 2`.
+- The following functions:
+  - `round(x)` rounds `x` to the nearest integer, and `round(x, digits)` to the given number of decimal places, e.g. `round({{fields.price}} * 1.13, 2)`.
+  - `floor(x)` and `ceil(x)` round `x` down or up to an integer.
+  - `abs(x)` returns the absolute value of `x`.
+- The following aggregate functions, which take any number of values, including every item of a list:
+  - `sum(x, y, …)` returns the sum of the values, or `0` if there are none.
+  - `avg(x, y, …)` returns the average of the values.
+  - `min(x, y, …)` and `max(x, y, …)` return the smallest or largest of the values.
+  - `count(x, y, …)` returns the number of values, which don’t have to be numbers, e.g. `count({{fields.lines.*.name}})`.
+
+A field reference passed directly to an aggregate function can cover every item of a list: the last `*` in it stands for every item rather than the current one, so `sum({{fields.lines.*.amount}})` adds up the `amount` of every item in the `lines` list, even in a field of a `lines` item. Any other `*` still stands for the current item if the Compute field is in that list, so `sum({{fields.orders.*.lines.*.amount}})` in a field of an `orders` item adds up the lines of that order only. Empty values are left out, so an item that has yet to be filled in doesn’t empty the result; `avg`, `min` and `max` leave the result empty if there is no value at all.
+
+Each field reference is used as a number: the stored value of a Number field or another Compute field that yields a number, or the text of any other field, which must be a number like `12.5`. If a referenced field is empty or doesn’t hold a number, or the result isn’t a finite number, as with a division by zero, the value is left empty. Small floating-point errors are removed from the result, so `0.1 * 3` is stored as `0.3` rather than `0.30000000000000004`.
+
+An invalid expression or a UUID variable in it is reported as a configuration error.
+
+A Compute field can’t refer to itself, as in `sum({{fields.lines.*.amount}})` for the `amount` field of the `lines` list, because its value would change every time it’s computed. For the same reason, Compute fields can’t refer to each other in a cycle, like `a` referring to `b` and `b` referring back to `a`, directly or through other Compute fields. Such references are reported as configuration warnings.
 
 ### Examples
 
@@ -1274,6 +1318,295 @@ id = "hello-world-e7bc7d91"
 {
   title: 'Hello World',
   id: 'hello-world-e7bc7d91',
+}
+```
+
+#### Calculating a Total
+
+The `value_type` option turns the `value` option into an arithmetic expression. In this example, each item of the `lines` list has an `amount` field that multiplies the item’s price by its quantity, and a `line` field that numbers the items from 1 rather than 0. The `total` field adds up the amounts and applies the discount, which is treated as zero when the field is left empty.
+
+```yaml [YAML]
+fields:
+  - name: lines
+    label: Lines
+    widget: list
+    fields:
+      - name: line
+        label: Line
+        widget: compute
+        value_type: int
+        value: '{{index}} + 1'
+      - name: name
+        label: Name
+        widget: string
+      - name: price
+        label: Price
+        widget: number
+        value_type: float
+      - name: quantity
+        label: Quantity
+        widget: number
+      - name: amount
+        label: Amount
+        widget: compute
+        value_type: float
+        value: '{{fields.lines.*.price}} * {{fields.lines.*.quantity}}'
+  - name: discount
+    label: Discount (%)
+    widget: number
+    required: false
+  - name: total
+    label: Total
+    widget: compute
+    value_type: float
+    value: "round(sum({{fields.lines.*.amount}}) * (1 - {{fields.discount | default('0')}} / 100), 2)"
+```
+
+```toml [TOML]
+[[fields]]
+name = "lines"
+label = "Lines"
+widget = "list"
+
+[[fields.fields]]
+name = "line"
+label = "Line"
+widget = "compute"
+value_type = "int"
+value = "{{index}} + 1"
+
+[[fields.fields]]
+name = "name"
+label = "Name"
+widget = "string"
+
+[[fields.fields]]
+name = "price"
+label = "Price"
+widget = "number"
+value_type = "float"
+
+[[fields.fields]]
+name = "quantity"
+label = "Quantity"
+widget = "number"
+
+[[fields.fields]]
+name = "amount"
+label = "Amount"
+widget = "compute"
+value_type = "float"
+value = "{{fields.lines.*.price}} * {{fields.lines.*.quantity}}"
+
+[[fields]]
+name = "discount"
+label = "Discount (%)"
+widget = "number"
+required = false
+
+[[fields]]
+name = "total"
+label = "Total"
+widget = "compute"
+value_type = "float"
+value = "round(sum({{fields.lines.*.amount}}) * (1 - {{fields.discount | default('0')}} / 100), 2)"
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "lines",
+      "label": "Lines",
+      "widget": "list",
+      "fields": [
+        {
+          "name": "line",
+          "label": "Line",
+          "widget": "compute",
+          "value_type": "int",
+          "value": "{{index}} + 1"
+        },
+        {
+          "name": "name",
+          "label": "Name",
+          "widget": "string"
+        },
+        {
+          "name": "price",
+          "label": "Price",
+          "widget": "number",
+          "value_type": "float"
+        },
+        {
+          "name": "quantity",
+          "label": "Quantity",
+          "widget": "number"
+        },
+        {
+          "name": "amount",
+          "label": "Amount",
+          "widget": "compute",
+          "value_type": "float",
+          "value": "{{fields.lines.*.price}} * {{fields.lines.*.quantity}}"
+        }
+      ]
+    },
+    {
+      "name": "discount",
+      "label": "Discount (%)",
+      "widget": "number",
+      "required": false
+    },
+    {
+      "name": "total",
+      "label": "Total",
+      "widget": "compute",
+      "value_type": "float",
+      "value": "round(sum({{fields.lines.*.amount}}) * (1 - {{fields.discount | default('0')}} / 100), 2)"
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  fields: [
+    {
+      name: 'lines',
+      label: 'Lines',
+      widget: 'list',
+      fields: [
+        {
+          name: 'line',
+          label: 'Line',
+          widget: 'compute',
+          value_type: 'int',
+          value: '{{index}} + 1',
+        },
+        {
+          name: 'name',
+          label: 'Name',
+          widget: 'string',
+        },
+        {
+          name: 'price',
+          label: 'Price',
+          widget: 'number',
+          value_type: 'float',
+        },
+        {
+          name: 'quantity',
+          label: 'Quantity',
+          widget: 'number',
+        },
+        {
+          name: 'amount',
+          label: 'Amount',
+          widget: 'compute',
+          value_type: 'float',
+          value: '{{fields.lines.*.price}} * {{fields.lines.*.quantity}}',
+        },
+      ],
+    },
+    {
+      name: 'discount',
+      label: 'Discount (%)',
+      widget: 'number',
+      required: false,
+    },
+    {
+      name: 'total',
+      label: 'Total',
+      widget: 'compute',
+      value_type: 'float',
+      value:
+        "round(sum({{fields.lines.*.amount}}) * (1 - {{fields.discount | default('0')}} / 100), 2)",
+    },
+  ],
+}
+```
+
+Output example when two lines are added and `discount` is 20:
+
+```yaml [YAML]
+lines:
+  - line: 1
+    name: Beans
+    price: 12.5
+    quantity: 2
+    amount: 25
+  - line: 2
+    name: Filters
+    price: 4.25
+    quantity: 3
+    amount: 12.75
+discount: 20
+total: 30.2
+```
+
+```toml [TOML]
+discount = 20
+total = 30.2
+
+[[lines]]
+line = 1
+name = "Beans"
+price = 12.5
+quantity = 2
+amount = 25
+
+[[lines]]
+line = 2
+name = "Filters"
+price = 4.25
+quantity = 3
+amount = 12.75
+```
+
+```json [JSON]
+{
+  "lines": [
+    {
+      "line": 1,
+      "name": "Beans",
+      "price": 12.5,
+      "quantity": 2,
+      "amount": 25
+    },
+    {
+      "line": 2,
+      "name": "Filters",
+      "price": 4.25,
+      "quantity": 3,
+      "amount": 12.75
+    }
+  ],
+  "discount": 20,
+  "total": 30.2
+}
+```
+
+```js [JavaScript]
+{
+  lines: [
+    {
+      line: 1,
+      name: 'Beans',
+      price: 12.5,
+      quantity: 2,
+      amount: 25,
+    },
+    {
+      line: 2,
+      name: 'Filters',
+      price: 4.25,
+      quantity: 3,
+      amount: 12.75,
+    },
+  ],
+  discount: 20,
+  total: 30.2,
 }
 ```
 

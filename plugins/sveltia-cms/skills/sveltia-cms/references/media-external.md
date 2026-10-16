@@ -1,8 +1,38 @@
 # External Media Storage Providers
 
-Cloudinary, Uploadcare and Azure Blob Storage, plus stock photo integrations. For Amazon S3 and S3-compatible object storage, see `media-s3.md`.
+An overview of third-party integrations, then Cloudinary, Uploadcare and Azure Blob Storage, plus stock photo integrations. For Amazon S3 and S3-compatible object storage, see `media-s3.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
+
+## Integrations
+
+Sveltia CMS supports integration with various third-party services to enhance its functionality. These integrations allow users to connect Sveltia CMS with external tools for media management, stock photos, translations, and more.
+
+**Future Plans**
+
+More integration options, including stock video providers, analytics tools, and AI-powered content generation services, will be added in future releases.
+
+### Media Storage Providers
+
+Sveltia CMS can be connected to external media storage providers such as cloud storage services or digital asset management systems to manage and utilize media assets.
+
+See the [Media Storage](https://sveltiacms.app/en/docs/media#external-storage) guide for available media storage options and instructions on how to set up and use external media storage providers with Sveltia CMS.
+
+### Stock Photo Providers
+
+Sveltia CMS supports integration with popular stock photo services to easily add images to your content.
+
+See the [Stock Photos](https://sveltiacms.app/en/docs/integrations/stock-photos) guide for detailed instructions on how to set up and use stock photo services within Sveltia CMS.
+
+### Translation Services
+
+Sveltia CMS supports integration with popular AI-powered translation services to translate content into multiple languages.
+
+See the [Translation Services](https://sveltiacms.app/en/docs/integrations/translations) guide for detailed instructions on how to set up and use translation services within Sveltia CMS.
+
+Source: https://sveltiacms.app/en/docs/integrations
+
+---
 
 ## Cloudinary Integration
 

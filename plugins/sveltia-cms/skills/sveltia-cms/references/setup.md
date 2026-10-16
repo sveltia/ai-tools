@@ -1,6 +1,6 @@
 # Installation and Framework Setup
 
-How to install Sveltia CMS, how it loads, and the list of framework guides. For a specific framework, see `frameworks-js.md` or `frameworks-other.md`.
+How to install Sveltia CMS, how it loads, how to check and update the installed version, and the list of framework guides. For a specific framework, see `frameworks-js.md` or `frameworks-other.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -406,6 +406,156 @@ In addition to the architectural differences explained above, here are other fac
 Sveltia CMS aims to excel in many of these areas while maintaining a simple, developer-friendly experience. We encourage you to [explore its features](https://sveltiacms.app/en/features) and see how well it fits your project’s needs!
 
 Source: https://sveltiacms.app/en/docs/architecture
+
+---
+
+## Releases
+
+This document provides information about Sveltia CMS releases, including how to find release notes, versioning practices, and update instructions.
+
+### Release Frequency
+
+Sveltia CMS ships new versions frequently, usually multiple times per week or even multiple times per day. Instead of following a strict release schedule, we prioritize releasing updates as soon as they are ready. This approach allows us to deliver new features, improvements, and bug fixes to users more rapidly.
+
+And this approach works because our product is a [CDN-served SPA](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works). As long as you use the CDN script without pinning to a specific version, there is no maintenance overhead for users to update their installations. End-users can always access the latest version of Sveltia CMS without needing to manually update their software.
+
+### Release Information
+
+Here are some ways to stay informed about new releases:
+
+- Our [release notes](https://github.com/sveltia/sveltia-cms/releases) are available on GitHub. There are a couple of ways to receive notifications about new releases:
+  - [Watch the repository](https://docs.github.com/en/subscriptions-and-notifications/get-started/configuring-notifications#configuring-your-watch-settings-for-an-individual-repository) (select Watch → Custom → Releases on the [repository homepage](https://github.com/sveltia/sveltia-cms)) and you’ll get release notifications in:
+    - The [Notifications](https://github.com/notifications) and [Feed](https://github.com/feed) pages on the web
+    - The Inbox and Explore tabs in the [GitHub Mobile](https://github.com/mobile) app
+  - Join the #cms-announcements channel on our [Discord server](https://discord.com/invite/5hwCGqup5b).
+  - Subscribe to the Atom feed in your feed reader:
+    ```
+    https://github.com/sveltia/sveltia-cms/releases.atom
+    ```
+- Major, minor and security releases are also announced on our [Bluesky account](https://bsky.app/profile/sveltiacms.app). Follow us there for the latest updates!
+- Interested in what’s coming next? Check out our [roadmap](https://sveltiacms.app/en/docs/roadmap). We have a lot of exciting ideas to make Sveltia CMS the best Git-based CMS out there.
+- Deprecated features and breaking changes are documented in the [migration guide](https://sveltiacms.app/en/docs/migration/earlier-versions).
+
+### Versioning Policy
+
+We follow [semantic versioning](https://semver.org/) for our releases. We don’t typically maintain multiple release lines, but we may do so for critical security fixes if necessary. We don’t offer long-term support (LTS) versions.
+
+Breaking changes are only introduced in major version updates (e.g., from 1.x.x to 2.0.0). Minor and patch releases (e.g., from 1.0.0 to 1.1.0 or 1.0.1) are backward-compatible, though unintended issues may occasionally arise.
+
+**Stable Version Not Yet Available**
+
+At this point, Sveltia CMS has not reached 1.0.0, so breaking changes may still occur in minor version updates. We’ll announce breaking changes clearly in the release notes.
+
+### CDN or NPM Package
+
+Sveltia CMS is published as the [`@sveltia/cms`](https://www.npmjs.com/package/@sveltia/cms) package, which contains three builds of the app. See the [API documentation](https://sveltiacms.app/en/docs/api#accessing-the-cms-object) for how to load each one.
+
+|  | CDN script | CDN module | NPM package |
+| --- | --- | --- | --- |
+| File | `dist/sveltia-cms.js` | `dist/sveltia-cms.mjs` | `npm/index.js` |
+| How to load | `script` tag | `script` tag with `type="module"` | `import` from `@sveltia/cms` |
+| Format | Classic script, single file | JavaScript module, single file | JavaScript modules, split into files |
+| Build tool | Not needed | Not needed | Required |
+| Updates | Automatic | Automatic | With your package manager |
+| Files loaded from CDNs | Yes | Yes | No |
+
+The CDN builds are self-contained scripts that work on any site. To keep them small, they load some files from public CDNs as needed: fonts from jsDelivr, and admin interface translations, additional libraries, image decoders and syntax highlighting definitions from UNPKG. This is still the case if you copy the script to your own site. See the [privacy notes](https://sveltiacms.app/en/docs/privacy#content-delivery-networks) and the [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) guide for details.
+
+The NPM package includes all of these files instead, so the CMS contacts no CDN. Your build tool processes them along with the rest of your site and loads each one only when it’s needed. This requires a build tool that supports JavaScript modules, workers and assets referenced with `new URL()`, such as [Vite](https://vite.dev/) and [webpack](https://webpack.js.org/) 5. Some of those files, including libraries like [Leaflet](https://leafletjs.com/) for the Map field and the syntax highlighting definitions, come with packages that your package manager installs as dependencies of Sveltia CMS. If your site uses one of them too, both can share a single copy.
+
+**Breaking Change in v0.221.0**
+
+Earlier versions of the NPM package pointed to the CDN module, `dist/sveltia-cms.mjs`, so `import CMS from '@sveltia/cms'` gave you the same self-contained file as the CDN. It now points to the NPM build described above, which needs a build tool. If you load the package without one, for example through an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), use the CDN module URL instead. Also note that the NPM build no longer shows update notifications, and doesn’t generate PDF thumbnails.
+
+**PDF Thumbnails in the NPM Package**
+
+The NPM package generates thumbnails for PDF files with [PDF.js](https://github.com/mozilla/pdf.js), like the CDN builds, but it doesn’t include the hundreds of character maps, standard fonts and color profiles that come with the library. Text in fonts that are not embedded in a PDF file is drawn with a font installed on the user’s system instead, and some text in Chinese, Japanese or Korean may be left out of the thumbnail. The image decoders for JPEG 2000 and JBIG2 images are included.
+
+### Checking Your Current Version
+
+The current version of Sveltia CMS can be viewed by enabling [Developer Mode](https://sveltiacms.app/en/docs/ui#developer-mode) in the application:
+
+1. Click on the avatar in the top right corner of the application to open the Account menu.
+1. Click Settings.
+1. Click the Developer tab.
+1. Enable Developer Mode.
+1. Close the Settings dialog.
+
+A Release Notes link will now appear under the Help menu with the `?` icon, displaying the current application version.
+
+### Updating Your Installation
+
+#### CDN Usage
+
+Updating Sveltia CMS when using the CDN is automatic, unless you have pinned to a specific version. The CDN always serves the latest version, so you don’t need to take any action to receive updates.
+
+To use the latest version of Sveltia CMS via the CDN, include the following script tag in your HTML, as the [start guide](https://sveltiacms.app/en/docs/start) suggests:
+
+```html
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+```
+
+**Module Version**
+
+Earlier versions of Sveltia CMS were bundled as a [JavaScript module](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules), so you needed `type="module"` in the script. The current version is a classic [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE) script, so the `type` attribute is no longer necessary. If you still need to use the module version for some reason, you can use this tag instead, which loads the `.mjs` file:
+
+```html
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs" type="module"></script>
+```
+
+The CMS also periodically checks for updates and notifies users when a new version is available. When the notification appears, simply click the “Update Now” button to refresh the application and load the latest version.
+
+To avoid major version updates that may include breaking changes, you can pin to a specific major version using the caret symbol (`^`) followed by the major version number:
+
+```html
+<script src="https://unpkg.com/@sveltia/cms@^1/dist/sveltia-cms.js"></script>
+```
+
+**Stable Version Not Yet Available**
+
+At this point, Sveltia CMS has not reached 1.0.0, so breaking changes may still occur in minor version updates. Pinning to a specific major version is more relevant once we start releasing stable versions (1.0.0 and above).
+
+You can also pin to an exact version, but this is not recommended unless you have a specific reason, like debugging or temporarily avoiding a problematic release:
+
+```html
+<script src="https://unpkg.com/@sveltia/cms@1.2.3/dist/sveltia-cms.js"></script>
+```
+
+**Security Risk**
+
+Pinning to an exact version means that you will not receive any updates, including important bug fixes and security patches, until you manually update the version number in your script tag. This can lead to a degraded experience and potential security risks.
+
+Because our [security practices](https://sveltiacms.app/en/docs/security#security-practices) include regular dependency updates and supply chain attack mitigations, pinning to an exact version is discouraged for long-term use.
+
+#### NPM Package Usage
+
+If you’ve chosen to install the CMS using a package manager, updating the package is your responsibility. The CMS doesn’t notify users of new versions in this case, as updating requires a new build of your site. We strongly recommend using [`ncu`](https://www.npmjs.com/package/npm-check-updates) or a service like [Dependabot](https://github.blog/news-insights/product-news/keep-all-your-packages-up-to-date-with-dependabot/) to keep dependencies up to date. Otherwise, you’ll miss important bug fixes and new features.
+
+**ProTip**
+
+We update our dependencies using `ncu -u && pnpm up` at least once a week.
+
+The pinning methods described in the CDN section above also apply to NPM package versions. For example, to pin to a specific major version, you can run:
+
+```bash [npm]
+npm install @sveltia/cms@^1
+```
+
+```bash [yarn]
+yarn add @sveltia/cms@^1
+```
+
+```bash [pnpm]
+pnpm add @sveltia/cms@^1
+```
+
+```bash [bun]
+bun add @sveltia/cms@^1
+```
+
+See the [NPM semantic versioning documentation](https://docs.npmjs.com/about-semantic-versioning) for more details on version ranges.
+
+Source: https://sveltiacms.app/en/docs/releases
 
 ---
 

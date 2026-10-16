@@ -1,6 +1,6 @@
 # Publishing Workflows
 
-Local development, the simple publishing workflow and deploy previews. For the editorial workflow, the preview workflow and open authoring, see `workflows-editorial.md`.
+Local development, the simple publishing workflow, CI/CD deployments and how to disable them, and deploy previews. For the editorial workflow, the preview workflow and open authoring, see `workflows-editorial.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -230,6 +230,142 @@ While this workflow is designed for single users, multiple editors can still col
 At this time, Sveltia CMS does not provide built-in features for handling merge conflicts or simultaneous edits. We plan to add such features in future releases to enhance collaboration in the simple workflow.
 
 Source: https://sveltiacms.app/en/docs/workflows/simple
+
+---
+
+## Deployments
+
+Sveltia CMS is a headless CMS, so it doesn’t involve any specific deployment process. The [two required CMS files](https://sveltiacms.app/en/docs/start#manual-installation), `index.html` and `config.yml`, can be hosted on any web server or static hosting service. This enables the project to be deployed like any other website using any preferred hosting service or platform.
+
+### CI/CD Integration
+
+In most cases, you may want to automatically deploy your website whenever content is saved in your Git repository via Sveltia CMS. This can be achieved by integrating with a [CI/CD](https://en.wikipedia.org/wiki/CI/CD) (Continuous Integration/Continuous Deployment) service that monitors your Git repository for changes and triggers a build and deployment process.
+
+All the supported Git backends offer their own CI/CD solutions or can be easily integrated with popular third-party CI/CD services. Here are some examples:
+
+- Building: [GitHub Actions](https://github.com/features/actions), [GitLab CI/CD](https://docs.gitlab.com/ci/), [Gitea Actions](https://docs.gitea.com/usage/actions/overview), [Forgejo Actions](https://forgejo.org/docs/latest/user/actions/reference/), [Cloudflare Pages](https://pages.cloudflare.com/), [Netlify](https://www.netlify.com/), [Vercel](https://vercel.com/), [CircleCI](https://circleci.com/), [Travis CI](https://www.travis-ci.com/), [Jenkins](https://www.jenkins.io/), etc.
+- Hosting: [GitHub Pages](https://docs.github.com/en/pages), [GitLab Pages](https://docs.gitlab.com/user/project/pages/), [Cloudflare Pages](https://pages.cloudflare.com/), [Netlify](https://www.netlify.com/), [Vercel](https://vercel.com/), [Amazon EC2](https://aws.amazon.com/ec2/), [Firebase Hosting](https://firebase.google.com/products/hosting), [DigitalOcean Droplets](https://www.digitalocean.com/products/droplets), etc.
+
+Your choice of CI/CD service may depend on factors such as ease of use, pricing, performance, and integration with your existing workflow. Some services only host completely static sites, while others can handle dynamic applications as well. Refer to the documentation of your chosen CI/CD and hosting providers for specific instructions on how to set up the deployment process.
+
+### Deploy Previews
+
+A connected CI/CD provider does more than publish your site: it reports each build back to your Git repository, and Sveltia CMS reads those reports. Editors get a link straight to the page they just worked on, and can see whether the build carrying their change has finished.
+
+This works in both production workflows. With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the preview built for its pull request, so a draft can be reviewed before it goes live. With [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), the entry links to the live site and the CMS reports whether the latest build is done.
+
+Nothing needs to be turned on. Set a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on the collections you want entry links for — without it, only the root of a deploy preview is linked — and see [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for which providers are recognized and how the links behave while a build is running.
+
+### Disabling Automatic Deployments
+
+You may already have a CI/CD tool set up on your Git repository to automatically deploy changes to production. Occasionally, you make a lot of changes to your content to quickly reach the CI/CD provider’s (free) build limits, or you just don’t want to see builds triggered for every single small change.
+
+With Sveltia CMS, you can disable automatic deployments by default and manually trigger deployments at your convenience. This is done by adding the `[skip ci]` prefix to commit messages, the convention supported by [GitHub Actions](https://docs.github.com/en/actions/managing-workflow-runs/skipping-workflow-runs), [GitLab CI/CD](https://docs.gitlab.com/ee/ci/pipelines/#skip-a-pipeline), [CircleCI](https://circleci.com/docs/skip-build/#skip-jobs), [Travis CI](https://docs.travis-ci.com/user/customizing-the-build/#skipping-a-build), [Netlify](https://docs.netlify.com/site-deploys/manage-deploys/#skip-a-deploy), [Cloudflare Pages](https://developers.cloudflare.com/pages/platform/branch-build-controls/#skip-builds) and others.
+
+**No build, no preview**
+
+A skipped commit produces no build, so there’s nothing for [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) to report and the entry keeps its plain live-site link. This applies to Editorial Workflow saves too, where the prefix is added to the pull request’s commits. Deletion commits are never skipped.
+
+#### Configuration
+
+Here are the steps to use this feature:
+
+1. Add the `skip_ci` property to your `backend` configuration with a value of `true`:
+
+   ::: code-group
+
+   ```yaml [YAML]
+   backend:
+     name: github
+     repo: owner/repo
+     branch: main
+     skip_ci: true
+   ```
+
+   ```toml [TOML]
+   [backend]
+   name = "github"
+   repo = "owner/repo"
+   branch = "main"
+   skip_ci = true
+   ```
+
+   ```json [JSON]
+   {
+     "backend": {
+       "name": "github",
+       "repo": "owner/repo",
+       "branch": "main",
+       "skip_ci": true
+     }
+   }
+   ```
+
+   ```js [JavaScript]
+   {
+     backend: {
+       name: "github",
+       repo: "owner/repo",
+       branch: "main",
+       skip_ci: true,
+     },
+   }
+   ```
+
+   :::
+
+1. Commit and deploy the change to the config file and reload the CMS.
+1. Now, whenever an entry or asset is saved, `[skip ci]` is automatically added to each commit message. However, deletions are always committed without the prefix to avoid unexpected data retention on the site.
+1. To deploy a new or updated entry, as well as any other unpublished entries and assets, click an arrow next to the Save button in the Content Editor, then select **Save and Publish**. This will trigger CI/CD by omitting `[skip ci]`.
+
+If you set `skip_ci` to `false`, the behavior is reversed. CI/CD will be triggered by default, while an option to **Save without Publishing** is available, which adds `[skip ci]` only to the associated commit.
+
+**Deprecation Notice**
+
+The `automatic_deployments` option has been deprecated in favor of the more intuitive `skip_ci` option and will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly: `automatic_deployments: false` is equivalent to `skip_ci: true`, while `automatic_deployments: true` is equivalent to `skip_ci: false`.
+
+**Unpublished vs. Drafts**
+
+Unpublished entries and assets are not drafts. Once committed to your repository, those changes can be deployed any time another commit is pushed without `[skip ci]`, or when a manual deployment is triggered.
+
+#### Manual Deployment Trigger
+
+If the `skip_ci` property is defined, you can manually trigger a deployment by clicking the **Publish Changes** button on the application header. To use this feature:
+
+##### GitHub Actions
+
+Without any configuration, Publish Changes will [trigger a `repository_dispatch` event](https://docs.github.com/en/rest/repos/repos#create-a-repository-dispatch-event) with the `sveltia-cms-publish` event type. Update your build workflow to receive this event:
+
+```yaml
+on:
+  push:
+    branches: [$default-branch]
+  repository_dispatch:
+    types: [sveltia-cms-publish]
+```
+
+##### Other CI/CD Providers
+
+To use Publish Changes with a CI/CD provider other than GitHub Actions, you need to set up a [webhook](https://en.wikipedia.org/wiki/Webhook) in your CI/CD provider that triggers a build when called. Check your provider’s documentation for instructions on how to create a deploy hook URL. Here are some examples:
+
+- [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/deploy-hooks/)
+- [Netlify](https://docs.netlify.com/build/configure-builds/build-hooks/)
+- [Vercel](https://vercel.com/docs/deploy-hooks)
+
+Then, configure Sveltia CMS to use this URL:
+
+1. Select Settings under the Account button in the top right corner of the CMS.
+1. Select the Developer tab.
+1. Enter the deploy hook URL for your provider.
+1. [Configure the CSP](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) if necessary.
+
+**Why Deploy Hook URL Is Stored in User Settings**
+
+Deploy hook URLs are confidential and cannot be stored in the CMS configuration file, which is typically accessible via a public website. As Sveltia CMS works entirely in the frontend, there is no secure place to store such credentials. This is why they are managed in the user settings, which are stored securely in the browser’s local storage. The deploy hook URL and its authorization header are removed from the browser when the user signs out, along with the API keys for other integrations, so they need to be entered again after signing back in.
+
+In the future, we may provide a way to manage credentials for all users via an edge function called [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions).
+
+Source: https://sveltiacms.app/en/docs/deployments
 
 ---
 
