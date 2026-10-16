@@ -403,7 +403,7 @@ In addition to the architectural differences explained above, here are other fac
 - **Media Management**: image handling, file uploads, optimization, and gallery features
 - **Collaboration Features**: editorial workflow, versioning, comments, and notifications
 
-Sveltia CMS aims to excel in many of these areas while maintaining a simple, developer-friendly experience. We encourage you to [explore its features](https://sveltiacms.app/en/docs/features) and see how well it fits your project’s needs!
+Sveltia CMS aims to excel in many of these areas while maintaining a simple, developer-friendly experience. We encourage you to [explore its features](https://sveltiacms.app/en/features) and see how well it fits your project’s needs!
 
 Source: https://sveltiacms.app/en/docs/architecture
 

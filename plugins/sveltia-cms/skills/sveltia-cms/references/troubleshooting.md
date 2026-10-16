@@ -625,7 +625,7 @@ The only comparable product is our predecessor, Netlify/Decap CMS, which is the 
 
 To decide which CMS solution is right for your project, we recommend evaluating your specific needs and requirements, and comparing the features, pricing, and support options of different solutions to find the best fit for you.
 
-Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/docs/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [Showcase](https://sveltiacms.app/en/showcase).
+Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [Showcase](https://sveltiacms.app/en/showcase).
 
 #### Is Sveltia CMS framework-agnostic?
 
