@@ -650,7 +650,7 @@ The KeyValue field type allows users to create and manage a dynamic list of key-
 A dynamic list of key-value pairs, where users can add, edit, reorder and remove entries. Each entry consists of a text input for the key and a text input for the value.
 
 - Pressing Enter moves focus or adds a new row while editing.
-- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). The pairs are saved in the order they are shown.
+- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). When there are 3 or more pairs, a menu next to the handle offers Move to Top and Move to Bottom, and Move to…, which asks for the position to move the pair to. The pairs are saved in the order they are shown.
 - A field without pairs shows a blank row, like a [simple List field](https://sveltiacms.app/en/docs/fields/list#simple-list-field), so there’s always somewhere to type. The blank row isn’t saved until its key is filled in, and removing the last pair leaves one in its place.
 
 #### Preview

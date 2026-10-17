@@ -30,6 +30,7 @@ The List field type has four different UI modes, depending on the configuration:
 - Each item can be reordered in its header:
   - The Move Up and Move Down buttons, next to the item menu, move the item one position. They are disabled on the first and last items respectively.
   - With a mouse, the drag handle in the middle of the header also moves the item when dragged. With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list. The handle is not shown on a touch screen, because drag and drop requires a mouse.
+  - When the list has 3 or more items, the item menu also offers Move to Top and Move to Bottom, and Move to…, which asks for the position to move the item to, from 1 to the number of items. Move to Top and Move to Bottom are disabled on the first and last items respectively.
 - With a mouse, the Move Up, Move Down, menu and Remove buttons of an item are shown when the pointer is over the item or the item has focus, to reduce clutter.
 
 ###### Copying and pasting items
@@ -51,7 +52,7 @@ An item of a complex list field can be copied and pasted into the same list or a
 
 - Pressing Enter in an item’s input adds a new item below it. The Add button below the list appends one to the end.
 - Each item comes with a Remove button.
-- Each item can be reordered using the drag handle at the start of its row, by dragging it or with the same keys as a complex list field. On a touch screen, Move Up and Move Down buttons are shown in place of the handle.
+- Each item can be reordered using the drag handle at the start of its row, by dragging it or with the same keys as a complex list field. On a touch screen, Move Up and Move Down buttons are shown in place of the handle. When the list has 3 or more items, a menu next to the handle or buttons offers Move to Top, Move to Bottom and Move to…, as in a complex list field.
 - The list always keeps one row, so that an empty list still offers somewhere to type. The Remove and reorder controls are disabled when a single item is left.
 - Blank rows are ignored. The stored value is the list of the remaining items, each trimmed of surrounding spaces.
 
@@ -241,7 +242,7 @@ Whether to allow duplicating items in the list. If set to `false`, the Duplicate
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow reordering of items in the list by using the Move Up and Move Down buttons in each item’s header, by dragging the handle, or by using the keyboard while the handle is focused. In a simple list field, the Move Up and Move Down buttons are shown in place of the handle on a touch screen only. If set to `false`, the reorder controls will be hidden.
+Whether to allow reordering of items in the list by using the Move Up and Move Down buttons in each item’s header, by dragging the handle, by using the keyboard while the handle is focused, or by selecting Move to Top, Move to Bottom or Move to… in the menu. In a simple list field, the Move Up and Move Down buttons are shown in place of the handle on a touch screen only. If set to `false`, the reorder controls will be hidden.
 
 ##### `add_to_top`
 

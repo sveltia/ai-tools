@@ -8,6 +8,9 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 This section provides an overview of the application user interface (UI) of Sveltia CMS. It covers the main features and components of the UI, including navigation, content editing, asset management, and customization options.
 
+![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-light.webp?20261016)
+![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-dark.webp?20261016)
+
 ### Accessing the Admin UI
 
 The Sveltia CMS admin user interface is accessed by navigating to the URL where the `index.html` file in the static files folder is deployed. For example, if the site is deployed to `https://example.com` and Sveltia CMS is placed in the `admin` folder, it is available at `https://example.com/admin/`.
@@ -229,6 +232,9 @@ Source: https://sveltiacms.app/en/docs/ui
 
 Sveltia CMS’s Asset Library allows users to efficiently manage and organize media files, including images, videos, and documents. It serves as a centralized hub for all digital assets, making it easy to upload, categorize, and retrieve files as needed — whether they are stored in the Git repository with the [internal media storage](https://sveltiacms.app/en/docs/media/internal) or on an [external media storage provider](https://sveltiacms.app/en/docs/media) such as Amazon S3, Cloudflare R2 or Uploadcare.
 
+![The Asset Library showing a grid of photos and the details of a selected image](/images/landing/asset-library-light.webp?20261016)
+![The Asset Library showing a grid of photos and the details of a selected image](/images/landing/asset-library-dark.webp?20261016)
+
 ### Features
 
 The Asset Library includes the following features:
@@ -360,6 +366,9 @@ Source: https://sveltiacms.app/en/docs/ui/asset-library
 ## Content Editor
 
 Sveltia CMS provides a powerful Content Editor that allows users to create and modify content entries stored in their Git repository. This document outlines the key features and functionalities of the Content Editor.
+
+![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-light.webp?20261016)
+![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-dark.webp?20261016)
 
 ### Features
 
@@ -962,6 +971,9 @@ Source: https://sveltiacms.app/en/docs/ui/content-editor
 ## Content Library
 
 Manage entries and files in one place. The Content Library provides a centralized location to organize, search, and manage all contents efficiently.
+
+![The Content Library showing blog posts in grid view, with sort, filter and group options](/images/landing/entry-grid-light.webp?2026101612)
+![The Content Library showing blog posts in grid view, with sort, filter and group options](/images/landing/entry-grid-dark.webp?2026101612)
 
 ### Features
 

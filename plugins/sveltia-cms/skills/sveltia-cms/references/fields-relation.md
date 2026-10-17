@@ -21,7 +21,7 @@ Radio buttons (single select) or checkboxes (multi select) for choosing related 
 
 For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
 
-The options are listed in the following order:
+The options are listed in the order defined by the [`sort_by`](#sort-by) option, if any. Otherwise, they are listed in the following order:
 
 - List items in a file, with the [`file`](#file) option: the order of the items in the list.
 - Entries in an entry collection with the [`reorder`](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) option: the manual order of the entries. Entries without an order value, such as the ones just created with the [**Add**](#creating-related-entries) button, come last.
@@ -341,6 +341,52 @@ exclude = true
       exclude: true,
     },
   ],
+}
+```
+
+##### `sort_by`
+
+- **Type**: `object`
+- **Default**: `undefined`
+
+Defines the order of the related entries in the Relation field UI. The object has the following properties:
+
+- `field`: The field name in the **related** collection to sort by. Nested fields can be specified with dot notation, like `meta.date`. The field type is respected: [DateTime](https://sveltiacms.app/en/docs/fields/datetime) fields are sorted by date, [Number](https://sveltiacms.app/en/docs/fields/number) fields numerically, and others alphabetically. You can also use `slug` (entry slug), `commit_author`, `commit_date`, or `_manual` (the manual order of a collection with the [`reorder`](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) option).
+- `direction` _(optional)_: `ascending` or `descending`. Default: `ascending`.
+
+Entries without a value come last in either direction. Entries with the same value are sorted by their labels. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the values are read from the current locale, falling back to the default locale.
+
+The `sort_by` option takes precedence over the manual order of a collection with the `reorder` option. It doesn’t apply to the list items in a file referenced with the [`file`](#file) option, which always follow the order of the list.
+
+Example — list the newest posts first:
+
+```yaml [YAML]
+sort_by:
+  field: date
+  direction: descending
+```
+
+```toml [TOML]
+[sort_by]
+field = "date"
+direction = "descending"
+```
+
+```json [JSON]
+{
+  "sort_by": {
+    "field": "date",
+    "direction": "descending"
+  }
+}
+```
+
+```js [JavaScript]
+{
+  sort_by: {
+    field: 'date',
+    direction: 'descending',
+  },
 }
 ```
 
