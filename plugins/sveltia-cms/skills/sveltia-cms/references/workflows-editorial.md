@@ -240,6 +240,14 @@ Otherwise the publish is refused, saying why. If the branch has moved on, the me
 
 Once the checks pass, the merge is pinned to the commit that was checked, so a push made in the meantime makes the merge fail rather than go along with it.
 
+#### Waiting for Required Checks
+
+The configured branch can require CI to pass before anything is merged into it: [required status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging) on GitHub, or a [successful pipeline](https://docs.gitlab.com/user/project/merge_requests/auto_merge/#require-a-successful-pipeline-for-merge) on GitLab. If they’re still running when an entry is published, which is likely right after it’s saved, the Git service can’t merge the pull request yet. The CMS then sets it to [auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request) instead, pinned to the same commit, and the Git service merges it as soon as the checks pass.
+
+The entry isn’t taken for published until the merge has actually happened: the CMS keeps checking every 10 seconds, for up to an hour. If a check fails, the pull request is closed, someone turns the auto-merge off, or the hour runs out, the publish fails and any auto-merge still on is canceled, so the entry stays unpublished until it’s published again once the problem is fixed.
+
+On GitHub, the repository has to [allow auto-merge](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-auto-merge-for-pull-requests-in-your-repository), and the CMS only waits when the checks are the sole thing blocking the merge, not a required review or a conflict. Otherwise, the publish fails while the checks run, and the entry has to be published again once they’ve passed. On GitLab, auto-merge is always available.
+
 #### Saving and Sending for Review
 
 Saving an entry doesn’t hand it to anyone — it stays a draft until someone moves it on. So when a user saves an entry that’s still in the Draft status, the CMS asks what to do next:
@@ -561,7 +569,7 @@ Preview Workflow is Editorial Workflow with a single stage, Draft, so everything
 - The Editorial Workflow page is called **Drafts**, and lays the unpublished entries out in a single column. If another collection uses Editorial Workflow with more than one stage, the page is a board with a column for each stage again, and an Open Authoring contributor always gets the board.
 - Every pull request counts as a draft, whatever its label says. One labeled In Review or Ready by Editorial Workflow, by [Decap CMS](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) or by hand can be published straight away, and its label is left alone.
 
-Pull requests are labeled `sveltia-cms/draft` and kept as [draft pull requests](https://sveltiacms.app/en/docs/workflows/editorial#statuses), which the Git service won’t merge. Publishing an entry therefore marks its pull request ready first, relabeling it `sveltia-cms/pending_publish`, and then merges it. If the merge fails, the entry stays unpublished with the new label.
+Pull requests are labeled `sveltia-cms/draft` and kept as [draft pull requests](https://sveltiacms.app/en/docs/workflows/editorial#statuses), which the Git service won’t merge. Publishing an entry therefore marks its pull request ready first, relabeling it `sveltia-cms/pending_publish`, and then merges it, [waiting for any required checks](https://sveltiacms.app/en/docs/workflows/editorial#waiting-for-required-checks) to pass. If the merge fails, the entry stays unpublished with the new label.
 
 Switching between Preview Workflow and Editorial Workflow keeps every unpublished entry. Deleting a published entry opens a pull request that removes it, as with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-entries).
 
