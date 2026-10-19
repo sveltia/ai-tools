@@ -137,7 +137,7 @@ Sveltia CMS employs multiple layers of security measures to protect data and ens
 - **Frequent releases**: Regular releases ensure users get the latest security fixes and improvements promptly. Timely dependency updates also reduce the risk of vulnerabilities in third-party packages.
 - **Publishing security**: [Trusted publishing](https://docs.npmjs.com/trusted-publishers) and [2FA](https://docs.npmjs.com/requiring-2fa-for-package-publishing-and-settings-modification) enabled.
 - **Responsible disclosure**: We publish a [security policy](https://github.com/sveltia/sveltia-cms/security/policy) and encourage the responsible disclosure of vulnerabilities. We maintain a public list of [security advisories](https://github.com/sveltia/sveltia-cms/security/advisories) to keep users informed about issues and their resolutions. We give credit to security researchers who report vulnerabilities, although we do not offer bounties.
-- **Swift response**: We prioritize security fixes and aim to address vulnerabilities within 12 hours of discovery, regardless of severity. In fact, we fixed the [first XSS vulnerability](https://github.com/sveltia/sveltia-cms/security/advisories/GHSA-97r8-rf7q-wmjw) reported to us in just two hours, despite it being low severity with no known exploits.
+- **Swift response**: We prioritize security fixes and aim to address vulnerabilities within 8 hours of discovery, regardless of severity. In fact, we fixed the [first XSS vulnerability](https://github.com/sveltia/sveltia-cms/security/advisories/GHSA-97r8-rf7q-wmjw) reported to us in just two hours, despite it being low severity with no known exploits.
 
 ### What You Can Do
 
@@ -663,7 +663,7 @@ See the [Support](https://sveltiacms.app/en/support) page for information on how
 
 #### Where can I report bugs for Sveltia CMS?
 
-See the [Feedback](https://sveltiacms.app/en/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 12 hours, depending on the complexity of the issue.
+See the [Feedback](https://sveltiacms.app/en/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 8 hours, depending on the complexity of the issue.
 
 #### Do you offer paid support for Sveltia CMS?
 

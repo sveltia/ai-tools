@@ -594,34 +594,34 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 653 sites in the showcase, sorted by popularity:
+Framework distribution across 674 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 246 | 37.7% |
-| Vanilla JavaScript | 102 | 15.6% |
-| Eleventy | 82 | 12.6% |
-| Hugo | 60 | 9.2% |
-| Custom Tooling | 42 | 6.4% |
-| Jekyll | 32 | 4.9% |
-| Next.js | 31 | 4.7% |
-| SvelteKit | 14 | 2.1% |
+| Astro | 252 | 37.4% |
+| Vanilla JavaScript | 109 | 16.2% |
+| Eleventy | 84 | 12.5% |
+| Hugo | 62 | 9.2% |
+| Custom Tooling | 45 | 6.7% |
+| Jekyll | 32 | 4.7% |
+| Next.js | 31 | 4.6% |
+| SvelteKit | 15 | 2.2% |
 | React | 10 | 1.5% |
 | React Router | 8 | 1.2% |
 | Nuxt | 4 | 0.6% |
 | VitePress | 4 | 0.6% |
-| MkDocs | 3 | 0.5% |
-| Zola | 3 | 0.5% |
+| MkDocs | 3 | 0.4% |
+| Zola | 3 | 0.4% |
 | Docusaurus | 2 | 0.3% |
 | Vue | 2 | 0.3% |
-| Middleman | 1 | 0.2% |
-| Sphinx | 1 | 0.2% |
-| Gatsby | 1 | 0.2% |
-| SolidStart | 1 | 0.2% |
-| TanStack Start | 1 | 0.2% |
-| Pelican | 1 | 0.2% |
-| Blume | 1 | 0.2% |
-| Antora | 1 | 0.2% |
+| Middleman | 1 | 0.1% |
+| Sphinx | 1 | 0.1% |
+| Gatsby | 1 | 0.1% |
+| SolidStart | 1 | 0.1% |
+| TanStack Start | 1 | 0.1% |
+| Pelican | 1 | 0.1% |
+| Blume | 1 | 0.1% |
+| Antora | 1 | 0.1% |
 
 Source: https://sveltiacms.app/en/docs/frameworks
 
