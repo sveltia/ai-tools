@@ -689,7 +689,7 @@ Must be set to `keyvalue`.
 - **Type**: `object`
 - **Default**: `{}`
 
-The default value for the field when creating a new entry.
+The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration.
 
 ##### `key_label`
 

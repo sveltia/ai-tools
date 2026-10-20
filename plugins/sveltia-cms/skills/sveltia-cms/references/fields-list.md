@@ -96,7 +96,7 @@ Must be set to `list` to use the List field type.
 - **Type**: `array`
 - **Default**: `[]`
 
-The default value for the field when creating a new entry. The shape of the array depends on how the list is configured:
+The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. The shape of the array depends on how the list is configured:
 
 - For a simple list without `field`, `fields` or `types`, an array of strings.
 - For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/en/docs/fields/object) or [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield, and so on.

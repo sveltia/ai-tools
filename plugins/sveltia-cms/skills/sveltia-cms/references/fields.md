@@ -507,7 +507,7 @@ Must be set to `string`, but is optional since it is the default field type.
 - Type: `string`
 - **Default**: `""`
 
-The default value for the field when creating a new entry.
+The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration.
 
 ##### `type`
 
@@ -910,7 +910,7 @@ Must be set to `text`.
 - **Type**: `string`
 - **Default**: `""`
 
-The default value for the field when creating a new entry.
+The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration.
 
 ##### `minlength`
 
@@ -1465,7 +1465,7 @@ Must be set to `boolean`.
 - **Type**: `boolean`
 - **Default**: `false`
 
-The default value for the field when creating a new entry.
+The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration.
 
 ##### `before_input`
 
@@ -2275,7 +2275,7 @@ Must be set to `hidden`.
 - **Type**: `any`
 - **Default**: `""`
 
-The default value for the hidden field when creating a new entry. Any data type is accepted (string, number, boolean, object, array, etc.) as long as it can be serialized to the collection’s data format (YAML, JSON, TOML, etc).
+The default value for the hidden field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. Any data type is accepted (string, number, boolean, object, array, etc.) as long as it can be serialized to the collection’s data format (YAML, JSON, TOML, etc).
 
 TOML does not support `null` values, so avoid using `null` as the default value when the collection’s data format is set to TOML.
 
