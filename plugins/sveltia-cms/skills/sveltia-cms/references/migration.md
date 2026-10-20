@@ -49,6 +49,7 @@ See our [Showcase](https://sveltiacms.app/en/showcase) for examples of sites tha
 
 - [Examples of sites migrated from TinaCMS](https://sveltiacms.app/en/showcase?migrated-from=tinacms)
 - [Examples of sites migrated from Keystatic](https://sveltiacms.app/en/showcase?migrated-from=keystatic)
+- [Examples of sites migrated from CloudCannon](https://sveltiacms.app/en/showcase?migrated-from=cloudcannon)
 
 #### Traditional CMSs
 

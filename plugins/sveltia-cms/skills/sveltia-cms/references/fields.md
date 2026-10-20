@@ -33,11 +33,11 @@ Sveltia CMS includes the following field types out of the box:
 - [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue): A field for storing key-value pairs.
 - [List](https://sveltiacms.app/en/docs/fields/list): A list of items, which can be of any field type.
 - [Map](https://sveltiacms.app/en/docs/fields/map): A geo-location picker.
-- [Markdown](https://sveltiacms.app/en/docs/fields/markdown): An alias of [RichText](https://sveltiacms.app/en/docs/fields/richtext).
+- [Markdown](https://sveltiacms.app/en/docs/fields/markdown): An alias of [RichText](https://sveltiacms.app/en/docs/fields/richtext) with no HTML support.
 - [Number](https://sveltiacms.app/en/docs/fields/number): A numeric input field.
 - [Object](https://sveltiacms.app/en/docs/fields/object): A field for storing nested objects.
 - [Relation](https://sveltiacms.app/en/docs/fields/relation): A field for creating relationships between entries in different collections.
-- [RichText](https://sveltiacms.app/en/docs/fields/richtext): A rich text editor with Markdown support.
+- [RichText](https://sveltiacms.app/en/docs/fields/richtext): A rich text editor with Markdown and HTML support.
 - [Select](https://sveltiacms.app/en/docs/fields/select): A dropdown or multi-select field.
 - [String](https://sveltiacms.app/en/docs/fields/string): A single-line text input.
 - [Text](https://sveltiacms.app/en/docs/fields/text): A multi-line text input.
