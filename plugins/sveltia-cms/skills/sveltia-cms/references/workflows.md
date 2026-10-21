@@ -137,7 +137,7 @@ So your own work in progress is never mixed into its commits, the CMS saves your
 - Another Git process is using the repository, which is indicated by a `.git/index.lock` file. If no Git process is running, delete the file.
 - No branch is checked out (a detached `HEAD`).
 - Your name and email address aren’t set in the repository, as described above.
-- A saved file is tracked with [Git LFS](https://git-lfs.com/).
+- A saved file is tracked with [Git LFS](https://git-lfs.com/). As with Git, the patterns in `.gitattributes` are matched case-insensitively when `core.ignorecase` is `true`, as it is in a repository cloned or created on macOS or Windows, so `IMG_1234.JPG` is caught by `*.jpg`.
 
 While the CMS commits, it creates `.git/index.lock` like Git does, so Git commands that change the repository refuse to run until it’s done.
 
@@ -158,7 +158,7 @@ Committing is done in the browser rather than with Git itself, by the CMS with t
 - An indicator is displayed in the Account menu when using the local workflow.
 - The `localhost` URL:
   - The port number varies by framework. Check the terminal output from the previous step. For example, if you use Vite-based frameworks like SvelteKit or VitePress, the default port is `5173`. Astro uses `4321`, Eleventy uses `8080`, Hugo uses `1313`, and Jekyll uses `4000`.
-  - The `127.0.0.1` addresses can also be used instead of `localhost`.
+  - The `127.0.0.1` and `[::1]` addresses can also be used instead of `localhost`.
   - If your CMS instance is not located under `/admin/`, use the appropriate path.
   - It’s recommended to use `index.html` in the URL to make sure the framework treats it as a static file. For example, use `http://localhost:5173/admin/index.html` instead of `http://localhost:5173/admin/`.
 - Git clients:

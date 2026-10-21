@@ -252,6 +252,8 @@ If entries already share a value when the option is added, each of them has to b
 
 A boolean indicating whether the field is read-only. It’s useful for fields with a default value that should not be modified by users.
 
+On a [List](https://sveltiacms.app/en/docs/fields/list) or [Object](https://sveltiacms.app/en/docs/fields/object) field, the subfields are read-only as well, and no subfield can opt out. On a [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, the editor components in the value can’t be changed or removed either, and no image can be dropped or pasted into it.
+
 ##### `preview`
 
 - **Type**: `boolean`

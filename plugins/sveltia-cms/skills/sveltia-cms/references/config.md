@@ -945,6 +945,8 @@ Here are some key aspects of data output in Sveltia CMS:
   - Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
   - Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
   - Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file, as long as the value isn’t edited.
+  - Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`, as long as the value isn’t edited, so tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
+  - Native TOML dates and times, such as `2024-01-01T10:00:00Z` or `12:30:00`, are written back as they appear in the file, as long as the value isn’t edited. This applies to any field, not just DateTime fields, and to data not covered by the configuration.
 - **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array, or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
   - `required: false` makes data input optional, but doesn't make data output optional.
   - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
@@ -955,6 +957,7 @@ Here are some key aspects of data output in Sveltia CMS:
 - **Indentation**: Indentation is 2 spaces for YAML and JSON by default (configurable).
 - **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted, or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted, so that tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers values like `yes`, `no`, `on`, `off`, `y` and `n` in any of their usual capitalizations, numbers with underscores or commas like `1_000`, and sexagesimal numbers like `1:20`, which a YAML 1.1 parser reads as `80`. Dates are not quoted, so they are still read as dates.
 - **JSON and YAML Formatting Options**: Fully configurable in the [output options](#controlling-data-output).
+- **Empty List Items in TOML**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
 - **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format, unless the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
 
 #### Markdown Syntax
@@ -976,12 +979,15 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 The rich text editor doesn’t support some Markdown syntax. Content using it can be edited, but it’s changed as follows once the content is saved in the rich text mode. To keep such content as is, edit it in the `raw` mode instead:
 
 - **Table Column Alignment**: The alignment in the delimiter row of a table, like `:--` or `:-:`, is dropped, so all columns use the default alignment.
-- **Nested Block Quotes**: A block quote within another one, like `> > text`, as well as a list within a block quote, is turned into text, with the `>` or list marker escaped.
-- **Ordered Lists with Parentheses**: An ordered list using a closing parenthesis, like `1)`, is turned into text, with the parenthesis escaped. Use a period, like `1.`, instead.
 - **Code Blocks in List Items**: A fenced code block within a list item is moved out of the list.
 - **Single-Tilde Strikethrough**: Strikethrough with single tildes, like `~text~`, is turned into text, with the tildes escaped. Use double tildes, like `~~text~~`, instead.
 - **Adjacent Lists**: Consecutive lists that only differ in their markers, like a `-` list followed by a `*` list, are merged into one list.
-- **Bold Links**: Bold text around a link, like `**[text](url)**`, is moved inside the link, like `[**text**](url)`.
+- **Formatting Across Links**: Bold, italic or strikethrough text that spans a link and other text, like `**[text](url) more**`, is split at the link, like `**[text](url)** **more**`. Formatting around a whole link, like `**[text](url)**`, is kept as it is.
+
+Some other syntax the editor can’t edit as such is shown as text and saved as written, so it isn’t changed:
+
+- **Blocks Within Block Quotes and List Items**: A block quote within another one, like `> > text`, a list, heading or code block within a block quote, and a block quote within a list item.
+- **Ordered Lists with Parentheses**: An ordered list using a closing parenthesis, like `1)`. Use a period, like `1.`, to edit it as a list.
 
 ### Controlling Data Output
 

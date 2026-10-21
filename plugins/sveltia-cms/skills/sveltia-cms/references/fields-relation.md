@@ -895,7 +895,7 @@ The value can be computed using a template string that references other fields. 
   - A Number field is referenced by its stored value, e.g. `1234.5`, rather than its localized display value, e.g. `1,234.5`. String transformations are also applied to the stored value of the referenced field, so a `ternary` transformation, for example, works on a Boolean field’s `true` or `false`.
   - In a Compute field defined in a [rich text editor component](https://sveltiacms.app/en/docs/api/editor-components), a reference like `{{fields.title}}` refers to the component’s own field of that name. If the component has no such field, it refers to the entry’s field instead.
   - In a Compute field within a [List field](https://sveltiacms.app/en/docs/fields/list), a `*` in a reference stands for the current item. For example, `{{fields.lines.*.name}}` in a field of the `lines` list refers to the `name` field of the same item. This also works for nested lists, like `{{fields.orders.*.lines.*.name}}`. A `*` for a list the Compute field isn’t in resolves to nothing, and is reported as a configuration warning.
-- The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list).
+- The special variable `{{index}}` to reference the current index when used within a list. It only works inside a [List field](https://sveltiacms.app/en/docs/fields/list), including in an [Object field](https://sveltiacms.app/en/docs/fields/object) of a list item. In a nested list, it’s the index of the innermost item.
 - The special variables `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}` to generate a random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags). The UUID is generated once when the entry is created and kept afterwards, even as the other parts of the value change, so it can serve as a stable identifier. A duplicated entry gets a new UUID. See the [example below](#generating-a-unique-identifier).
 
 **Warning**
@@ -923,10 +923,11 @@ If the [`value_type`](#value-type) option is set to anything other than `string`
 
 - Numbers, like `100` or `0.5`.
 - References to other fields using the syntax `{{fields.name}}`, as well as the `{{index}}` variable in a [List field](https://sveltiacms.app/en/docs/fields/list). [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied, so `{{fields.discount | default('0')}}` treats an empty field as zero. The UUID variables can’t be used.
+  - A [Select](https://sveltiacms.app/en/docs/fields/select) or [Relation](https://sveltiacms.app/en/docs/fields/relation) field is referenced by its stored value, e.g. `15`, rather than the label of its option, so an option value can be used in a calculation. With the `multiple` option, `{{fields.extras.*}}` covers each selected value, e.g. `sum({{fields.extras.*}})`.
 - The `+` (addition), `-` (subtraction or negation), `*` (multiplication), `/` (division) and `%` (remainder) operators. Multiplication, division and remainder are evaluated before addition and subtraction.
 - Parentheses to group operations, like `({{fields.a}} + {{fields.b}}) / 2`.
 - The following functions:
-  - `round(x)` rounds `x` to the nearest integer, and `round(x, digits)` to the given number of decimal places, e.g. `round({{fields.price}} * 1.13, 2)`.
+  - `round(x)` rounds `x` to the nearest integer, and `round(x, digits)` to the given number of decimal places, e.g. `round({{fields.price}} * 1.13, 2)`. Halves are rounded away from zero, so `round(2.5)` is `3` and `round(-2.5)` is `-3`, and the result has no floating-point error: `round(1.005, 2)` is `1.01`.
   - `floor(x)` and `ceil(x)` round `x` down or up to an integer.
   - `abs(x)` returns the absolute value of `x`.
 - The following aggregate functions, which take any number of values, including every item of a list:

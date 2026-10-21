@@ -303,7 +303,9 @@ When [working with a local repository](https://sveltiacms.app/en/docs/workflows/
 
 ##### Read-Only Folders
 
-The files in a folder named `admin` or `cms`, at any depth, are listed but read-only, because the CMS itself is usually served from such a folder. With a media folder at the root of the public folder, such as `static` or `public`, the CMS’s own admin page and configuration file — `static/admin/index.html` and `static/admin/config.yml`, for example — would otherwise appear as assets, and replacing them would hand the next user’s sign-in to whoever wrote the new page.
+The files in a folder the CMS itself may be served from are listed but read-only. That’s a folder named `admin` or `cms`, or named like the folder of the admin page you’re using, at the top of the repository or right below the folder the site is served from: `static` or `public`, or the folder the global `media_folder` and `public_folder` options point to. With a media folder at the root of the public folder, the CMS’s own admin page and configuration file — `static/admin/index.html` and `static/admin/config.yml`, for example — would otherwise appear as assets, and replacing them would hand the next user’s sign-in to whoever wrote the new page.
+
+A folder with the same name deeper down, like a page bundle at `content/posts/cms`, is a regular folder. Only an `index.html` or `config.yml` file in it (also `.yaml`, `.toml` or `.json`) is protected, as it could still be an admin page.
 
 - The files can’t be replaced, edited, renamed, moved or deleted.
 - Nothing can be uploaded to such a folder, and no folder can be created in it.
@@ -313,7 +315,7 @@ The same applies to the picker of the [File](https://sveltiacms.app/en/docs/fiel
 
 ##### Folders on External Locations
 
-[Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and the S3-compatible providers, as well as [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage), store files at paths, so they are browsed folder by folder the same way, with the same breadcrumb, Info pane, **New Folder** button and folder menu. As object storage has no folders of its own, the CMS keeps an empty folder with a zero-byte placeholder object named after the folder with a trailing slash, which is what the consoles of these services do, and it reads the other folders off the file paths. Renaming a folder copies each file to its new path and deletes the original, one file at a time, since the services can’t move a file, and deleting a folder deletes each file in it. Keep in mind that the entries link to the files on these services by URL, so a rename changes those URLs and the entries using them aren’t updated. The search box in the location’s toolbar looks through every folder, listing the matches with their paths.
+[Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and the S3-compatible providers, as well as [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage), store files at paths, so they are browsed folder by folder the same way, with the same breadcrumb, Info pane, **New Folder** button and folder menu. As object storage has no folders of its own, the CMS keeps an empty folder with a zero-byte placeholder object named after the folder with a trailing slash, which is what the consoles of these services do, and it reads the other folders off the file paths. Renaming a folder copies each file to its new path and deletes the original, one file at a time, since the services can’t move a file, and deleting a folder deletes each file in it. Keep in mind that the entries link to the files on these services by URL, so a rename changes those URLs and the entries using them aren’t updated. The search box in the location’s toolbar looks through every folder, listing the matches with their paths. An uploaded file whose name is already taken in the folder, or by another file in the same upload, such as `photo.jpg` and `photo.png` both converted to WebP, is given a number suffix like `photo-1.webp` as in the repository, instead of overwriting the file on the service.
 
 [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) has no folders, and [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) handles them in its own widget, so neither is affected.
 
@@ -399,7 +401,7 @@ More panels will be added in the future.
 
 #### Auto-Saving Drafts
 
-When creating or editing content, Sveltia CMS automatically saves draft backups in the browser’s local storage. This ensures that work is not lost in case of accidental navigation away from the page or browser crashes. Drafts are saved periodically as changes are made and can be restored when the user returns to the editing interface.
+When creating or editing content, Sveltia CMS automatically saves draft backups in the browser’s local storage. This ensures that work is not lost in case of accidental navigation away from the page or browser crashes. Drafts are saved periodically as changes are made and can be restored when the user returns to the editing interface. A backup also keeps the folder chosen with the [path editor](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder), and a new index file has a backup of its own, apart from that of a new entry. If someone else has saved the entry since the backup was made, restoring it doesn’t silently undo their change: the editor tells you about it, and saving asks before overwriting it, as if the draft had been open all along.
 
 Auto-saving draft can be disabled in User Preferences.
 
@@ -407,7 +409,7 @@ Auto-saving draft can be disabled in User Preferences.
 
 The Content Editor offers three ways to start over, side by side in the 3-dot menus:
 
-- **Revert Changes** discards the unsaved changes, bringing back the last saved values. This is useful for undoing changes made during the current editing session.
+- **Revert Changes** discards the unsaved changes, bringing back the last saved values. This is useful for undoing changes made during the current editing session. Revert All Changes also brings back the entry’s folder, slugs and enabled locales, so a locale turned off isn’t deleted on the next save.
 - **Restore Default** puts back the values a new entry would have, taking each field’s `default` option into account.
 - **Clear** empties the values, ignoring the defaults, so that fields can be filled in from scratch. A List field is left without items and a KeyValue field without pairs. A required field then has to be filled in again before the entry can be saved.
 
@@ -451,7 +453,7 @@ The slug of a saved entry is shown without the pencil button where it can’t me
 
 #### Deleting an Entry
 
-The Delete Entry option in the 3-dot menu removes a saved entry along with the files in its [entry-relative media folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), if it has one. Every entry that points at it through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is updated in the same commit, so no reference is left dangling: the confirmation dialog says how many entries will be updated, and refuses the deletion if clearing a reference would leave a required field empty or a multi-select field short of its minimum, listing the entries and fields in the way. See [Cascading Deletions](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions). Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the deletion is staged in a pull request instead of being committed right away.
+The Delete Entry option in the 3-dot menu removes a saved entry along with the files in its [entry-relative media folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), if it has one. When entries are files sharing a folder, a file another entry also uses, such as an image a duplicated entry still points to, is kept. Every entry that points at it through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is updated in the same commit, so no reference is left dangling: the confirmation dialog says how many entries will be updated, and refuses the deletion if clearing a reference would leave a required field empty or a multi-select field short of its minimum, listing the entries and fields in the way. See [Cascading Deletions](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions). Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the deletion is staged in a pull request instead of being committed right away.
 
 The option isn’t offered in [file and singleton collections](https://sveltiacms.app/en/docs/collections/files), or in collections where [entry deletion is disabled](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion). To delete several entries at once, [select them in the entry list](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions).
 

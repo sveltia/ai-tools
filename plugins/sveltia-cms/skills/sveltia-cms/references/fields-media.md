@@ -610,7 +610,7 @@ If the `format`, `date_format` or `time_format` option is specified, the string 
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string.
 
-If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value, or date-time value, depending on the configuration, unless a custom `format` is specified. TOML output always carries millisecond precision, so the examples above are written as `2025-08-15T14:30:00.000` and `14:30:00.000`. Note also that TOML has no offset-time type, so a UTC time-only value loses its `Z` suffix and is written as a local time (e.g., `14:30:00.000`). This also applies to TOML front matter, and a value that isn’t a valid date or time, such as `TBD` in an existing file, is kept as a quoted string.
+If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value, or date-time value, depending on the configuration, unless a custom `format` is specified. A value set or changed in the editor carries millisecond precision, so the examples above are written as `2025-08-15T14:30:00.000` and `14:30:00.000`. A value read from an existing file that isn’t edited is written back as it appears there, e.g. `2025-08-15T14:30:00Z`, with any finer precision kept. Note also that TOML has no offset-time type, so a UTC time-only value loses its `Z` suffix and is written as a local time (e.g., `14:30:00.000`). This also applies to TOML front matter, and a value that isn’t a valid date or time, such as `TBD` in an existing file, is kept as a quoted string.
 
 ### Data Validation
 

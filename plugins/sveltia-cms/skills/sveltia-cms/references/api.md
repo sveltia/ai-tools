@@ -573,7 +573,8 @@ CMS.registerCustomFormat(name, extension, { fromFile, toFile });
 - `name` (string): A unique name for the custom format. This name will be used to reference the format in collection configurations. A custom format with the same name as a built-in one, such as `json`, takes precedence over the built-in format, and registering a format with the same name again replaces the previous one.
 - `extension` (string): The file extension associated with this format, without a leading dot (e.g., `json5`, `yaml`, `toml`).
 - `fromFile` (function): A parser function that takes a string (the content of the file, trimmed and with line breaks normalized to `\n`) and returns a JavaScript object.
-- `toFile` (function): A formatter function that takes a JavaScript object and returns a string (the content to be saved to the file). The output is trimmed and a trailing line break is added.
+- `toFile` (function): A formatter function that takes a JavaScript object and returns a string (the content to be saved to the file). The output is trimmed and a trailing line break is added. The function also receives a context object as the second argument, which has the following property:
+  - `serialize` (function): An async function that takes a JavaScript object and returns the content the built-in formatter would save, with the same options, such as the front matter delimiters, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output). The given object is left unchanged. It’s only available when the format name is a built-in one, such as `yaml` or `yaml-frontmatter`; otherwise it throws an error. See [Post-Processing Built-In Output](#post-processing-built-in-output) for an example.
 
 You can omit either `fromFile` or `toFile` if you only need to customize one direction (parsing or formatting). If you omit `fromFile`, the CMS will use the built-in parser for the format name, if any, such as `yaml` or `json`. Similarly, if you omit `toFile`, the CMS will use the built-in formatter. If the format name isn’t a built-in one, provide both functions: without `fromFile`, files in the format can’t be loaded, and without `toFile`, saving an entry fails with an error, leaving the file untouched. The CMS logs a warning to the browser console when such a function is missing. You must provide at least one of the two functions; otherwise an error is thrown.
 
@@ -710,14 +711,44 @@ This example uses a simple regex to extract the JSON object from the `export def
 The parser and formatter functions can also be asynchronous. For example, you might want to format JSON data using a library like Prettier, which returns a promise:
 
 ```js
-import Prettier from 'prettier';
+import * as Prettier from 'prettier/standalone';
+import * as babelPlugin from 'prettier/plugins/babel';
+import * as estreePlugin from 'prettier/plugins/estree';
 
 CMS.registerCustomFormat('json', 'json', {
-  toFile: async (data) => Prettier.format(data),
+  toFile: async (data) =>
+    Prettier.format(JSON.stringify(data), {
+      parser: 'json',
+      plugins: [babelPlugin, estreePlugin],
+    }),
 });
 ```
 
 If you omit `fromFile`, the CMS will fall back to the built-in parser for the format name. In this case, the standard `JSON.parse` method will be used to parse JSON files.
+
+#### Post-Processing Built-In Output
+
+Instead of formatting the data from scratch, a formatter can call the `serialize` function it receives to get the content the built-in formatter would save, then process it further. This allows you to keep the CMS’s handling of front matter, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output) while applying your own code formatter, for example to match the formatting rules of your repository:
+
+```js
+import * as Prettier from 'prettier/standalone';
+import * as markdownPlugin from 'prettier/plugins/markdown';
+import * as yamlPlugin from 'prettier/plugins/yaml';
+
+CMS.registerCustomFormat('frontmatter', 'md', {
+  toFile: async (data, { serialize }) =>
+    Prettier.format(await serialize(data), {
+      parser: 'markdown',
+      plugins: [markdownPlugin, yamlPlugin],
+      proseWrap: 'always',
+      printWidth: 100,
+    }),
+});
+```
+
+The format name must match the `format` option of your collection, which is `frontmatter` in this example. In a collection with the `frontmatter` format, which reads YAML, TOML and JSON front matter alike, `serialize` writes an existing file in the front matter format it was read in. `fromFile` is omitted, so the built-in parser is used.
+
+If `serialize` or your code formatter throws an error, the entry isn’t saved and the error is shown to the user, leaving the file untouched.
 
 #### Custom Markdown Parser/Formatter
 

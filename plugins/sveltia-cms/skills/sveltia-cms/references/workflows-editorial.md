@@ -228,10 +228,10 @@ Only a pull request that goes from a branch of the repository to the configured 
 The board and the editor show an entry, but publishing merges the whole pull request, with everything on its branch. So right before merging, the CMS reads the pull request again and publishes the entry only if:
 
 - the pull request still goes from a branch of the repository to the configured branch;
-- its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw;
+- its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw. That’s the commit of the version the editor shows, or of the card the publish was confirmed for, even when the board has [picked up](#editorial-workflow-page) a newer commit since: one pushed by someone else in the meantime isn’t published unseen;
 - every file it changes is one the CMS accounts for: the entry’s own files, and those of its published version that a rename removes; assets added or replaced along with it, which are only removed when the entry is moved or deleted; the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites; and the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it. A file the merge would leave exactly as the configured branch already has it passes as well;
 - every file it leaves behind is a regular file, rather than a symbolic link or a Git submodule;
-- no file in an `admin` or `cms` folder is among its assets, as the CMS itself is usually served from there; see [Read-Only Folders](https://sveltiacms.app/en/docs/ui/asset-library#read-only-folders);
+- none of its assets is in a folder the CMS itself may be served from, or is an admin page or configuration file in a folder named like one; see [Read-Only Folders](https://sveltiacms.app/en/docs/ui/asset-library#read-only-folders);
 - the list of files it changes is complete, rather than cut short by the Git service on a very large pull request.
 
 Gitea and Forgejo work out the files a pull request changes in the background after each push, so publishing right after a save can take a few seconds while the CMS waits for the list to catch up with the latest commit. If the list still lags behind the branch when the board loads — on a busy instance with a backlog of work, say — the entry is shown as of the commit the list describes, so the board never mixes the files of one commit with the content of another. Publishing or saving it is then refused until the instance has caught up and the page is reloaded.
@@ -388,6 +388,14 @@ See the [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pul
 ### Editorial Workflow Page
 
 A board with a column for each status is available from the top navigation. Drag a card from one column to another to change an entry’s status, or use the status button in the entry editor. Each card also offers the actions available at that stage, and clicking the card opens the entry in the editor.
+
+The board and the [entry list](#entry-list) keep up with pull requests changed outside the CMS — opened by a colleague or a bot, relabeled, pushed to, merged or closed on GitHub, GitLab, Gitea or Forgejo — without a page reload:
+
+- **When the configured branch moves**, which is what a merge does, the pull requests are read again on the next check for remote changes, made every minute while the tab is shown. A merged entry then leaves the board and is listed as published, and a pull request closed without merging is dropped.
+- **Every five minutes** otherwise, and whenever the user comes back to the tab after 30 seconds or more, so a pull request opened or relabeled elsewhere shows up too.
+- **On request**, with the Refresh button in the board’s toolbar.
+
+Listing the pull requests takes a couple of requests rather than the single one the branch check takes, which is why it’s done less often. Changes made in the CMS in the meantime, such as a save or a status change still on its way, aren’t undone by a refresh. An entry open in the editor keeps the version it was opened with; see [Checks Before Publishing](#checks-before-publishing) for what happens when it’s published after a newer commit has been picked up.
 
 ### Entry List
 
@@ -775,6 +783,54 @@ A private repository always needs the full `repo` scope, so set `auth_scope: rep
 
 Because the CMS can’t tell whether your repository is public until someone signs in, it can’t choose for you. It logs a configuration warning when `open_authoring` is enabled and `auth_scope` is left unset, so the broader scope is never requested by accident — setting either value silences it.
 
+##### Keeping Forks in Sync with Workflow Changes
+
+Without GitHub’s `workflow` scope, a contributor’s sign-in can’t bring changes to your GitHub Actions workflow files into their fork. Once you change a workflow, the CMS can no longer [bring the fork up to date](#contributors-work-in-a-fork) on sign-in, and a fork that falls behind can lead to merge conflicts in a contributor’s pull requests. If your workflows change often, you can add the scope by giving `auth_scope` as a list, which must include `repo` or `public_repo`:
+
+```yaml [YAML]
+backend:
+  name: github
+  repo: user/repo
+  open_authoring: true
+  auth_scope: [public_repo, workflow]
+```
+
+```toml [TOML]
+[backend]
+name = "github"
+repo = "user/repo"
+open_authoring = true
+auth_scope = ["public_repo", "workflow"]
+```
+
+```json [JSON]
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "open_authoring": true,
+    "auth_scope": ["public_repo", "workflow"]
+  }
+}
+```
+
+```js [JavaScript]
+{
+  backend: {
+    name: 'github',
+    repo: 'user/repo',
+    open_authoring: true,
+    auth_scope: ['public_repo', 'workflow'],
+  },
+}
+```
+
+**Consider the trade-off**
+
+The `workflow` scope lets the token create and change GitHub Actions workflows in **every repository the contributor can push to**, not only their fork, and workflows can read a repository’s secrets. GitHub shows this on the sign-in page, which may put some contributors off. Leave it out unless keeping forks in sync matters to you: the CMS still saves a contributor’s changes without it.
+
+Netlify’s OAuth, which the CMS uses when `base_url` isn’t set, passes the scope on to GitHub as is, so the option is all you need there. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) only requests the scope if its `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is set to `true`, and leaves it out of the request otherwise. A contributor who signed in before you added the scope keeps their old token until they sign out and sign in again.
+
 **Your OAuth client has to honor the option**
 
 The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honors it, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
@@ -805,7 +861,7 @@ The first time a contributor signs in, Sveltia CMS asks for permission to create
 
 A contributor’s fork can fall behind, or gain commits of its own. What that means for their pull requests depends on the backend:
 
-- **GitHub and GitLab** create the workflow branch at the head of your configured repository rather than at the fork’s copy of it, so a fork that has drifted passes nothing on: the pull request only ever contains the entry they edited. On GitHub, Sveltia CMS also tries to fast-forward the fork’s copy of your branch on sign-in, and a contributor can [sync it](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/syncing-a-fork) themselves if that fails. There’s one exception on GitHub: a sign-in without the [`workflow` scope](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes) can’t bring changes to your GitHub Actions workflow files into the fork, so GitHub refuses both the sync and a branch at your head once you’ve changed a workflow since the fork was last updated. The workflow branch then starts from the fork’s own copy of your branch instead. A fork that’s only behind still adds nothing to the pull request, but one with commits of its own passes them on, and an edit to an entry that has changed in your repository since the fork was last updated can show up as a merge conflict. Syncing the fork on GitHub, where the contributor’s own sign-in can update workflow files, avoids both. On GitLab, the CMS leaves the fork as it is; a contributor can bring theirs up to date with **Update fork** on the fork’s overview page if they’d like it tidy.
+- **GitHub and GitLab** create the workflow branch at the head of your configured repository rather than at the fork’s copy of it, so a fork that has drifted passes nothing on: the pull request only ever contains the entry they edited. On GitHub, Sveltia CMS also tries to fast-forward the fork’s copy of your branch on sign-in, and a contributor can [sync it](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/syncing-a-fork) themselves if that fails. There’s one exception on GitHub: a sign-in without the [`workflow` scope](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes) can’t bring changes to your GitHub Actions workflow files into the fork, so GitHub refuses both the sync and a branch at your head once you’ve changed a workflow since the fork was last updated. The workflow branch then starts instead from the last commit your branch shares with the fork’s copy of it — or with the fork’s default branch if it has no copy, such as for a branch you created after the fork was made. The pull request still only contains the entry, but an edit to an entry that has changed in your repository since that commit can show up as a merge conflict. Syncing the fork on GitHub, where the contributor’s own sign-in can update workflow files, avoids that, and so does [adding the `workflow` scope](#keeping-forks-in-sync-with-workflow-changes) to the CMS sign-in. On GitLab, the CMS leaves the fork as it is; a contributor can bring theirs up to date with **Update fork** on the fork’s overview page if they’d like it tidy.
 - **Gitea and Forgejo** can’t create a branch in a fork from a commit that isn’t in it, so the workflow branch starts from the fork’s own copy of your branch. Keeping that copy current matters as a result, and the CMS brings it up to date on sign-in — using [`merge-upstream`](https://docs.gitea.com/api/next/#tag/repository/operation/repoMergeUpstream) on Gitea and [`sync_fork`](https://codeberg.org/api/swagger#/repository/repoSyncForkBranch) on Forgejo, which are each service’s own API for it. Gitea merges your branch in when it can’t fast-forward; Forgejo only fast-forwards and declines once the fork has commits of its own. When the sync is declined the branch starts from the fork as it is, so the pull request carries whatever the fork was already ahead by. Merging your branch into the fork clears that.
 
 From then on, a banner at the top of the CMS names the fork their work is saved to, with a link to it. It’s a one-off notice — once dismissed, it stays dismissed.
