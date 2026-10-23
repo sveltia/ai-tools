@@ -463,6 +463,10 @@ The CDN builds are self-contained scripts that work on any site. To keep them sm
 
 The NPM package includes all of these files instead, so the CMS contacts no CDN. Your build tool processes them along with the rest of your site and loads each one only when it’s needed. This requires a build tool that supports JavaScript modules, workers and assets referenced with `new URL()`, such as [Vite](https://vite.dev/) and [webpack](https://webpack.js.org/) 5. Some of those files, including libraries like [Leaflet](https://leafletjs.com/) for the Map field and the syntax highlighting definitions, come with packages that your package manager installs as dependencies of Sveltia CMS. If your site uses one of them too, both can share a single copy.
 
+**Advanced Usage of the NPM Package**
+
+The NPM package is aimed at advanced users who are familiar with build tools and JavaScript modules. We do not provide support for using it. If you are not comfortable with build tools, we recommend using the CDN builds instead.
+
 **Breaking Change in v0.221.0**
 
 Earlier versions of the NPM package pointed to the CDN module, `dist/sveltia-cms.mjs`, so `import CMS from '@sveltia/cms'` gave you the same self-contained file as the CDN. It now points to the NPM build described above, which needs a build tool. If you load the package without one, for example through an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), use the CDN module URL instead. Also note that the NPM build no longer shows update notifications, and doesn’t generate PDF thumbnails.
@@ -594,26 +598,27 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 682 sites in the showcase, sorted by popularity:
+Framework distribution across 695 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 254 | 37.2% |
-| Vanilla JavaScript | 110 | 16.1% |
-| Eleventy | 85 | 12.5% |
-| Hugo | 62 | 9.1% |
-| Custom Tooling | 46 | 6.7% |
-| Jekyll | 34 | 5.0% |
-| Next.js | 32 | 4.7% |
-| SvelteKit | 15 | 2.2% |
-| React | 10 | 1.5% |
-| React Router | 8 | 1.2% |
+| Astro | 259 | 37.3% |
+| Vanilla JavaScript | 110 | 15.8% |
+| Eleventy | 85 | 12.2% |
+| Hugo | 63 | 9.1% |
+| Custom Tooling | 47 | 6.8% |
+| Jekyll | 34 | 4.9% |
+| Next.js | 33 | 4.7% |
+| SvelteKit | 17 | 2.4% |
+| React | 10 | 1.4% |
+| React Router | 9 | 1.3% |
 | Nuxt | 4 | 0.6% |
 | VitePress | 4 | 0.6% |
 | MkDocs | 3 | 0.4% |
 | Zola | 3 | 0.4% |
 | Docusaurus | 2 | 0.3% |
 | Vue | 2 | 0.3% |
+| Unknown | 2 | 0.3% |
 | Middleman | 1 | 0.1% |
 | Sphinx | 1 | 0.1% |
 | Gatsby | 1 | 0.1% |
