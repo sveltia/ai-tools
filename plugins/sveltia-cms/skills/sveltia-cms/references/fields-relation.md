@@ -42,13 +42,16 @@ The new entry is not saved on its own. It’s kept with the draft and committed 
 - Files attached to the new entry, such as an author’s avatar, are uploaded in the same commit.
 - The pending entries are part of the [auto-saved draft](https://sveltiacms.app/en/docs/ui/content-editor#auto-saving-drafts), so they survive a page reload along with the rest of the changes.
 
+With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the new entry goes into the **pull request** of the entry being edited, so it’s reviewed and published along with that entry, in the same merge. An article and the section created for it can’t go live one without the other. The new entry doesn’t get a card of its own on the Editorial Workflow page; the card of the entry it was created from lists it instead, e.g. “Also adds Section: Guides”. See [Entries Added from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-from-a-relation-field) for details.
+
 The button is not offered in the following cases:
 
 - The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), with the [`file`](#file) option. The button creates a new entry, but such a field selects an item from a list within an existing file. Adding an item would mean editing that file from another entry, which could conflict with changes made to the file elsewhere, so the item is added by editing the file itself instead.
 - The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) option.
-- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in the draft. The button is then shown disabled.
+- The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in the draft and, with the Editorial Workflow, the new entries waiting in pull requests. The button is then shown disabled.
 - The Relation field is read-only.
-- The entry being edited is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), or the related collection is under the workflow on its own. A pull request stands for a single entry in the workflow, so an entry created on the fly would either be invisible until the pull request is published, or skip the review the related collection asks for. Create the related entry in its own collection instead.
+- The entry being edited is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and the related collection is the entry’s own collection, e.g. a post referring to other posts. A pull request stands for a single entry, and a second entry of the same collection in it couldn’t be told apart from the first. Create the related entry on its own instead.
+- The entry being edited is saved directly, but the related collection is under the Editorial Workflow on its own, with the collection-level [`publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) option. The new entry would be committed along with the entry being edited, skipping the review the related collection asks for. Create the related entry in its own collection instead.
 
 #### Preview
 

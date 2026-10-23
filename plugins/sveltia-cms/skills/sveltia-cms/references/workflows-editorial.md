@@ -200,7 +200,7 @@ Nothing an editor does in the CMS touches the configured branch until the change
 | --- | --- |
 | Save a new entry | A branch named `cms/[COLLECTION_NAME]/[SLUG]` is created off the configured branch, the entry files are committed to it, and a pull request is opened |
 | Save an existing draft | Another commit is added to the same branch |
-| Change the status | The pull request’s label is updated |
+| Change the status | The pull request’s label is updated. Moving the entry to Ready also [approves](#approvals) the pull request, and moving it back withdraws the approval |
 | Delete a published entry | A pull request is opened that removes the entry files |
 | Publish | The pull request is merged and its branch is deleted |
 | Discard | The pull request is closed without merging and its branch is deleted |
@@ -223,13 +223,24 @@ A workflow branch is named after the entry, not after the editor, so two people 
 
 Only a pull request that goes from a branch of the repository to the configured branch is taken for an entry’s own, and only if it holds one of the entry’s files, or a file the entry had before it was renamed. If its base branch is changed to something else, the CMS stops treating it as the entry’s and leaves it alone, rather than relabeling or merging it in the entry’s name; the entry is then listed as it was before the pull request existed. Likewise, a pull request from the entry’s branch that holds a different entry isn’t offered in the entry’s editor.
 
+#### Entries Added from a Relation Field
+
+A [Relation](https://sveltiacms.app/en/docs/fields/relation) field can [create a related entry](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) on the fly with its **Add** button, e.g. a new section for a help center article. With the Editorial Workflow, the new entry is committed to the **pull request of the entry being edited** rather than getting a branch of its own, so the two are reviewed together and published in the same merge. The dialog can be nested, e.g. adding a section from an article and then a tile from the section, and every entry created that way goes into the same pull request.
+
+- The [Editorial Workflow page](#editorial-workflow-page) shows a single card for the pull request: the card of the entry being edited, which lists the new entries, e.g. “Also adds Section: Guides”.
+- Until the pull request is published, the new entries aren’t listed in their own collections, but the Relation field shows them by their labels whenever the entry is opened. They count toward their collections’ [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), and another entry added with the same title gets a distinct slug.
+- Publishing the pull request publishes the new entries too, firing the `prePublish` and `postPublish` [event hooks](#event-hooks) for each of them.
+- The new entries can’t be edited or removed on their own before then. Discarding the pull request discards them along with the entry, and [deleting a published entry](#deleting-a-published-entry) whose pull request is still open takes them off the branch, so the removal doesn’t publish them.
+
+The Add button isn’t offered for the entry’s own collection: a pull request stands for a single entry, so a second entry of the same collection in it couldn’t be told apart from the first. Nor is it offered for a collection under the workflow on its own while the entry being edited is saved directly, as the new entry would skip the review.
+
 #### Checks Before Publishing
 
 The board and the editor show an entry, but publishing merges the whole pull request, with everything on its branch. So right before merging, the CMS reads the pull request again and publishes the entry only if:
 
 - the pull request still goes from a branch of the repository to the configured branch;
 - its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw. That’s the commit of the version the editor shows, or of the card the publish was confirmed for, even when the board has [picked up](#editorial-workflow-page) a newer commit since: one pushed by someone else in the meantime isn’t published unseen;
-- every file it changes is one the CMS accounts for: the entry’s own files, and those of its published version that a rename removes; assets added or replaced along with it, which are only removed when the entry is moved or deleted; the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites; and the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it. A file the merge would leave exactly as the configured branch already has it passes as well;
+- every file it changes is one the CMS accounts for: the entry’s own files, and those of its published version that a rename removes; assets added or replaced along with it, which are only removed when the entry is moved or deleted; the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites; the new entries [added from a Relation field](#entries-added-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch; and the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it. A file the merge would leave exactly as the configured branch already has it passes as well;
 - every file it leaves behind is a regular file, rather than a symbolic link or a Git submodule;
 - none of its assets is in a folder the CMS itself may be served from, or is an admin page or configuration file in a folder named like one; see [Read-Only Folders](https://sveltiacms.app/en/docs/ui/asset-library#read-only-folders);
 - the list of files it changes is complete, rather than cut short by the Git service on a very large pull request.
@@ -247,6 +258,20 @@ The configured branch can require CI to pass before anything is merged into it: 
 The entry isn’t taken for published until the merge has actually happened: the CMS keeps checking every 10 seconds, for up to an hour. If a check fails, the pull request is closed, someone turns the auto-merge off, or the hour runs out, the publish fails and any auto-merge still on is canceled, so the entry stays unpublished until it’s published again once the problem is fixed.
 
 On GitHub, the repository has to [allow auto-merge](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-auto-merge-for-pull-requests-in-your-repository), and the CMS only waits when the checks are the sole thing blocking the merge, not a required review or a conflict. Otherwise, the publish fails while the checks run, and the entry has to be published again once they’ve passed. On GitLab, auto-merge is always available.
+
+#### Approvals
+
+The configured branch can require a pull request to be approved before it’s merged: a [required review](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging) on GitHub, an [approval rule](https://docs.gitlab.com/user/project/merge_requests/approvals/) on GitLab, or a protected branch that requires approvals on Gitea and Forgejo. Marking an entry as Ready is how you approve it in the CMS, so moving it there from Draft or In Review also approves its pull request on your behalf, without a trip to the Git service. Publishing an entry straight from Draft, with [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview) or [direct publishing](#direct-publishing), marks it as Ready first, so it’s approved as well. The approval is given for the commit the entry was reviewed at: GitLab refuses it if the branch has moved on since, while GitHub, Gitea and Forgejo record it against that commit.
+
+Moving the entry back to Draft or In Review withdraws your approval, so the pull request can’t be merged on the strength of it. GitHub doesn’t let a submitted review be deleted, so it’s dismissed instead, and a protected branch may allow only some users to dismiss reviews. GitLab revokes the approval, and Gitea and Forgejo delete the review.
+
+Nothing is approved in these cases:
+
+- The pull request is your own. GitHub, Gitea and Forgejo don’t let you approve your own pull request, and GitLab can be set up to forbid it too, so the CMS doesn’t try. Ask a colleague to mark the entry as Ready instead.
+- You’re an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor. Your approval wouldn’t count toward the branch’s requirement.
+- The entry is published from In Review, which the [`stages`](#review-stages) option allows when it leaves out Ready. The entry never passes through Ready, so nothing approves it.
+
+The CMS approves and withdraws with your own access. If the Git service doesn’t let you, for example because you aren’t an eligible approver on GitLab, the status still changes, and the review can be given or withdrawn on the Git service itself.
 
 #### Saving and Sending for Review
 
