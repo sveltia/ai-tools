@@ -344,9 +344,23 @@ on:
     types: [sveltia-cms-publish]
 ```
 
+##### GitLab CI/CD
+
+Without any configuration, Publish Changes will [create a new pipeline](https://docs.gitlab.com/api/pipelines/#create-a-new-pipeline) on the configured branch with the signed-in user’s access token. A pipeline created this way runs even when the latest commit has the `[skip ci]` prefix, so there’s no deploy hook URL to set up.
+
+The user needs the Developer role or higher on the project, and if the branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/), permission to push or merge to it.
+
+The pipeline has `api` as its [`CI_PIPELINE_SOURCE`](https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable). If your `.gitlab-ci.yml` only runs on push, GitLab refuses to create the pipeline and the CMS shows an error. Allow the `api` source as well:
+
+```yaml
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "api"
+```
+
 ##### Other CI/CD Providers
 
-To use Publish Changes with a CI/CD provider other than GitHub Actions, you need to set up a [webhook](https://en.wikipedia.org/wiki/Webhook) in your CI/CD provider that triggers a build when called. Check your provider’s documentation for instructions on how to create a deploy hook URL. Here are some examples:
+To use Publish Changes with a CI/CD provider other than GitHub Actions or GitLab CI/CD, you need to set up a [webhook](https://en.wikipedia.org/wiki/Webhook) in your CI/CD provider that triggers a build when called. Check your provider’s documentation for instructions on how to create a deploy hook URL. Here are some examples:
 
 - [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/deploy-hooks/)
 - [Netlify](https://docs.netlify.com/build/configure-builds/build-hooks/)

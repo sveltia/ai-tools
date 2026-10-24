@@ -598,17 +598,17 @@ Using no framework? No problem! Check out our [Vanilla JavaScript Integration Gu
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 699 sites in the showcase, sorted by popularity:
+Framework distribution across 704 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 260 | 37.2% |
-| Vanilla JavaScript | 110 | 15.7% |
-| Eleventy | 86 | 12.3% |
-| Hugo | 63 | 9.0% |
-| Custom Tooling | 48 | 6.9% |
-| Jekyll | 34 | 4.9% |
-| Next.js | 33 | 4.7% |
+| Astro | 261 | 37.1% |
+| Vanilla JavaScript | 111 | 15.8% |
+| Eleventy | 87 | 12.4% |
+| Hugo | 64 | 9.1% |
+| Custom Tooling | 48 | 6.8% |
+| Jekyll | 34 | 4.8% |
+| Next.js | 34 | 4.8% |
 | SvelteKit | 17 | 2.4% |
 | React | 10 | 1.4% |
 | React Router | 9 | 1.3% |
