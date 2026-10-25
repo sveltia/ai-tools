@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Configuration Basics
 
-This guide covers the basics of configuring Sveltia CMS using a configuration file. It explains the supported file formats, how to specify the configuration file location, and how to enable validation and autocomplete in your code editor.
+This guide covers the basics of configuring Sveltia CMS using a configuration file. It explains the supported file formats, how to specify the configuration file location and how to enable validation and autocomplete in your code editor.
 
 **Future Plans**
 
@@ -16,7 +16,7 @@ We plan to introduce a graphical configuration editor in a future release, allow
 
 #### Netlify CMS and Decap CMS
 
-Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration files. You can use your existing `config.yml` file from Netlify/Decap CMS with Sveltia CMS, and it should work without any issues in most cases. However, please note that some options may have been deprecated or replaced in Sveltia CMS, so it’s recommended to review the configuration file and make any necessary adjustments. See the [migration guide](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) for details.
+Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration files. In most cases, your existing `config.yml` file from Netlify/Decap CMS works with Sveltia CMS as is. However, some options may have been deprecated or replaced in Sveltia CMS, so review the configuration file and make any necessary adjustments. See the [migration guide](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) for details.
 
 #### Pages CMS
 
@@ -71,7 +71,7 @@ fields:
 
 ##### Quoting Strings
 
-In YAML, strings can be quoted using single (`'`) or double (`"`) quotes. Quoting is necessary when the string contains special characters, leading/trailing spaces, or when you want to preserve the exact formatting. For example:
+In YAML, strings can be quoted using single (`'`) or double (`"`) quotes. Quoting is necessary when the string contains special characters, leading/trailing spaces or when you want to preserve the exact formatting. For example:
 
 ```yaml
 description: 'A site with special characters: #, :, -'
@@ -118,9 +118,9 @@ Sveltia CMS currently uses the [`smol-toml` npm package](https://www.npmjs.com/p
 
 Sveltia CMS also supports JSON format for configuration files. However, JSON is mainly intended for programmatic generation of configuration files rather than manual editing, due to its verbosity and lack of support for comments.
 
-To use a JSON configuration file, create a file named `config.json` instead of `config.yml` and write the configuration in JSON syntax, and add a `<link>` tag in your HTML to point to the file with the correct MIME type (see the [Config URL](#toml-or-json-configuration-file) section below).
+To use a JSON configuration file, create a file named `config.json` instead of `config.yml` and write the configuration in JSON syntax. Then add a `<link>` tag in your HTML to point to the file with the correct MIME type (see the [Config URL](#toml-or-json-configuration-file) section below).
 
-We don’t support JSONC, JSON5, or other JSON variants — only standard JSON that can be parsed by [`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) and serialized by [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify). If you want to write comments in your configuration file, use YAML format instead.
+We don’t support JSONC, JSON5 or other JSON variants — only standard JSON that can be parsed by [`JSON.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse) and serialized by [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify). If you want to write comments in your configuration file, use YAML format instead.
 
 #### JavaScript/TypeScript
 
@@ -232,7 +232,7 @@ The configuration file location varies by framework and project structure, so ad
 
 ##### Other Editors
 
-Check your code editor or IDE documentation to see if it supports JSON schema validation for YAML, TOML, or JSON files. If supported, use the following schema URL:
+Check your code editor or IDE documentation to see if it supports JSON schema validation for YAML, TOML or JSON files. If supported, use the following schema URL:
 
 ```
 https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
@@ -248,32 +248,86 @@ The type definitions are generated from the JSDoc comments in the source code, e
 
 #### Runtime Validation
 
-Sveltia CMS validates the configuration every time it loads. Anything that would break the CMS is listed on the login screen, and users can’t sign in until it’s fixed, so a broken configuration never reaches the content editor. Everything the CMS can safely work around is logged to the browser console as a warning instead.
+Sveltia CMS validates the configuration every time it loads. Anything that would break the CMS is listed on the login screen, and users can’t sign in until it’s fixed. This way, a broken configuration never reaches the content editor. Everything the CMS can safely work around is logged to the browser console as a warning instead.
 
 Each message names the collection, file and field it applies to, so you can go straight to the line that needs changing:
 
 > Blog collection, `seo.score` field: The `min` option must be a number.
 
-Two sets of checks run. The first validates the whole configuration against the same [JSON schema](#json-schema) your editor uses, published alongside the CMS version you’re running. It catches wrong value types, values outside an allowed set, and missing required options. A [custom field type](https://sveltiacms.app/en/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
+Two sets of checks run. The first validates the whole configuration against the same [JSON schema](#json-schema) your editor uses, published alongside the CMS version you’re running. It catches wrong value types, values outside an allowed set and missing required options.
 
-The second covers the rules a schema can’t express — mostly mistakes that wouldn’t fail at all otherwise, but would quietly give you an empty collection, a random slug or a validation rule that never runs:
+A [custom field type](https://sveltiacms.app/en/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
 
-- Backend: a missing, unsupported or misspelled backend name, with a pointer to the supported backends; a missing `repo`, or one that isn’t in the `owner/repo` format; a missing OAuth client ID (`app_id`) for GitLab PKCE or Gitea/Forgejo, the unsupported implicit flow, or an empty `auth_methods` list that would leave no way to sign in; Open Authoring without Editorial Workflow or without an `auth_scope`
-- Site-wide options: a `site_url` that isn’t an absolute URL, which would silently drop every preview link, a missing `media_folder` or a `public_folder` that isn’t an absolute path, template tags in the top-level `media_folder`, which can’t be resolved without an entry, a `sanitize_replacement` slug option that itself contains a character slugs can’t have (other than a plain space), an empty `i18n.locales` list, a `default_locale` or `initial_locales` entry that isn’t one of the `locales`, or a collection or file `i18n` option with no site-level i18n to build on
-- Internationalization: an `i18n` option that leaves nothing to translate — a site-level configuration that no collection or singleton enables with its own `i18n` option, an entry collection or collection file with i18n enabled but no field with `i18n: true` (or `translate`) or `i18n: duplicate`, or a file collection with i18n enabled but none of its files
-- Collections: duplicate, empty or invalid collection, file, field and variable type names (e.g. names containing `.` or `*`, or the reserved name `__proto__`), a collection with none of `folder`, `files` or `divider` or more than one of them, a collection without fields, a configuration where every collection is hidden, a mismatch between `format` and `extension`, a `body` field that can’t hold text in a front matter format, as the file body is plain text, a template tag that a collection or field `media_folder` or `public_folder` doesn’t support, and a `{{locale}}` placeholder in a file path without i18n
-- Entry naming: an `identifier_field` that names no field, a collection with neither a `title` field nor an `identifier_field` or `slug` option, a `slug` template containing slashes, and `slug`, `path`, `summary`, `thumbnail` and `preview_path` options that refer to fields that don’t exist, or that use date tags without a DateTime field to read them from
-- Entry lists: a `filter` on an undefined field, with neither a `value` nor a `pattern`, or with a pattern that isn’t a valid regular expression; `sortable_fields`, `view_groups` and `view_filters` that refer to undefined fields; a `view_groups` or `view_filters` `default` that names no group or filter; a `reorder` group that isn’t defined; `table_columns` or `summary_fields` that refer to undefined fields; `bulk_edit` fields that aren’t defined at the top level or can’t be edited in bulk
-- Fields: widget-specific options, such as a `search_fields` list written as a string, mutually exclusive options such as `field`, `fields` and `types` on List fields, an explicitly empty `fields` or `types` list on a List or Object field (omitting `fields` in a variable type remains valid), a validation `pattern` that isn’t a valid regular expression, a `min` above the `max` or a `minlength` above the `maxlength`, a Number `step` of zero or less, Select fields with no options or duplicate option values, and conflicting DateTime timezone options or an invalid IANA timezone identifier
-- Default values: a `default` whose shape doesn’t match the field’s other options — a Select `default` that isn’t among the `options`; a Select, Relation, File or Image `default` that is an array without `multiple` or a single value with it; a Number `default` that isn’t a number of the `value_type`; a Code `default` object with `output_code_only` or with a property that isn’t one of the `keys`; a List or Object `default` with an object where a plain value is expected or the other way round, a property that names no subfield, or a missing or unknown variable type
-- References between fields: a Relation field whose `collection` or `file` doesn’t exist, or whose `value_field`, `display_fields`, `search_fields` or `filters` name fields the referenced collection doesn’t have; a Compute `value` template that names an undefined field; a List or Object `thumbnail` that names an undefined subfield, or one that isn’t an Image or File field
-- Options that Sveltia CMS doesn’t support, including deprecated camel case options such as `valueField`, the deprecated Date widget, and other unsupported widgets
+The second set covers the rules a schema can’t express. Most of these mistakes wouldn’t fail at all otherwise. Instead, they would quietly give you an empty collection, a random slug or a validation rule that never runs:
 
-An option name the schema doesn’t define is a warning rather than an error, so that a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. The option has no effect, and the console says so:
+- Backend:
+  - a missing, unsupported or misspelled backend name, with a pointer to the supported backends
+  - a missing `repo`, or one that isn’t in the `owner/repo` format
+  - a missing OAuth client ID (`app_id`) for GitLab PKCE or Gitea/Forgejo
+  - the unsupported implicit flow
+  - an empty `auth_methods` list, which would leave no way to sign in
+  - Open Authoring without Editorial Workflow or without an `auth_scope`
+- Site-wide options:
+  - a `site_url` that isn’t an absolute URL, which would silently drop every preview link
+  - a missing `media_folder`, or a `public_folder` that isn’t an absolute path
+  - template tags in the top-level `media_folder`, which can’t be resolved without an entry
+  - a `sanitize_replacement` slug option that itself contains a character slugs can’t have (other than a plain space)
+  - an empty `i18n.locales` list
+  - a `default_locale` or `initial_locales` entry that isn’t one of the `locales`
+  - a collection or file `i18n` option with no site-level i18n to build on
+- Internationalization — an `i18n` option that leaves nothing to translate:
+  - a site-level configuration that no collection or singleton enables with its own `i18n` option
+  - an entry collection or collection file with i18n enabled but no field with `i18n: true` (or `translate`) or `i18n: duplicate`
+  - a file collection with i18n enabled but none of its files
+- Collections:
+  - duplicate, empty or invalid collection, file, field and variable type names (e.g. names containing `.` or `*`, or the reserved name `__proto__`)
+  - a collection with none of `folder`, `files` or `divider`, or more than one of them
+  - a collection without fields
+  - a configuration where every collection is hidden
+  - a mismatch between `format` and `extension`
+  - a `body` field that can’t hold text in a front matter format, as the file body is plain text
+  - a template tag that a collection or field `media_folder` or `public_folder` doesn’t support
+  - a `{{locale}}` placeholder in a file path without i18n
+- Entry naming:
+  - an `identifier_field` that names no field
+  - a collection with neither a `title` field nor an `identifier_field` or `slug` option
+  - a `slug` template containing slashes
+  - `slug`, `path`, `summary`, `thumbnail` and `preview_path` options that refer to fields that don’t exist, or that use date tags without a DateTime field to read them from
+- Entry lists:
+  - a `filter` on an undefined field, with neither a `value` nor a `pattern`, or with a pattern that isn’t a valid regular expression
+  - `sortable_fields`, `view_groups` and `view_filters` that refer to undefined fields
+  - a `view_groups` or `view_filters` `default` that names no group or filter
+  - a `reorder` group that isn’t defined
+  - `table_columns` or `summary_fields` that refer to undefined fields
+  - `bulk_edit` fields that aren’t defined at the top level or can’t be edited in bulk
+- Fields:
+  - widget-specific options, such as a `search_fields` list written as a string
+  - mutually exclusive options, such as `field`, `fields` and `types` on List fields
+  - an explicitly empty `fields` or `types` list on a List or Object field (omitting `fields` in a variable type remains valid)
+  - a validation `pattern` that isn’t a valid regular expression
+  - a `min` above the `max`, or a `minlength` above the `maxlength`
+  - a Number `step` of zero or less
+  - Select fields with no options or duplicate option values
+  - conflicting DateTime timezone options, or an invalid IANA timezone identifier
+- Default values — a `default` whose shape doesn’t match the field’s other options:
+  - a Select `default` that isn’t among the `options`
+  - a Select, Relation, File or Image `default` that is an array without `multiple`, or a single value with it
+  - a Number `default` that isn’t a number of the `value_type`
+  - a Code `default` object with `output_code_only`, or with a property that isn’t one of the `keys`
+  - a List or Object `default` with an object where a plain value is expected or the other way round, a property that names no subfield, or a missing or unknown variable type
+- References between fields:
+  - a Relation field whose `collection` or `file` doesn’t exist, or whose `value_field`, `display_fields`, `search_fields` or `filters` name fields the referenced collection doesn’t have
+  - a Compute `value` template that names an undefined field
+  - a List or Object `thumbnail` that names an undefined subfield, or one that isn’t an Image or File field
+- Options that Sveltia CMS doesn’t support, including deprecated camel case options such as `valueField`, the deprecated Date widget and other unsupported widgets
+
+##### Unknown Options
+
+An option name the schema doesn’t define is a warning rather than an error. This way, a configuration carrying leftovers from Netlify/Decap CMS — or options from a newer release — keeps working. The option has no effect, and the console says so:
 
 > Blog collection: The `filter.Tutorial` option is not defined in the Sveltia CMS configuration schema. It will be ignored. Check for a typo or a syntax mistake.
 
-A misspelled name is the obvious way to get one of these, but not the only one, which is why the console is worth a look whenever an option seems to do nothing. A YAML flow mapping quietly turns a comma-separated list into extra keys:
+A misspelled name is the obvious way to get one of these, but not the only one. That’s why the console is worth a look whenever an option seems to do nothing. For example, a YAML flow mapping quietly turns a comma-separated list into extra keys:
 
 ```yaml
 # `Tutorial` becomes an option of its own, and only `News` is matched
@@ -302,7 +356,7 @@ In Netlify/Decap CMS, this feature is known as **summary string transformations*
 
 String transformations can be applied in the following contexts:
 
-- [Entry Collection](https://sveltiacms.app/en/docs/collections/entries): the `summary`, `slug`, `path`, `preview_path` options
+- [Entry Collection](https://sveltiacms.app/en/docs/collections/entries): the `summary`, `slug`, `path` and `preview_path` options
 - [Compute Field](https://sveltiacms.app/en/docs/fields/compute): the `value` option
 - [Hidden Field](https://sveltiacms.app/en/docs/fields/hidden): the `default` option
 - [List Field](https://sveltiacms.app/en/docs/fields/list): the `summary` option
@@ -329,8 +383,8 @@ or with arguments:
 
 Where:
 
-- `value`: The original string value to be transformed. This is typically a field name enclosed in double curly braces (e.g., `{{title}}`).
-- `transformation_name`: The name of the transformation to apply (e.g., `upper`, `lower`, `truncate`).
+- `value`: The original string value to be transformed. This is typically a field name enclosed in double curly braces (e.g. `{{title}}`).
+- `transformation_name`: The name of the transformation to apply (e.g. `upper`, `lower`, `truncate`).
 - `arguments`: Optional arguments required by certain transformations, enclosed in parentheses.
 
 Multiple transformations can be chained together by separating them with a pipe (`|`). The output of one transformation serves as the input for the next. For example:
@@ -463,7 +517,7 @@ Truncate the string to a specified length, optionally adding a suffix.
 {{value | truncate(<length>, '<suffix>')}}
 ```
 
-The `length` argument specifies the maximum number of characters to keep. If the string exceeds this length, it will be truncated. The optional `suffix` argument allows you to specify a string to append to the truncated string (e.g., an ellipsis).
+The `length` argument specifies the maximum number of characters to keep. If the string exceeds this length, it will be truncated. The optional `suffix` argument allows you to specify a string to append to the truncated string (e.g. an ellipsis).
 
 Configuration examples:
 
@@ -655,7 +709,7 @@ summary = "{{title}} {{published | ternary('', '(DRAFT)')}}"
 }
 ```
 
-Like the `default` transformation, the `true_value` and `false_value` can contain nested templates to use other field values. For example, show the subtitle after the title only when it’s available:
+As with the `default` transformation, the `true_value` and `false_value` can contain nested templates to use other field values. For example, show the subtitle after the title only when it’s available:
 
 ```yaml [YAML]
 summary: "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
@@ -691,7 +745,7 @@ Format a date string, with an optional timezone.
 
 The `format` argument specifies the desired date format using [Day.js formatting tokens](https://day.js.org/docs/en/display/format).
 
-The optional `timezone` argument allows you to specify the time zone for formatting. It only supports `utc` for Coordinated Universal Time. If no timezone is provided, the local timezone will be used.
+The optional `timezone` argument allows you to specify the timezone for formatting. It only supports `utc` for Coordinated Universal Time. If no timezone is provided, the local timezone will be used.
 
 If the value comes from a [DateTime](https://sveltiacms.app/en/docs/fields/datetime) field with a custom `format` option, such as `DD/MM/YYYY` or `X` (Unix timestamp), it’s parsed in that format. If an invalid date is provided, an empty string will be returned.
 
@@ -848,7 +902,7 @@ widget = "richtext"
 }
 ```
 
-It will transform the `title` to uppercase, format the `publish_date` to `YYYY-MM-DD`, and truncate the `body` to 20 characters with an ellipsis. For example, if an entry has the following values:
+It will transform the `title` to uppercase, format the `publish_date` to `YYYY-MM-DD` and truncate the `body` to 20 characters with an ellipsis. For example, if an entry has the following values:
 
 ```yaml [YAML]
 title: My First Blog Post
@@ -906,9 +960,9 @@ Source: https://sveltiacms.app/en/docs/string-transformations
 
 ## Data Output
 
-Content in Sveltia CMS is stored in static files, which can be in various formats such as Markdown, YAML, TOML, or JSON. The format used for storing content can be configured on a per-collection basis.
+Content in Sveltia CMS is stored in static files, which can be in various formats such as Markdown, YAML, TOML or JSON. The format used for storing content can be configured on a per-collection basis.
 
-In most cases, you don’t need to worry about the details of data output, as Sveltia CMS and consuming tools, like your frameworks, static site generators (SSGs) or parser libraries, handle it seamlessly. However, understanding how data is output can help you avoid unexpected issues, especially when using strict type validations or manually editing data files.
+In most cases, you don’t need to worry about the details of data output. Sveltia CMS and the tools that consume your content, like your frameworks, static site generators (SSGs) or parser libraries, handle it seamlessly. However, understanding how data is output can help you avoid unexpected issues, especially when using strict type validations or manually editing data files.
 
 ### File Formats
 
@@ -920,7 +974,7 @@ Sveltia CMS supports the following data output formats for content files out of 
 - YAML
 - TOML
 - JSON
-- Raw text files, such as plain text, JSON, XML, or CSV files
+- Raw text files, such as plain text, JSON, XML or CSV files
 
 To customize the format for each collection, see the [Entry Collection File Formats](https://sveltiacms.app/en/docs/collections/entries/formats) and [File Collection](https://sveltiacms.app/en/docs/collections/files#file-format-and-extension) documentation.
 
@@ -945,20 +999,26 @@ Here are some key aspects of data output in Sveltia CMS:
   - Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
   - Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
   - Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file, as long as the value isn’t edited.
-  - Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`, as long as the value isn’t edited, so tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
+  - Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`, as long as the value isn’t edited. This way, tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
   - Native TOML dates and times, such as `2024-01-01T10:00:00Z` or `12:30:00`, are written back as they appear in the file, as long as the value isn’t edited. This applies to any field, not just DateTime fields, and to data not covered by the configuration.
-- **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array, or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
-  - `required: false` makes data input optional, but doesn't make data output optional.
+- **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
+  - `required: false` makes data input optional, but doesn’t make data output optional.
   - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
 
 #### Format-Specific Conventions
 
 - **YAML String Folding**: YAML string folding (maximum line width) is disabled for improved framework compatibility.
 - **Indentation**: Indentation is 2 spaces for YAML and JSON by default (configurable).
-- **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted, or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted, so that tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers values like `yes`, `no`, `on`, `off`, `y` and `n` in any of their usual capitalizations, numbers with underscores or commas like `1_000`, and sexagesimal numbers like `1:20`, which a YAML 1.1 parser reads as `80`. Dates are not quoted, so they are still read as dates.
+- **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted. This way, tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers:
+  - values like `yes`, `no`, `on`, `off`, `y` and `n` in any of their usual capitalizations
+  - numbers with underscores or commas, like `1_000`
+  - sexagesimal numbers like `1:20`, which a YAML 1.1 parser reads as `80`
+
+  Dates are not quoted, so they are still read as dates.
+
 - **JSON and YAML Formatting Options**: Fully configurable in the [output options](#controlling-data-output).
 - **Empty List Items in TOML**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
-- **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format, unless the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
+- **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
 
 #### Markdown Syntax
 
@@ -971,12 +1031,12 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 - **Headings**: Hash signs (`#`) are used for headings. Headings underlined with `===` or `---` are converted to this style.
 - **Code Blocks**: Backticks (`` ` ``) are used to fence code blocks. Code blocks fenced with tildes (`~~~`) are converted to this style, and a code block without a language is given the `plain` language.
 - **Horizontal Rules**: Three asterisks (`***`) are used for horizontal rules instead of three hyphens (`---`).
-- **Line Breaks**: Soft line breaks (single line breaks) are used instead of hard line breaks (two or more spaces, escaped line breaks `\`, or HTML `<br>` tags). In your framework, you may need to [enable the appropriate option](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) to render soft line breaks as hard line breaks.
+- **Line Breaks**: Soft line breaks (single line breaks) are used instead of hard line breaks (two or more spaces, escaped line breaks `\` or HTML `<br>` tags). In your framework, you may need to [enable the appropriate option](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) to render soft line breaks as hard line breaks.
 - **Tight Lists**: Blank lines between list items are removed, so a loose list becomes a tight one.
 - **Escapes**: Backslash escapes that aren’t needed are removed, like the one in `snake\_case`. Escaped square brackets (`\[`, `\]`) and angle brackets (`\<`, `\>`) are written without the backslash.
 - **Character References**: Numeric character references, like `&#169;`, are written as the characters they stand for, like `©`. Named ones, like `&copy;`, are kept.
 
-The rich text editor doesn’t support some Markdown syntax. Content using it can be edited, but it’s changed as follows once the content is saved in the rich text mode. To keep such content as is, edit it in the `raw` mode instead:
+The rich text editor doesn’t support some Markdown syntax. You can still edit content that uses it, but it’s changed as follows once the content is saved in the rich text mode. To keep such content as is, edit it in the `raw` mode instead:
 
 - **Table Column Alignment**: The alignment in the delimiter row of a table, like `:--` or `:-:`, is dropped, so all columns use the default alignment.
 - **Code Blocks in List Items**: A fenced code block within a list item is moved out of the list.
@@ -1106,9 +1166,9 @@ fr:
 ---
 ```
 
-#### List Widget
+#### List Field
 
-There are two exceptional cases for the List widget:
+There are two exceptional cases for the List field:
 
 ##### `field` vs. `fields` Option
 
@@ -1288,6 +1348,6 @@ members:
 }
 ```
 
-This `root` option doesn’t work with TOML format, as TOML doesn’t support top-level arrays.
+This `root` option doesn’t work with the TOML format, as TOML doesn’t support top-level arrays.
 
 Source: https://sveltiacms.app/en/docs/data-output

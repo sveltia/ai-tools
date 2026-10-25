@@ -18,7 +18,7 @@ The [internal media storage](https://sveltiacms.app/en/docs/media/internal) allo
 
 ### External Storage
 
-Sveltia CMS supports integrations with popular cloud-based media storage providers for enhanced capabilities such as automatic image transformations, CDN delivery, and more. Sveltia CMS currently supports the following external media storage providers:
+Sveltia CMS supports integrations with popular cloud-based media storage providers for enhanced capabilities such as automatic image transformations, CDN delivery and more. Sveltia CMS currently supports the following external media storage providers:
 
 - [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and S3-compatible providers:
   - [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2)
@@ -38,7 +38,7 @@ Unlike backends, you can use multiple storage providers simultaneously in Svelti
 
 Sveltia CMS does not support the deprecated **Netlify Large Media** service. If you’re using it with Netlify/Decap CMS, you will need to migrate your assets to one of the supported providers mentioned above.
 
-Also, Sveltia CMS does not support the undocumented custom media storage provider API. The `CMS.registerMediaLibrary` method is a noop in Sveltia CMS. We may add support for custom storage providers in future releases, though compatibility with existing Netlify/Decap CMS custom media libraries is not guaranteed.
+Also, Sveltia CMS does not support the undocumented custom media storage provider API. The `CMS.registerMediaLibrary` method is a no-op in Sveltia CMS. We may add support for custom storage providers in future releases, though compatibility with existing Netlify/Decap CMS custom media libraries is not guaranteed.
 
 **Future Plans**
 
@@ -46,7 +46,7 @@ More integration options may be added in the future.
 
 ### Configuration
 
-Relevant configuration options can be set in the `media_folder`, `public_folder`, and `media_libraries` options of your CMS configuration file. The `media_library` option from Netlify/Decap CMS is also supported for backward compatibility.
+Relevant configuration options can be set in the `media_folder`, `public_folder` and `media_libraries` options of your CMS configuration file. The `media_library` option from Netlify/Decap CMS is also supported for backward compatibility.
 
 The following example demonstrates how to configure multiple providers in Sveltia CMS:
 
@@ -167,11 +167,23 @@ defaultOperations = "/resize/800x600/"
 
 See the individual media storage provider documentation for specific configuration options and details.
 
-The `media_libraries` option can also be defined for a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field. The options of each provider, including the internal media storage (`default`), the stock photo providers (`stock_assets`) and the shared `all` options, are merged over the same provider’s top-level options, so a field only needs to set the options it changes, or `false` to make the provider unavailable for the field. A nested object such as `config` is merged key by key, but only one level deep, while other values, including arrays such as the `providers` list, are replaced. The `all` options are merged shallowly, too. So a field-level `transformations` map, under `all` or `default.config`, replaces the top-level one as a whole rather than being merged format by format. Providers not defined there fall back to the top-level configuration.
+The `media_libraries` option can also be defined for a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field. The options of each provider are merged over the same provider’s top-level options. This includes the internal media storage (`default`), the stock photo providers (`stock_assets`) and the shared `all` options. A field therefore only needs to set the options it changes, or `false` to make the provider unavailable for the field. Providers not defined at the field level fall back to the top-level configuration.
+
+The options are merged as follows:
+
+- A nested object such as `config` is merged key by key, but only one level deep.
+- Other values, including arrays such as the `providers` list, are replaced.
+- The `all` options are merged shallowly, too.
+
+As a result, a field-level `transformations` map, under `all` or `default.config`, replaces the top-level one as a whole rather than being merged format by format.
 
 **Legacy `media_library` Option**
 
-Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS, but it is recommended to use the `media_libraries` option for new configurations. With the legacy option, only a single media storage provider can be configured. If both options define the same provider, `media_libraries` takes precedence. Unlike Netlify/Decap CMS, which requires the `name`, Sveltia CMS applies a legacy option without a `name` to the internal media storage. Here is an example of configuring Cloudinary using the legacy option:
+Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS. For new configurations, use the `media_libraries` option instead.
+
+With the legacy option, only a single media storage provider can be configured. If both options define the same provider, `media_libraries` takes precedence. Netlify/Decap CMS requires the `name`, but Sveltia CMS applies a legacy option without a `name` to the internal media storage.
+
+Here is an example of configuring Cloudinary using the legacy option:
 
 ```yaml
 media_library:
@@ -186,13 +198,22 @@ media_library:
 
 A couple of additional features are available to enhance media management. These features apply to the internal media storage and to files uploaded to external storage providers, except for Cloudinary, which uses its own Media Library widget.
 
-The configuration goes in the `media_libraries` option, under the `all` key. For the internal media storage, these options can be overridden by the same options in `media_libraries.default.config`. A File or Image field can also have its own `media_libraries.all` options, which are merged into the global ones. For the internal media storage, the options are applied in this order, each overriding the previous ones: the top-level `all`, the top-level `default.config`, the field-level `all` and the field-level `default.config`. So a field-level `all` option takes precedence over the same option in the top-level `default.config`.
+The configuration goes in the `media_libraries` option, under the `all` key. For the internal media storage, these options can be overridden by the same options in `media_libraries.default.config`. A File or Image field can also have its own `media_libraries.all` options, which are merged into the global ones.
+
+For the internal media storage, the options are applied in this order, each overriding the previous ones:
+
+1. the top-level `all`
+1. the top-level `default.config`
+1. the field-level `all`
+1. the field-level `default.config`
+
+So a field-level `all` option takes precedence over the same option in the top-level `default.config`.
 
 #### Image Optimization
 
 You can enable automatic image optimization by configuring the `transformations` option in the `media_libraries` configuration. This allows you to specify how uploaded images should be processed and optimized before being stored.
 
-For example, you can convert raster images to WebP format, resize them to a maximum dimension, and optimize SVG files.
+For example, you can convert raster images to WebP format, resize them to a maximum dimension and optimize SVG files.
 
 ```yaml [YAML]{3-10}
 media_libraries:
@@ -259,7 +280,7 @@ optimize = true
 }
 ```
 
-Then, whenever a user selects images to upload, those images are automatically optimized, all within the browser. Raster images such as JPEG and PNG are converted to WebP format and resized if necessary. SVG images are minified using the [SVGO](https://github.com/svg/svgo) library if the `optimize` option is `true`, which removes unnecessary data such as comments and editor metadata.
+Then, whenever a user selects images to upload, those images are automatically optimized, all within the browser. Raster images such as JPEG and PNG are converted to WebP format and resized if necessary. If the `optimize` option is `true`, SVG images are minified using the [SVGO](https://github.com/svg/svgo) library, which removes unnecessary data such as comments and editor metadata.
 
 In case you’re not aware, [WebP](https://developers.google.com/speed/webp) offers better compression than conventional formats and is now [widely supported](https://caniuse.com/webp) across major browsers. So there is no reason not to use WebP on the web.
 
@@ -276,8 +297,8 @@ In case you’re not aware, [WebP](https://developers.google.com/speed/webp) off
 
 Photos taken on an iPhone or a recent Android phone are often saved in HEIC (HEIF) format, which only Safari can display. When the `raster_image` or `heic` transformation is configured, HEIC photos are accepted by Image fields and the Asset Library, and converted on upload like any other raster image:
 
-- The photo is decoded within the browser using [libheif](https://github.com/strukturag/libheif) compiled to WebAssembly ([`@discourse/heic`](https://www.npmjs.com/package/@discourse/heic), a build from the [jSquash](https://github.com/jamsinclair/jSquash) project), which is downloaded from UNPKG on first use (about 300 KB). Decoding runs in a Web Worker so the interface stays responsive, and takes about half a second for a 12-megapixel photo on a recent laptop. Photos are decoded one at a time. Safari decodes HEIC natively, so nothing is downloaded there.
-- A HEIC photo saved with a `.jpg` extension, which happens when a photo is renamed rather than converted, is detected by its content and converted as well. Without HEIC conversion, such a file is rejected as unusable, because browsers other than Safari can’t display it.
+- The photo is decoded within the browser using [libheif](https://github.com/strukturag/libheif) compiled to WebAssembly. The decoder, [`@discourse/heic`](https://www.npmjs.com/package/@discourse/heic), is a build from the [jSquash](https://github.com/jamsinclair/jSquash) project and is downloaded from UNPKG on first use (about 300 KB). Decoding runs in a Web Worker so the interface stays responsive. It takes about half a second for a 12-megapixel photo on a recent laptop. Photos are decoded one at a time. Safari decodes HEIC natively, so nothing is downloaded there.
+- A HEIC photo saved with a `.jpg` extension is detected by its content and converted as well. This happens when a photo is renamed rather than converted. Without HEIC conversion, such a file is rejected as unusable, because browsers other than Safari can’t display it.
 - A HEIC photo that can’t be decoded is rejected rather than uploaded as is.
 - Use the `heic` key to give HEIC photos their own options, such as a smaller maximum dimension, since they’re typically full-resolution camera shots.
 - If your site adopts a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy), add `blob:` to the `worker-src` directive so that the decoder can run in a Web Worker. The decoder falls back to the main thread otherwise, which freezes the interface during decoding.
@@ -292,7 +313,7 @@ We may add more transformation options in the future.
 
 #### File Size Limits
 
-If you want to restrict the maximum file size for uploads, you can set the `max_file_size` option (in bytes) in the `media_libraries` configuration at the top level or in a File/Image field. The default value is `Infinity`, meaning there is no limit. The legacy field-level `media_library.config.max_file_size` option from Netlify/Decap CMS is also supported for the internal media storage.
+To restrict the maximum file size for uploads, set the `max_file_size` option (in bytes) in the `media_libraries` configuration, either at the top level or in a File/Image field. The default value is `Infinity`, meaning there is no limit. The legacy field-level `media_library.config.max_file_size` option from Netlify/Decap CMS is also supported for the internal media storage.
 
 For example, to set a maximum file size of 1 MB for all uploads, add the following to your `config.yml`:
 
@@ -362,7 +383,7 @@ slugify_filename = true
 }
 ```
 
-Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). The same applies to a file renamed in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), or in a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field before the entry is saved: the resulting filename is shown below the input, so `Blog Photo 1.jpg` is saved as `blog-photo-1.jpg`.
+Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). The same applies to a file renamed in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), or in a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field before the entry is saved. The resulting filename is shown below the input. For example, `Blog Photo 1.jpg` is saved as `blog-photo-1.jpg`.
 
 #### Renaming Uploaded Files
 
@@ -413,7 +434,9 @@ Keep these points in mind:
 - If a file with the same name already exists in the folder, a number is appended to the new filename, like `20260929-392bdcf3b642-1.jpg`.
 - A file that replaces an existing asset keeps the name of that asset.
 
-When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So the tags that refer to the entry can also be used, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value. The file is shown with the new filename in the field before the entry is saved, and the name follows any changes to the entry until then. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
+When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So you can also use the tags that refer to the entry, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value.
+
+Before the entry is saved, the field shows the file with its new filename, and the name follows any changes to the entry. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
 
 In a multilingual entry, the tags are filled with the content of the default locale, so a file used in several locales has the same name everywhere. If the user renames the file by hand before saving the entry, the template no longer applies to the file.
 
@@ -444,7 +467,7 @@ The internal media storage in Sveltia CMS uses the repository’s file system to
 
 **Considerations**
 
-The internal storage (Git repository) may not be suitable for a large number of media files or very large files, as it can lead to performance issues with Git operations. It’s particularly true for the [GitHub backend](https://sveltiacms.app/en/docs/backends/github) that does not support Git LFS (Large File Storage) at this time. In such cases, consider using [external storage](https://sveltiacms.app/en/docs/media#external-storage).
+The internal storage (Git repository) may not be suitable for a large number of media files or very large files, because they can cause performance issues with Git operations. This is particularly true for the [GitHub backend](https://sveltiacms.app/en/docs/backends/github), which does not support Git LFS (Large File Storage) at this time. In such cases, consider using [external storage](https://sveltiacms.app/en/docs/media#external-storage).
 
 ### Requirements
 
@@ -452,7 +475,7 @@ No special requirements are needed to use the internal media storage, as it work
 
 ### Configuring Folder Paths
 
-You can configure the folder paths for storing and accessing media files in the internal media storage at four levels: top-level, collection-level, file-level, and field-level. The settings at each level override the ones at the previous level.
+You can configure the folder paths for storing and accessing media files in the internal media storage at four levels: top-level, collection-level, file-level and field-level. The settings at each level override the ones at the previous level.
 
 #### Top-Level Configuration
 
@@ -521,7 +544,7 @@ A few notes about this option:
 
 - It must be an absolute path relative to the root of the repository.
 - Although the leading slash can be omitted, it is recommended to include it for clarity.
-- To use the repository’s root folder, set this option to a slash (`/`), a period (`.`), or an empty string (`''`).
+- To use the repository’s root folder, set this option to a slash (`/`), a period (`.`) or an empty string (`''`).
 
 ##### Public Folder
 
@@ -537,7 +560,7 @@ Sveltia CMS does not support absolute URLs in the `public_folder` option. Use re
 
 If you only want to use an [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage) and do not need the internal media storage, you can omit the `media_folder` option to disable it. Otherwise, this option is required.
 
-Note that some of the [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) may still require a `media_folder` to function properly because they don’t allow direct linking to their CDN URLs, requiring the images to be copied to the local repository instead.
+Note that some of the [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) may still require a `media_folder` to function properly. They don’t allow direct linking to their CDN URLs, so the images have to be copied to the local repository instead.
 
 You can also [disable the internal media storage for specific fields](#disabling-internal-media-storage-for-a-field).
 
@@ -597,9 +620,13 @@ If `public_folder` is not specified, it will default to the value of the collect
 
 The collection-level and field-level `media_folder` option must start with a slash (`/`) to indicate an absolute path from the root of the repository, while a leading slash can be omitted in the top-level `media_folder` option.
 
-If you use a relative path, Sveltia CMS will treat it as relative to the collection `folder` (and `path`, if defined). In a [file collection](https://sveltiacms.app/en/docs/collections/files), which has no folder of its own, it’s relative to the folder of each file that doesn’t have a `media_folder` option of its own: with `media_folder: images`, the media for `content/pages/about.md` goes to `content/pages/images`. See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
+If you use a relative path, Sveltia CMS treats it as relative to the collection `folder` (and `path`, if defined).
 
-If a collection’s `folder` is the root of the repository, as with `folder: .`, only the files in the relative media folder, such as `images` and the folders below it, are listed as the collection’s assets, so the rest of the repository isn’t mistaken for media. A relative media folder that can’t be told apart from the other files in the repository — the root itself (`media_folder: ''`), or one starting with a placeholder like `{{slug}}` — lists no assets for such a collection.
+A [file collection](https://sveltiacms.app/en/docs/collections/files) has no folder of its own. There, the path is relative to the folder of each file that doesn’t have a `media_folder` option of its own. For example, with `media_folder: images`, the media for `content/pages/about.md` goes to `content/pages/images`. See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
+
+A collection’s `folder` can be the root of the repository, as with `folder: .`. In that case, only the files in the relative media folder, such as `images` and the folders below it, are listed as the collection’s assets. This way, the rest of the repository isn’t mistaken for media.
+
+For such a collection, a relative media folder that can’t be told apart from the other files in the repository lists no assets. This includes the root itself (`media_folder: ''`) and a folder starting with a placeholder like `{{slug}}`.
 
 We recommend using absolute paths for better clarity and to avoid confusion, unless you specifically want to organize media files within the content folders.
 
@@ -612,7 +639,7 @@ The absolute path setup is not documented in the official Netlify/Decap CMS docu
 The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags):
 
 - `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
-- `{{filename}}`: The entry file name without the extension. (Not the media file name.)
+- `{{filename}}`: The entry filename without the extension. (Not the media filename.)
 - `{{extension}}`: The entry file extension. (Not the media file extension.)
 - `{{media_folder}}`: Refers to the top-level `media_folder` setting.
 - `{{public_folder}}`: Refers to the top-level `public_folder` setting.
@@ -675,13 +702,20 @@ This only applies when the entry has a folder of its own, for example with a `pa
 
 In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 
+Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
+
 To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to look for media files in the same folder as the content files.
 
-This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
+This only makes each entry’s media its own if the entry has a folder of its own to keep it in. Two options give it one:
+
+- the [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option, as in the example below
+- the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles)
+
+Without either, entries are files sharing one folder. A relative `media_folder` then resolves to the collection folder, and the media is shared as well.
 
 **Tip**
 
-When a collection has the `path` option but no `media_folder` option of its own, its `media_folder` defaults to an empty string, and `public_folder` follows it, so the entry-relative setup below is implied. This applies when the [global `media_folder`](#media-folder) option is defined. Set the collection-level `media_folder` explicitly to store the media elsewhere.
+When a collection has the `path` option but no `media_folder` option of its own, its `media_folder` defaults to an empty string, and `public_folder` follows it. The entry-relative setup below is therefore implied. This applies when the [global `media_folder`](#media-folder) option is defined. Set the collection-level `media_folder` explicitly to store the media elsewhere.
 
 ```yaml [YAML]{5-7}
 collections:
@@ -782,6 +816,8 @@ cover: image1.jpg
 Content goes here...
 ```
 
+###### Multilingual Entries
+
 With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, an entry-relative file is stored once, not once per locale.
 
 The `multiple_files` and `single_file` structures keep every locale’s content in the folder holding the entry, so the media already sits beside all of them. This is how [Hugo’s page bundles](https://gohugo.io/content-management/page-bundles/) are usually organized:
@@ -800,7 +836,11 @@ content/posts/de/my-first-post/index.md   # cover: image1.jpg
 content/posts/en/my-first-post/image1.jpg
 ```
 
-Sveltia CMS resolves that path across locales, so the image appears in the content editor whichever locale the user is editing. Your framework may not: taken literally from the German entry’s own folder, `image1.jpg` points at a file that isn’t there. Hugo resolves it for page bundles, where [a bundle inherits the resources of its translated pages](https://gohugo.io/content-management/multilingual/), as long as the two are linked as translations. If your framework has no such mechanism, prefer the `multiple_files` structure, which keeps the media next to every locale’s file.
+Sveltia CMS resolves that path across locales, so the image appears in the content editor whichever locale the user is editing.
+
+Your framework may not do the same. Taken literally from the German entry’s own folder, `image1.jpg` points at a file that isn’t there. Hugo resolves it for page bundles, where [a bundle inherits the resources of its translated pages](https://gohugo.io/content-management/multilingual/), as long as the two are linked as translations. If your framework has no such mechanism, prefer the `multiple_files` structure, which keeps the media next to every locale’s file.
+
+###### Media Subfolders
 
 If you want to organize media files in a subfolder within each entry folder, you can specify the subfolder name in the `media_folder` and `public_folder` options.
 
@@ -875,8 +915,6 @@ cover: images/image1.jpg
 ---
 Content goes here...
 ```
-
-Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
 
 #### File-Level Configuration
 
@@ -1007,7 +1045,7 @@ Field-level `media_folder` and `public_folder` options can also be set to empty 
 
 ##### Disabling Internal Media Storage for a Field
 
-If you have enabled an [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage) and want to disable the internal media storage for a specific field, you can add the `media_libraries` option with the `default` library set to `false` in the field configuration. This will prevent the media picker from showing the internal media library and only allow selecting from the external provider.
+If you have enabled an [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage), you can disable the internal media storage for a specific field. Add the `media_libraries` option to the field configuration, with the `default` library set to `false`. This will prevent the media picker from showing the internal media library and only allow selecting from the external provider.
 
 ```yaml [YAML]{5-6}
 fields:
@@ -1172,7 +1210,7 @@ public_folder = "/uploads/documents"
 
 ### Additional Features
 
-For backward compatibility, the [additional media storage features](https://sveltiacms.app/en/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key, which applies only to the internal media storage provider, as opposed to the `all` key that also applies to files uploaded to external storage providers. Options set here override the same options under the `all` key at the same level.
+For backward compatibility, the [additional media storage features](https://sveltiacms.app/en/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key. This key applies only to the internal media storage provider, unlike the `all` key, which also applies to files uploaded to external storage providers. Options set here override the same options under the `all` key at the same level.
 
 ```yaml [YAML]{4-11}
 media_libraries:
@@ -1326,10 +1364,10 @@ There are two main ways to use the internal media storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Clicking the Browse button opens the media picker, where users can select existing assets or upload new ones, browsing the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and creating new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Clicking the Browse button opens the media picker. There, users can select existing assets or upload new ones. They can also browse the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and create new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
 
 #### Standalone Asset Library
 
-The Asset Library is accessible from the main navigation menu in the CMS interface. Here, users can view, upload, and manage all media assets in one place. Assets can be viewed in a grid or list format, and users can browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files and view asset details such as file size, dimensions and a list of entries using the asset.
+The Asset Library is accessible from the main navigation menu in the CMS interface. Here, users can view, upload and manage all media assets in one place. Assets can be viewed in a grid or list format. Users can browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
 
 Source: https://sveltiacms.app/en/docs/media/internal

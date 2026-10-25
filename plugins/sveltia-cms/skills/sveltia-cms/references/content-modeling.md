@@ -6,11 +6,11 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Content Modeling Guide
 
-Sveltia CMS is a generic-purpose content management system that can be adapted to various use cases. How to structure your collections and design your content models depends on your project requirements. Here are some guidelines and examples to help you get started.
+Sveltia CMS is a general-purpose content management system that can be adapted to various use cases. How to structure your collections and design your content models depends on your project requirements. Here are some guidelines and examples to help you get started.
 
 ### Planning Your Content Model
 
-Content modeling is primarily a non-technical task that requires understanding of your content and how it will be used. It’s recommended to involve content editors and stakeholders in the planning process to ensure the content model meets everyone’s needs. If you are building a site for a client, collaborate with them to understand their content requirements and workflows.
+Content modeling is primarily a non-technical task that requires an understanding of your content and how it will be used. It’s recommended to involve content editors and stakeholders in the planning process to ensure the content model meets everyone’s needs. If you are building a site for a client, collaborate with them to understand their content requirements and workflows.
 
 ### Understanding Content Models
 
@@ -18,10 +18,10 @@ A content model defines the structure and organization of your content within Sv
 
 When designing your content model, consider the following:
 
-- **Content types**: Identify the different types of content you need to manage (e.g., blog posts, products, pages).
+- **Content types**: Identify the different types of content you need to manage (e.g. blog posts, products, pages).
 - **Collections**: Decide whether to use [entry collections](https://sveltiacms.app/en/docs/collections/entries) (for multiple similar items) or [file collections](https://sveltiacms.app/en/docs/collections/files) (for individual files) based on your content types.
 - **Fields**: Define the fields required for each content type, including their data types and validation rules.
-- **Relationships**: Determine if there are any relationships between different content types that need to be represented (e.g., authors for blog posts, categories for products).
+- **Relationships**: Determine if there are any relationships between different content types that need to be represented (e.g. authors for blog posts, categories for products).
 
 ### Tips for Designing Content Models
 
@@ -29,7 +29,7 @@ Some best practices for designing effective content models in Sveltia CMS includ
 
 - **Plan ahead**: Take the time to think through your content structure before creating collections and fields. This will help avoid unnecessary changes later.
 - **Keep it simple**: Start with a basic structure and expand as needed. Avoid overcomplicating your content model.
-- **Use meaningful names**: Choose clear and descriptive names for collections and fields to make it easier to understand.
+- **Use meaningful names**: Choose clear and descriptive names for collections and fields to make them easier to understand.
 - **Leverage field types**: Utilize the [various field types](https://sveltiacms.app/en/docs/fields#field-types) available in Sveltia CMS to capture different kinds of data effectively.
 - **Plan for scalability**: Consider how your content model may need to evolve over time and design it to accommodate future changes.
 - **Test and iterate**: Regularly review and refine your content model based on feedback from content editors and users.
@@ -40,7 +40,7 @@ Sveltia CMS supports [Relation fields](https://sveltiacms.app/en/docs/fields/rel
 
 When using relations, consider the following:
 
-- **Cardinality**: Decide whether the relationship is one-to-one, one-to-many, or many-to-many, and configure the Relation field accordingly.
+- **Cardinality**: Decide whether the relationship is one-to-one, one-to-many or many-to-many, and configure the Relation field accordingly.
 - **Performance**: Be mindful of the potential performance implications of complex relationships, especially with large datasets.
 - **User experience**: Ensure that the relationship is intuitive for content editors, providing clear labels and options in the CMS interface.
 
@@ -131,7 +131,7 @@ collections:
 #### Documentation Site
 
 - **Documents**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for documentation pages, linked to versions and categories via Relation fields.
-- **Versions**: entry collection for managing available versions (e.g., v1.0, v2.0), linked to documentation pages via a Relation field.
+- **Versions**: entry collection for managing available versions (e.g. v1.0, v2.0), linked to documentation pages via a Relation field.
 - **Categories**: entry collection for organizing documentation by category, linked to documents via a Relation field.
 - **Tutorials**: entry collection for step-by-step tutorials and guides.
 - **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Getting Started or FAQ.
@@ -213,8 +213,8 @@ collections:
 #### Portfolio Site
 
 - **Portfolio items**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for portfolio items, linked to categories and skills via Relation fields.
-- **Categories**: entry collection for managing available categories (e.g., Web Design, Branding, Photography), linked to portfolio items via a Relation field.
-- **Skills**: entry collection for managing the list of skills or technologies used (e.g., React, Figma, CSS), linked to portfolio items via a Relation field.
+- **Categories**: entry collection for managing available categories (e.g. Web Design, Branding, Photography), linked to portfolio items via a Relation field.
+- **Skills**: entry collection for managing the list of skills or technologies used (e.g. React, Figma, CSS), linked to portfolio items via a Relation field.
 - **Testimonials**: entry collection for client testimonials, linked to portfolio items via a Relation field.
 - **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About Me or Services.
 
@@ -299,7 +299,7 @@ collections:
 
 #### Corporate Website
 
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Home, About Us, Services, and Contact.
+- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Home, About Us, Services and Contact.
 - **Services**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for services offered.
 - **Products**: entry collection for products or offerings.
 - **Brands**: entry collection for brand information, linked to products via a Relation field.
@@ -490,7 +490,7 @@ collections:
 
 - **Posts**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for blog posts. Unlike the blog example above, tags are entered freely in a simple [List](https://sveltiacms.app/en/docs/fields/list) field instead of being managed in a separate collection, which is enough for a small site with a single author.
 - **Projects**: entry collection for personal projects or side projects.
-- **About**, **Contact**, and **Site Settings**: [singletons](https://sveltiacms.app/en/docs/collections/singletons) for one-off pages and site-wide settings like the site title, description, and social links. Singletons appear directly in the sidebar, so they are easier to reach than files in a file collection when there are only a few of them.
+- **About**, **Contact** and **Site Settings**: [singletons](https://sveltiacms.app/en/docs/collections/singletons) for one-off pages and site-wide settings like the site title, description and social links. Singletons appear directly in the sidebar, so they are easier to reach than files in a file collection when there are only a few of them.
 
 ```yaml [YAML]
 backend:
@@ -558,8 +558,8 @@ singletons:
 
 #### Event Management Site
 
-- **Events**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for events, linked to categories, locations, and organizers via Relation fields. Whether an event is upcoming or past is determined by its date, so only cancellation needs to be set manually.
-- **Categories**: entry collection for event categories (e.g., Conference, Webinar, Workshop), linked to events via a Relation field.
+- **Events**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for events, linked to categories, locations and organizers via Relation fields. Whether an event is upcoming or past is determined by its date, so only cancellation needs to be set manually.
+- **Categories**: entry collection for event categories (e.g. Conference, Webinar, Workshop), linked to events via a Relation field.
 - **Locations**: entry collection for available venues, linked to events via a Relation field.
 - **Organizers**: entry collection for event organizers, linked to events via a Relation field.
 - **Speakers**: entry collection for event speakers.
@@ -843,8 +843,8 @@ collections:
 
 #### Recipe Website
 
-- **Recipes**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for recipes, linked to categories, ingredients, and chefs via Relation fields. Each ingredient is listed with its quantity and unit, which are stored in the recipe rather than in the ingredient, because they vary from recipe to recipe.
-- **Categories**: entry collection for recipe categories (e.g., Appetizers, Desserts, Main Courses), linked to recipes via a Relation field.
+- **Recipes**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for recipes, linked to categories, ingredients and chefs via Relation fields. Each ingredient is listed with its quantity and unit, which are stored in the recipe rather than in the ingredient, because they vary from recipe to recipe.
+- **Categories**: entry collection for recipe categories (e.g. Appetizers, Desserts, Main Courses), linked to recipes via a Relation field.
 - **Ingredients**: entry collection for available ingredients, linked to recipes via a Relation field.
 - **Chefs**: entry collection for chefs, linked to recipes via a Relation field.
 - **Cooking tips**: entry collection for cooking tips.
@@ -954,10 +954,10 @@ collections:
 
 #### Educational Platform
 
-- **Courses**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for courses, linked to instructors, categories, lessons, and locations via Relation fields.
+- **Courses**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for courses, linked to instructors, categories, lessons and locations via Relation fields.
 - **Instructors**: entry collection for instructors, linked to courses and blog posts via Relation fields.
 - **Lessons**: entry collection for lessons within each course, linked to courses via a Relation field.
-- **Categories**: entry collection for course categories (e.g., Web Development, Design, Business), linked to courses via a Relation field.
+- **Categories**: entry collection for course categories (e.g. Web Development, Design, Business), linked to courses via a Relation field.
 - **Locations**: entry collection for available venues (for in-person courses), linked to courses via a Relation field.
 - **Testimonials**: entry collection for student testimonials, linked to courses via a Relation field.
 - **Events**: entry collection for upcoming educational events (workshops, webinars).
@@ -1115,7 +1115,7 @@ collections:
 
 #### Nonprofit Organization Site
 
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Mission, Programs, Leadership, Donate, and Contact.
+- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Mission, Programs, Leadership, Donate and Contact.
 - **News**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for news related to the organization.
 - **Events**: entry collection for upcoming events.
 - **Locations**: entry collection for available venues, linked to events via a Relation field.

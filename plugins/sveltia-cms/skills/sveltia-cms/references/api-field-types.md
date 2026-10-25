@@ -10,13 +10,21 @@ A custom field type allows you to create reusable, complex input controls and pr
 
 **Compatibility Note**
 
-Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, other than the [`entry` and `getAsset` props](#control-component-props) for control components and the [`entry`, `getAsset` and `fieldsMetaData` props](#preview-component-props) for preview components. The undocumented `onPersistMedia` prop is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries, and the undocumented `onOpenMediaLibrary` and `mediaPaths` props are replaced with the [`pickFile` prop](#picking-files), which resolves with what the user picked instead of leaving the control to watch a Redux store.
+Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/docs/custom-widgets/#registerwidget) on this topic, Sveltia CMS may not be fully compatible with existing preview templates. Our implementation does not include undocumented component props, with these exceptions:
+
+- the [`entry` and `getAsset` props](#control-component-props) for control components
+- the [`entry`, `getAsset` and `fieldsMetaData` props](#preview-component-props) for preview components
+
+Two sets of undocumented props are replaced:
+
+- `onPersistMedia` is replaced with the [`addFile` prop](#uploading-files), which is designed for the way Sveltia CMS saves entries.
+- `onOpenMediaLibrary` and `mediaPaths` are replaced with the [`pickFile` prop](#picking-files). It resolves with what the user picked instead of leaving the control to watch a Redux store.
 
 **Naming Convention**
 
 In Sveltia CMS, what was previously referred to as a **widget** in Netlify/Decap CMS is now called a **field type**. This change was made to better align with common content management terminology, as originally [proposed](https://github.com/decaporg/decap-cms/issues/3719) by Netlify CMS maintainers themselves.
 
-The `registerWidget` method from Netlify/Decap CMS has been renamed to `registerFieldType` in Sveltia CMS to reflect this terminology change, but the old name remains available as an alias for backward compatibility. The signature and behavior are identical.
+The `registerWidget` method from Netlify/Decap CMS has been renamed to `registerFieldType` in Sveltia CMS to reflect this terminology change. The old name remains available as an alias for backward compatibility. The signature and behavior are identical.
 
 ### Registering a Custom Field Type
 
@@ -42,8 +50,8 @@ For backward compatibility with Netlify/Decap CMS, the `registerWidget` method i
 
 #### Parameters
 
-- `name` (string, required): The name of the custom field type. This is the name you will use in your collection configuration to reference this type. It cannot be the name of a [built-in field type](https://sveltiacms.app/en/docs/fields#built-in-field-types); an error is thrown if it is. Registering a field type with the same name again replaces the previous one.
-- `control` (React component or string, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here; the field shows no control and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
+- `name` (string, required): The name of the custom field type. This is the name you will use in your collection configuration to reference this type. It cannot be the name of a [built-in field type](https://sveltiacms.app/en/docs/fields#built-in-field-types), or an error is thrown. Registering a field type with the same name again replaces the previous one.
+- `control` (React component or string, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the control (input) part of the field. Alternatively, the name of another registered custom field type whose control should be reused. Built-in field type names are not supported here: the field shows no control, and a warning is logged to the browser console. To reuse a built-in control, use [`getFieldType`](#getting-a-field-type) instead.
 - `preview` (React component, optional): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines how the field’s value is previewed in the CMS preview pane. If not provided, no preview will be shown.
 - `schema` (object, optional): A [JSON schema](https://json-schema.org/) (draft-07) object that defines the configuration options for the field type. See [Field Schema](#field-schema) below.
 
@@ -55,7 +63,7 @@ The definition object takes the same options under the following names:
 - `summaryComponent` (React component, optional): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that draws a collapsed List field item. See [Summary Component](#summary-component) below.
 - `schema` (object, optional): Same as the `schema` parameter.
 
-When a definition object is given, any other arguments are ignored. The format is the same as the one undocumented Netlify/Decap CMS `registerWidget` method accepts, so existing code works as is, except that the Netlify/Decap CMS-specific `globalStyles` and `allowMapValue` options are ignored.
+When a definition object is given, any other arguments are ignored. The format is the same as the one the undocumented Netlify/Decap CMS `registerWidget` method accepts, so existing code works as is. The only exception is that the Netlify/Decap CMS-specific `globalStyles` and `allowMapValue` options are ignored.
 
 You can write the components with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
 
@@ -64,7 +72,7 @@ You can write the components with [HTM](https://sveltiacms.app/en/docs/api#using
 The control component receives the following props:
 
 - `value` (any): The current field value. Your component should display this value and call `onChange` when the user modifies it.
-- `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration from the CMS config. Contains all field properties including `name`, `label`, `widget`, and any custom properties you define in your schema. Access properties using methods like `field.get('name')` or `field.getIn(['custom', 'property'])`.
+- `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration from the CMS config. Contains all field properties including `name`, `label`, `widget` and any custom properties you define in your schema. Access properties using methods like `field.get('name')` or `field.getIn(['custom', 'property'])`.
 - `forID` (string): The HTML `id` attribute that should be used for the main input element. This enables proper label association and accessibility.
 - `classNameWrapper` (string): A CSS class name that can be applied to your input element for consistent styling with built-in field controls.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited. Read the content with `entry.getIn(['data', 'fieldName'])`. This lets your control display values derived from other fields in the same entry, such as dynamically generated select options. The prop is updated whenever any field in the entry is modified, so your control always sees the latest content. See the [Dependent Select](#dependent-select) example below.
@@ -75,30 +83,33 @@ The control component receives the following props:
 
 ##### Uploading Files
 
-A control that produces files — an image editor, a control that downloads a remote image, or one that derives a thumbnail from an upload, for example — can hand them to the CMS with the `addFile` prop:
+A control that produces files — an image editor, a control that downloads a remote image or one that derives a thumbnail from an upload, for example — can hand them to the CMS with the `addFile` prop:
 
 ```js
 const url = await this.props.addFile(file, options);
 ```
 
 - `file` (`File` or `Blob`, required): The file to be added.
-- `options.name` (string): The file name, including the extension. It’s required when a `Blob` is given, given that a `Blob` has no name of its own. When a `File` is given, the option overrides its name.
+- `options.name` (string): The filename, including the extension. It’s required when a `Blob` is given, because a `Blob` has no name of its own. When a `File` is given, the option overrides its name.
 - `options.replace` (boolean): Whether the file replaces an existing file with the same name in the target folder, rather than being saved with a unique name next to it. See [Replacing Files](#replacing-files) below. Default: `false`.
 
 The function resolves to a temporary `blob:` URL. Store it in the field value with `onChange`, either as the value itself or anywhere within an object or array value, just like the [Image with Derived Files](#image-with-derived-files) example below does. The URL can also be used to display the file in the control and the preview pane while the entry is being edited.
 
 When the entry is saved, the CMS replaces each URL in the value with the public path of the uploaded file, and commits the file along with the entry. Everything works the same way as a file selected in a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field:
 
-- The file is saved to the field’s own `media_folder` if the option is defined on the field, otherwise to the collection-level or top-level folder. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). The file name is sanitized and, if another file in the folder already has the same name, made unique, unless the `replace` option is enabled.
-- The [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features), such as `max_file_size` and `transformations`, are applied. If the file exceeds the size limit or cannot be decoded, the Promise is rejected with an error, so wrap the call in `try`/`catch` to show a message to the user.
-- A file identical to one already uploaded, or already added to the draft, is not uploaded twice; the existing path or URL is returned instead.
+- The file is saved to the field’s own `media_folder` if the option is defined on the field, otherwise to the collection-level or top-level folder. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths).
+- The filename is sanitized. If another file in the folder already has the same name, the name is made unique, unless the `replace` option is enabled.
+- The [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features), such as `max_file_size` and `transformations`, are applied. If the file exceeds the size limit or cannot be decoded, the Promise is rejected with an error. Wrap the call in `try`/`catch` to show a message to the user.
+- A file identical to one already uploaded, or already added to the draft, is not uploaded twice. The existing path or URL is returned instead.
 - The file is included in the same commit as the entry, so the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) and [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) work as usual. A file that is no longer referenced in the value when the entry is saved is simply discarded.
 
-The function is only available while an entry is being edited; it rejects otherwise.
+The function is only available while an entry is being edited. Otherwise, it rejects.
 
 ###### Replacing Files
 
-A control often regenerates a file whenever the entry changes: a thumbnail rendered from the entry, an Open Graph image drawn from the title, or an image a framework expects under a fixed name, such as `featured.jpg` in a Hugo page bundle. By default, each new version is saved next to the previous one as `thumb-1.webp`, `thumb-2.webp` and so on, leaving the old files behind. Enable the `replace` option to overwrite the existing file instead:
+A control often regenerates a file whenever the entry changes. Examples include a thumbnail rendered from the entry, an Open Graph image drawn from the title or an image a framework expects under a fixed name, such as `featured.jpg` in a Hugo page bundle.
+
+By default, each new version is saved next to the previous one as `thumb-1.webp`, `thumb-2.webp` and so on, leaving the old files behind. Enable the `replace` option to overwrite the existing file instead:
 
 ```js
 const url = await this.props.addFile(blob, { name: 'thumb.webp', replace: true });
@@ -110,15 +121,17 @@ With the option, the file is always saved under the given name:
 - If there is no such file, the file is created as usual.
 - The `filename_template` option of the [internal media storage](https://sveltiacms.app/en/docs/media/internal#additional-features) is not applied, but the name is still sanitized. A [transformation](https://sveltiacms.app/en/docs/media/internal#additional-features) that converts the file to another format changes its extension.
 - An identical file is reused only if it has the same name. If the file is unchanged from the one already in the folder, nothing is committed.
-- If two files with the same name are added to the same folder, only the first one replaces the existing file; the other is saved with a unique name.
+- If two files with the same name are added to the same folder, only the first one replaces the existing file. The other is saved with a unique name.
 
 **Keep the URL intact**
 
-The CMS finds the files to be uploaded by looking for the temporary URLs in the field value. If your control transforms the URL before storing it — by encoding it or embedding it in a string that is later serialized differently, for example — the file won’t be uploaded and the value will end up with a dangling `blob:` URL.
+The CMS finds the files to be uploaded by looking for the temporary URLs in the field value. Your control may transform the URL before storing it, for example by encoding it or embedding it in a string that is later serialized differently. In that case, the file won’t be uploaded and the value will end up with a dangling `blob:` URL.
 
 ##### Picking Files
 
-A control that stores a file reference in a shape of its own — an image with alt text and a focal point, a gallery with per-item captions, a download with a label — shouldn’t have to reimplement file browsing. The `pickFile` prop opens the same dialog as a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field, complete with the folder list, search, uploads, URL input and [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos) integrations:
+A control that stores a file reference in a shape of its own shouldn’t have to reimplement file browsing. Examples include an image with alt text and a focal point, a gallery with per-item captions or a download with a label.
+
+The `pickFile` prop opens the same dialog as a built-in [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field, complete with the folder list, search, uploads, URL input and [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos) integrations:
 
 ```js
 const picked = await this.props.pickFile(options);
@@ -131,9 +144,12 @@ All the options are optional:
 - `options.multiple` (boolean): Whether to let the user pick several files at once. Default: `false`.
 - `options.allowURL` (boolean): Whether to let the user enter a URL instead of picking a file. Same as the [`choose_url` option](https://sveltiacms.app/en/docs/fields/file#options) of a File field. Default: `true`.
 
-The function resolves once the dialog is closed with the Insert button, to an object with the following properties, or to an array of such objects when `multiple` is enabled:
+When the dialog is closed with the Insert button, the function resolves to an object with the following properties. When `multiple` is enabled, it resolves to an array of such objects:
 
-- `value` (string): The value to be stored in the field, exactly what a built-in File or Image field would store for the same pick: the public path of an existing file, a temporary `blob:` URL for a file uploaded through the dialog, or an external URL. Store it with `onChange`, either as the value itself or anywhere within an object or array value. A temporary URL is handled like one returned from `addFile`, so the file is uploaded when the entry is saved and the URL is replaced with the public path.
+- `value` (string): The value to be stored in the field. Store it with `onChange`, either as the value itself or anywhere within an object or array value. A temporary URL is handled like one returned from `addFile`: the file is uploaded when the entry is saved, and the URL is replaced with the public path. The value is exactly what a built-in File or Image field would store for the same pick:
+  - the public path of an existing file
+  - a temporary `blob:` URL for a file uploaded through the dialog
+  - an external URL
 - `file` (`Blob`): The contents of the file, for a control that needs the bytes, such as one deriving a thumbnail like the [Image with Derived Files](#image-with-derived-files) example below. It’s `undefined` for an external URL.
 - `credit` (string): Attribution HTML for a stock photo, including the photographer and service links. It’s `undefined` otherwise.
 
@@ -147,19 +163,30 @@ if (picked) {
 }
 ```
 
-The dialog lists the folders a File or Image field in the same place would offer: the field’s own `media_folder` if the option is defined on the field, otherwise the collection-level and top-level folders. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths). Files uploaded through the dialog are handled exactly like files given to `addFile`, including naming, deduplication and the [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features). A file that exceeds the size limit or cannot be decoded is reported to the user in a dialog, the way a built-in field does, rather than rejecting the Promise; the Promise is only rejected if the contents of a picked file cannot be retrieved.
+The dialog lists the folders a File or Image field in the same place would offer: the field’s own `media_folder` if the option is defined on the field, otherwise the collection-level and top-level folders. See [Configuring Folder Paths](https://sveltiacms.app/en/docs/media/internal#configuring-folder-paths).
 
-The function is only available while an entry is being edited; it rejects otherwise.
+Files uploaded through the dialog are handled exactly like files given to `addFile`, including naming, deduplication and the [internal media storage options](https://sveltiacms.app/en/docs/media/internal#additional-features). A file that exceeds the size limit or cannot be decoded is reported to the user in a dialog, the way a built-in field does. The Promise isn’t rejected in that case. It’s only rejected if the contents of a picked file cannot be retrieved.
+
+The function is only available while an entry is being edited. Otherwise, it rejects.
 
 ##### Custom Validation
 
-Control components may optionally implement an `isValid` method for custom validation. On a class component, it’s an instance method. A function component, which has no instance, exposes the method with the [`useImperativeHandle`](https://react.dev/reference/react/useImperativeHandle) hook from `CMS.React` instead, given the `ref` prop it receives, or the ref passed by `forwardRef`. See [Using Hooks](https://sveltiacms.app/en/docs/api#using-hooks). The method should return:
+Control components may optionally implement an `isValid` method for custom validation:
+
+- On a class component, it’s an instance method.
+- A function component has no instance, so it exposes the method with the [`useImperativeHandle`](https://react.dev/reference/react/useImperativeHandle) hook from `CMS.React` instead. Pass it the `ref` prop the component receives, or the ref passed by `forwardRef`.
+
+See [Using Hooks](https://sveltiacms.app/en/docs/api#using-hooks). The method should return:
 
 - `true` when the value is valid.
 - `false` or `{ error: { message: "text" } }` when the value is invalid.
 - A Promise that resolves to any of the above formats for async validation.
 
-The method is called with two arguments: the current field value and the field configuration as an [Immutable Map](https://immutable-js.com/docs/v5/Map/), the same as the `field` prop. It runs whenever any field in the entry is modified, not only your field, so it can also check the value against other fields read from the `entry` prop. If the method is called again before an earlier Promise settles, the earlier result is discarded, so you can simply return a new Promise on each call. Saving the entry waits for any pending validation to complete. If the method throws an error or returns a rejected Promise, the value is considered invalid, and the error message is shown to the user.
+The method is called with two arguments: the current field value and the field configuration as an [Immutable Map](https://immutable-js.com/docs/v5/Map/), the same as the `field` prop.
+
+It runs whenever any field in the entry is modified, not only your field. This means it can also check the value against other fields read from the `entry` prop.
+
+If the method is called again before an earlier Promise settles, the earlier result is discarded, so you can simply return a new Promise on each call. Saving the entry waits for any pending validation to complete. If the method throws an error or returns a rejected Promise, the value is considered invalid, and the error message is shown to the user.
 
 In a function component, the method can be exposed as follows. See the [Number with Validation](#number-with-validation) example below for a complete field type, implemented as a function component in the HTM version and as a class component in the others.
 
@@ -246,16 +273,16 @@ The preview component receives the following props:
 
 - `value` (any): The current field value to display in the preview.
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
-- `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the field’s key path, so it works for a field nested in an Object or List field too. For relation fields, contains referenced entry data. Use Immutable Map methods to access nested data.
+- `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the field’s key path, so it works for a field nested in an Object or List field too. For relation fields, it contains referenced entry data. Use Immutable Map methods to access nested data.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited, with the same structure as the [`entry` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. Read the content with `entry.getIn(['data', 'fieldName'])`.
 - `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. The path can also be a temporary `blob:` URL returned from the [`addFile`](#uploading-files) or [`pickFile`](#picking-files) prop. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
 - `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by the field’s key path, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
 #### Summary Component
 
-When a [List](https://sveltiacms.app/en/docs/fields/list) field has a single subfield, defined with the `field` option, a collapsed item shows the item’s value as text by default, or the text made from the List field’s `summary` option. That’s fine for a plain string, but a custom field type that stores a file path or an ID can draw something more meaningful, such as a small picture and a title.
+When a [List](https://sveltiacms.app/en/docs/fields/list) field has a single subfield, defined with the `field` option, a collapsed item shows text. By default, it’s the item’s value, or the text made from the List field’s `summary` option. That’s fine for a plain string, but a custom field type that stores a file path or an ID can draw something more meaningful, such as a small picture and a title.
 
-To do so, register the field type with a `summaryComponent` in a [definition object](#registering-a-custom-field-type). The component receives the same [props as a preview component](#preview-component-props), with `value` being the value of the item, and is drawn in place of the summary text whenever the item is collapsed:
+To do so, register the field type with a `summaryComponent` in a [definition object](#registering-a-custom-field-type). The component receives the same [props as a preview component](#preview-component-props), with `value` being the value of the item. It’s drawn in place of the summary text whenever the item is collapsed:
 
 ```js
 const PhotoSummary = ({ value, getAsset }) => html`
@@ -313,7 +340,7 @@ fields:
     maxItems: 10 # custom configuration option
 ```
 
-The schema is applied to the whole field object whenever a field uses your field type, as part of the [runtime validation](https://sveltiacms.app/en/docs/config-basics#runtime-validation) that runs each time the CMS loads. A configuration that doesn’t match is reported on the login screen, alongside the built-in checks:
+Whenever a field uses your field type, the schema is applied to the whole field object. This is part of the [runtime validation](https://sveltiacms.app/en/docs/config-basics#runtime-validation) that runs each time the CMS loads. A configuration that doesn’t match is reported on the login screen, alongside the built-in checks:
 
 > Posts collection, `tags` field: The `maxItems` option must be an integer.
 
@@ -344,20 +371,22 @@ This is mainly useful for building a custom field type on top of an existing one
 
 #### Reusing a Built-In Field Type
 
-Sveltia CMS is built with Svelte rather than React, so built-in field controls and previews are Svelte components. The components returned from `getFieldType` are React wrappers that render those Svelte components for you, which means you can compose them into your own React components as usual.
+Sveltia CMS is built with Svelte rather than React, so built-in field controls and previews are Svelte components. The components returned from `getFieldType` are React wrappers that render those Svelte components for you. You can compose them into your own React components as usual.
 
 Only the built-in field types that work outside the entry editor can be reused this way:
 
 `boolean`, `color`, `datetime`, `map`, `number`, `select`, `string`, `text`, `uuid`
 
-For any other built-in field type, such as `list` or `object`, the method returns `undefined` and logs a warning to the browser console, because those editors read from and write to the entry draft directly and can’t be rendered on their own.
+For any other built-in field type, such as `list` or `object`, the method returns `undefined` and logs a warning to the browser console. Those editors read from and write to the entry draft directly, so they can’t be rendered on their own.
 
 The returned control component accepts the same `value`, `field`, `forID` and `onChange` props as a custom control, with two differences:
 
-- The `field` prop can be an [Immutable Map](https://immutable-js.com/docs/v5/Map/), a plain object, or any object exposing an Immutable Map-like `get` method. A plain object is the simplest way to pass an ad hoc field configuration, while the other shapes let you reuse a control wrapper ported from Netlify/Decap CMS as is.
-- The `classNameWrapper` prop is ignored, given that built-in components come with their own styles.
+- The `field` prop can be an [Immutable Map](https://immutable-js.com/docs/v5/Map/), a plain object or any object exposing an Immutable Map-like `get` method. A plain object is the simplest way to pass an ad hoc field configuration. The other shapes let you reuse a control wrapper ported from Netlify/Decap CMS as is.
+- The `classNameWrapper` prop is ignored, because built-in components come with their own styles.
 
-You can also pass the optional `locale`, `keyPath`, `required`, `readonly` and `invalid` props. When they are omitted, they are inherited from the field being edited, so a reused control behaves consistently with the rest of the CMS: it’s marked required, read-only and invalid exactly when your custom field is. This inheritance takes precedence over the ad hoc field configuration, given that the configuration typically describes how to render the input rather than the field itself. For example, a `required: false` option there won’t make a required field optional, which would otherwise let the user select an empty value that the CMS then rejects.
+You can also pass the optional `locale`, `keyPath`, `required`, `readonly` and `invalid` props. When they are omitted, they are inherited from the field being edited. A reused control therefore behaves consistently with the rest of the CMS: it’s marked required, read-only and invalid exactly when your custom field is.
+
+This inheritance takes precedence over the ad hoc field configuration, because the configuration typically describes how to render the input rather than the field itself. For example, a `required: false` option there won’t make a required field optional. Otherwise, the user could select an empty value that the CMS then rejects.
 
 The returned preview component accepts the `value` and `field` props, plus the optional `locale` and `keyPath` props.
 
@@ -369,7 +398,13 @@ In Netlify/Decap CMS, the undocumented `getWidget` method returns any built-in o
 
 **HTM, JSX or `h()`**
 
-Each example below comes in three versions: [HTM](https://sveltiacms.app/en/docs/api#using-htm), which runs in the browser as is and is the recommended way; [JSX](https://sveltiacms.app/en/docs/api#using-jsx), which requires a build step to transpile it to JavaScript; and [`h()`](https://sveltiacms.app/en/docs/api#using-h), which is compatible with Netlify/Decap CMS. The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) for more details.
+Each example below comes in three versions:
+
+- [HTM](https://sveltiacms.app/en/docs/api#using-htm), which runs in the browser as is and is the recommended way
+- [JSX](https://sveltiacms.app/en/docs/api#using-jsx), which requires a build step to transpile it to JavaScript
+- [`h()`](https://sveltiacms.app/en/docs/api#using-h), which is compatible with Netlify/Decap CMS
+
+The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) for more details.
 
 #### Simple Text Array
 
@@ -1140,7 +1175,7 @@ CMS.registerFieldType('imageMeta', ImageMetaControl, ImageMetaPreview);
 
 #### Image with Derived Files
 
-A field type that lets the user pick an image with the [`pickFile` prop](#picking-files), generates a small WebP thumbnail in the browser, and stores the paths of both files along with the aspect ratio. The user can either upload a new image or choose one already in the repository. The thumbnail is added to the entry draft with the [`addFile` prop](#uploading-files), and any new file is uploaded when the entry is saved.
+A field type that lets the user pick an image with the [`pickFile` prop](#picking-files), generates a small WebP thumbnail in the browser and stores the paths of both files along with the aspect ratio. The user can either upload a new image or choose one already in the repository. The thumbnail is added to the entry draft with the [`addFile` prop](#uploading-files), and any new file is uploaded when the entry is saved.
 
 Given the following field configuration, the files are saved to the `static/photos` folder and referenced as `/photos/...` in the entry:
 
@@ -1393,7 +1428,7 @@ const PhotoPreview = createClass({
 CMS.registerFieldType('photo', PhotoControl, PhotoPreview);
 ```
 
-Once saved, the entry holds the public paths, which your site can use for a blurred placeholder, a `srcset`, or a fixed-ratio box that avoids layout shift:
+Once saved, the entry holds the public paths, which your site can use for a blurred placeholder, a `srcset` or a fixed-ratio box that avoids layout shift:
 
 ```yaml
 photo:

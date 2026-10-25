@@ -358,7 +358,7 @@ widget = "richtext"
 }
 ```
 
-Each file in the collection is defined with a `name`, `label`, `file` path, and a set of `fields`. Editors can modify the content of these files through the Sveltia CMS interface.
+Each file in the collection is defined with a `name`, `label`, `file` path and a set of `fields`. Editors can modify the content of these files through the Sveltia CMS interface.
 
 #### Collection Options
 
@@ -389,7 +389,7 @@ A file definition within a file collection supports the following options:
 - `label`: A human-readable name for the file. Optional.
 - `icon`: A Material Symbols icon name to represent the file in the CMS UI. Optional.
 - `file`: The path to the file in the content repository. Required.
-- `format`: The file format (e.g., `yaml`, `json`, `toml`, `yaml-frontmatter`, etc.). Optional. [See below](#file-format-and-extension) for details.
+- `format`: The file format (e.g. `yaml`, `json`, `toml`, `yaml-frontmatter`, etc.). Optional. [See below](#file-format-and-extension) for details.
 - `frontmatter_delimiter`: The front matter delimiter. Optional. [See below](#front-matter-delimiter) for details.
 - `body_field`: The body field options for front matter formats. Optional. [See below](#body-field-for-front-matter-formats) for details.
 - `fields`: An array of field definitions for the file content. Required.
@@ -403,9 +403,9 @@ A listed file doesn’t have to exist in the repository. If it’s missing, the 
 
 ### File Format and Extension
 
-The file format and extension for each file in a file collection can be customized using the `format` property within each file definition. Sveltia CMS supports various file formats, including Markdown, YAML, JSON, and TOML.
+The file format and extension for each file in a file collection can be customized using the `format` property within each file definition. Sveltia CMS supports various file formats, including Markdown, YAML, JSON and TOML.
 
-By default, file format is determined based on the file extension. If it is a Markdown file (e.g., `.md`), it uses the `frontmatter` format, which detects YAML, TOML or JSON front matter automatically; a new file is saved with YAML front matter. For other extensions, it uses the corresponding format (e.g., `.yaml` uses `yaml` format). See [Default Format and Extension](https://sveltiacms.app/en/docs/collections/entries/formats#default-format-and-extension) for the full list.
+By default, the file format is determined based on the file extension. If it is a Markdown file (e.g. `.md`), it uses the `frontmatter` format, which detects YAML, TOML or JSON front matter automatically. A new file is saved with YAML front matter. For other extensions, it uses the corresponding format (e.g. `.yaml` uses `yaml` format). See [Default Format and Extension](https://sveltiacms.app/en/docs/collections/entries/formats#default-format-and-extension) for the full list.
 
 To illustrate, here is a file collection with two files using different formats:
 
@@ -672,7 +672,7 @@ frontmatter_delimiter = "~~~"
 
 #### Body Field for Front Matter Formats
 
-When using front matter formats (e.g., `yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter`), you can configure the body field to specify where the main content of the file should be stored. By default, the body field is named `body`, but you can customize this by setting the `body_field` option at either the collection or file level.
+When using front matter formats (e.g. `yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter`), you can configure the body field to specify where the main content of the file should be stored. By default, the body field is named `body`, but you can customize this by setting the `body_field` option at either the collection or file level.
 
 See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) in the entry collections documentation for more details.
 
@@ -800,7 +800,7 @@ The differences between the Singleton collection and a regular [file collection]
 
 ### When to Use Singletons
 
-If your project has multiple similar files, you might consider creating a regular [file collection](https://sveltiacms.app/en/docs/collections/files) and include all your relevant files there. A typical example is a `pages` collection that contains multiple page files like `home`, `about`, and `contact`.
+If your project has multiple similar files, you might consider creating a regular [file collection](https://sveltiacms.app/en/docs/collections/files) and including all your relevant files there. A typical example is a `pages` collection that contains multiple page files like `home`, `about` and `contact`.
 
 However, if your project has only a few pages or configuration files that are not part of a larger collection, using singletons can be more straightforward.
 
@@ -1133,13 +1133,13 @@ icon = "settings"
 
 ### Referencing Singleton Files
 
-Singletons belong to a collection named `_singletons` (note the underscore prefix). Use this name wherever a collection name is expected, along with the singleton’s `name` as the file name:
+Singletons belong to a collection named `_singletons` (note the underscore prefix). Use this name wherever a collection name is expected, along with the singleton’s `name` as the filename:
 
 - In a [Relation](https://sveltiacms.app/en/docs/fields/relation) field, set `collection` to `_singletons` and `file` to the singleton’s name.
 - In a [custom preview style](https://sveltiacms.app/en/docs/api/preview-styles#applying-preview-styles-to-specific-collections-or-files), set the `collection` option to `_singletons` and the `file` option to the singleton’s name, e.g. `registerPreviewStyle('/settings.css', { collection: '_singletons', file: 'settings' })`.
-- In a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates), call `getCollection('_singletons', 'settings')` to get the `settings` singleton, or `getCollection('_singletons')` to get all the singletons. `getCollection('settings')` doesn’t work, because `settings` is a file name, not a collection name.
+- In a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates), call `getCollection('_singletons', 'settings')` to get the `settings` singleton, or `getCollection('_singletons')` to get all the singletons. `getCollection('settings')` doesn’t work, because `settings` is a filename, not a collection name.
 - In a custom preview template or an [event hook](https://sveltiacms.app/en/docs/api/events), the `collection` property of a singleton’s entry is `_singletons`.
 
-`registerPreviewTemplate()` is different: like with a file collection, it takes the file name, which is the singleton’s own name, e.g. `registerPreviewTemplate('settings', SettingsPreview)`.
+`registerPreviewTemplate()` is different: like with a file collection, it takes the filename, which is the singleton’s own name, e.g. `registerPreviewTemplate('settings', SettingsPreview)`.
 
 Source: https://sveltiacms.app/en/docs/collections/singletons

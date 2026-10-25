@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Getting Started
 
-This guide will help you get Sveltia CMS up and running in your project. Follow the steps below to install, configure, test, and deploy Sveltia CMS.
+This guide will help you get Sveltia CMS up and running in your project. Follow the steps below to install, configure, test and deploy Sveltia CMS.
 
 Already using **Netlify CMS**, **Decap CMS**, **Static CMS** or **Pages CMS**? Check out the [Migration Guides](https://sveltiacms.app/en/docs/migration) for specific instructions.
 
@@ -66,7 +66,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 Even without a starter template, you can easily add Sveltia CMS to your existing project. Follow the steps below to set it up.
 
-Sveltia CMS requires a static files folder to serve the admin interface, configuration file, and media assets. First, you need to identify or create your static files folder. This folder is typically named `public` or `static`, depending on your framework or static site generator. If the static folder does not exist, create it in the root of your project.
+Sveltia CMS requires a static files folder to serve the admin interface, configuration file and media assets. First, you need to identify or create your static files folder. This folder is typically named `public` or `static`, depending on your framework or static site generator. If the static folder does not exist, create it in the root of your project.
 
 **Common static folder names**
 
@@ -167,11 +167,11 @@ Similarly, some agents and templates add a `type="module"` attribute to the `<sc
 
 **Advanced Setup: Using a Package Manager**
 
-You can install Sveltia CMS using a package manager like npm, pnpm, or yarn, instead of using the CDN version, and [manually initialize](https://sveltiacms.app/en/docs/api/initialization) the CMS in your JavaScript code with a custom configuration provided directly. See the [API documentation](https://sveltiacms.app/en/docs/api) for more details.
+You can install Sveltia CMS using a package manager like npm, pnpm or yarn, instead of using the CDN version, and [manually initialize](https://sveltiacms.app/en/docs/api/initialization) the CMS in your JavaScript code with a custom configuration provided directly. See the [API documentation](https://sveltiacms.app/en/docs/api) for more details.
 
 #### Install YAML Extension for VS Code (Optional)
 
-If you use VS Code as your code editor, it’s recommended to install the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml). This extension provides syntax highlighting, validation, and autocompletion for YAML files, including the Sveltia CMS configuration file. The `config.yml` file includes a schema reference that the extension can use to provide better support.
+If you use VS Code as your code editor, it’s recommended to install the [YAML extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml). This extension provides syntax highlighting, validation and autocompletion for YAML files, including the Sveltia CMS configuration file. The `config.yml` file includes a schema reference that the extension can use to provide better support.
 
 #### Set Up AI Tools (Optional)
 
@@ -179,7 +179,7 @@ If you use an AI coding assistant like Claude, GitHub Copilot, Cursor or ChatGPT
 
 ### 2. Configure
 
-Once you have the basic setup ready, you can customize the configuration file to suit your needs. It allows you to set up various aspects of Sveltia CMS, including backend, media storage, collections, and internationalization.
+Once you have the basic setup ready, you can customize the configuration file to suit your needs. It allows you to set up various aspects of Sveltia CMS, including backend, media storage, collections and internationalization.
 
 #### Backend
 
@@ -197,7 +197,7 @@ You should configure at least one [media storage provider](https://sveltiacms.ap
 
 #### Collections
 
-You need to define at least one collection in the configuration file to manage your content. Collections represent different types of content, such as blog posts, pages, or products. Each collection can have its own folder, fields, and settings.
+You need to define at least one collection in the configuration file to manage your content. Collections represent different types of content, such as blog posts, pages or products. Each collection can have its own folder, fields and settings.
 
 Before defining collections, you need to think about your content model and how you want to organize your content in the repository. Check out the [Content Modeling Guide](https://sveltiacms.app/en/docs/content-modeling) for tips on how to design your content model.
 
@@ -219,7 +219,7 @@ Before deploying Sveltia CMS to production, it’s a good idea to test it locall
 
 #### Test Locally
 
-Use the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) to test Sveltia CMS on your local machine before deploying it to production. You can update the configuration file, add contents and assets, see if the output is as expected, and troubleshoot any issues that arise.
+Use the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) to test Sveltia CMS on your local machine before deploying it to production. You can update the configuration file, add content and assets, see if the output is as expected, and troubleshoot any issues that arise.
 
 #### Update Your Site Code
 
@@ -267,7 +267,7 @@ This document explores the architecture of headless CMSs in general, highlightin
 
 As a quick refresher, a headless CMS is a content management system without a built-in presentation layer. It provides pure content management decoupled from how that content is displayed, enabling separation of concerns between content and presentation. This architecture offers several key benefits:
 
-- **Flexibility**: Use any frontend framework, static site generator, or platform to consume and display your content
+- **Flexibility**: Use any frontend framework, static site generator or platform to consume and display your content
 - **Scalability**: Scale your content distribution independently from your presentation layer
 - **Performance**: Deliver content through fast, distributed networks without the overhead of traditional CMS presentation layers
 - **Security**: Reduce the attack surface by keeping your content API separate from your public-facing application
@@ -279,7 +279,7 @@ The [headless CMS directory](https://jamstack.org/headless-cms/) on Jamstack.org
 
 #### API-Driven vs. Git-Based
 
-Most headless CMSs are API-driven, providing REST or GraphQL APIs to fetch and manage content with a backend server for storage. Git-based CMSs use a Git repository as the primary data store, enabling version control, collaboration, and easy change tracking. While API-driven CMSs are scalable for large applications, they require more complex infrastructure.
+Most headless CMSs are API-driven, providing REST or GraphQL APIs to fetch and manage content with a backend server for storage. Git-based CMSs use a Git repository as the primary data store, enabling version control, collaboration and easy change tracking. While API-driven CMSs are scalable for large applications, they require more complex infrastructure.
 
 Git-based CMSs like **Sveltia CMS** are simpler to set up and maintain, avoid vendor lock-in, and are better suited to smaller projects or teams.
 
@@ -287,7 +287,7 @@ Git-based CMSs like **Sveltia CMS** are simpler to set up and maintain, avoid ve
 
 Headless CMSs vary in framework support. Some integrate with specific frameworks for optimized workflows and features, while most are framework-agnostic and work with any generator or framework. A few provide built-in static site generators for direct deployment.
 
-**Sveltia CMS** is [framework-agnostic](https://sveltiacms.app/en/docs/frameworks), supporting Astro, Eleventy, Hugo, Jekyll, Next.js, and more.
+**Sveltia CMS** is [framework-agnostic](https://sveltiacms.app/en/docs/frameworks), supporting Astro, Eleventy, Hugo, Jekyll, Next.js and more.
 
 #### Cloud vs. Self-Hosted
 
@@ -346,7 +346,7 @@ collections:
 
 Sveltia CMS is distributed as an [npm package](https://www.npmjs.com/package/@sveltia/cms) but is easiest to use via [UNPKG](https://unpkg.com/), a [content delivery network](https://developer.mozilla.org/en-US/docs/Glossary/CDN) (CDN) that serves npm packages. The HTML file is simply a container that loads the Sveltia CMS JavaScript file from there.
 
-Since the CDN always serves the latest version, you never need to manually update the CMS. Just include the script tag and you’re ready to go. The entire CMS — all features and UI — runs within that single JavaScript file. No build step is required.
+Since the CDN always serves the latest version, you never need to manually update the CMS. Just include the script tag, and you’re ready to go. The entire CMS — all features and UI — runs within that single JavaScript file. No build step is required.
 
 #### Single-Page Application
 
@@ -354,15 +354,15 @@ When the HTML file is opened in a browser, Sveltia CMS initializes completely cl
 
 #### YAML Configuration
 
-On startup, Sveltia CMS automatically reads `config.yml` from the same directory as the HTML file — no path specification needed. This configuration file defines your backend, media folders, and content collections.
+On startup, Sveltia CMS automatically reads `config.yml` from the same directory as the HTML file — no path specification needed. This configuration file defines your backend, media folders and content collections.
 
 #### Git Backend
 
-Once a user authenticates with the Git service provider, they can access and manage content through a user-friendly interface. End-users never need to interact with Git directly; all operations are handled through the provider’s API behind the scenes.
+Once a user authenticates with the Git service provider, they can access and manage content through a user-friendly interface. End users never need to interact with Git directly; all operations are handled through the provider’s API behind the scenes.
 
 #### All Files in One Place
 
-The `index.html` and `config.yml` files live alongside your other project files in your repository, allowing your code, content, assets, CMS instance, and configuration to coexist seamlessly. This simplifies deployment and maintenance, and eliminates the need for a database.
+The `index.html` and `config.yml` files live alongside your other project files in your repository, allowing your code, content, assets, CMS instance and configuration to coexist seamlessly. This simplifies deployment and maintenance, and eliminates the need for a database.
 
 #### SSG-Friendly
 
@@ -370,38 +370,38 @@ Sveltia CMS focuses solely on content management without building your site, mak
 
 #### Local Development Workflow
 
-Sveltia CMS allows developers to [work with local repositories](https://sveltiacms.app/en/docs/workflows/local) directly from the browser, making it easy to update your configuration, content, and media assets without pushing changes to a remote repository first. This also enables offline editing capabilities.
+Sveltia CMS allows developers to [work with local repositories](https://sveltiacms.app/en/docs/workflows/local) directly from the browser, making it easy to update your configuration, content and media assets without pushing changes to a remote repository first. This also enables offline editing capabilities.
 
 #### JavaScript API
 
-Advanced users can leverage the [JavaScript API](https://sveltiacms.app/en/docs/api) to customize and extend Sveltia CMS functionality, such as manual initialization, registering custom preview styles, and adding editor components.
+Advanced users can leverage the [JavaScript API](https://sveltiacms.app/en/docs/api) to customize and extend Sveltia CMS functionality, such as manual initialization, registering custom preview styles and adding editor components.
 
 ### Differences from Netlify/Decap CMS
 
 While Sveltia CMS is heavily inspired by Netlify CMS, we’re committed to building a modern platform with unique features. Key differences include:
 
-- **Built with Svelte**: Smaller bundle sizes, faster performance, fewer crashes, and simpler reactivity compared to React, thanks to efficient compile-time optimizations.
+- **Built with Svelte**: Smaller bundle sizes, faster performance, fewer crashes and simpler reactivity compared to React, thanks to efficient compile-time optimizations.
 - **Lean codebase**: Provides only the core CMS with no extra packages, reducing complexity and maintenance overhead while enabling frequent releases.
 - **Modular dependencies**: Dynamically loads additional dependencies from UNPKG rather than bundling everything into one large file, reducing initial download size.
 - **Seamless local workflow**: First CMS to leverage the [File System Access API](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access) for direct browser access to local files, eliminating the need for an insecure proxy server.
-- **Modern web application**: Uses [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) for caching, [Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) for lazy loading, [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) for smooth visual transitions, and more.
-- **Startup content fetching**: Enables instant full text search, advanced [relation fields](https://sveltiacms.app/en/docs/fields/relation), entry-asset linking, and better performance by fetching all entries in one go.
+- **Modern web application**: Uses [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) for caching, [Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) for lazy loading, [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) for smooth visual transitions and more.
+- **Startup content fetching**: Enables instant full-text search, advanced [relation fields](https://sveltiacms.app/en/docs/fields/relation), entry-asset linking and better performance by fetching all entries in one go.
 - **Unified type definitions**: TypeScript types and JSON schema are generated from a single source of truth, ensuring consistency between the codebase and editor support.
 
 ### Choosing a Headless CMS
 
 In addition to the architectural differences explained above, here are other factors to consider when choosing a headless CMS:
 
-- **License & Pricing**: open source, commercial, freemium, or enterprise models
-- **Activity & Roadmap**: update frequency, new features, bug fixes, and future plans
-- **Backend Support**: Git providers, databases, file storage, and API capabilities
+- **License & Pricing**: open source, commercial, freemium or enterprise models
+- **Activity & Roadmap**: update frequency, new features, bug fixes and future plans
+- **Backend Support**: Git providers, databases, file storage and API capabilities
 - **Content Modeling**: flexible schemas, custom fields, relationships, validations and i18n
-- **User Experience**: intuitive UI, personalization, accessibility, performance, and mobile support
-- **Security & Access Control**: roles, permissions, SSO, encryption, and vulnerability management
-- **Documentation & Support**: tutorials, API reference, examples, FAQs, forums, and professional support
-- **Extensibility**: plugins, integrations, APIs, SDKs, and customization options
-- **Media Management**: image handling, file uploads, optimization, and gallery features
-- **Collaboration Features**: editorial workflow, versioning, comments, and notifications
+- **User Experience**: intuitive UI, personalization, accessibility, performance and mobile support
+- **Security & Access Control**: roles, permissions, SSO, encryption and vulnerability management
+- **Documentation & Support**: tutorials, API reference, examples, FAQs, forums and professional support
+- **Extensibility**: plugins, integrations, APIs, SDKs and customization options
+- **Media Management**: image handling, file uploads, optimization and gallery features
+- **Collaboration Features**: editorial workflow, versioning, comments and notifications
 
 Sveltia CMS aims to excel in many of these areas while maintaining a simple, developer-friendly experience. We encourage you to [explore its features](https://sveltiacms.app/en/features) and see how well it fits your project’s needs!
 
@@ -411,13 +411,13 @@ Source: https://sveltiacms.app/en/docs/architecture
 
 ## Releases
 
-This document provides information about Sveltia CMS releases, including how to find release notes, versioning practices, and update instructions.
+This document provides information about Sveltia CMS releases, including how to find release notes, versioning practices and update instructions.
 
 ### Release Frequency
 
-Sveltia CMS ships new versions frequently, usually multiple times per week or even multiple times per day. Instead of following a strict release schedule, we prioritize releasing updates as soon as they are ready. This approach allows us to deliver new features, improvements, and bug fixes to users more rapidly.
+Sveltia CMS ships new versions frequently, usually multiple times per week or even multiple times per day. Instead of following a strict release schedule, we prioritize releasing updates as soon as they are ready. This approach allows us to deliver new features, improvements and bug fixes to users more rapidly.
 
-And this approach works because our product is a [CDN-served SPA](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works). As long as you use the CDN script without pinning to a specific version, there is no maintenance overhead for users to update their installations. End-users can always access the latest version of Sveltia CMS without needing to manually update their software.
+And this approach works because our product is a [CDN-served SPA](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works). As long as you use the CDN script without pinning to a specific version, there is no maintenance overhead for users to update their installations. End users can always access the latest version of Sveltia CMS without needing to manually update their software.
 
 ### Release Information
 
@@ -440,17 +440,17 @@ Here are some ways to stay informed about new releases:
 
 We follow [semantic versioning](https://semver.org/) for our releases. We don’t typically maintain multiple release lines, but we may do so for critical security fixes if necessary. We don’t offer long-term support (LTS) versions.
 
-Breaking changes are only introduced in major version updates (e.g., from 1.x.x to 2.0.0). Minor and patch releases (e.g., from 1.0.0 to 1.1.0 or 1.0.1) are backward-compatible, though unintended issues may occasionally arise.
+Breaking changes are only introduced in major version updates (e.g. from 1.x.x to 2.0.0). Minor and patch releases (e.g. from 1.0.0 to 1.1.0 or 1.0.1) are backward-compatible, though unintended issues may occasionally arise.
 
 **Stable Version Not Yet Available**
 
 At this point, Sveltia CMS has not reached 1.0.0, so breaking changes may still occur in minor version updates. We’ll announce breaking changes clearly in the release notes.
 
-### CDN or NPM Package
+### CDN or npm Package
 
 Sveltia CMS is published as the [`@sveltia/cms`](https://www.npmjs.com/package/@sveltia/cms) package, which contains three builds of the app. See the [API documentation](https://sveltiacms.app/en/docs/api#accessing-the-cms-object) for how to load each one.
 
-|  | CDN script | CDN module | NPM package |
+|  | CDN script | CDN module | npm package |
 | --- | --- | --- | --- |
 | File | `dist/sveltia-cms.js` | `dist/sveltia-cms.mjs` | `npm/index.js` |
 | How to load | `script` tag | `script` tag with `type="module"` | `import` from `@sveltia/cms` |
@@ -461,19 +461,21 @@ Sveltia CMS is published as the [`@sveltia/cms`](https://www.npmjs.com/package/@
 
 The CDN builds are self-contained scripts that work on any site. To keep them small, they load some files from public CDNs as needed: fonts from jsDelivr, and admin interface translations, additional libraries, image decoders and syntax highlighting definitions from UNPKG. This is still the case if you copy the script to your own site. See the [privacy notes](https://sveltiacms.app/en/docs/privacy#content-delivery-networks) and the [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) guide for details.
 
-The NPM package includes all of these files instead, so the CMS contacts no CDN. Your build tool processes them along with the rest of your site and loads each one only when it’s needed. This requires a build tool that supports JavaScript modules, workers and assets referenced with `new URL()`, such as [Vite](https://vite.dev/) and [webpack](https://webpack.js.org/) 5. Some of those files, including libraries like [Leaflet](https://leafletjs.com/) for the Map field and the syntax highlighting definitions, come with packages that your package manager installs as dependencies of Sveltia CMS. If your site uses one of them too, both can share a single copy.
+The npm package includes all of these files instead, so the CMS contacts no CDN. Your build tool processes them along with the rest of your site and loads each one only when it’s needed. This requires a build tool that supports JavaScript modules, workers and assets referenced with `new URL()`, such as [Vite](https://vite.dev/) and [webpack](https://webpack.js.org/) 5.
 
-**Advanced Usage of the NPM Package**
+Some of those files, including libraries like [Leaflet](https://leafletjs.com/) for the Map field and the syntax highlighting definitions, come with packages that your package manager installs as dependencies of Sveltia CMS. If your site uses one of them too, both can share a single copy.
 
-The NPM package is aimed at advanced users who are familiar with build tools and JavaScript modules. We do not provide support for using it. If you are not comfortable with build tools, we recommend using the CDN builds instead.
+**Advanced Usage of the npm Package**
+
+The npm package is aimed at advanced users who are familiar with build tools and JavaScript modules. We do not provide support for using it. If you are not comfortable with build tools, we recommend using the CDN builds instead.
 
 **Breaking Change in v0.221.0**
 
-Earlier versions of the NPM package pointed to the CDN module, `dist/sveltia-cms.mjs`, so `import CMS from '@sveltia/cms'` gave you the same self-contained file as the CDN. It now points to the NPM build described above, which needs a build tool. If you load the package without one, for example through an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), use the CDN module URL instead. Also note that the NPM build no longer shows update notifications, and doesn’t generate PDF thumbnails.
+Earlier versions of the npm package pointed to the CDN module, `dist/sveltia-cms.mjs`, so `import CMS from '@sveltia/cms'` gave you the same self-contained file as the CDN. It now points to the npm build described above, which needs a build tool. If you load the package without one, for example through an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), use the CDN module URL instead. Also note that the npm build no longer shows update notifications, and doesn’t generate PDF thumbnails.
 
-**PDF Thumbnails in the NPM Package**
+**PDF Thumbnails in the npm Package**
 
-The NPM package generates thumbnails for PDF files with [PDF.js](https://github.com/mozilla/pdf.js), like the CDN builds, but it doesn’t include the hundreds of character maps, standard fonts and color profiles that come with the library. Text in fonts that are not embedded in a PDF file is drawn with a font installed on the user’s system instead, and some text in Chinese, Japanese or Korean may be left out of the thumbnail. The image decoders for JPEG 2000 and JBIG2 images are included.
+The npm package generates thumbnails for PDF files with [PDF.js](https://github.com/mozilla/pdf.js), like the CDN builds. However, it doesn’t include the hundreds of character maps, standard fonts and color profiles that come with the library. As a result, text in fonts that are not embedded in a PDF file is drawn with a font installed on the user’s system instead. Some text in Chinese, Japanese or Korean may also be left out of the thumbnail. The image decoders for JPEG 2000 and JBIG2 images are included.
 
 ### Checking Your Current Version
 
@@ -531,7 +533,7 @@ Pinning to an exact version means that you will not receive any updates, includi
 
 Because our [security practices](https://sveltiacms.app/en/docs/security#security-practices) include regular dependency updates and supply chain attack mitigations, pinning to an exact version is discouraged for long-term use.
 
-#### NPM Package Usage
+#### npm Package Usage
 
 If you’ve chosen to install the CMS using a package manager, updating the package is your responsibility. The CMS doesn’t notify users of new versions in this case, as updating requires a new build of your site. We strongly recommend using [`ncu`](https://www.npmjs.com/package/npm-check-updates) or a service like [Dependabot](https://github.blog/news-insights/product-news/keep-all-your-packages-up-to-date-with-dependabot/) to keep dependencies up to date. Otherwise, you’ll miss important bug fixes and new features.
 
@@ -539,7 +541,7 @@ If you’ve chosen to install the CMS using a package manager, updating the pack
 
 We update our dependencies using `ncu -u && pnpm up` at least once a week.
 
-The pinning methods described in the CDN section above also apply to NPM package versions. For example, to pin to a specific major version, you can run:
+The pinning methods described in the CDN section above also apply to npm package versions. For example, to pin to a specific major version, you can run:
 
 ```bash [npm]
 npm install @sveltia/cms@^1
@@ -557,7 +559,7 @@ pnpm add @sveltia/cms@^1
 bun add @sveltia/cms@^1
 ```
 
-See the [NPM semantic versioning documentation](https://docs.npmjs.com/about-semantic-versioning) for more details on version ranges.
+See the [npm semantic versioning documentation](https://docs.npmjs.com/about-semantic-versioning) for more details on version ranges.
 
 Source: https://sveltiacms.app/en/docs/releases
 
@@ -565,7 +567,7 @@ Source: https://sveltiacms.app/en/docs/releases
 
 ## Framework Guides
 
-Sveltia CMS is designed to be framework-agnostic, allowing you to integrate it with a wide range of frameworks and [static site generators](https://jamstack.org/generators/) (SSGs). Whether you’re using Astro, Eleventy, Hugo, Jekyll, Next.js, or another framework — or even vanilla JavaScript — Sveltia CMS can fit seamlessly into your development workflow.
+Sveltia CMS is designed to be framework-agnostic, allowing you to integrate it with a wide range of frameworks and [static site generators](https://jamstack.org/generators/) (SSGs). Whether you’re using Astro, Eleventy, Hugo, Jekyll, Next.js or another framework — or even vanilla JavaScript — Sveltia CMS can fit seamlessly into your development workflow.
 
 ### Getting Started
 
@@ -640,7 +642,7 @@ Sveltia CMS works seamlessly with vanilla JavaScript projects — no framework r
 
 Sveltia CMS operates as a [CDN-served single-page application](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works), so you can load it directly in your project without any build tools or server-side rendering. Simply include an HTML file with the CMS script and start managing your content.
 
-Once configured, the CMS generates static JSON or Markdown files that you consume on the client side. This approach works well for lightweight projects that need dynamic content management without framework overhead — perfect for event listings, announcements, portfolios, or any site where you want managed content instead of hardcoded data.
+Once configured, the CMS generates static JSON or Markdown files that you consume on the client side. This approach works well for lightweight projects that need dynamic content management without framework overhead — perfect for event listings, announcements, portfolios or any site where you want managed content instead of hardcoded data.
 
 ### Implementation
 

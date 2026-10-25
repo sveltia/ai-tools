@@ -36,7 +36,7 @@ The Astro development server doesn’t serve `index.html` for a folder path in `
 
 **Don’t Use an Astro Page**
 
-Don’t load Sveltia CMS from an Astro page, such as `src/pages/admin.astro` or `src/pages/admin/index.astro`, even if you import it from the [npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package). The Astro development server reloads such a page every time a file changes, which can interrupt saving when you [work with a local repository](https://sveltiacms.app/en/docs/workflows/local), leaving a file empty or a temporary `.sveltia-tmp-*` file behind. Sveltia CMS shows a warning at the top of the page in this case. A static HTML file in the `public` folder is not reloaded.
+Don’t load Sveltia CMS from an Astro page, such as `src/pages/admin.astro` or `src/pages/admin/index.astro`, even if you import it from the [npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package). The Astro development server reloads such a page every time a file changes. This can interrupt saving when you [work with a local repository](https://sveltiacms.app/en/docs/workflows/local), leaving a file empty or a temporary `.sveltia-tmp-*` file behind. Sveltia CMS shows a warning at the top of the page in this case. A static HTML file in the `public` folder is not reloaded.
 
 If your site uses the [`<ClientRouter />`](https://docs.astro.build/en/guides/view-transitions/) component for view transitions, add the `data-astro-reload` attribute to links to the admin page, so they are opened as regular pages instead of being handled by the router:
 
@@ -104,7 +104,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 
 - [Starlight](https://sveltiacms.app/en/docs/frameworks/starlight): Manage a Starlight documentation site, including its folder tree, front matter and multilingual content.
 - The [`value_field`](https://sveltiacms.app/en/docs/fields/relation#value-field) Relation field option can contain a locale prefix like `{{locale}}/{{slug}}`, which will be replaced with the current locale. It’s intended to support i18n in Astro. ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/302))
-- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
+- [Localizing entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs): Generate localized slugs for multilingual Astro sites, notably with the [@astrolicious/i18n](https://github.com/astrolicious/i18n) library. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/137))
 - [Omitting empty optional fields](https://sveltiacms.app/en/docs/data-output#controlling-data-output): Set the `omit_empty_optional_fields` output option to `true` so that content with unfilled optional fields passes [content collection schema](https://docs.astro.build/en/guides/content-collections/#defining-the-collection-schema) validation. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/241))
 
 Source: https://sveltiacms.app/en/docs/frameworks/astro
@@ -169,7 +169,7 @@ collections:
 
 Some notes on authors and tags:
 
-- [Authors](https://docusaurus.io/docs/blog#blog-post-authors) are defined inline in the example above. If you maintain the authors in `blog/authors.yml` instead, the front matter refers to them by key, such as `authors: [jane]`. Since the file is a map keyed by author, it can’t be edited easily in the CMS, but a Select field with the keys as `options` and `multiple: true` lets editors pick authors from the list.
+- [Authors](https://docusaurus.io/docs/blog#blog-post-authors) are defined inline in the example above. If you maintain the authors in `blog/authors.yml` instead, the front matter refers to them by key, such as `authors: [jane]`. Since the file is a map keyed by author, it can’t be edited easily in the CMS. However, a Select field with the keys as `options` and `multiple: true` lets editors pick authors from the list.
 - [Tags](https://docusaurus.io/docs/blog#blog-post-tags) can be free-form strings, as in the example above. If you predefine tags in `blog/tags.yml`, Docusaurus warns about tags that are not in the file by default, so use a Select field with the same keys as `options` and `multiple: true` instead of a List field.
 
 #### Docs
@@ -204,13 +204,15 @@ output:
 
 **MDX Content**
 
-Docusaurus parses `.md` and `.mdx` files as [MDX](https://docusaurus.io/docs/markdown-features/react) by default, which allows JSX components in Markdown. Sveltia CMS doesn’t support MDX yet (it’s on our [roadmap](https://sveltiacms.app/en/docs/roadmap)), so editing a file with components in the rich text editor may change or break them. Also, an entry collection uses one file extension, so `.md` and `.mdx` files in the same folder need to be managed by separate collections with the [`extension`](https://sveltiacms.app/en/docs/collections/entries/formats#extension) option.
+Docusaurus parses `.md` and `.mdx` files as [MDX](https://docusaurus.io/docs/markdown-features/react) by default, which allows JSX components in Markdown. Sveltia CMS doesn’t support MDX yet (it’s on our [roadmap](https://sveltiacms.app/en/docs/roadmap)), so editing a file with components in the rich text editor may change or break them.
+
+Also, an entry collection uses one file extension, so `.md` and `.mdx` files in the same folder need to be managed by separate collections with the [`extension`](https://sveltiacms.app/en/docs/collections/entries/formats#extension) option.
 
 ### Support for Docusaurus
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Docusaurus:
 
-- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if one exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
 - [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [docs folder tree](https://docusaurus.io/docs/create-doc) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
 
 Source: https://sveltiacms.app/en/docs/frameworks/docusaurus
@@ -242,7 +244,9 @@ See real-world examples of Eleventy integrations in our [Showcase](https://svelt
 
 #### Adding the Admin Page
 
-Eleventy doesn’t have a static files folder. It processes template files, including HTML, in the input folder, which is the project root by default, and ignores other files. Create `admin/index.html` and `admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide, then add a [passthrough file copy](https://www.11ty.dev/docs/copy/) to your Eleventy configuration file so that both files are copied to the output folder as is:
+Eleventy doesn’t have a static files folder. It processes template files, including HTML, in the input folder, which is the project root by default. Other files are ignored.
+
+Create `admin/index.html` and `admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. Then add a [passthrough file copy](https://www.11ty.dev/docs/copy/) to your Eleventy configuration file so that both files are copied to the output folder as is:
 
 ```js [eleventy.config.js]
 export default function (eleventyConfig) {
@@ -275,7 +279,7 @@ Some notes on this configuration:
 
 - The `images` media folder also needs a passthrough file copy, such as `addPassthroughCopy('images')`, to be included in the output.
 - The layout and the `posts` tag shared by all posts are usually defined in a [directory data file](https://www.11ty.dev/docs/data-template-dir/) like `posts/posts.json` instead of the front matter of each post. Eleventy merges the `tags` in the front matter with the ones in the data file, so editors only need to add extra tags. The data file itself can be managed in the same collection, as explained below.
-- Eleventy uses the file name as the URL of a post by default, such as `/posts/hello-world/`. Each post can override it with a [`permalink`](https://www.11ty.dev/docs/permalinks/) property, which can be added as a String field if needed.
+- Eleventy uses the filename as the URL of a post by default, such as `/posts/hello-world/`. Each post can override it with a [`permalink`](https://www.11ty.dev/docs/permalinks/) property, which can be added as a String field if needed.
 
 ### Support for Eleventy
 
@@ -459,7 +463,7 @@ The Astro development server doesn’t serve `index.html` for a folder path in `
 
 #### Docs Collection
 
-Starlight turns every Markdown file in `src/content/docs` into a page at its own path, and the folder structure becomes the URL structure and, with [autogenerated sidebar groups](https://starlight.astro.build/guides/sidebar/#autogenerated-links), the sidebar structure. A collection of [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) in the `subfolders: false` mode manages this structure as a folder tree, where editors can create new folders as needed:
+Starlight turns every Markdown file in `src/content/docs` into a page at its own path. The folder structure becomes the URL structure. With [autogenerated sidebar groups](https://starlight.astro.build/guides/sidebar/#autogenerated-links), it also becomes the sidebar structure. A collection of [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) in the `subfolders: false` mode manages this structure as a folder tree, where editors can create new folders as needed:
 
 ```yaml [public/admin/config.yml]
 media_folder: public/images
@@ -501,11 +505,11 @@ The fields correspond to the [front matter](https://starlight.astro.build/refere
 
 #### Omitting Empty Optional Fields
 
-Starlight validates front matter with the [`docsSchema()`](https://starlight.astro.build/reference/configuration/#docsschema) helper defined in `src/content.config.ts`. The schema uses Zod’s `.optional()`, which only accepts a missing property, so an empty value saved by Sveltia CMS for an optional field, such as `order: null`, can cause a build error. The [`omit_empty_optional_fields`](https://sveltiacms.app/en/docs/data-output#controlling-data-output) output option in the example above leaves such fields out of the front matter.
+Starlight validates front matter with the [`docsSchema()`](https://starlight.astro.build/reference/configuration/#docsschema) helper defined in `src/content.config.ts`. The schema uses Zod’s `.optional()`, which only accepts a missing property. An empty value saved by Sveltia CMS for an optional field, such as `order: null`, can therefore cause a build error. The [`omit_empty_optional_fields`](https://sveltiacms.app/en/docs/data-output#controlling-data-output) output option in the example above leaves such fields out of the front matter.
 
 #### Images
 
-Images uploaded in the CMS are saved in the `public/images` folder in the example above and referenced as `/images/file.png`. Starlight serves these files as is. If you want Astro to optimize images, they need to be stored in `src/assets` or next to the page and referenced with a relative path, which is not supported by the `subfolders: false` mode because the relative path differs for each folder level.
+Images uploaded in the CMS are saved in the `public/images` folder in the example above and referenced as `/images/file.png`. Starlight serves these files as is. If you want Astro to optimize images, they need to be stored in `src/assets` or next to the page and referenced with a relative path. The `subfolders: false` mode doesn’t support this, because the relative path differs for each folder level.
 
 ### Multilingual Sites
 
@@ -588,15 +592,18 @@ collections:
 
 ### Loading Content
 
-A key step in integrating Sveltia CMS with SvelteKit is using Vite’s [glob import](https://vite.dev/guide/features#glob-import) to load all your content files at once in [`+layout.js`](https://svelte.dev/docs/kit/load#Layout-data) or somewhere else in your SvelteKit app. Since SvelteKit uses Vite under the hood, you can take advantage of the `import.meta.glob` function without additional configuration. This allows you to easily access and manage your content within the SvelteKit framework.
+A key step in integrating Sveltia CMS with SvelteKit is using Vite’s [glob import](https://vite.dev/guide/features#glob-import). It loads all your content files at once in [`+layout.js`](https://svelte.dev/docs/kit/load#Layout-data) or somewhere else in your SvelteKit app. Since SvelteKit uses Vite under the hood, you can take advantage of the `import.meta.glob` function without additional configuration. This allows you to easily access and manage your content within the SvelteKit framework.
 
 Since content files are bundled with your site, the site must be rebuilt to reflect content changes made in the CMS. Most hosting services rebuild the site automatically when a commit is pushed to the repository.
 
 ### Serving the CMS as a SvelteKit Route
 
-The standard setup is to place `index.html` and `config.yml` in the `static/admin` folder as described in the Setup section above, but if you’re using the [NPM package](https://sveltiacms.app/en/docs/api#using-the-npm-package), you can also serve the CMS from a regular SvelteKit route. This is useful when you want to bundle the CMS with your site instead of loading it from a CDN, or define the [configuration in JavaScript/TypeScript](https://sveltiacms.app/en/docs/api/initialization) so it can be shared with your site’s content schemas or switched between a real and a test repository depending on the environment.
+The standard setup is to place `index.html` and `config.yml` in the `static/admin` folder as described in the Setup section above. However, if you’re using the [npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package), you can also serve the CMS from a regular SvelteKit route. This is useful when you want to:
 
-Sveltia CMS is a client-side single-page application that needs the `window` and `document` objects, so it can’t be rendered on the server. Disable SSR for the admin route by exporting `ssr = false` from its `+page.js` (or `+page.ts`) file; otherwise you’ll see an error like “Cannot read properties of undefined (reading 'bind')” during server-side rendering. The rest of your site can still be server-rendered or built as static pages as usual.
+- bundle the CMS with your site instead of loading it from a CDN
+- define the [configuration in JavaScript/TypeScript](https://sveltiacms.app/en/docs/api/initialization), so it can be shared with your site’s content schemas or switched between a real and a test repository depending on the environment
+
+Sveltia CMS is a client-side single-page application that needs the `window` and `document` objects, so it can’t be rendered on the server. Disable SSR for the admin route by exporting `ssr = false` from its `+page.js` (or `+page.ts`) file. Otherwise, you’ll see an error like “Cannot read properties of undefined (reading 'bind')” during server-side rendering. The rest of your site can still be server-rendered or built as static pages as usual.
 
 `src/routes/admin/+page.ts`:
 
@@ -713,14 +720,16 @@ collections:
       - { name: body, label: Body, widget: markdown }
 ```
 
-The `title` and `description` fields correspond to the [front matter](https://vitepress.dev/reference/frontmatter-config) options of the same names, and `layout` selects one of the [default theme layouts](https://vitepress.dev/reference/default-theme-layout). VitePress can take the page title from the first heading instead, but the `title` field is required here because Sveltia CMS uses it to generate the file name of a new page. The home page uses many layout-specific options, such as `hero` and `features`, so you may want to manage `index.md` with a [file collection](https://sveltiacms.app/en/docs/collections/files) of its own instead.
+The `title` and `description` fields correspond to the [front matter](https://vitepress.dev/reference/frontmatter-config) options of the same names, and `layout` selects one of the [default theme layouts](https://vitepress.dev/reference/default-theme-layout). VitePress can take the page title from the first heading instead. However, the `title` field is required here, because Sveltia CMS uses it to generate the filename of a new page.
+
+The home page uses many layout-specific options, such as `hero` and `features`, so you may want to manage `index.md` with a [file collection](https://sveltiacms.app/en/docs/collections/files) of its own instead.
 
 ### Support for VitePress
 
 We have implemented specific features to enhance the integration of Sveltia CMS with VitePress:
 
 - The [`folder` option](https://sveltiacms.app/en/docs/collections/entries#creating-an-entry-collection) for an entry collection can be an empty string (or `.` or `/`) if you want to store entries in the root folder. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
-- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if one exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
 - [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [folder tree of pages](https://vitepress.dev/guide/routing#source-directory) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
 
 Source: https://sveltiacms.app/en/docs/frameworks/vitepress

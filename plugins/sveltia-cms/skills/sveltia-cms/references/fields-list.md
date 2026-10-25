@@ -24,13 +24,13 @@ The List field type has four different UI modes, depending on the configuration:
 ##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
-- Each item comes with a menu that allows users to copy the item, paste a copied item in place of it or above/below it, duplicate the item or insert a new item above/below it, and a Remove button. A duplicated or pasted item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one. See [Copying and pasting items](#copying-and-pasting-items) below.
-- A removed item is replaced with a notice and a Restore button, which brings the item back to the same position with all its values, in every locale it was removed from. The notice is shown until the entry editor is closed, or until the list is changed in another way that leaves it out of place, e.g. by reverting the field. Restore is disabled while the list has reached its [`max`](#max) number of items.
+- Each item comes with a Remove button and a menu. The menu lets users copy the item, paste a copied item in place of it or above/below it, duplicate the item, or insert a new item above/below it. A duplicated or pasted item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one. See [Copying and pasting items](#copying-and-pasting-items) below.
+- A removed item is replaced with a notice and a Restore button. Restore brings the item back to the same position with all its values, in every locale it was removed from. The notice is shown until the entry editor is closed, or until the list is changed in a way that leaves it out of place, e.g. by reverting the field. Restore is disabled while the list has reached its [`max`](#max) number of items.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
 - Each item can be reordered in its header:
   - The Move Up and Move Down buttons, next to the item menu, move the item one position. They are disabled on the first and last items respectively.
   - With a mouse, the drag handle in the middle of the header also moves the item when dragged. With the handle focused, the Up and Down arrow keys move the item one position, while Home and End send it to the top or bottom of the list. The handle is not shown on a touch screen, because drag and drop requires a mouse.
-  - When the list has 3 or more items, the item menu also offers Move to Top and Move to Bottom, and Move to…, which asks for the position to move the item to, from 1 to the number of items. Move to Top and Move to Bottom are disabled on the first and last items respectively.
+  - When the list has 3 or more items, the item menu also offers Move to Top, Move to Bottom and Move to…. The last one asks for the position to move the item to, from 1 to the number of items. Move to Top and Move to Bottom are disabled on the first and last items respectively.
 - With a mouse, the Move Up, Move Down, menu and Remove buttons of an item are shown when the pointer is over the item or the item has focus, to reduce clutter.
 
 ###### Copying and pasting items
@@ -38,21 +38,22 @@ The List field type has four different UI modes, depending on the configuration:
 An item of a complex list field can be copied and pasted into the same list or any other list that takes it, in another entry or collection, or even on another site managed with Sveltia CMS.
 
 - **Copy**: Select Copy in the item menu. The item is copied to the system clipboard, so it can be pasted in another browser tab as well. Copy is available even in a read-only list or a list that doesn’t allow adding items.
-- **Paste**: Select Paste Item Above, Paste Item Below or Paste to Replace in the menu of another item, or click the Paste Item button next to the Add button, which adds the item to the end of the list, or to the top with the [`add_to_top`](#add-to-top) option. The button is also how to paste an item into an empty list. Paste to Replace replaces the item, so it’s available even when the list has reached its [`max`](#max) number of items.
+- **Paste**: Select Paste Item Above, Paste Item Below or Paste to Replace in the menu of another item. Paste to Replace replaces the item, so it’s available even when the list has reached its [`max`](#max) number of items.
+  - You can also click the Paste Item button next to the Add button. It adds the item to the end of the list, or to the top with the [`add_to_top`](#add-to-top) option. This button is also how to paste an item into an empty list.
 - The browser may ask for permission to read the clipboard. If the permission is denied, an item copied in the same tab can still be pasted.
 - The copied item doesn’t have to come from a list with the same configuration. The values are matched to the subfields by name:
   - A value is left out if the list doesn’t have a subfield of the same name, or if the subfield doesn’t take that kind of value, e.g. text pasted into a Boolean field. A notification tells how many values were left out.
   - A subfield that the item doesn’t have gets its default value.
   - In a [variable type](#types) list, the list needs a type with the same name as the copied item’s type.
   - If none of the values fit, the item isn’t pasted, and a notification says so.
-- File and image paths are updated to work in the entry the item is pasted into. If a file stored next to the source entry, e.g. in a Hugo page bundle, can’t be referenced from the target entry, it’s copied to the target field’s media folder when the entry is saved, just like a file picked for the field. A notification tells if a file can’t be found, e.g. when the item comes from another site.
+- File and image paths are updated to work in the entry the item is pasted into. A file stored next to the source entry, e.g. in a Hugo page bundle, may not be referenced from the target entry. If so, it’s copied to the target field’s media folder when the entry is saved, just like a file picked for the field. A notification tells if a file can’t be found, e.g. when the item comes from another site.
 - In a list whose items are paired across locales, the item is copied and pasted in every locale. Otherwise, the item is copied in the locale it’s copied from, and its values are pasted in the locale being edited.
 
 ##### Simple list field
 
 - Pressing Enter in an item’s input adds a new item below it. The Add button below the list appends one to the end.
 - Each item comes with a Remove button.
-- Each item can be reordered using the drag handle at the start of its row, by dragging it or with the same keys as a complex list field. On a touch screen, Move Up and Move Down buttons are shown in place of the handle. When the list has 3 or more items, a menu next to the handle or buttons offers Move to Top, Move to Bottom and Move to…, as in a complex list field.
+- Each item can be reordered using the drag handle at the start of its row, either by dragging it or with the same keys as a complex list field. On a touch screen, Move Up and Move Down buttons are shown in place of the handle. When the list has 3 or more items, a menu next to the handle or buttons offers Move to Top, Move to Bottom and Move to…, as in a complex list field.
 - The list always keeps one row, so that an empty list still offers somewhere to type. The Remove and reorder controls are disabled when a single item is left.
 - Blank rows are ignored. The stored value is the list of the remaining items, each trimmed of surrounding spaces.
 
@@ -72,7 +73,7 @@ With the [`map_key_field`](#map-key-field) option, the list is stored as an obje
 
 - If the `required` option is set to `true`, the list must contain at least one item.
 - If the `min` and/or `max` options are specified, the number of items in the list must be within the defined limits.
-- For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list rather than against each item, so a pattern that describes a single item has to allow for the commas: use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$` to accept lowercase words only.
+- For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list, not against each item. A pattern that describes a single item therefore has to allow for the commas. To accept lowercase words only, use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$`.
 - Each item in the list is validated according to the subfield definitions, if applicable.
 - With the [`map_key_field`](#map-key-field) option, the key of each item is required, even in an [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) draft, must be unique within the list, and can’t be a whole number such as `1` or `2024`.
 
@@ -99,11 +100,18 @@ Must be set to `list` to use the List field type.
 The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. The shape of the array depends on how the list is configured:
 
 - For a simple list without `field`, `fields` or `types`, an array of strings.
-- For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/en/docs/fields/object) or [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield, and so on.
+- For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/en/docs/fields/object) or [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield and so on.
 - For a list with `fields`, an array of objects whose keys are the subfield names.
 - For a list with `types`, an array of objects, each including the [`typeKey`](#typekey) property (`type` by default) to identify its variable type.
 
-An item that doesn’t match the configuration — an object in a simple list, a plain value in a list with `fields` or `types`, a property that isn’t a subfield name, or a type name that isn’t one of the `types` — is reported as a config validation error on the login screen, because it would otherwise be silently dropped or saved to the entry as-is. See the [Default Values](#default-values) example below for each shape.
+An item that doesn’t match the configuration is reported as a config validation error on the login screen, because it would otherwise be silently dropped or saved to the entry as-is. This includes:
+
+- an object in a simple list
+- a plain value in a list with `fields` or `types`
+- a property that isn’t a subfield name
+- a type name that isn’t one of the `types`
+
+See the [Default Values](#default-values) example below for each shape.
 
 Note that the field can also be pre-filled with comma-separated [dynamic default values](https://sveltiacms.app/en/docs/ui/content-editor#dynamic-default-values) passed via URL query parameters. Dynamic values take precedence over the `default` option.
 
@@ -112,7 +120,7 @@ Note that the field can also be pre-filled with comma-separated [dynamic default
 - **Type**: `string`
 - **Default**: The value of the `label` option
 
-A label used for singular items in the list, e.g., “Member” for a list labeled “Members”. It will be displayed on the Add button and in other relevant places in the UI.
+A label used for singular items in the list, e.g. “Member” for a list labeled “Members”. It will be displayed on the Add button and in other relevant places in the UI.
 
 ##### `min`
 
@@ -178,7 +186,7 @@ Each type definition is an object with the following properties:
 
 #### Subfield Options
 
-These options are effective only when the `field`, `fields`, or `types` option is used:
+These options are effective only when the `field`, `fields` or `types` option is used:
 
 ##### `summary`
 
@@ -228,7 +236,7 @@ Whether to allow adding new items to the list. If set to `false`, the Add and Pa
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden, and so will the Paste to Replace option in the item menu. Clear and Restore Default are also disabled for the field, as they could remove items, and the Clear All option in the pane and editor menus leaves the list as it is.
+Whether to allow removing items from the list. If set to `false`, the Remove button will be hidden, and so will the Paste to Replace option in the item menu. Clear and Restore Default are also disabled for the field, as they could remove items. The Clear All option in the pane and editor menus leaves the list as it is.
 
 ##### `allow_duplicate`
 
@@ -242,7 +250,14 @@ Whether to allow duplicating items in the list. If set to `false`, the Duplicate
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to allow reordering of items in the list by using the Move Up and Move Down buttons in each item’s header, by dragging the handle, by using the keyboard while the handle is focused, or by selecting Move to Top, Move to Bottom or Move to… in the menu. In a simple list field, the Move Up and Move Down buttons are shown in place of the handle on a touch screen only. If set to `false`, the reorder controls will be hidden.
+Whether to allow reordering of items in the list. Items can be reordered in these ways:
+
+- with the Move Up and Move Down buttons in each item’s header
+- by dragging the handle
+- with the keyboard while the handle is focused
+- by selecting Move to Top, Move to Bottom or Move to… in the menu
+
+In a simple list field, the Move Up and Move Down buttons are shown in place of the handle on a touch screen only. If set to `false`, the reorder controls will be hidden.
 
 ##### `add_to_top`
 
@@ -262,14 +277,18 @@ You cannot use a key that conflicts with any of the subfield names defined in th
 
 **Tip**
 
-Unlike most of other config options, `typeKey` is camelCased.
+Unlike most other config options, `typeKey` is camelCased.
 
 ##### `map_key_field`
 
 - **Type**: `string`
 - **Default**: `""`
 
-This option requires the `fields` or `types` option; using it without them, or naming a subfield that doesn’t exist, is reported as a config validation error on the login screen. It names the subfield whose value becomes the key of each item, so that the list is stored as an object mapping the keys to the items, rather than as an array. The subfield itself is left out of each item. This is useful for editing a file format where each item has a unique key, like a [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) bibliography or a map of translations.
+The name of the subfield whose value becomes the key of each item. With this option, the list is stored as an object mapping the keys to the items, rather than as an array. The subfield itself is left out of each item.
+
+This option requires the `fields` or `types` option. Using it without them, or naming a subfield that doesn’t exist, is reported as a config validation error on the login screen.
+
+This is useful for editing a file format where each item has a unique key, like a [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) bibliography or a map of translations.
 
 For example, with `map_key_field: key`, a list with the items `{ key: harry, title: Harry Potter }` and `{ key: darwin, title: On the Origin of Species }` is stored as:
 
@@ -280,9 +299,14 @@ darwin:
   title: On the Origin of Species
 ```
 
-In the editor, the key is a regular subfield, so it can be placed anywhere among the subfields, used in the [`summary`](#summary) template and given a [`hint`](https://sveltiacms.app/en/docs/fields#hint), or a [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) if it’s a String field. The items are kept in the order of the object, and reordering them changes the order of the keys.
+In the editor, the key is a regular subfield. It can be placed anywhere among the subfields, used in the [`summary`](#summary) template and given a [`hint`](https://sveltiacms.app/en/docs/fields#hint), or a [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) if it’s a String field. The items are kept in the order of the object, and reordering them changes the order of the keys.
 
-The key can also be picked from a list instead of typed: use a [Relation](https://sveltiacms.app/en/docs/fields/relation) field to key the items by entries in another collection, such as page slugs, or a [Select](https://sveltiacms.app/en/docs/fields/select) field to key them by a fixed set of values, such as sizes or languages. See the [Keyed List with Picked Keys](#keyed-list-with-picked-keys) example below. An entry used as a key can’t be deleted until the item is removed or given another key, as the item can’t be saved without a key.
+The key can also be picked from a list instead of typed:
+
+- Use a [Relation](https://sveltiacms.app/en/docs/fields/relation) field to key the items by entries in another collection, such as page slugs. An entry used as a key can’t be deleted until the item is removed or given another key, as the item can’t be saved without a key.
+- Use a [Select](https://sveltiacms.app/en/docs/fields/select) field to key them by a fixed set of values, such as sizes or languages.
+
+See the [Keyed List with Picked Keys](#keyed-list-with-picked-keys) example below.
 
 The following rules apply. A configuration that breaks one of the first four is reported as a config validation error, and a key that breaks one of the last two is shown as a validation error in the editor:
 
@@ -291,7 +315,7 @@ The following rules apply. A configuration that breaks one of the first four is 
 - The subfield must be required, so it can’t have the `required` option set to `false` or to a list of locales.
 - The subfield can’t have `i18n: false`, as the items need a key in every locale. Use `i18n: duplicate` to share the keys across locales.
 - Each key must be unique within the list.
-- A key can’t be a whole number such as `1` or `2024`, because JavaScript moves such keys in an object to the front in ascending order, so the items wouldn’t keep their order. A key like `01`, `-1` or `2024a` is fine. A file that already has such a key is loaded, but it has to be renamed before the entry can be saved.
+- A key can’t be a whole number such as `1` or `2024`. JavaScript moves such keys in an object to the front in ascending order, so the items wouldn’t keep their order. A key like `01`, `-1` or `2024a` is fine. A file that already has such a key is loaded, but it has to be renamed before the entry can be saved.
 
 A list still stored as an array, e.g. one saved before the option was added, is loaded as is, and saved as an object the next time the entry is saved.
 
@@ -639,7 +663,7 @@ widget = "image"
 
 #### Variable Type
 
-The following example defines a variable type List field named `items` with two types: `text_item` and `image_item`. User can add either type of item to the list. These types can be mixed in any order. Each type’s `description` is shown in the Add button’s dropdown menu, and the `hint` of the `image_item` type is shown above its subfields.
+The following example defines a variable type List field named `items` with two types: `text_item` and `image_item`. Users can add either type of item to the list. These types can be mixed in any order. Each type’s `description` is shown in the Add button’s dropdown menu, and the `hint` of the `image_item` type is shown above its subfields.
 
 ```yaml [YAML]
 - name: items
@@ -1069,7 +1093,7 @@ alt = "Image 2"
 
 By default, the type field is named `type`, but you can customize it using the `typeKey` option. Also, the `fields` option can be omitted if a type has no subfields.
 
-The following example shows a simple page builder configuration with three block types: Heading, Paragraph, and Horizontal Rule.
+The following example shows a simple page builder configuration with three block types: Heading, Paragraph and Horizontal Rule.
 
 ```yaml [YAML]
 - name: blocks

@@ -24,7 +24,7 @@ Some features only work with specific backends.
 
 For performance reasons, Sveltia CMS does not support the **Azure DevOps**, **Bitbucket** and **Git Gateway** backends. Please note that [Git Gateway](https://docs.netlify.com/manage/security/secure-access-to-sites/git-gateway/) has officially been deprecated by Netlify. If you’re using one of these backends with Netlify/Decap CMS, consider switching to GitHub, GitLab, Gitea or Forgejo before migrating to Sveltia CMS.
 
-Also, Sveltia CMS does not support the undocumented custom backend API. The `CMS.registerBackend` method is a noop in Sveltia CMS. We may add support for custom backends in future releases, though compatibility with existing Netlify/Decap CMS custom backends is not guaranteed.
+Also, Sveltia CMS does not support the undocumented custom backend API. The `CMS.registerBackend` method is a no-op in Sveltia CMS. We may add support for custom backends in future releases, though compatibility with existing Netlify/Decap CMS custom backends is not guaranteed.
 
 ### Configuration
 
@@ -104,7 +104,11 @@ branch = "develop"
 
 #### Monorepos
 
-If your repository holds more than one site, or the site lives in a subdirectory along with other code, set the `root_dir` option to the directory of the site. Sveltia CMS then treats that directory as the root of the repository: every path in the configuration, such as a collection’s `folder` or the `media_folder`, is relative to it, and nothing outside it shows up in the CMS. The option is available for all the Git-based backends and the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
+If your repository holds more than one site, or the site lives in a subdirectory along with other code, set the `root_dir` option to the directory of the site.
+
+Sveltia CMS then treats that directory as the root of the repository. Every path in the configuration, such as a collection’s `folder` or the `media_folder`, is relative to it, and nothing outside it shows up in the CMS.
+
+The option is available for all the Git-based backends and the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
 
 For example, with a site in `apps/blog`, a collection whose files live in `apps/blog/content/posts` is configured with `folder: content/posts`:
 
@@ -151,16 +155,26 @@ folder = "content/posts"
 }
 ```
 
-The path is relative to the repository root, and it can’t climb out of the repository with `..`. Likewise, the other paths in the configuration can’t lead outside the directory with `..`, as the CMS doesn’t list the files there. If the directory doesn’t exist on the branch, the CMS says so after you sign in. With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the path also becomes part of branch names, so no part of it can start with a dot, end with `.lock` or contain a space or any of `~^:?*[\` or `@{`, which Git doesn’t allow in a branch name.
+The path is relative to the repository root, and it can’t climb out of the repository with `..`. Likewise, the other paths in the configuration can’t lead outside the directory with `..`, because the CMS doesn’t list the files there. If the directory doesn’t exist on the branch, the CMS says so after you sign in.
+
+With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the path also becomes part of branch names. Git doesn’t allow certain characters in a branch name, so no part of the path can:
+
+- start with a dot
+- end with `.lock`
+- contain a space or any of `~^:?*[\` or `@{`
+
+##### Multiple Sites
 
 Each site in the monorepo can have its own CMS with its own `root_dir`, and they don’t get in each other’s way:
 
 - Only the files in the directory are listed when the CMS loads, which saves listing the whole of a big monorepo.
-- A commit made to another part of the repository doesn’t make the CMS reload its content: only the directory is checked for changes. The [deployment status](https://sveltiacms.app/en/docs/deployments) also stays on the last commit that changed the directory, as a build for such a commit is usually skipped.
-- With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the directory is part of the branch name, e.g. `cms/apps/blog/posts/hello-world`, so two sites with a collection of the same name don’t share branches or list each other’s unpublished entries. An entry saved before you set the option keeps its branch and stays on the board, as long as all its files are in the directory. An entry whose pull request also changes a file outside the directory can’t be published from the CMS, as the change can’t be shown.
+- A commit made to another part of the repository doesn’t make the CMS reload its content, because only the directory is checked for changes. The [deployment status](https://sveltiacms.app/en/docs/deployments) also stays on the last commit that changed the directory, as a build for such a commit is usually skipped.
+- With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the directory is part of the branch name, e.g. `cms/apps/blog/posts/hello-world`. Two sites with a collection of the same name therefore don’t share branches or list each other’s unpublished entries.
+  - An entry saved before you set the option keeps its branch and stays on the board, as long as all its files are in the directory.
+  - An entry whose pull request also changes a file outside the directory can’t be published from the CMS, because the change can’t be shown.
 - Each site gets a local cache of its own in the browser.
 
-Commits are still made to the repository as a whole: the `{{path}}` [template tag](#available-template-tags) in commit messages is the path from the repository root, e.g. `apps/blog/content/posts/hello-world.md`. To tell the sites apart in the Git history, you can also put the site name in the [commit messages](#commit-messages).
+Commits are still made to the repository as a whole. The `{{path}}` [template tag](#available-template-tags) in commit messages is the path from the repository root, e.g. `apps/blog/content/posts/hello-world.md`. To tell the sites apart in the Git history, you can also put the site name in the [commit messages](#commit-messages).
 
 With the [local workflow](https://sveltiacms.app/en/docs/workflows/local), select the root directory of the repository, not the directory of the site, when the CMS asks for it. The CMS finds the site’s directory within it.
 
@@ -313,7 +327,7 @@ The `auth_endpoint` option must be a path relative to `base_url`, not a full URL
 
 With the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds the OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
 
-By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, for example when the CMS is served from a preview URL that isn’t registered with the OAuth client, set the `site_domain` option:
+By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, set the `site_domain` option. You might need this when the CMS is served from a preview URL that isn’t registered with the OAuth client:
 
 ```yaml [YAML]{4}
 backend:
@@ -412,13 +426,13 @@ openAuthoring = "{{message}}"
 
 ###### Available Commit Types
 
-- `create`, `update`, `delete`: Used when creating, updating, or deleting entries in collections.
+- `create`, `update`, `delete`: Used when creating, updating or deleting entries in collections.
 - `uploadMedia`, `deleteMedia`: Used when uploading or deleting media assets.
 - `openAuthoring`: Wraps the message generated by one of the types above when the commit is made by an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, so you can record who wrote it. `{{message}}` is that generated message. The default template is `{{message}}` on its own, which changes nothing.
 
 **Tip**
 
-Unlike most of other config options, the commit message keys are camelCased.
+Unlike most other config options, the commit message keys are camelCased.
 
 ###### Available Template Tags
 
@@ -497,7 +511,7 @@ openAuthoring = "{{message}}"
 
 ##### Prompting for Commit Messages
 
-The messages generated from the templates are often the same for every change to an entry, which makes the Git history hard to follow. Set the `prompt_commit_messages` option to ask users for a commit message every time they save, for example to describe the change or to tie it to an issue in your project tracker:
+The messages generated from the templates are often the same for every change to an entry, which makes the Git history hard to follow. Set the `prompt_commit_messages` option to ask users for a commit message every time they save. They can use it, for example, to describe the change or to tie it to an issue in your project tracker:
 
 - `true`: Users can write the whole message. The text box is filled in with the message generated from the template, so they can edit it or keep it as is.
 - `prefix`: Users can enter a note, such as an issue number, that is added before the generated message, with a space in between. A preview shows the message as it will be recorded.
@@ -543,14 +557,14 @@ How the prompt works:
 
 - Users are asked every time a change is committed: when an entry is saved, deleted or reordered, and when assets or folders are uploaded, deleted, renamed or moved.
 - The text box can be left empty, in which case the generated message is used as is.
-- With `prefix` and `suffix`, the note entered last is filled in again for the next commit, as several changes in a row often belong to the same issue. It’s kept until the page is reloaded.
+- With `prefix` and `suffix`, the note entered last is filled in again for the next commit, because several changes in a row often belong to the same issue. It’s kept until the page is reloaded.
 - Canceling the dialog cancels the save, deletion or upload, and nothing is committed. In the Content Editor, the changes are kept so you can save them again.
 - With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the message is also used as the title of the pull request when it’s opened, and the merge commit takes that title when the entry is published. Deleting several entries at once asks only once.
 - The [`openAuthoring`](#commit-messages) template and the [`[skip ci]` prefix](#skipping-ci-cd) are applied to the message the user enters as well.
 - The [History panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) of the Content Editor shows the first line of each commit’s message, so the history of an entry can be followed at a glance.
 - With the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), users are only asked when [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits) are turned on.
 
-The default is `false`, which commits the generated messages without asking. The option is not available with the [Test backend](https://sveltiacms.app/en/docs/backends/test).
+The default is `false`, which commits the generated messages without asking. The option is not available with the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
 
 ##### Skipping CI/CD
 
@@ -606,13 +620,16 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 
 ### Requirements
 
-- Gitea 1.24, Forgejo 12.0 or later.
+- Gitea 1.24 or later, or Forgejo 12.0 or later.
 - A Gitea or Forgejo account.
 - A Gitea or Forgejo repository to store the content.
 - Write access to the repository. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them contribute from a fork.
 - Sveltia CMS installed in your project.
 
-If the configured branch is [protected](https://docs.gitea.com/usage/access-control/protected-branches) and doesn’t allow a user to push, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own, but the Publish button is only shown to users who are allowed to merge into the branch.
+If the configured branch is [protected](https://docs.gitea.com/usage/access-control/protected-branches) and doesn’t allow a user to push:
+
+- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who are allowed to merge into the branch.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -744,7 +761,9 @@ api_root = "https://codeberg.org/api/v1"
 
 The API version for Gitea/Forgejo is `v1`, so make sure to include `/api/v1` in the `api_root` option.
 
-Because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client, `base_url` is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. It’s not inferred from `api_root`, so both options have to be set. The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+The `base_url` option is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. This is because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client. The `base_url` is not inferred from `api_root`, so you have to set both options.
+
+The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -760,9 +779,14 @@ If you plan to only [work with your local repository](https://sveltiacms.app/en/
 
 If you or a small team of developers are the only users of your CMS instance, you can use an access token for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
-Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on Gitea/Forgejo with the required scopes pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
+Click the “Sign In with Token” button on the login screen. The prompt dialog provides a link to the token generation page on Gitea/Forgejo with the required scopes pre-selected. Generate a new token, copy it to the clipboard and paste it into the prompt dialog to sign in. The token will be stored in the browser’s local storage and used for subsequent API requests.
 
-The scopes depend on your configuration: `read:repository`, `write:repository` and `read:user` are always requested, and `read:issue` and `write:issue` are added when the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled, because the workflow labels its pull requests and labels live under the issue scope. If you turn the workflow on after generating a token, generate a new one, or saving an entry fails with a permission error.
+The scopes depend on your configuration:
+
+- `read:repository`, `write:repository` and `read:user` are always requested.
+- `read:issue` and `write:issue` are added when the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled. The workflow labels its pull requests, and labels live under the issue scope.
+
+If you turn the workflow on after generating a token, generate a new one. Otherwise, saving an entry fails with a permission error.
 
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 
@@ -771,7 +795,7 @@ You can [disable token authentication](https://sveltiacms.app/en/docs/backends#a
 To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app on Gitea/Forgejo and update your Sveltia CMS configuration file accordingly. Here’s how:
 
 1. Follow the instructions in the [Gitea](https://docs.gitea.com/development/oauth2-provider) or [Forgejo](https://forgejo.org/docs/latest/user/oauth2-provider/) documentation to create a new OAuth application.
-1. Set the **Redirect URI** to your CMS admin URL, e.g., `https://your-domain.com/admin/`.
+1. Set the **Redirect URI** to your CMS admin URL, e.g. `https://your-domain.com/admin/`.
 1. Uncheck the **Confidential** option.
 1. Copy the Client ID of your registered OAuth app.
 
@@ -864,7 +888,10 @@ GitHub is one of the most popular Git hosting services, and Sveltia CMS provides
 - Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them work on a fork instead.
 - Sveltia CMS installed in your project.
 
-If the configured branch is [protected](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) and doesn’t allow a user to push, e.g. because it requires a pull request, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own. GitHub doesn’t tell whether a user can merge a pull request, so the Publish button is still shown, and GitHub refuses the merge if the user isn’t allowed to make it.
+If the configured branch is [protected](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) and doesn’t allow a user to push, e.g. because it requires a pull request:
+
+- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. GitHub doesn’t tell whether a user can merge a pull request, so the Publish button is still shown. GitHub refuses the merge if the user isn’t allowed to make it.
 
 #### CSP
 
@@ -946,13 +973,13 @@ The API version for GitHub Enterprise is `v3`, so the REST API endpoint is `http
 
 Sveltia CMS uses the GitHub GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v3` part with `/api/graphql`, e.g. `https://github.example.com/api/graphql`. If your server’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
 
-Don’t set the `base_url` option to your GitHub Enterprise Server URL. The `base_url` option specifies the URL of your OAuth client, not the GitHub instance. To sign in with the [authorization code flow](#authorization-code-flow), deploy an OAuth client that supports GitHub Enterprise Server, such as [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) with the `GITHUB_HOSTNAME` environment variable, and point `base_url` to it. Alternatively, sign in with an [access token](#access-token).
+Don’t set the `base_url` option to your GitHub Enterprise Server URL. The `base_url` option specifies the URL of your OAuth client, not the GitHub instance. To sign in with the [authorization code flow](#authorization-code-flow), deploy an OAuth client that supports GitHub Enterprise Server and point `base_url` to it. For example, [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) supports it with the `GITHUB_HOSTNAME` environment variable. Alternatively, sign in with an [access token](#access-token).
 
 ### Authentication
 
 <!-- There are multiple ways to authenticate with GitHub when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started, but PKCE authorization is recommended if your CMS instance is used by multiple users or non-technical users because it’s more user-friendly and secure. -->
 
-There are multiple ways to authenticate with GitHub when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started, but authorization code flow is recommended if your CMS instance is used by multiple users or non-technical users because it’s more user-friendly and secure.
+There are multiple ways to authenticate with GitHub when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started. If your CMS instance is used by multiple users or non-technical users, the authorization code flow is recommended, because it’s more user-friendly and secure.
 
 **Tip**
 
@@ -962,7 +989,7 @@ If you plan to only [work with your local repository](https://sveltiacms.app/en/
 
 If you or a small team of developers are the only users of your CMS instance, you can use a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (PAT) for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
-Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on GitHub with the required permissions pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
+Click the “Sign In with Token” button on the login screen. The prompt dialog provides a link to the token generation page on GitHub with the required permissions pre-selected. Generate a new token, copy it to the clipboard and paste it into the prompt dialog to sign in. The token will be stored in the browser’s local storage and used for subsequent API requests.
 
 If you create a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) yourself, give it access to the repository and the following repository permissions:
 
@@ -975,7 +1002,9 @@ Metadata (read) is added automatically. A classic token needs the `repo` scope, 
 
 **Warning**
 
-With the Editorial Workflow, a token that has content access but no pull request access gets as far as committing the entry to its workflow branch, then fails with “Resource not accessible by personal access token” when the CMS tries to open the pull request. Edit the token to add the Pull requests permission; the branches already created will be reused the next time each entry is saved.
+With the Editorial Workflow, a token needs pull request access as well as content access. Without it, saving an entry gets as far as committing the entry to its workflow branch. It then fails with “Resource not accessible by personal access token” when the CMS tries to open the pull request.
+
+To fix this, edit the token to add the Pull requests permission. The branches already created will be reused the next time each entry is saved.
 
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 
@@ -1047,13 +1076,13 @@ app_id = "YOUR_CLIENT_ID"
 }
 ```
 
-Save the configuration file, deploy it to your site, and reload the CMS. You should now be able to sign in with GitHub using the PKCE authorization flow!
+Save the configuration file, deploy it to your site and reload the CMS. You should now be able to sign in with GitHub using the PKCE authorization flow!
 
 Users’ OAuth tokens will be automatically renewed as needed, so there’s no need to worry about token expiration.
 
 **Tip**
 
-If you have installed Sveltia CMS Authenticator or any other third party client, you can remove it as it’s no longer needed for GitHub authentication. Sveltia CMS will handle the PKCE flow directly in the browser.
+If you have installed Sveltia CMS Authenticator or any other third-party client, you can remove it as it’s no longer needed for GitHub authentication. Sveltia CMS will handle the PKCE flow directly in the browser.
 
 #### Authorization Code Flow (Legacy) {#authorization-code-flow}
 
@@ -1065,7 +1094,7 @@ PKCE authorization is the recommended way to authenticate with GitHub. However, 
 
 The authorization code flow requires you to set up an OAuth app on GitHub and deploy an OAuth client server to handle the authentication process.
 
-There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS, or using Netlify as an OAuth provider.
+There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS or using Netlify as an OAuth provider.
 
 ##### Using Sveltia CMS Authenticator
 
@@ -1170,7 +1199,7 @@ The following [content management workflows](https://sveltiacms.app/en/docs/work
 
 [GitHub Actions](https://github.com/features/actions) is a great choice for deploying Sveltia CMS sites hosted on GitHub. [GitHub Pages](https://docs.github.com/en/pages) is free for public repositories and easy to set up.
 
-There are also other deployment options, including [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/), [Netlify](https://www.netlify.com/integrations/github/), and [Vercel](https://vercel.com/docs/git/vercel-for-github). They provide seamless integration with GitHub repositories and support automatic deployments on push, with additional benefits like serverless functions, storage and AI integrations.
+There are also other deployment options, including [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/), [Netlify](https://www.netlify.com/integrations/github/) and [Vercel](https://vercel.com/docs/git/vercel-for-github). They provide seamless integration with GitHub repositories and support automatic deployments on push, with additional benefits like serverless functions, storage and AI integrations.
 
 Choose the deployment platform that best fits your needs and follow their documentation to set up continuous deployment for your Sveltia CMS site.
 
@@ -1187,10 +1216,13 @@ GitLab is a popular Git hosting service that offers a wide range of features for
 - GitLab 16.3 or later.
 - A GitLab account.
 - A GitLab repository to store the content.
-- The Developer role or higher on the project, like Netlify/Decap CMS requires. The role can come from project membership, a parent group, or a group invited to the project or to a parent group. Users with the Guest or Reporter role can’t sign in.
+- The Developer role or higher on the project, like Netlify/Decap CMS requires. The role can come from project membership, a parent group or a group invited to the project or to a parent group. Users with the Guest or Reporter role can’t sign in.
 - Sveltia CMS installed in your project.
 
-If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it, collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, as they commit to the branch directly. Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, as they commit to branches of their own, but the Publish button is only shown to users who can merge the entry’s merge request.
+If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it:
+
+- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who can merge the entry’s merge request.
 
 #### CSP
 
@@ -1230,7 +1262,7 @@ repo = "user/repo"
 }
 ```
 
-If you use subgroups, include them in the `owner` part, e.g., `group/subgroup/repo`.
+If you use subgroups, include them in the `owner` part, e.g. `group/subgroup/repo`.
 
 #### Self-Hosted GitLab Instances
 
@@ -1278,11 +1310,16 @@ The API version for GitLab is `v4`, so make sure to include `/api/v4` in the `ap
 
 Sveltia CMS uses the GitLab GraphQL API where possible. Its endpoint is inferred from the `api_root` option by replacing the `/api/v4` part with `/api/graphql`, e.g. `https://gitlab.example.com/api/graphql`. If your instance’s GraphQL endpoint is at a different URL, set it with the `graphql_api_root` option.
 
-The `base_url` option points to your GitLab server only when you use [PKCE authorization](#pkce-authorization). In that case, the OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `oauth/authorize`. The `base_url` is not inferred from `api_root`, so it must be set for a self-hosted instance; otherwise, it defaults to `https://gitlab.com`. If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`. With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead, which must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+The `base_url` option points to your GitLab server only when you use [PKCE authorization](#pkce-authorization). In that case, the OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `oauth/authorize`.
+
+- The `base_url` is not inferred from `api_root`, so you must set it for a self-hosted instance. Otherwise, it defaults to `https://gitlab.com`.
+- If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`.
+
+With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead. The client must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
 
 ### Authentication
 
-There are multiple ways to authenticate with GitLab when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started, but PKCE authorization is recommended if your CMS instance is used by multiple users or non-technical users because it’s more user-friendly and secure.
+There are multiple ways to authenticate with GitLab when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started. If your CMS instance is used by multiple users or non-technical users, PKCE authorization is recommended, because it’s more user-friendly and secure.
 
 **Tip**
 
@@ -1290,13 +1327,13 @@ If you plan to only [work with your local repository](https://sveltiacms.app/en/
 
 **Breaking change from Netlify/Decap CMS**
 
-The deprecated client-side implicit grant flow for the GitLab backend is not supported in Sveltia CMS. It was [removed from GitLab 15.0](https://gitlab.com/gitlab-org/gitlab/-/issues/344609) in May 2022. Use the PKCE authorization instead.
+The deprecated client-side implicit grant flow for the GitLab backend is not supported in Sveltia CMS. It was [removed from GitLab 15.0](https://gitlab.com/gitlab-org/gitlab/-/issues/344609) in May 2022. Use PKCE authorization instead.
 
 #### Access Token (Quick Start) {#access-token}
 
 If you or a small team of developers are the only users of your CMS instance, you can use a [personal access token](https://docs.gitlab.com/user/profile/personal_access_tokens/) (PAT) for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
-Just click the “Sign In with Token” button on the login screen. The prompt dialog will provide a link to the token generation page on GitLab with the required scopes pre-selected. Generate a new token and copy it to the clipboard, then paste it into the prompt dialog to log in. The token will be stored in the browser’s local storage and used for subsequent API requests.
+Click the “Sign In with Token” button on the login screen. The prompt dialog provides a link to the token generation page on GitLab with the required scopes pre-selected. Generate a new token, copy it to the clipboard and paste it into the prompt dialog to sign in. The token will be stored in the browser’s local storage and used for subsequent API requests.
 
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 
@@ -1305,7 +1342,7 @@ You can [disable token authentication](https://sveltiacms.app/en/docs/backends#a
 To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app on GitLab and update your Sveltia CMS configuration file accordingly. Here’s how:
 
 1. Follow the instructions in the [GitLab documentation](https://docs.gitlab.com/integration/oauth_provider/) to create a new OAuth application.
-1. Set the **Redirect URI** to your CMS admin URL, e.g., `https://your-domain.com/admin/`.
+1. Set the **Redirect URI** to your CMS admin URL, e.g. `https://your-domain.com/admin/`.
 1. Uncheck the **Confidential** option.
 1. Select the `api` scope.
 1. Copy the Client ID of your registered OAuth app.
@@ -1356,7 +1393,7 @@ Users’ OAuth tokens will be automatically renewed as needed, so there’s no n
 
 PKCE authorization is the recommended way to authenticate with GitLab. However, if you need to use the authorization code flow for some reason, you can follow the instructions below. This method requires a backend server to keep the client secret safe.
 
-There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS, or using Netlify as an OAuth provider.
+There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS or using Netlify as an OAuth provider.
 
 ##### Using Sveltia CMS Authenticator
 
@@ -1418,7 +1455,7 @@ If your site is hosted on Netlify, you don’t need to install Sveltia CMS Authe
 1. Set the **Redirect URI** to `https://api.netlify.com/auth/done`.
 1. Select the `api` scope.
 1. Open the Netlify dashboard for your site and go to **Project configuration** > **Security** > **OAuth**. Note that this is not the **Identity** section, which is only used for Git Gateway and Netlify Identity.
-1. Under **Authentication Providers**, click **Install Provider**, select **GitLab**, and [provide the Client ID and Client Secret](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings) of your registered OAuth app.
+1. Under **Authentication Providers**, click **Install Provider**, select **GitLab** and [provide the Client ID and Client Secret](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/#netlify-ui-settings) of your registered OAuth app.
 
 No changes are needed in Sveltia CMS, as long as `auth_type` and `base_url` are not set in your configuration file.
 
@@ -1461,7 +1498,7 @@ The following [content management workflows](https://sveltiacms.app/en/docs/work
 
 [GitLab CI/CD](https://docs.gitlab.com/ci/) is a great choice for deploying Sveltia CMS sites hosted on GitLab. [GitLab Pages](https://docs.gitlab.com/user/project/pages/) can be used to host static sites for free.
 
-There are also other deployment options, including [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/git-integration/gitlab-integration/), [Netlify](https://www.netlify.com/integrations/gitlab/), and [Vercel](https://vercel.com/docs/git/vercel-for-gitlab). They provide seamless integration with GitLab repositories and support automatic deployments on push, with additional benefits like serverless functions, storage and AI integrations.
+There are also other deployment options, including [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/git-integration/gitlab-integration/), [Netlify](https://www.netlify.com/integrations/gitlab/) and [Vercel](https://vercel.com/docs/git/vercel-for-gitlab). They provide seamless integration with GitLab repositories and support automatic deployments on push, with additional benefits like serverless functions, storage and AI integrations.
 
 Choose the deployment platform that best fits your needs and follow their documentation to set up continuous deployment for your Sveltia CMS site.
 
@@ -1533,7 +1570,9 @@ The manifest is a JSON file listing the paths of the files to be copied to the v
 
 In the above example, `content/posts/hello-world.md` is fetched from `/seed/content/posts/hello-world.md`.
 
-When a seed manifest is linked, the sign-in button reads Start Demo instead of Work with Test Repository. The files are copied when the user signs in for the first time. Once the virtual file system exists, it’s left untouched, so the user’s changes are kept across reloads. If the user deletes the virtual file system with the Clear File Cache or Erase All Data button in the Data Management tab of the Settings dialog, the content is seeded again on the next sign-in.
+When a seed manifest is linked, the sign-in button reads Start Demo instead of Work with Test Repository. The files are copied when the user signs in for the first time.
+
+Once the virtual file system exists, it’s left untouched, so the user’s changes are kept across reloads. If the user deletes the virtual file system with the Clear File Cache or Erase All Data button in the Data Management tab of the Settings dialog, the content is seeded again on the next sign-in.
 
 A file that cannot be fetched is skipped with a warning in the browser console. Paths containing empty, `.` or `..` segments are ignored.
 

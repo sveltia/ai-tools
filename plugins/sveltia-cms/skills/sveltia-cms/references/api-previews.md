@@ -46,7 +46,7 @@ The component you register receives the following props during render:
   }
   ```
 - `widgetFor` (function): Returns a React element rendering a Svelte field preview for a given field key path. Useful for rendering individual field previews.
-- `widgetsFor` (function): Returns widget data for a given top-level field name. For List fields, returns an array of Immutable Maps; for Object fields, returns a single Immutable Map; for other fields, returns the raw value. Each Map has:
+- `widgetsFor` (function): Returns widget data for a given top-level field name: an array of Immutable Maps for a List field, a single Immutable Map for an Object field or the raw value for any other field. Each Map has:
   ```js
   {
     data: { ... },              // Raw values of the list item or object
@@ -54,19 +54,22 @@ The component you register receives the following props during render:
   }
   ```
   `widgets` is empty for a list item that is a primitive value, such as a string.
-- `getAsset` (function): Takes a file path, typically a File or Image field value, including the temporary `blob:` URL the field holds for a file that hasn’t been saved yet, and returns an asset object with the following properties, or `undefined` if no matching asset is found:
+- `getAsset` (function): Takes a file path and returns an asset object, or `undefined` if no matching asset is found. The path is typically a File or Image field value, including the temporary `blob:` URL the field holds for a file that hasn’t been saved yet. The asset object has the following properties:
   - `url` (string): A URL to display the file in the preview, typically a `blob:` URL. The public path is used until the blob URL is available.
   - `path` (string): The public path of the file, or the temporary `blob:` URL of a file that hasn’t been saved yet.
   - `fileObj` (`File` or `undefined`): The file selected by the user, if the file hasn’t been saved yet.
   - `field` (`undefined`): Always `undefined`. It’s included only for compatibility with Netlify/Decap CMS.
   - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
   - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix. It rejects with an error if the file can’t be retrieved.
-- `getCollection` (function): Async function that returns entries from a specified collection, each as an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
+- `getCollection` (function): Async function that returns entries from a specified collection. Each entry is an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
   - `collectionName` (string): Name of the collection to query. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). The Promise is rejected if the collection is not found.
-  - `slug` (string, optional): Entry slug to fetch a specific entry, or the file name in a file collection or the singleton collection; if omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
-- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s key path, e.g. `author` for a top-level field, `details.author` for a field nested in an Object field or `authors.0.person` for one in a List item. A trailing index is removed, so the subfield of a List field with a single `field` uses the List field’s key path, e.g. `tags` instead of `tags.0`. Useful for accessing related entry data from relation fields.
-- `document` (Document): The preview pane iframe's Document object. Use this instead of the global `document` to manipulate the preview DOM.
-- `window` (Window): The preview pane iframe's Window object. Use this instead of the global `window` to access the preview window context.
+  - `slug` (string, optional): Entry slug to fetch a specific entry, or the filename in a file collection or the singleton collection. If omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
+- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s key path. Useful for accessing related entry data from relation fields. A trailing index is removed from the key path, so the subfield of a List field with a single `field` uses the List field’s key path, e.g. `tags` instead of `tags.0`. Other examples of key paths:
+  - `author` for a top-level field
+  - `details.author` for a field nested in an Object field
+  - `authors.0.person` for one in a List item
+- `document` (Document): The preview pane iframe’s Document object. Use this instead of the global `document` to manipulate the preview DOM.
+- `window` (Window): The preview pane iframe’s Window object. Use this instead of the global `window` to access the preview window context.
 
 ### Working with Immutable Data
 
@@ -80,7 +83,9 @@ For more information on working with Immutable data structures, see the [Immutab
 
 ### Styling the Preview
 
-The preview pane is a sandboxed `<iframe>` with its own document, so it doesn’t inherit any stylesheets from the admin page — including CSS that your bundler emits for the template or for a component library it uses. Register the styles the template depends on with [`CMS.registerPreviewStyle()`](https://sveltiacms.app/en/docs/api/preview-styles), either as a file path or as a raw CSS string:
+The preview pane is a sandboxed `<iframe>` with its own document, so it doesn’t inherit any stylesheets from the admin page. That includes CSS that your bundler emits for the template or for a component library it uses.
+
+Register the styles the template depends on with [`CMS.registerPreviewStyle()`](https://sveltiacms.app/en/docs/api/preview-styles), either as a file path or as a raw CSS string:
 
 ```js
 import css from './preview.css?inline'; // Vite
@@ -89,23 +94,29 @@ CMS.registerPreviewStyle('/admin/preview.css');
 CMS.registerPreviewStyle(css, { raw: true });
 ```
 
-If you render a [Svelte](https://svelte.dev/) component inside the template, you can instead compile it with `css: "injected"`, either per component with [`<svelte:options>`](https://svelte.dev/docs/svelte/svelte-options) or for the whole bundle with the `compilerOptions` of `@sveltejs/vite-plugin-svelte`. Svelte then appends the component’s styles to the document it’s mounted in, which is the preview iframe:
+If you render a [Svelte](https://svelte.dev/) component inside the template, you can compile it with `css: "injected"` instead. Set it either per component with [`<svelte:options>`](https://svelte.dev/docs/svelte/svelte-options) or for the whole bundle with the `compilerOptions` of `@sveltejs/vite-plugin-svelte`. Svelte then appends the component’s styles to the document it’s mounted in, which is the preview iframe:
 
 ```svelte
 <svelte:options css="injected" />
 ```
 
-[Vue](https://vuejs.org/) has no equivalent: the `<style>` block of a single-file component always goes through the bundler’s CSS pipeline, which ends up in the admin page. Keep the styles of a Vue preview component in a separate CSS file and register it as shown above.
+[Vue](https://vuejs.org/) has no equivalent. The `<style>` block of a single-file component always goes through the bundler’s CSS pipeline, so it ends up in the admin page. Keep the styles of a Vue preview component in a separate CSS file and register it as shown above.
 
 ### Linking to the Edit Pane
 
-The default preview supports [Scroll Synchronization and Click-to-Highlight](https://sveltiacms.app/en/docs/ui/content-editor): scrolling one pane scrolls the other to the same field, and clicking a field in the preview highlights it in the Edit Pane. A custom preview template gets both features by marking its elements with the `data-key-path` attribute, whose value is the key path of the field the element displays:
+The default preview supports [Scroll Synchronization and Click-to-Highlight](https://sveltiacms.app/en/docs/ui/content-editor). Scrolling one pane scrolls the other to the same field, and clicking a field in the preview highlights it in the Edit Pane.
+
+A custom preview template gets both features by marking its elements with the `data-key-path` attribute. Its value is the key path of the field the element displays:
 
 - A top-level field uses its name, e.g. `title`.
 - A field nested in an Object field adds its name with a dot, e.g. `details.author`.
 - A field in a List item adds the item’s zero-based index, e.g. `sections.0.heading` for the `heading` subfield of the first item in the `sections` List field.
 
-Clicking a marked element, or anything inside it, highlights the field of the innermost marked element: the Edit Pane expands any collapsed List or Object field containing it, scrolls it into view and focuses it. To let keyboard users do the same, make the element focusable with `tabindex="0"`; pressing Enter on it highlights the field. An event handler in the template can call `event.preventDefault()` to stop a click or Enter key press from highlighting a field, e.g. for a button that does something else.
+Clicking a marked element, or anything inside it, highlights the field of the innermost marked element. The Edit Pane expands any collapsed List or Object field containing it, scrolls it into view and focuses it.
+
+To let keyboard users do the same, make the element focusable with `tabindex="0"`. Pressing Enter on it then highlights the field.
+
+An event handler in the template can call `event.preventDefault()` to stop a click or Enter key press from highlighting a field, e.g. for a button that does something else.
 
 ```js [HTM]
 html`
@@ -166,7 +177,13 @@ The field previews that `widgetFor` and `widgetsFor` return are already marked.
 
 **HTM, JSX or `h()`**
 
-Each example below comes in three versions: [HTM](https://sveltiacms.app/en/docs/api#using-htm), which runs in the browser as is and is the recommended way; [JSX](https://sveltiacms.app/en/docs/api#using-jsx), which requires a build step to transpile it to JavaScript; and [`h()`](https://sveltiacms.app/en/docs/api#using-h), which is compatible with Netlify/Decap CMS. The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) for more details.
+Each example below comes in three versions:
+
+- [HTM](https://sveltiacms.app/en/docs/api#using-htm), which runs in the browser as is and is the recommended way
+- [JSX](https://sveltiacms.app/en/docs/api#using-jsx), which requires a build step to transpile it to JavaScript
+- [`h()`](https://sveltiacms.app/en/docs/api#using-h), which is compatible with Netlify/Decap CMS
+
+The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) for more details.
 
 #### Basic Entry Preview
 
@@ -746,7 +763,12 @@ CMS.registerPreviewTemplate('products', ProductPreview);
 
 #### Using Other Frameworks
 
-The registered component must be a React component, but it can mount a component written in another framework into the preview document. These examples wrap a [Svelte 5](https://svelte.dev/) or [Vue 3](https://vuejs.org/) component, updating its props in place on each render instead of remounting it. Keep the Svelte wrapper in a `.svelte.js` file so the `$state` rune compiles. The Vue wrapper renders the component from a render function so that changes to the reactive props are picked up; the `rootProps` argument of `createApp()` is not reactive. See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
+The registered component must be a React component, but it can mount a component written in another framework into the preview document. These examples wrap a [Svelte 5](https://svelte.dev/) or [Vue 3](https://vuejs.org/) component, updating its props in place on each render instead of remounting it.
+
+- Keep the Svelte wrapper in a `.svelte.js` file so the `$state` rune compiles.
+- The Vue wrapper renders the component from a render function so that changes to the reactive props are picked up. The `rootProps` argument of `createApp()` is not reactive.
+
+See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
 
 ```js [Svelte]
 import { mount, unmount } from 'svelte';
@@ -906,15 +928,15 @@ CMS.registerPreviewStyle('/path/to/about-style.css', { collection: 'pages', file
 CMS.registerPreviewStyle('/path/to/home-style.css', { collection: '_singletons', file: 'home' });
 ```
 
-The styles that apply to an entry are combined in the order they were registered, so in this example, the preview of the `about` file uses both `common-style.css` and `about-style.css`. An entry that no preview style applies to is previewed with the built-in styles only.
+The styles that apply to an entry are combined in the order they were registered. In this example, the preview of the `about` file uses both `common-style.css` and `about-style.css`. An entry that no preview style applies to is previewed with the built-in styles only.
 
 ### Styling Specific Fields
 
 The default preview marks each field with three attributes that identify it, which your preview styles can use to target specific fields:
 
-- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown`, or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
-- `data-key-path`: The field’s key path, e.g. `title` for a top-level field, `details.author` for a field in an Object field, or `sections.0.heading` for a subfield of the first item in a List field.
-- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, so one selector matches the subfield in all the items, e.g. `sections.*.heading`. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
+- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown` or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
+- `data-key-path`: The field’s key path. For example, `title` for a top-level field, `details.author` for a field in an Object field or `sections.0.heading` for a subfield of the first item in a List field.
+- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, e.g. `sections.*.heading`. One selector then matches the subfield in all the items. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
 
 ```css
 [data-key-path='title'] p {
@@ -932,13 +954,13 @@ The default preview marks each field with three attributes that identify it, whi
 
 A [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#linking-to-the-edit-pane) has these attributes only where it adds them itself, apart from the field previews that `widgetFor` and `widgetsFor` return.
 
-The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. The preview is rendered in an iframe once a preview style applies to the entry, so your admin page styles don’t affect it, and your preview styles don’t affect the Edit Pane.
+The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. Once a preview style applies to the entry, the preview is rendered in an iframe. Your admin page styles then don’t affect the preview, and your preview styles don’t affect the Edit Pane.
 
-The attributes are primarily for internal use, and the rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
+The attributes are primarily for internal use. The rest of the markup, such as class names and element structure, may change in any release, so keep your selectors as simple as possible.
 
 **Why “key path”?**
 
-The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object, keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
+The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
 
 ### Showcase
 
@@ -954,7 +976,13 @@ Sveltia CMS offers various customization options to tailor the admin interface a
 
 ### Site URL
 
-The `site_url` configuration option allows you to specify the URL of the published site. It’s used for the link to the live site in the admin interface, entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option, and public asset URLs. If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
+The `site_url` configuration option allows you to specify the URL of the published site. It’s used for:
+
+- the link to the live site in the admin interface
+- entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option
+- public asset URLs
+
+If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
 
 To link the admin interface to a different URL than the one used for previews and assets, use the [`display_url`](#display-url) option.
 
@@ -980,7 +1008,7 @@ site_url = "https://example.com"
 
 ### Display URL
 
-The `display_url` configuration option allows you to specify the URL opened by the link to the live site in the admin interface, which is available in the account menu and on the custom logo in the application header. Unlike `site_url`, it doesn’t affect preview links or asset URLs. If omitted, it defaults to the `site_url` option value.
+The `display_url` configuration option allows you to specify the URL opened by the link to the live site in the admin interface. That link is available in the account menu and on the custom logo in the application header. Unlike `site_url`, it doesn’t affect preview links or asset URLs. If omitted, it defaults to the `site_url` option value.
 
 The value can be an absolute URL or a path relative to the CMS origin.
 
@@ -1137,11 +1165,11 @@ app_title = "Acme Inc. Site Admin"
 }
 ```
 
-Note that this is not a white-label solution, so the name of Sveltia CMS will remain visible in some places. When a custom title is set, a small ”Powered by Sveltia CMS” label will appear in the footer of the login page.
+Note that this is not a white-label solution, so the name of Sveltia CMS will remain visible in some places. When a custom title is set, a small “Powered by Sveltia CMS” label will appear in the footer of the login page.
 
 ### Custom Mount Element
 
-Sveltia CMS mounts the admin interface to the `<body>` element by default. However, you can specify a custom mount element by adding a `<div>` with a specific ID in your HTML. This way, you can embed the CMS admin interface within a specific section of your webpage, allowing to have a navigation bar or other content alongside the CMS.
+Sveltia CMS mounts the admin interface to the `<body>` element by default. However, you can specify a custom mount element by adding a `<div>` with a specific ID in your HTML. This way, you can embed the CMS admin interface within a specific section of your webpage, with a navigation bar or other content alongside the CMS.
 
 The ID of the custom mount element is `nc-root`.
 
@@ -1149,7 +1177,7 @@ The ID of the custom mount element is `nc-root`.
 <div id="nc-root"></div>
 ```
 
-Make sure to properly style the custom mount element to ensure the CMS interface displays correctly within your layout. You may need to set dimensions, overflow properties, or other CSS styles depending on your design requirements. Otherwise, the admin interface may not render as expected.
+Make sure to properly style the custom mount element to ensure the CMS interface displays correctly within your layout. You may need to set dimensions, overflow properties or other CSS styles depending on your design requirements. Otherwise, the admin interface may not render as expected.
 
 Sveltia CMS will automatically detect the presence of the `nc-root` element and mount the admin interface there instead of the default `<body>` element.
 
@@ -1173,7 +1201,7 @@ The default Preview Pane marks each field with the same attributes. See [Styling
 
 ### JavaScript API
 
-Sveltia CMS offers a comprehensive API that enables developers to extend and customize its features. You can register custom field types, preview templates, editor components, and more to enhance the content management experience.
+Sveltia CMS offers a comprehensive API that enables developers to extend and customize its features. You can register custom field types, preview templates, editor components and more to enhance the content management experience.
 
 For detailed information on how to use the API, please refer to the [JavaScript API guide](https://sveltiacms.app/en/docs/api).
 

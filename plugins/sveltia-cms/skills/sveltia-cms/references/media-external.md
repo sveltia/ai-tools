@@ -6,11 +6,11 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Integrations
 
-Sveltia CMS supports integration with various third-party services to enhance its functionality. These integrations allow users to connect Sveltia CMS with external tools for media management, stock photos, translations, and more.
+Sveltia CMS supports integration with various third-party services to enhance its functionality. These integrations allow users to connect Sveltia CMS with external tools for media management, stock photos, translations and more.
 
 **Future Plans**
 
-More integration options, including stock video providers, analytics tools, and AI-powered content generation services, will be added in future releases.
+More integration options, including stock video providers, analytics tools and AI-powered content generation services, will be added in future releases.
 
 ### Media Storage Providers
 
@@ -36,7 +36,7 @@ Source: https://sveltiacms.app/en/docs/integrations
 
 ## Cloudinary Integration
 
-[Cloudinary](https://cloudinary.com/) is a leading cloud-based media management service that offers comprehensive solutions for image and video upload, storage, manipulation, and delivery. The Cloudinary integration enables users to efficiently manage media assets within Sveltia CMS by leveraging Cloudinary’s powerful features.
+[Cloudinary](https://cloudinary.com/) is a leading cloud-based media management service that offers comprehensive solutions for image and video upload, storage, manipulation and delivery. The Cloudinary integration enables users to efficiently manage media assets within Sveltia CMS by leveraging Cloudinary’s powerful features.
 
 ### Requirements
 
@@ -96,7 +96,7 @@ api_key = "YOUR_API_KEY"
 
 **Legacy `media_library` Option**
 
-Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS, but it is recommended to use the `media_libraries` option for new configurations. With the legacy option, only a single media storage provider can be configured. Here is an example of configuring Cloudinary using the legacy option:
+Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS. For new configurations, use the `media_libraries` option instead. With the legacy option, only a single media storage provider can be configured. Here is an example of configuring Cloudinary using the legacy option:
 
 ```yaml
 media_library:
@@ -184,7 +184,15 @@ api_key = "YOUR_API_KEY"
 
 #### Field-Level Configuration
 
-The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so is the `config` object, key by key, so a field only needs to set the options it changes: `cloud_name` and `api_key` don’t need to be repeated, and an option such as `use_transformations` is inherited unless the field sets it. An array such as `default_transformations` is replaced, not combined. Setting `cloudinary` to `false` makes Cloudinary unavailable for the field. Here is an example of configuring a File field to use the Cloudinary media storage with custom default transformations and storing only the filename:
+The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so is the `config` object, key by key. A field therefore only needs to set the options it changes:
+
+- `cloud_name` and `api_key` don’t need to be repeated.
+- An option such as `use_transformations` is inherited unless the field sets it.
+- An array such as `default_transformations` is replaced, not combined.
+
+Setting `cloudinary` to `false` makes Cloudinary unavailable for the field.
+
+Here is an example of configuring a File field to use the Cloudinary media storage with custom default transformations and storing only the filename:
 
 ```yaml [YAML]{5-11}
 fields:
@@ -267,7 +275,7 @@ default_transformations = [[{quality = "auto", fetch_format = "auto"}]]
 
 **Legacy `media_library` Option**
 
-As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Cloudinary media storage with the legacy option:
+As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`. Without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Cloudinary media storage with the legacy option:
 
 ```yaml
 media_library:
@@ -352,7 +360,7 @@ There are two ways to use Cloudinary in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudinary directly within the entry editor. When uploading media, files will be stored in the Cloudinary account, and the CMS can take advantage of Cloudinary’s transformation capabilities directly from the CMS. You can also select existing media from your Cloudinary storage.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudinary directly within the entry editor. Uploaded files are stored in the Cloudinary account, and the CMS can take advantage of Cloudinary’s transformation capabilities directly. You can also select existing media from your Cloudinary storage.
 
 Users are required to authenticate with Cloudinary using their username and password when accessing the media storage provider. The authentication process is handled automatically by Sveltia CMS using the provided API key.
 
@@ -370,7 +378,7 @@ Source: https://sveltiacms.app/en/docs/media/cloudinary
 
 ## Uploadcare Integration
 
-[Uploadcare](https://uploadcare.com/) is a powerful media management service that provides robust file uploading, storage, and delivery capabilities. The Uploadcare integration allows users to seamlessly upload and manage media files within Sveltia CMS using Uploadcare’s infrastructure.
+[Uploadcare](https://uploadcare.com/) is a powerful media management service that provides robust file uploading, storage and delivery capabilities. The Uploadcare integration allows users to seamlessly upload and manage media files within Sveltia CMS using Uploadcare’s infrastructure.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -434,7 +442,7 @@ publicKey = "YOUR_PUBLIC_KEY"
 
 **Legacy `media_library` Option**
 
-Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS, but it is recommended to use the `media_libraries` option for new configurations. With the legacy option, only a single media storage provider can be configured. Here is an example of configuring Uploadcare using the legacy option:
+Sveltia CMS supports the legacy `media_library` option for backward compatibility with Netlify/Decap CMS. For new configurations, use the `media_libraries` option instead. With the legacy option, only a single media storage provider can be configured. Here is an example of configuring Uploadcare using the legacy option:
 
 ```yaml
 media_library:
@@ -446,12 +454,12 @@ media_library:
 The `config` object includes the Uploadcare [jQuery File Uploader options](https://uploadcare.com/docs/uploads/file-uploader-options/). However, only `publicKey`, `multiple` and `cdnBase` are supported in Sveltia CMS at this time, as we don’t actually use the pre-built uploader.
 
 - `publicKey` (string, required): Your Uploadcare public API key. A [field-level configuration](#field-level-configuration) inherits it from the top-level configuration, so it doesn’t need to be repeated there.
-- `multiple` (boolean, optional): If set to `true`, allows selecting multiple files at once. Default is `false`. This option is available for backward compatibility; use the `multiple` option in the File or Image field configuration instead, which takes precedence over this option.
+- `multiple` (boolean, optional): If set to `true`, allows selecting multiple files at once. Default is `false`. This option is available for backward compatibility. Use the `multiple` option in the File or Image field configuration instead, which takes precedence over this option.
 - `cdnBase` (string, optional): The CDN origin used in output URLs, such as a custom CDN domain. Default: the origin of the file URL returned by Uploadcare, typically `https://ucarecdn.com`.
 
 **Warning**
 
-Do not write your Uploadcare secret key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the secret key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Uploadcare secret key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the secret key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 There are two Sveltia CMS-specific configuration options you can include under the `settings` object:
 
@@ -518,7 +526,11 @@ defaultOperations = "/resize/800x600/"
 
 #### Field-Level Configuration
 
-The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so are the `config` and `settings` objects, key by key, so a field only needs to set the options it changes: `publicKey` doesn’t need to be repeated, and a setting such as `autoFilename` is inherited unless the field sets it. Setting `uploadcare` to `false` makes Uploadcare unavailable for the field. Here is an example of configuring a File field to use the Uploadcare media storage with custom default operations:
+The `media_libraries` configuration can also be specified at the field level for File and Image fields. This allows you to override the top-level configuration for specific fields. The field-level options are merged over the top-level ones, and so are the `config` and `settings` objects, key by key. A field therefore only needs to set the options it changes. For example, `publicKey` doesn’t need to be repeated, and a setting such as `autoFilename` is inherited unless the field sets it.
+
+Setting `uploadcare` to `false` makes Uploadcare unavailable for the field.
+
+Here is an example of configuring a File field to use the Uploadcare media storage with custom default operations:
 
 ```yaml [YAML]{4-7}
 - name: my_image
@@ -571,7 +583,7 @@ defaultOperations = "/crop/200x200/"
 
 **Legacy `media_library` Option**
 
-As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Uploadcare media storage with the legacy option:
+As with the top-level configuration, Sveltia CMS supports the legacy `media_library` option at the field level for backward compatibility. The field-level option applies to the provider set with its `name`. Without a `name`, it applies to the provider named in the top-level `media_library` option, or to the internal media storage if there is none. Its options are merged over the top-level ones in the same way. Here is an example of configuring a File field to use the Uploadcare media storage with the legacy option:
 
 ```yaml
 media_library:
@@ -582,7 +594,7 @@ media_library:
 
 ### Signed Uploads
 
-To enhance security, Uploadcare supports [signed uploads](https://uploadcare.com/docs/security/secure-uploads/), which require a secret key to generate upload signatures. Sveltia CMS prompts users to enter the secret key when they use the Uploadcare storage for the first time, and the key is securely stored in the browser’s local storage. After that, all uploads will be automatically signed using the provided secret key. No configuration is needed in the CMS config file.
+To enhance security, Uploadcare supports [signed uploads](https://uploadcare.com/docs/security/secure-uploads/), which require a secret key to generate upload signatures. Sveltia CMS prompts users to enter the secret key when they use the Uploadcare storage for the first time. The key is securely stored in the browser’s local storage, and all later uploads are automatically signed with it. No configuration is needed in the CMS config file.
 
 ### Accessing the Storage
 
@@ -590,11 +602,11 @@ There are two ways to use Uploadcare in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Uploadcare directly within the entry editor. When uploading media, files will be stored in the Uploadcare account, and the CMS can take advantage of Uploadcare’s transformation capabilities directly from the CMS. You can also select existing media from your Uploadcare storage.
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Uploadcare directly within the entry editor. Uploaded files are stored in the Uploadcare account, and the CMS can take advantage of Uploadcare’s transformation capabilities directly. You can also select existing media from your Uploadcare storage.
 
 #### Asset Library
 
-Uploadcare also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files, and upload, download or delete them without leaving the CMS. Files can’t be renamed or replaced, because the Uploadcare REST API doesn’t support renaming, and a re-uploaded file gets a new UUID and therefore a new URL.
+Uploadcare also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files, and upload, download or delete them without leaving the CMS. Files can’t be renamed or replaced, because the Uploadcare REST API doesn’t support renaming, and a re-uploaded file gets a new UUID and therefore a new URL.
 
 Source: https://sveltiacms.app/en/docs/media/uploadcare
 
@@ -708,7 +720,7 @@ az storage cors add \
 
 CORS rules are set per storage account, not per container, and they apply to the Blob service as a whole.
 
-The `DELETE` method and the `x-ms-copy-source` header are needed to delete and rename blobs from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule, otherwise the browser will block those requests during the preflight check.
+The `DELETE` method and the `x-ms-copy-source` header are needed to delete and rename blobs from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule. Otherwise, the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -759,7 +771,7 @@ prefix = "cms-uploads/" # Optional
 
 **Warning**
 
-Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -788,7 +800,7 @@ connect-src https://mystorageaccount.blob.core.windows.net
 img-src     https://media.example.com;
 ```
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 Replace `mystorageaccount` with your actual storage account name.
 
@@ -806,7 +818,13 @@ When uploading media, files are stored in the container as block blobs, and the 
 
 #### Asset Library
 
-Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission, and so does renaming, which copies the blob to the new name and then deletes the original. The blobs are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations) by their virtual directories: subfolders are listed ahead of the blobs, uploads go to the folder being viewed, and folders can be created, renamed and deleted — an empty folder is kept with a zero-byte placeholder blob named after it with a trailing slash, and renaming a folder copies and deletes each blob in it.
+Azure Blob Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the blobs in your container, and upload, rename, replace, download or delete them without leaving the CMS. Deleting requires a SAS token with the Delete permission. So does renaming, which copies the blob to the new name and then deletes the original.
+
+The blobs are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations) by their virtual directories:
+
+- Subfolders are listed ahead of the blobs.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted. An empty folder is kept with a zero-byte placeholder blob named after it with a trailing slash, and renaming a folder copies and deletes each blob in it.
 
 Source: https://sveltiacms.app/en/docs/media/azure-blob-storage
 
@@ -834,16 +852,16 @@ More providers, including paid stock photo services, will be added in future rel
 - You don’t need an API key to use Lorem Picsum, so it’s the easiest option to get started with stock photos in Sveltia CMS.
 - Their pictures are mainly for placeholder use, so they may not be suitable for all types of content. However, they can be a great option for testing or when you need generic images without specific themes.
 - Their pictures are [CC0 licensed](https://github.com/DMarby/picsum-photos/issues/81#issuecomment-1340068800), which means they are free to use without giving credit to the creator.
-- You can access 300 random pictures quickly, but you cannot search for specific images using keywords because the images do not have tags or captions due to the nature of the service.
+- You can access 300 random pictures quickly, but you cannot search for specific images using keywords. Due to the nature of the service, the images do not have tags or captions.
 - Unfortunately, there is no alternative text for the images because they do not have tags or captions. This makes them inaccessible to some users.
 
 #### Non-hotlinking Providers
 
-Due to the non-hotlinking policies, Pexels and Pixabay are disabled if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is disabled due to the lack of the [`media_folder` option](https://sveltiacms.app/en/docs/media/internal#media-folder) in the configuration. They are also hidden for a field where the internal media storage is [disabled](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) with `media_libraries.default: false`.
+Pexels and Pixabay don’t allow hotlinking, so they need the [internal media storage](https://sveltiacms.app/en/docs/media/internal). They are disabled if the internal media storage is disabled because the configuration lacks the [`media_folder` option](https://sveltiacms.app/en/docs/media/internal#media-folder). They are also hidden for a field where the internal media storage is [disabled](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) with `media_libraries.default: false`.
 
 ### Requirements
 
-Except for Lorem Picsum, which does not require an API key, you must obtain API keys for each stock photo service you wish to use. Register for developer accounts at the following links to get your API keys:
+Except for Lorem Picsum, which does not require an API key, you must obtain an API key for each stock photo service you wish to use. Register for developer accounts at the following links to get your API keys:
 
 - [Pexels API](https://www.pexels.com/api/)
 - [Pixabay API](https://pixabay.com/service/about/api/)
@@ -938,7 +956,7 @@ By default, curated images from each provider are available for quick access. Yo
 
 Once the desired image is found, simply select it, and it will be inserted into the content just like any other media asset. The CMS may show a dialog where you can copy the image credit information to comply with attribution requirements.
 
-Note that some providers require hotlinking to the image’s original URL, while others rather disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies, and downloads the image to the media storage if necessary.
+Note that some providers require hotlinking to the image’s original URL, while others disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies. If necessary, it downloads the image to the media storage.
 
 When an Unsplash photo is inserted, Sveltia CMS also notifies Unsplash of the download using your API key, as the [Unsplash API guidelines](https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download) require.
 
@@ -946,6 +964,6 @@ When an Unsplash photo is inserted, Sveltia CMS also notifies Unsplash of the do
 
 If your CMS instance is used by multiple users, the administrator needs to distribute an API key to all users to let them use the stock photo feature.
 
-Alternatively, each user can provide their own API key. However, this is not recommended for instances with non-technical end-users because generating and managing API keys may be challenging for them.
+Alternatively, each user can provide their own API key. However, this is not recommended for instances with non-technical end users because generating and managing API keys may be challenging for them.
 
 Source: https://sveltiacms.app/en/docs/integrations/stock-photos

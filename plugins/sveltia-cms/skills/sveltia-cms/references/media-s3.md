@@ -36,7 +36,7 @@ Create an IAM user with programmatic access and attach a policy granting the min
 }
 ```
 
-The `s3:DeleteObject` action is only needed to delete and rename files and folders from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original, and an empty folder is kept with a zero-byte placeholder object.
+The `s3:DeleteObject` action is only needed to delete and rename files and folders from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). Leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original. An empty folder is kept with a zero-byte placeholder object.
 
 The resulting **Access Key ID** goes in `access_key_id` in your config. The **Secret Access Key** is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
 
@@ -78,11 +78,11 @@ Configure cross-origin resource sharing in the S3 console under **Bucket > Permi
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 #### Bucket Naming
 
-For virtual-hosted-style URLs (the default), the bucket name must be DNS-compatible: lowercase letters, numbers, and hyphens only. If your bucket name contains underscores, use `force_path_style: true` in your config.
+For virtual-hosted-style URLs (the default), the bucket name must be DNS-compatible: lowercase letters, numbers and hyphens only. If your bucket name contains underscores, use `force_path_style: true` in your config.
 
 ### Configuration
 
@@ -145,7 +145,7 @@ public_url = "https://media.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -227,9 +227,9 @@ public_url = "https://my-website-assets.web.example.com"
 Keep the following in mind:
 
 - **Path-style URLs:** With a custom `endpoint`, objects are always addressed as `{endpoint}/{bucket}/{key}`, so the server doesn’t need a wildcard DNS record or a TLS certificate for bucket subdomains. `force_path_style` has no effect.
-- **Region:** The region isn’t part of the URL, but it’s used to sign every request, so it must match the region the server is configured with: the `s3_region` option for Garage (`garage` in the sample configuration) or `us-east-1` for MinIO unless you’ve changed it. A mismatch makes every request fail with a signature error.
-- **CORS:** The server must allow cross-origin requests from the CMS origin, as described in [CORS](#cors) above. With Garage, apply the same policy to the bucket through its S3 API, e.g. with `aws s3api put-bucket-cors --endpoint-url https://s3.example.com`. MinIO allows any origin by default; if you’ve restricted it, add the CMS origin to its `cors_allow_origin` setting.
-- **Public read access:** Asset preview and download URLs are unsigned, so objects must be readable without credentials. On MinIO, allow anonymous downloads on the bucket, e.g. with `mc anonymous set download`. Garage doesn’t serve anonymous requests on its S3 API; enable [website access](https://garagehq.deuxfleurs.fr/documentation/cookbook/exposing-websites/) on the bucket instead and set `public_url` to the bucket’s web endpoint or a reverse proxy in front of it.
+- **Region:** The region isn’t part of the URL, but it’s used to sign every request. It must therefore match the region the server is configured with. For Garage, that’s the `s3_region` option (`garage` in the sample configuration). For MinIO, it’s `us-east-1` unless you’ve changed it. A mismatch makes every request fail with a signature error.
+- **CORS:** The server must allow cross-origin requests from the CMS origin, as described in [CORS](#cors) above. With Garage, apply the same policy to the bucket through its S3 API, e.g. with `aws s3api put-bucket-cors --endpoint-url https://s3.example.com`. MinIO allows any origin by default. If you’ve restricted it, add the CMS origin to its `cors_allow_origin` setting.
+- **Public read access:** Asset preview and download URLs are unsigned, so objects must be readable without credentials. On MinIO, allow anonymous downloads on the bucket, e.g. with `mc anonymous set download`. Garage doesn’t serve anonymous requests on its S3 API. Instead, enable [website access](https://garagehq.deuxfleurs.fr/documentation/cookbook/exposing-websites/) on the bucket and set `public_url` to the bucket’s web endpoint or a reverse proxy in front of it.
 - **HTTPS:** If the CMS is served over HTTPS, browsers block requests to a plain `http://` endpoint as mixed content, except for `localhost`. Put the server behind a reverse proxy with a TLS certificate.
 - **Content Security Policy:** Add the `endpoint` origin, and the `public_url` origin if any, to `connect-src` and `img-src`. See [Content Security Policy](#content-security-policy) below.
 
@@ -262,7 +262,7 @@ img-src     https://*.s3.us-east-1.amazonaws.com
             https://media.example.com;
 ```
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -278,7 +278,13 @@ When uploading media, files will be stored in the S3 bucket, and the CMS can tak
 
 #### Asset Library
 
-Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/amazon-s3
 
@@ -337,7 +343,7 @@ With a public bucket, B2’s S3 endpoint serves objects anonymously, so no separ
 
 **Important**
 
-The CORS configuration required by Sveltia CMS **cannot be set via the B2 web console**. The console only offers four basic presets that don’t include the S3 operations needed for uploads and listings. You must use the **B2 CLI**, native API, or AWS CLI to configure CORS.
+The CORS configuration required by Sveltia CMS **cannot be set via the B2 web console**. The console only offers four basic presets that don’t include the S3 operations needed for uploads and listings. You must use the **B2 CLI**, native API or AWS CLI to configure CORS.
 
 This is documented, by-design behavior — see [Enable and Manage CORS Rules in the Enterprise Web Console](https://www.backblaze.com/docs/cloud-storage-enable-and-manage-cors-rules).
 
@@ -391,7 +397,7 @@ The S3 operations Sveltia CMS requires are:
 
 Sveltia CMS uploads each file with a single `PUT` request, so `s3_post` (used for multipart uploads) isn’t needed.
 
-Deleting and renaming files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`; if your existing rule lacks them, update it, otherwise the browser will block those requests during the preflight check.
+Deleting and renaming files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`. If your existing rule lacks them, update it. Otherwise, the browser will block those requests during the preflight check.
 
 B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, `PUT`, `DELETE`).
 
@@ -452,7 +458,7 @@ public_url = "https://cdn.example.com"
 
 **Warning**
 
-Do not write your Application Key (secret) in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Application Key (secret) in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -508,7 +514,7 @@ img-src     https://cdn.example.com;
 
 Replace `us-east-005` and `my-bucket` with your actual region and bucket name.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -534,7 +540,13 @@ When uploading media, files will be stored in the B2 bucket with zero egress fee
 
 #### Asset Library
 
-Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/backblaze-b2
 
@@ -650,7 +662,7 @@ prefix = "cms-uploads/" # Optional
 
 **Warning**
 
-Do not write your storage zone password in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the password when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your storage zone password in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the password when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -674,7 +686,7 @@ img-src     https://my-zone.b-cdn.net;
 
 Replace `de` and `my-zone.b-cdn.net` with your actual region code and pull zone hostname.
 
-The pull zone hostname must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, the pull zone must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The pull zone hostname must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, the pull zone must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -690,7 +702,7 @@ Bunny Storage doesn’t implement the batch `DeleteObjects` API or custom object
 
 #### CDN Cache
 
-Files are served through the pull zone’s cache. If you replace a file with a new version under the same name, the old version may keep being served until the cache expires; purge the pull zone cache from the bunny.net dashboard if you need the change to appear immediately.
+Files are served through the pull zone’s cache. If you replace a file with a new version under the same name, the old version may keep being served until the cache expires. Purge the pull zone cache from the bunny.net dashboard if you need the change to appear immediately.
 
 ### Accessing the Storage
 
@@ -704,7 +716,13 @@ When uploading media, files will be stored in the storage zone and delivered thr
 
 #### Asset Library
 
-Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/bunny-storage
 
@@ -779,7 +797,7 @@ Configure via **R2 Dashboard > Bucket > Settings > CORS Policy**. CORS is requir
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -838,7 +856,7 @@ jurisdiction = "eu" # Optional; 'default' | 'eu' | 'fedramp'
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -902,7 +920,7 @@ connect-src https://abcdef1234567890abcdef1234567890.eu.r2.cloudflarestorage.com
 img-src     https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 ```
 
-The public URL host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, it must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The public URL host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, it must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -918,7 +936,13 @@ When uploading media, files will be stored in the R2 bucket, and the CMS can tak
 
 #### Asset Library
 
-Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/cloudflare-r2
 
@@ -949,7 +973,9 @@ The resulting **Access Key** goes in `access_key_id` in your config. The **Secre
 
 #### Public Read Access
 
-Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Files in a Space are private by default, and the Space’s file listing setting only controls whether anyone can list them, not whether they can be read. Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL, so no further setup is needed, and the file listing can stay private.
+Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Files in a Space are private by default. The Space’s file listing setting only controls whether anyone can list them, not whether they can be read.
+
+Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL. No further setup is needed, and the file listing can stay private.
 
 Files uploaded by other means, such as the control panel, stay private unless you set their permissions to **Public**. Their previews won’t load in the CMS until you do.
 
@@ -969,7 +995,7 @@ Configure via **DigitalOcean Control Panel > Spaces > Select bucket > Settings >
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy, otherwise the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 ### Configuration
 
@@ -1028,7 +1054,7 @@ public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -1054,7 +1080,7 @@ public_url: 'https://images.example.com'
 
 **Warning**
 
-Do **not** set `public_url` to the CDN URL and rely on it for API operations. The CDN endpoint does not support the S3 ListObjects API, so browsing the asset library would stop working. The storage endpoint is always used for listing and uploading; only the asset URLs shown in the CMS change.
+Do **not** set `public_url` to the CDN URL and rely on it for API operations. The CDN endpoint does not support the S3 ListObjects API, so browsing the asset library would stop working. The storage endpoint is always used for listing and uploading. Only the asset URLs shown in the CMS change.
 
 ### Content Security Policy
 
@@ -1076,7 +1102,7 @@ img-src     https://my-space.nyc3.cdn.digitaloceanspaces.com;
 
 Replace `nyc3` and `my-space` with your actual region and bucket name. If you use a custom subdomain, such as `https://images.example.com`, allow it in place of the CDN endpoint.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom subdomain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom subdomain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -1092,7 +1118,13 @@ When uploading media, files will be stored in the Spaces bucket, and the CMS can
 
 #### Asset Library
 
-DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/digitalocean-spaces
 
@@ -1121,13 +1153,17 @@ The resulting **Access Key ID** goes in `access_key_id` in your config. The **Se
 
 #### Public Read Access
 
-Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Objects are private by default, even in a bucket whose **Visibility** is **Public**, as that setting only controls whether anyone can list them. Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL, so the bucket can stay private. The API key’s IAM policy needs the `ObjectStorageObjectsWrite` or `ObjectStorageFullAccess` permission set, both of which include the `PutObjectAcl` permission. If the bucket has a bucket policy, it must allow `s3:PutObjectAcl` as well.
+Asset preview and download URLs are unsigned direct storage URLs, so objects must be publicly readable. Objects are private by default, even in a bucket whose **Visibility** is **Public**, because that setting only controls whether anyone can list them.
+
+Sveltia CMS therefore gives every file it uploads or renames, and every folder it creates, the `public-read` ACL, so the bucket can stay private. For this to work, the API key’s IAM policy needs the `ObjectStorageObjectsWrite` or `ObjectStorageFullAccess` permission set, both of which include the `PutObjectAcl` permission. If the bucket has a bucket policy, it must allow `s3:PutObjectAcl` as well.
 
 Objects uploaded by other means, such as the console, stay private unless you make them public, or add a bucket policy that grants `s3:GetObject` to everyone. Their previews won’t load in the CMS until you do.
 
 #### CORS
 
-Configure CORS via AWS CLI. See the [documentation](https://www.scaleway.com/en/docs/object-storage/api-cli/setting-cors-rules/) for details. CORS is required because Sveltia CMS sends custom AWS Signature v4 headers that trigger a preflight request. Make sure to allow the necessary HTTP methods (`GET`, `PUT` and `DELETE`) and all headers (`*`), as Sveltia CMS sends the `Authorization`, `x-amz-*` and `Content-Type` headers. The `DELETE` method and the `x-amz-copy-source` header are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library); if you configured CORS before these operations became available, add them to your existing rule.
+Configure CORS via AWS CLI. See the [documentation](https://www.scaleway.com/en/docs/object-storage/api-cli/setting-cors-rules/) for details. CORS is required because Sveltia CMS sends custom AWS Signature v4 headers that trigger a preflight request.
+
+Make sure to allow the necessary HTTP methods (`GET`, `PUT` and `DELETE`) and all headers (`*`), because Sveltia CMS sends the `Authorization`, `x-amz-*` and `Content-Type` headers. The `DELETE` method and the `x-amz-copy-source` header are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule.
 
 ### Configuration
 
@@ -1186,7 +1222,7 @@ public_url = "https://my-cdn.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -1194,7 +1230,7 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | --- | --- | --- |
 | `access_key_id` | Yes | Scaleway IAM Access Key ID. Safe to store in config. |
 | `bucket` | Yes | The bucket name. |
-| `region` | Yes | Scaleway region: `fr-par`, `nl-ams`, `pl-waw`, or `it-mil`. |
+| `region` | Yes | Scaleway region: `fr-par`, `nl-ams`, `pl-waw` or `it-mil`. |
 | `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
 | `public_url` | No | CDN or custom domain URL for asset previews. See [CDN / Custom Domain](#cdn-custom-domain) below. |
 
@@ -1208,7 +1244,7 @@ public_url: 'https://my-cdn.example.com'
 
 **Warning**
 
-Do **not** set `public_url` to a CDN URL and rely on it for API operations. The CDN endpoint does not support the S3 ListObjects API, so browsing the asset library would stop working. The storage endpoint is always used for listing and uploading; only the asset URLs shown in the CMS change.
+Do **not** set `public_url` to a CDN URL and rely on it for API operations. The CDN endpoint does not support the S3 ListObjects API, so browsing the asset library would stop working. The storage endpoint is always used for listing and uploading. Only the asset URLs shown in the CMS change.
 
 ### Content Security Policy
 
@@ -1230,7 +1266,7 @@ img-src     https://my-cdn.example.com;
 
 Replace `fr-par` and `my-bucket` with your actual region and bucket name.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -1244,7 +1280,13 @@ When editing content entries, users can use [File](https://sveltiacms.app/en/doc
 
 #### Asset Library
 
-Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/scaleway-object-storage
 
@@ -1348,7 +1390,7 @@ public_url = "https://my-cdn.example.com"
 
 **Warning**
 
-Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time, which will be stored securely in the browser’s local storage.
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 #### Configuration Properties
 
@@ -1389,7 +1431,7 @@ img-src     https://media.example.com;
 
 Replace `abcdefghijklmnopqrst` with your actual Project ID.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin, otherwise downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
 See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
 
@@ -1403,6 +1445,12 @@ When editing content entries, users can use [File](https://sveltiacms.app/en/doc
 
 #### Asset Library
 
-Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), where users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS. The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations): subfolders are listed ahead of the files, uploads go to the folder being viewed, and folders can be created, renamed and deleted.
+Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/supabase-storage

@@ -367,7 +367,7 @@ You don’t have to create the tags in the tag collection first: the Relation fi
 
 ### Editing Raw Text Files
 
-Sveltia CMS allows users to edit raw text files without any front matter, such as JSON, XML, or CSV files. To achieve this, you can use the `raw` format in a file collection with a single `body` field configured with the appropriate `widget` type: `code`, `markdown`, `richtext` or `text`.
+Sveltia CMS allows users to edit raw text files without any front matter, such as JSON, XML or CSV files. To achieve this, you can use the `raw` format in a file collection with a single `body` field configured with the appropriate `widget` type: `code`, `markdown`, `richtext` or `text`.
 
 Here is an example configuration for editing the `README.md` and `package.json` files:
 
@@ -678,7 +678,7 @@ Sometimes, you may want to create your content model in a flexible way. Sveltia 
 
 ### Rendering Soft Line Breaks as Hard Line Breaks in Markdown
 
-In the [rich text](https://sveltiacms.app/en/docs/fields/richtext) editor, pressing `Shift+Enter` inserts a [soft line break](https://spec.commonmark.org/current/#soft-line-breaks) (`\n`). We can’t change the behavior to add a [hard line break](https://spec.commonmark.org/current/#hard-line-breaks) (`<br>`) — it’s a limitation of the underlying [Lexical framework](https://lexical.dev/). However, if you look at the preview, you may notice that soft line breaks are rendered as hard line breaks. That’s because the preview is using the [Marked](https://github.com/markedjs/marked) library with the [`breaks` option](https://marked.js.org/using_advanced#options) enabled, which mimics how comments are rendered on GitHub.
+In the [rich text](https://sveltiacms.app/en/docs/fields/richtext) editor, pressing `Shift+Enter` inserts a [soft line break](https://spec.commonmark.org/current/#soft-line-breaks) (`\n`). We can’t change the behavior to add a [hard line break](https://spec.commonmark.org/current/#hard-line-breaks) (`<br>`) — it’s a limitation of the underlying [Lexical framework](https://lexical.dev/). However, if you look at the preview, you may notice that soft line breaks are rendered as hard line breaks. That’s because the preview uses the [Marked](https://github.com/markedjs/marked) library with the [`breaks` option](https://marked.js.org/using_advanced#options) enabled. This mimics how comments are rendered on GitHub.
 
 Chances are the Markdown parser you use for your frontend can do the same:
 

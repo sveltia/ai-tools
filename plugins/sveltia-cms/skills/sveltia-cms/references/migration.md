@@ -32,7 +32,7 @@ Static CMS was a community fork of Netlify CMS that introduced several unique fe
 
 #### Pages CMS
 
-Pages CMS was also inspired by Netlify CMS and shares similar concepts and configurations. Sveltia CMS offers more features, flexibility, and frequent releases than Pages CMS, but a hosted solution is not yet available.
+Pages CMS was also inspired by Netlify CMS and shares similar concepts and configurations. Sveltia CMS offers more features, flexibility and frequent releases than Pages CMS, but a hosted solution is not yet available.
 
 Our migration guide explains the differences between the two platforms and how to convert a Pages CMS configuration file to the Sveltia CMS format.
 
@@ -120,7 +120,7 @@ Source: https://sveltiacms.app/en/docs/migration/earlier-versions
 
 ## Migrating from Netlify CMS or Decap CMS
 
-Sveltia CMS is designed as a modern [successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) (now Decap CMS). If you are currently using Netlify/Decap CMS, you can migrate to Sveltia CMS to take advantage of its hundreds of improvements across the board, including better performance, a more intuitive user interface, enhanced asset management, improved i18n support, and more.
+Sveltia CMS is designed as a modern [successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) (now Decap CMS). If you are currently using Netlify/Decap CMS, you can migrate to Sveltia CMS to take advantage of its hundreds of improvements across the board, including better performance, a more intuitive user interface, enhanced asset management, improved i18n support and more.
 
 **Stable Version Not Yet Available**
 
@@ -185,7 +185,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
 - The new [`media_processing`](https://decapcms.org/docs/configuration-options/#media-processing) option: Sveltia CMS has already implemented a [built-in image optimizer](https://sveltiacms.app/en/docs/media#image-optimization) that supports both raster and SVG images and will be further enhanced. Use that feature instead.
 - The theme and keymap inline settings for the Code field, along with support for some languages. Instead of [CodeMirror](https://codemirror.net/), we use Lexical’s code block functionality powered by [Shiki](https://shiki.style/).
 - The `allow_multiple` option for the File and Image fields: It’s a confusing option that defaults to `true`, and there is a separate option called `media_library.config.multiple`. We have added the new [`multiple`](https://sveltiacms.app/en/docs/fields/file#multiple) option instead, which is more intuitive and works with all media storage providers.
-- Remark plugins for the Markdown field: Not compatible with our Lexical-based rich text editor. The `CMS.registerRemarkPlugin` method is a noop in Sveltia CMS.
+- Remark plugins for the Markdown field: Not compatible with our Lexical-based rich text editor. The `CMS.registerRemarkPlugin` method is a no-op in Sveltia CMS.
 - The `use_secure_url` option for the [Cloudinary media storage](https://sveltiacms.app/en/docs/media/cloudinary): Insecure URLs should never be used.
 - Local proxy server: Our [local development workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates the need for a proxy server. For security and performance reasons, we don’t support `netlify-cms-proxy-server` or `decap-server`. The `local_backend` option is ignored.
 - The global [`issue_reports`](https://decapcms.org/docs/configuration-options/#issue-reports) option: The Report Issue link in the Help menu always points to the Sveltia CMS issue tracker, and the `url` option is ignored.
@@ -202,7 +202,7 @@ We don’t implement features not described in the Netlify/Decap CMS documentati
 
 There are some differences in behavior between Sveltia CMS and Netlify/Decap CMS that may affect your existing configuration or content.
 
-- [Decap CMS 3.1.1](https://github.com/decaporg/decap-cms/releases/tag/decap-cms%403.1.1) replaced Moment.js with Day.js for date handling, and In Sveltia CMS followed suit. Since [Day.js tokens](https://day.js.org/docs/en/display/format) are not 100% compatible with [Moment.js tokens](https://momentjs.com/docs/#/displaying/format/), this could be a breaking change in certain cases. Check your `format`, `date_format` and `time_format` options for DateTime fields, as well as any date formatting in [string transformations](https://sveltiacms.app/en/docs/string-transformations#date).
+- [Decap CMS 3.1.1](https://github.com/decaporg/decap-cms/releases/tag/decap-cms%403.1.1) replaced Moment.js with Day.js for date handling, and Sveltia CMS followed suit. Since [Day.js tokens](https://day.js.org/docs/en/display/format) are not 100% compatible with [Moment.js tokens](https://momentjs.com/docs/#/displaying/format/), this could be a breaking change in certain cases. Check your `format`, `date_format` and `time_format` options for DateTime fields, as well as any date formatting in [string transformations](https://sveltiacms.app/en/docs/string-transformations#date).
 - By default, Sveltia CMS does not slugify uploaded filenames, as mentioned in the [asset management](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-asset-management) section. If your site generator expects hyphenated filenames, you can enable the `slugify_filename` [internal media storage option](https://sveltiacms.app/en/docs/media#slugification-of-filenames).
 - In some cases, the [data output](https://sveltiacms.app/en/docs/data-output) of Sveltia CMS may differ from that of Netlify/Decap CMS. Notably, Sveltia CMS does not omit empty optional fields by default. If you have data validation in your site generator, this could cause issues. Use the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) if needed.
 - Sveltia CMS requires a [secure context](https://developer.mozilla.org/en-US/docs/Web/Security/Secure_Contexts), meaning it only works with HTTPS, `localhost`, `127.0.0.1` or `[::1]` URLs. If you’re running your own remote server and serving content over HTTP, the CMS will not work. We recommend obtaining a TLS certificate from [Let’s Encrypt](https://letsencrypt.org/).
@@ -215,7 +215,7 @@ There may be other minor differences in behavior that are not listed here.
 
 Sveltia CMS is also adding various config validation checks to help users identify potential issues, so you may see errors that were not present in Netlify/Decap CMS before. For example, Sveltia CMS raises an error if the `slug` collection option contains slashes (`/`), which is supposed to be invalid.
 
-[Let us know](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) if you have encounter any compatibility issues not mentioned above. We want to make the migration process as smooth as possible for our users.
+[Let us know](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) if you encounter any compatibility issues not mentioned above. We want to make the migration process as smooth as possible for our users.
 
 ### Migration Steps
 
@@ -256,13 +256,13 @@ Note that Netlify Identity users can’t sign in to the CMS with their Identity 
 
 **Warning**
 
-Changes are now committed with each editor’s own GitHub account. If your repository is private, Netlify’s [Deploy Request Policy](https://docs.netlify.com/deploy/deploy-overview/#deploy-permissions) only builds commits from recognized authors, so a deploy triggered by an editor who isn’t a member of your Netlify team may stay pending until a Team Owner approves it. To avoid this, add the editors to your Netlify team as Git Contributors or enable auto-approval for deploy requests.
+Changes are now committed with each editor’s own GitHub account. If your repository is private, Netlify’s [Deploy Request Policy](https://docs.netlify.com/deploy/deploy-overview/#deploy-permissions) only builds commits from recognized authors. A deploy triggered by an editor who isn’t a member of your Netlify team may therefore stay pending until a Team Owner approves it. To avoid this, add the editors to your Netlify team as Git Contributors or enable auto-approval for deploy requests.
 
 Once everyone can sign in with GitHub, you can disable Git Gateway and Netlify Identity in the Netlify dashboard if you don’t use them for anything else.
 
 If your site is deployed to a different hosting service, you need to set up an OAuth client yourself or use another authentication method. See the [GitHub backend](https://sveltiacms.app/en/docs/backends/github#authentication) or [GitLab backend](https://sveltiacms.app/en/docs/backends/gitlab#authentication) documentation for the options.
 
-If you want to stay with Git Gateway and Netlify Identity, unfortunately you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [in the future](https://sveltiacms.app/en/docs/roadmap).
+If you want to stay with Git Gateway and Netlify Identity, unfortunately, you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [in the future](https://sveltiacms.app/en/docs/roadmap).
 
 #### Switching to Sveltia CMS
 
@@ -398,11 +398,11 @@ content/pages/products/hardware/_index.md
 
 The result is the same, but you choose the parent rather than typing the entry’s own folder. Moving an existing entry works the same way in both.
 
-Both sides of that example assume the `meta.path.index_file` option, which gives every entry the same file name. Without it, Netlify/Decap CMS names a new entry’s file from the `title` field — ignoring the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs) template and `identifier_field`, so a collection with no `title` field saves every entry as `untitled`. Sveltia CMS names the file from the slug, as it does in any other collection.
+Both sides of that example assume the `meta.path.index_file` option, which gives every entry the same filename. Without it, Netlify/Decap CMS names a new entry’s file from the `title` field, ignoring the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs) template and `identifier_field`. A collection with no `title` field therefore saves every entry as `untitled`. Sveltia CMS names the file from the slug, as it does in any other collection.
 
 #### Data Output
 
-The data output conventions of Sveltia CMS may differ from that of Netlify/Decap CMS in some cases. See the [data output](https://sveltiacms.app/en/docs/data-output#data-output-conventions) documentation for details.
+The data output conventions of Sveltia CMS may differ from those of Netlify/Decap CMS in some cases. See the [data output](https://sveltiacms.app/en/docs/data-output#data-output-conventions) documentation for details.
 
 You don’t need to manually update your existing content — the CMS automatically handles these differences when loading existing content. However, there are two notable differences to be aware of:
 
@@ -411,7 +411,7 @@ You don’t need to manually update your existing content — the CMS automatica
 
 #### Preview Styles
 
-Sveltia CMS comes with a minimum default preview style to ensure better readability. If you have [custom preview styles](https://sveltiacms.app/en/docs/api/preview-styles) for Netlify/Decap CMS, you could remove them or adapt them to Sveltia CMS, which shows field labels in the preview by default.
+Sveltia CMS comes with a minimal default preview style to ensure better readability. If you have [custom preview styles](https://sveltiacms.app/en/docs/api/preview-styles) for Netlify/Decap CMS, you could remove them or adapt them to Sveltia CMS, which shows field labels in the preview by default.
 
 Source: https://sveltiacms.app/en/docs/migration/netlify-decap-cms
 
@@ -459,7 +459,7 @@ We plan to support user management and roles with [Sveltia CMS Additions](https:
 The following Pages CMS features have no direct equivalent in Sveltia CMS:
 
 - **Branch switching**: Pages CMS reads `.pages.yml` from the branch being edited and lets users switch branches. Sveltia CMS works on the single branch specified with the `branch` [backend option](https://sveltiacms.app/en/docs/backends). The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) can be used to review changes in separate branches before publishing them.
-- **Actions**: Pages CMS can run GitHub Actions workflows from buttons with custom inputs. When automatic deployments are disabled, Sveltia CMS can trigger a deployment with the [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button, which sends a `repository_dispatch` event to GitHub Actions, creates a GitLab CI/CD pipeline or calls a webhook, but it doesn’t support other workflows or inputs.
+- **Actions**: Pages CMS can run GitHub Actions workflows from buttons with custom inputs. When automatic deployments are disabled, Sveltia CMS can trigger a deployment with the [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button. The button sends a `repository_dispatch` event to GitHub Actions, creates a GitLab CI/CD pipeline or calls a webhook. Other workflows and inputs are not supported.
 - **Commit identity**: Pages CMS can commit as the GitHub App. Sveltia CMS always commits as the signed-in user.
 - **Raw and datagrid editors**: Pages CMS provides a plain text editor for files without fields and a spreadsheet-like editor for CSV files. Sveltia CMS can manage such files with the [`raw` format](https://sveltiacms.app/en/docs/collections/entries/formats#format) and a single [Code](https://sveltiacms.app/en/docs/fields/code) or [Text](https://sveltiacms.app/en/docs/fields/text) field named `body`, but there is no table editor.
 - **Random filenames**: The `rename: random` media option is not supported. The `rename: safe` option is supported as `slugify_filename`.
@@ -617,7 +617,7 @@ The `view` options are converted as follows. See [Entry Listings](https://svelti
 | Pages CMS | Sveltia CMS |
 | --- | --- |
 | `view.primary` | [`identifier_field`](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field) |
-| `view.fields` | [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#table-view), e.g. `[title, date]`, for the columns of the table view, the default view of the entry list. A column can also be a template like `'{{locales}}'`. For the list view, which shows a single line per entry, a [`summary`](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) template like `'{{title}} ({{date}})'` can combine the fields as well |
+| `view.fields` | [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#choosing-columns), e.g. `[title, date]`, for the columns of the table view, the default view of the entry list. A column can also be a template like `'{{locales}}'`. For the list view, which shows a single line per entry, a [`summary`](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) template like `'{{title}} ({{date}})'` can combine the fields as well |
 | `view.sort` | [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting) |
 | `view.default.sort`, `view.default.order` | `sortable_fields.default.field`, `sortable_fields.default.direction` (`ascending` or `descending`) |
 | `view.search` | Not needed, as all entries are searchable |
@@ -859,7 +859,7 @@ collections:
 3. Convert `.pages.yml` to `admin/config.yml` using the [mapping](#converting-the-configuration) above. Enable [JSON schema validation](https://sveltiacms.app/en/docs/config-basics#json-schema) in your code editor to catch mistakes early.
 4. Test the configuration with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local). Open some existing entries and save them to make sure the data output is unchanged, as there might be differences in formatting. Use the [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output) to adjust the output if needed.
 5. Deploy the site and [set up authentication](https://sveltiacms.app/en/docs/backends/github#authentication) for production.
-6. Invite your Pages CMS collaborators to the GitHub repository, and share the admin URL with them.
+6. Invite your Pages CMS collaborators to the GitHub repository and share the admin URL with them.
 7. Once everything works as expected, delete `.pages.yml` from the repository and uninstall the Pages CMS GitHub App from your account or organization.
 
 If you encounter any issues during the migration, feel free to ask in our [Discussions](https://github.com/sveltia/sveltia-cms/discussions) or [report a bug](https://github.com/sveltia/sveltia-cms/issues/new?type=bug).
@@ -879,8 +879,8 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 #### Configuration Options
 
 - Sveltia CMS supports the [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting), [`view_filters`](https://sveltiacms.app/en/docs/collections/entries/views#filtering) and [`view_groups`](https://sveltiacms.app/en/docs/collections/entries/views#grouping) options with the new `default` option. We still support the legacy Netlify/Decap CMS format as well, so you can use either format for these options.
-- The `summary_fields` option is supported as an alias of [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#table-view), which chooses the columns of the entry list’s table view. As in Static CMS, `summary` stands for the entry summary. Sveltia CMS’s own `table_columns` option also accepts custom column labels and templates like `{{locales}}`.
-- Directory navigation is supported in the Asset Library and the Select File/Image dialog. If you define [collection-specific `media_folder`s](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration), these folders are displayed as separate locations. The [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) within a configured folder are listed and can be browsed in both places, created from either, and renamed or deleted in the Asset Library. Folders are enabled by default, so the `folder_support` option for `media_library` is not supported, nor is the `display_in_navigation` option.
+- The `summary_fields` option is supported as an alias of [`table_columns`](https://sveltiacms.app/en/docs/collections/entries/views#choosing-columns), which chooses the columns of the entry list’s table view. As in Static CMS, `summary` stands for the entry summary. Sveltia CMS’s own `table_columns` option also accepts custom column labels and templates like `{{locales}}`.
+- Directory navigation is supported in the Asset Library and the Select File/Image dialog. If you define [collection-specific `media_folder`s](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration), these folders are displayed as separate locations. The [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) within a configured folder are listed and can be browsed in both places. They can be created from either, and renamed or deleted in the Asset Library. Folders are enabled by default, so the `folder_support` option for `media_library` is not supported, nor is the `display_in_navigation` option.
 - The `logo_link` global option will not be supported. Use `display_url` or `site_url` instead.
 - The `yaml` global option will not be supported, as Sveltia CMS does not expose underlying `yaml` library options for forward compatibility reasons. However, we do have some [data output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output), including YAML indentation and quotes.
 
@@ -890,12 +890,12 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 
 #### Widgets
 
-- The date/time format options for the DateTime widget are **not compatible** since Static CMS [switched to date-fns](https://staticjscms.netlify.app/docs/decap-migration-guide#dates) while Decap CMS and Sveltia CMS have replaced Moment.js with Day.js. Update your formats accordingly.
-- The [KeyValue widget](https://sveltiacms.app/en/docs/fields/keyvalue) is implemented in Sveltia CMS with the same options.
-- The [UUID widget](https://sveltiacms.app/en/docs/fields/uuid) is also implemented, but with different options.
-- The `prefix` and `suffix` options for the Boolean, Number and String widgets are implemented as `before_input` and `after_input` in Sveltia CMS, respectively. Our `prefix` and `suffix` options for the String widget are literally a prefix and suffix to the value.
-- The `multiple` option for the File and Image widgets is supported in Sveltia CMS, along with the `min` and `max` options.
-- The [`select_folder`](https://sveltiacms.app/en/docs/fields/file#select-folder) option for the File widget is supported in Sveltia CMS. The public path of the selected folder is saved as the value, and several folders can be selected with the `multiple` option.
+- The date/time format options for the DateTime field are **not compatible** since Static CMS [switched to date-fns](https://staticjscms.netlify.app/docs/decap-migration-guide#dates) while Decap CMS and Sveltia CMS have replaced Moment.js with Day.js. Update your formats accordingly.
+- The [KeyValue field](https://sveltiacms.app/en/docs/fields/keyvalue) is implemented in Sveltia CMS with the same options.
+- The [UUID field](https://sveltiacms.app/en/docs/fields/uuid) is also implemented, but with different options.
+- The `prefix` and `suffix` options for the Boolean, Number and String fields are implemented as `before_input` and `after_input` in Sveltia CMS, respectively. Our `prefix` and `suffix` options for the String field are literally a prefix and suffix to the value.
+- The `multiple` option for the File and Image fields is supported in Sveltia CMS, along with the `min` and `max` options.
+- The [`select_folder`](https://sveltiacms.app/en/docs/fields/file#select-folder) option for the File field is supported in Sveltia CMS. The public path of the selected folder is saved as the value, and several folders can be selected with the `multiple` option.
 - The [breaking change to the List widget](https://staticjscms.netlify.app/docs/decap-migration-guide#list-widget) doesn’t apply to Sveltia CMS. You must use the `field` (singular) option to produce a single subfield with [no `name` output](https://sveltiacms.app/en/docs/data-output#understanding-exceptions).
 
 #### Customization

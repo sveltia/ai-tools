@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## RichText Field
 
-The RichText field type provides a rich text editor that supports both Markdown and HTML content. It allows content editors to format text, add links, images, and other media, making it a versatile choice for creating rich content.
+The RichText field type provides a rich text editor that supports both Markdown and HTML content. It allows content editors to format text, add links, images and other media, making it a versatile choice for creating rich content.
 
 **Note for Netlify/Decap CMS users**
 
@@ -16,11 +16,17 @@ For backward compatibility with Netlify/Decap CMS, the [Markdown](https://svelti
 
 #### Editor
 
-A [Lexical](https://lexical.dev/)-based rich text editor, including headings, lists, links, images, code blocks, and more. It provides a user-friendly interface for writing and formatting content.
+A [Lexical](https://lexical.dev/)-based rich text editor, including headings, lists, links, images, code blocks and more. It provides a user-friendly interface for writing and formatting content.
 
 The built-in toolbar includes buttons for common formatting options, which can be customized using the `buttons` option. The editor also supports different modes, including a raw Markdown or HTML editing mode, which can be configured using the `modes` option. Additional editor components can be added to enhance the editing experience using the `editor_components` option.
 
-Links are edited in a floating link editor. Placing the cursor in a link shows its URL along with buttons to edit or remove the link, and selecting text and clicking the Link button or pressing `Ctrl+K`/`Command+K` opens the editor to enter a URL for the text. Without a selection, the Link button opens a dialog to insert a link along with its text. With the `html` [format](#format), both the floating link editor and the dialog offer an “Open in New Tab” option, which adds `target="_blank"` to the link.
+Links are edited in a floating link editor:
+
+- Placing the cursor in a link shows its URL along with buttons to edit or remove the link.
+- Selecting text and clicking the Link button or pressing `Ctrl+K`/`Command+K` opens the editor to enter a URL for the text.
+- Without a selection, the Link button opens a dialog to insert a link along with its text.
+
+With the `html` [format](#format), both the floating link editor and the dialog offer an “Open in New Tab” option, which adds `target="_blank"` to the link.
 
 Tables can be inserted and edited with the [`table`](#editor-components) editor component, and text can be aligned with the [`align`](#buttons) button in HTML content. Both are disabled by default.
 
@@ -34,7 +40,7 @@ In the editor, pressing Enter inserts a new paragraph, while pressing Shift+Ente
 
 **Breaking change from Netlify/Decap CMS**
 
-Remark plugins are not supported because Sveltia CMS uses the Lexical framework instead of Slate. The `CMS.registerRemarkPlugin` API method is a noop in Sveltia CMS.
+Remark plugins are not supported because Sveltia CMS uses the Lexical framework instead of Slate. The `CMS.registerRemarkPlugin` API method is a no-op in Sveltia CMS.
 
 #### Preview
 
@@ -62,7 +68,7 @@ The following features are only available with the HTML format, as Markdown has 
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Markdown field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the RichText field supports the following options:
 
 #### Required Options
 
@@ -143,7 +149,7 @@ The following `buttons` are available in the rich text editor toolbar:
 
 By default, all buttons except `align` are enabled. You can customize the toolbar by specifying the desired buttons in the `buttons` option.
 
-The `align` button shows a menu to align the selected paragraphs, headings, block quotes or list items to the left, center or right, or to justify them. The button shows the current alignment. It’s only available with the `html` [format](#format), as Markdown has no syntax for alignment, so it’s not displayed in a Markdown field even if it’s listed. See the [example](#text-alignment-in-html) below.
+The `align` button shows a menu to align the selected paragraphs, headings, block quotes or list items to the left, center or right, or to justify them. The button shows the current alignment. It’s only available with the `html` [format](#format), because Markdown has no syntax for alignment. In a Markdown field, it’s not displayed even if it’s listed. See the [example](#text-alignment-in-html) below.
 
 **Note for Netlify/Decap CMS users**
 
@@ -197,7 +203,14 @@ The rows and columns can be inserted and deleted with the table menu, which is o
 - Insert Column Left, Insert Column Right
 - Delete Row, Delete Column, Delete Table
 
-Tables are saved in the [GitHub Flavored Markdown](https://github.github.com/gfm/#tables-extension-) syntax, or as `<table>` elements with the `html` format. A Markdown table always has a single header row on top, so the first row becomes the header row when a row is inserted above it or the header row is deleted. A Markdown table cell can only have inline content, so the block type selector, horizontal rules and block-level editor components are not available in a cell. Inline components, including the built-in `image` component and [custom components](https://sveltiacms.app/en/docs/api/editor-components) whose `pattern` matches a single line, can be inserted into a cell and are kept when the table is saved. A pipe (`|`) in their Markdown is escaped as `\|` so it doesn’t end the cell. In `raw` mode, the Insert Table button inserts an empty Markdown table.
+Tables are saved in the [GitHub Flavored Markdown](https://github.github.com/gfm/#tables-extension-) syntax, or as `<table>` elements with the `html` format. In `raw` mode, the Insert Table button inserts an empty Markdown table.
+
+A Markdown table has some limitations:
+
+- It always has a single header row on top. When a row is inserted above the header row, or the header row is deleted, the first row becomes the header row.
+- A cell can only have inline content, so the block type selector, horizontal rules and block-level editor components are not available in a cell.
+
+Inline components can be inserted into a cell and are kept when the table is saved. These include the built-in `image` component and [custom components](https://sveltiacms.app/en/docs/api/editor-components) whose `pattern` matches a single line. A pipe (`|`) in their Markdown is escaped as `\|` so it doesn’t end the cell.
 
 Merged cells and cell background colors are not supported. Tables can be read from Markdown and HTML even without the `table` component, but they can only be edited cell by cell then.
 
@@ -210,8 +223,8 @@ Developers can create [custom editor components](https://sveltiacms.app/en/docs/
 
 Whether to allow nested rich text editor components within editor components.
 
-- `true` (default): Allows all nested components, including nesting a component inside itself
-- `false`: Disables all nested components
+- `true` (default): Allows all nested components, including nesting a component inside itself.
+- `false`: Disables all nested components.
 - `'exclude_self'`: Allows nested components but excludes the parent component itself. For example, if you have a “Note” component with a rich text field, you can insert other components inside it, but not another “Note” component. This prevents potential issues with regex pattern matching when a component is nested inside itself.
 
 **Regex Matching Considerations**
@@ -230,14 +243,16 @@ Whether to allow linking images in the editor. When set to `true`, users can add
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to enable emoji autocomplete in the editor. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the content. The colon must be at the beginning of a line or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions. This works in both the rich text and raw Markdown editing modes.
+Whether to enable emoji autocomplete in the editor. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the content.
+
+The colon must be at the beginning of a line or preceded by a space or an opening bracket. A colon in the middle of a word, as in `12:34`, does not trigger the suggestions. This works in both the rich text and raw Markdown editing modes.
 
 ##### `use_markdown_shortcuts`
 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to enable Markdown shortcuts while typing in the editor. When set to `true`, typing `-` or `*` at the start of a line creates a bulleted list, `1.` creates a numbered list, `>` creates a blockquote, and `#`, `##`, `###` create headings. Standard keyboard shortcuts such as `Ctrl/Cmd+B` for bold and `Ctrl/Cmd+I` for italic are still enabled even when this option is `false`.
+Whether to enable Markdown shortcuts while typing in the editor. When set to `true`, typing `-` or `*` at the start of a line creates a bulleted list, `1.` creates a numbered list, `>` creates a blockquote and `#`, `##` and `###` create headings. Standard keyboard shortcuts such as `Ctrl/Cmd+B` for bold and `Ctrl/Cmd+I` for italic are still enabled even when this option is `false`.
 
 ##### `sanitize_preview`
 
@@ -270,7 +285,7 @@ The following options can be defined globally:
 - `use_markdown_shortcuts`
 - `sanitize_preview`
 
-The following example configures all RichText and Markdown fields to use `minimal: true`, disables Markdown shortcuts, and enables only the `bold`, `italic`, and `link` buttons by default.
+The following example configures all RichText and Markdown fields to use `minimal: true`, disables Markdown shortcuts and enables only the `bold`, `italic` and `link` buttons by default.
 
 ```yaml [YAML]
 field_defaults:
@@ -385,7 +400,7 @@ format = "html"
 
 #### Basic Markdown Field with Limited Buttons
 
-This example shows a minimal Markdown editor with only bold, italic, and link buttons.
+This example shows a minimal Markdown editor with only bold, italic and link buttons.
 
 ```yaml [YAML]
 - name: content
@@ -555,7 +570,7 @@ The Markdown field type is an alias of the RichText field type, available for ba
 
 The `widget` property for this field type is `markdown`.
 
-See the [RichText field documentation](https://sveltiacms.app/en/docs/fields/richtext) for details on the UI, data type, and available options.
+See the [RichText field documentation](https://sveltiacms.app/en/docs/fields/richtext) for details on the UI, data type and available options.
 
 Note that the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) option is not available for the Markdown field type since it is fixed to `markdown`. Use the RichText field type to save HTML.
 
@@ -632,7 +647,7 @@ This is a sample paragraph in **Markdown** format.
 }
 ```
 
-We have included a Markdown example output along with YAML, TOML, and JSON representations because a field named `body` with the Markdown field type would be stored outside of the frontmatter in a Markdown file. If the name of the field were different, the content would be stored in the frontmatter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
+We have included a Markdown example output along with YAML, TOML and JSON representations because a field named `body` with the Markdown field type would be stored outside of the front matter in a Markdown file. If the name of the field were different, the content would be stored in the front matter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 Source: https://sveltiacms.app/en/docs/fields/markdown
 
@@ -690,7 +705,7 @@ Must be set to `code`.
 
 **Breaking change from Netlify/Decap CMS**
 
-Sveltia CMS uses [Shiki](https://shiki.style/) for syntax highlighting. Therefore, the list of supported languages differ from that of Netlify/Decap CMS, which uses [CodeMirror](https://codemirror.net/).
+Sveltia CMS uses [Shiki](https://shiki.style/) for syntax highlighting. Therefore, the list of supported languages differs from that of Netlify/Decap CMS, which uses [CodeMirror](https://codemirror.net/).
 
 This affects the `default_language` option and the language used in the `default` option, along with the language selection dropdown in the UI.
 

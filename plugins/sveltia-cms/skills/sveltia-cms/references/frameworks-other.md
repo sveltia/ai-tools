@@ -100,13 +100,15 @@ See real-world examples of Jekyll integrations in our [Showcase](https://sveltia
 
 #### Adding the Admin Page
 
-Jekyll copies any file without front matter to the generated site as is, so the admin folder can be placed in the root of your project. Create `admin/index.html` and `admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide, and make sure the `admin` folder is not listed in the [`exclude`](https://jekyllrb.com/docs/configuration/options/) option of `_config.yml`. The admin page is then available at `/admin/` on the development server started with `jekyll serve` as well as on the built site.
+Jekyll copies any file without front matter to the generated site as is, so the admin folder can be placed in the root of your project.
+
+Create `admin/index.html` and `admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. Make sure the `admin` folder is not listed in the [`exclude`](https://jekyllrb.com/docs/configuration/options/) option of `_config.yml`. The admin page is then available at `/admin/` on the development server started with `jekyll serve` as well as on the built site.
 
 ### Configuration
 
 #### Blog Posts
 
-Jekyll requires [posts](https://jekyllrb.com/docs/posts/) in the `_posts` folder to be named `YEAR-MONTH-DAY-title.MARKUP`, such as `2026-10-01-hello-world.md`. Files that don’t follow this pattern are ignored. To create matching file names, add the date to the [entry slug](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs). The following example builds the date prefix from a DateTime field named `date` with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date):
+Jekyll requires [posts](https://jekyllrb.com/docs/posts/) in the `_posts` folder to be named `YEAR-MONTH-DAY-title.MARKUP`, such as `2026-10-01-hello-world.md`. Files that don’t follow this pattern are ignored. To create matching filenames, add the date to the [entry slug](https://sveltiacms.app/en/docs/collections/entries/slugs#defining-entry-slugs). The following example builds the date prefix from a DateTime field named `date` with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date):
 
 ```yaml [admin/config.yml]
 media_folder: assets/images
@@ -132,11 +134,13 @@ The Hidden field adds `layout: post` to every new post without showing it in the
 
 **Changing the Date of a Saved Post**
 
-The file name is set when a post is first saved. If an editor changes the date of an existing post later, the `date` property in the front matter takes precedence, but the file name and the post URL derived from it keep the original date. To keep them in sync, update the date in the slug from the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the file. Since Jekyll’s default post URLs include the date, consider setting up [entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#customizing-the-redirect-property) with the `jekyll-redirect-from` plugin so the old URL keeps working.
+The filename is set when a post is first saved. If an editor changes the date of an existing post later, the `date` property in the front matter takes precedence. However, the filename and the post URL derived from it keep the original date.
+
+To keep them in sync, update the date in the slug from the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the file. Since Jekyll’s default post URLs include the date, consider setting up [entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#customizing-the-redirect-property) with the `jekyll-redirect-from` plugin so the old URL keeps working.
 
 #### Drafts
 
-[Drafts](https://jekyllrb.com/docs/posts/#drafts) are stored in the `_drafts` folder without a date in the file name and are only built with the `--drafts` option. If you want editors to manage drafts, add another collection with `folder: _drafts` and the default slug. Publishing a draft means moving the file to `_posts` with a date prefix, which needs to be done outside the CMS. Alternatively, use the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) to review posts before they’re published.
+[Drafts](https://jekyllrb.com/docs/posts/#drafts) are stored in the `_drafts` folder without a date in the filename and are only built with the `--drafts` option. If you want editors to manage drafts, add another collection with `folder: _drafts` and the default slug. To publish a draft, you need to move the file to `_posts` with a date prefix outside the CMS. Alternatively, use the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) to review posts before they’re published.
 
 #### Data Files
 
@@ -180,7 +184,7 @@ The admin page is then available at `/admin/` on the development server started 
 
 ### Configuration
 
-Blog posts are usually managed with the [middleman-blog](https://middlemanapp.com/basics/blogging/) extension. Its `sources` option defines the file name pattern for posts, which includes the post date by default:
+Blog posts are usually managed with the [middleman-blog](https://middlemanapp.com/basics/blogging/) extension. Its `sources` option defines the filename pattern for posts, which includes the post date by default:
 
 ```ruby [config.rb]
 activate :blog do |blog|
@@ -215,13 +219,13 @@ collections:
 
 `title` is the only required front matter property in middleman-blog, and posts with `published: false` are treated as drafts that only appear on the development server.
 
-The post date is taken from the file name. If you also want editors to set the date, add a DateTime field named `date` and build the slug from it with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date), so the file name follows the selected date instead of the creation date:
+The post date is taken from the filename. If you also want editors to set the date, add a DateTime field named `date` and build the slug from it with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date), so the filename follows the selected date instead of the creation date:
 
 ```yaml
 slug: "{{date | date('YYYY-MM-DD')}}-{{slug}}"
 ```
 
-Keep in mind that middleman-blog stops the build if the date in the front matter doesn’t match the one in the file name. The file name is set when a post is first saved, so if an editor changes the date of an existing post, they also need to update the date in the slug from the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the file.
+Keep in mind that middleman-blog stops the build if the date in the front matter doesn’t match the one in the filename. The filename is set when a post is first saved. If an editor changes the date of an existing post, they also need to update the date in the slug from the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the file.
 
 Source: https://sveltiacms.app/en/docs/frameworks/middleman
 
@@ -286,7 +290,7 @@ collections:
 Some notes on this configuration:
 
 - Zola’s [front matter](https://www.getzola.org/documentation/content/page/#front-matter) is usually written in TOML with `+++` delimiters, so the `format` option is set to `toml-frontmatter`. YAML front matter is also supported by Zola, in which case the option can be omitted.
-- Zola accepts a `date` in the `YYYY-MM-DD` or RFC 3339 format. The `type: date` option of the DateTime field saves a date without time. If you need the time as well, remove the `type` option and add `output_utc: true` so the value is saved with a time zone, as required by RFC 3339.
+- Zola accepts a `date` in the `YYYY-MM-DD` or RFC 3339 format. The `type: date` option of the DateTime field saves a date without time. If you need the time as well, remove the `type` option and add `output_utc: true` so the value is saved with a timezone, as required by RFC 3339.
 - Taxonomy terms like tags are stored in the `taxonomies` table, using the taxonomy names defined in `zola.toml`, so an [Object](https://sveltiacms.app/en/docs/fields/object) field is used to group them. Custom properties go in the `extra` table in the same way.
 - The section’s own `_index.md` file is not part of this collection. You can manage it with the [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option or a [file collection](https://sveltiacms.app/en/docs/collections/files).
 
@@ -298,7 +302,7 @@ We have implemented specific features to enhance the integration of Sveltia CMS 
 - [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a tree of [sections](https://www.getzola.org/documentation/content/section/) as a folder tree in the sidebar, where each entry is stored as an `_index.md` file in its own folder and can be moved along with its children.
 - [Entry redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects): Out-of-the-box support for Zola’s [`aliases` front matter property](https://www.getzola.org/documentation/content/page/#front-matter), which is updated when the entry slug is changed in Sveltia CMS.
 - [Manual entry reordering](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries): Use the `reorder` option to add the [`weight` property](https://www.getzola.org/documentation/content/section/#weight) to entries for controlling their order in Zola.
-- The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
+- The [`value_type`](https://sveltiacms.app/en/docs/fields/number#value-type) Number field option supports `int/string` and `float/string` value types, which are useful for Zola sites that store numbers as strings in front matter. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/574))
 - The [`omit_default_locale_from_file_path`](https://sveltiacms.app/en/docs/i18n/options#top-level-configuration) i18n option allows omitting the locale suffix from filenames for entries in the default locale, which is useful for [multilingual Zola sites](https://www.getzola.org/documentation/content/multilingual/). ([Discussion](https://github.com/sveltia/sveltia-cms/discussions/394))
 
 Source: https://sveltiacms.app/en/docs/frameworks/zola

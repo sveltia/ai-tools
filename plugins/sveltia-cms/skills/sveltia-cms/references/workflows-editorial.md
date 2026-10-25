@@ -13,7 +13,7 @@ This is an advanced remote workflow designed for teams that require a review pro
 - Teams of content creators and editors working on collaborative projects.
 - Projects that require a formal review and approval process for content changes.
 - Situations where content quality and consistency are critical, necessitating oversight.
-- Workflows that involve multiple stages of review, such as draft, review, and publish.
+- Workflows that involve multiple stages of review, such as draft, review and publish.
 
 ### Requirements
 
@@ -169,7 +169,7 @@ allow_incomplete_drafts = false
 }
 ```
 
-A collection-level `publish_mode` overrides the top-level one option by option: anything the collection doesn’t set is inherited, including `type` when the collection’s option is an object without it. For example, a collection with `publish_mode: { stages: [draft] }` keeps the top-level publish mode and its other options, but lets an entry be published right after it’s saved. A string, such as `publish_mode: preview`, only replaces the publish mode.
+A collection-level `publish_mode` overrides the top-level one option by option. Anything the collection doesn’t set is inherited, including `type` when the collection’s option is an object without it. For example, a collection with `publish_mode: { stages: [draft] }` keeps the top-level publish mode and its other options, but lets an entry be published right after it’s saved. A string, such as `publish_mode: preview`, only replaces the publish mode.
 
 #### Review Stages
 
@@ -179,7 +179,9 @@ The `stages` option lists the [statuses](#statuses) an entry moves through, in o
 - `[draft, pending_review]` leaves out Ready, so an entry can be published as soon as it has been sent for review.
 - `[draft]` lets an entry be published right after it’s saved, which is what [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview) does.
 
-The Editorial Workflow page shows a column for each stage that any collection uses. A pull request labeled with a stage its collection doesn’t use — because the option was changed, or the label was set by another CMS — is shown in the nearest earlier stage, so it never skips a step. Its label is left alone until the entry is moved. An entry can’t be dragged to a column its collection doesn’t use.
+The Editorial Workflow page shows a column for each stage that any collection uses. An entry can’t be dragged to a column its collection doesn’t use.
+
+A pull request may be labeled with a stage its collection doesn’t use, because the option was changed or the label was set by another CMS. It’s then shown in the nearest earlier stage, so it never skips a step. Its label is left alone until the entry is moved.
 
 #### Direct Publishing
 
@@ -190,7 +192,13 @@ With `direct_publish: true`, the Save button in the entry editor turns into a sp
 
 The Publish Entry button is also available at every stage, in the entry editor and on the Editorial Workflow page, so a draft saved earlier can be published without changing anything or moving it through the stages first.
 
-Required fields have to be filled in either way, as the entry goes live. The option isn’t offered for a collection with [`publish: false`](#restricting-publishing-and-deletion), to an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, or to a user who can’t push to the configured branch or merge the pull request.
+Required fields have to be filled in either way, as the entry goes live.
+
+The option isn’t offered:
+
+- for a collection with [`publish: false`](#restricting-publishing-and-deletion)
+- to an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor
+- to a user who can’t push to the configured branch or merge the pull request
 
 ### How It Works
 
@@ -198,7 +206,7 @@ Nothing an editor does in the CMS touches the configured branch until the change
 
 | Editor action | What happens in Git |
 | --- | --- |
-| Save a new entry | A branch named `cms/[COLLECTION_NAME]/[SLUG]` is created off the configured branch, the entry files are committed to it, and a pull request is opened |
+| Save a new entry | A branch named `cms/[COLLECTION_NAME]/[SLUG]` is created off the configured branch, the entry files are committed to it and a pull request is opened |
 | Save an existing draft | Another commit is added to the same branch |
 | Change the status | The pull request’s label is updated. Moving the entry to Ready also [approves](#approvals) the pull request, and moving it back withdraws the approval |
 | Delete a published entry | A pull request is opened that removes the entry files |
@@ -215,55 +223,122 @@ Sveltia CMS commits changes to the remote repository, not to the copy on your co
 
 #### Sharing a Branch
 
-A workflow branch is named after the entry, not after the editor, so two people working on the same entry work on the same branch, and anyone with push access can commit to it.
+A workflow branch is named after the entry, not after the editor. So two people working on the same entry work on the same branch, and anyone with push access can commit to it.
 
-- **Saving** compares the branch with the draft first. If the entry has been changed on the branch since it was opened, a dialog says who changed it and when, and nothing is written until the user chooses Save Anyway. On GitHub, the commit also names the commit the entry was loaded or saved at, so a push that lands in the last moment makes GitHub refuse the save rather than have it built on top of something the user hasn’t seen. Gitea and Forgejo can’t be told which commit to build on, so the CMS checks that the branch still points at that commit right before saving, and refuses the save otherwise; trying again reads the entry back first. Each file the save changes is also checked against its version as of that commit, so a last-moment push that changes the same files is refused likewise. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
-- **Saving an entry that has no pull request yet** onto a branch that already exists starts the branch over from the configured branch, so whatever an earlier pull request left on it — one merged without deleting the branch, or closed on GitHub, GitLab, Gitea or Forgejo rather than discarded in the CMS — isn’t carried into the new one. If a pull request is still open from that branch, though, the save is refused, with a message giving the pull request’s number. That’s a pull request the board doesn’t show: one that has lost its status label, one that goes to another branch, or one the CMS didn’t open. The CMS won’t commit onto it, because whatever else it holds would then be published along with the entry. Close it there, or, if it’s one the CMS opened, add its status label back to put it on the board again.
-- **Publishing** checks the pull request first; see [Checks Before Publishing](#checks-before-publishing).
+Because of this, the CMS checks the branch before saving, as described below. Publishing checks the pull request first too; see [Checks Before Publishing](#checks-before-publishing).
 
-Only a pull request that goes from a branch of the repository to the configured branch is taken for an entry’s own, and only if it holds one of the entry’s files, or a file the entry had before it was renamed. If its base branch is changed to something else, the CMS stops treating it as the entry’s and leaves it alone, rather than relabeling or merging it in the entry’s name; the entry is then listed as it was before the pull request existed. Likewise, a pull request from the entry’s branch that holds a different entry isn’t offered in the entry’s editor.
+##### Saving over Other Changes
+
+Saving compares the branch with the draft first. If the entry has been changed on the branch since it was opened, a dialog says who changed it and when. Nothing is written until the user chooses Save Anyway. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
+
+A push may also land at the last moment. The CMS makes sure a save is never built on top of something the user hasn’t seen:
+
+- On GitHub, the commit names the commit the entry was loaded or saved at, so GitHub refuses the save if the branch has moved on.
+- GitLab, Gitea and Forgejo can’t be told which commit to build on. Instead, the CMS checks that the branch still points at that commit right before saving, and refuses the save otherwise. Trying again reads the entry back first.
+
+  Each file the save changes is also checked against its version as of that commit. So if a push lands between that check and the save and touches the same files, GitLab, Gitea or Forgejo refuses the save.
+
+##### Saving onto an Existing Branch
+
+An entry that has no pull request yet may be saved onto a branch that already exists. The save then starts the branch over from the configured branch, so nothing an earlier pull request left on it is carried into the new one. That earlier pull request may have been merged without deleting the branch, or closed on GitHub, GitLab, Gitea or Forgejo rather than discarded in the CMS.
+
+If a pull request is still open from that branch, though, the save is refused, with a message giving the pull request’s number. That’s a pull request the board doesn’t show:
+
+- one that has lost its status label
+- one that goes to another branch
+- one the CMS didn’t open
+
+The CMS won’t commit onto it, because whatever else it holds would then be published along with the entry. Close it on the Git service, or, if it’s one the CMS opened, add its status label back to put it on the board again.
+
+##### Matching a Pull Request to an Entry
+
+A pull request is taken for an entry’s own only if it:
+
+- goes from a branch of the repository to the configured branch
+- holds one of the entry’s files, or a file the entry had before it was renamed
+
+If its base branch is changed to something else, the CMS stops treating it as the entry’s and leaves it alone, rather than relabeling or merging it in the entry’s name. The entry is then listed as it was before the pull request existed.
+
+Likewise, a pull request from the entry’s branch that holds a different entry isn’t offered in the entry’s editor.
 
 #### Entries Added from a Relation Field
 
-A [Relation](https://sveltiacms.app/en/docs/fields/relation) field can [create a related entry](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) on the fly with its **Add** button, e.g. a new section for a help center article. With the Editorial Workflow, the new entry is committed to the **pull request of the entry being edited** rather than getting a branch of its own, so the two are reviewed together and published in the same merge. The dialog can be nested, e.g. adding a section from an article and then a tile from the section, and every entry created that way goes into the same pull request.
+A [Relation](https://sveltiacms.app/en/docs/fields/relation) field can [create a related entry](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) on the fly with its **Add** button, e.g. a new section for a help center article. With the Editorial Workflow, the new entry is committed to the **pull request of the entry being edited** rather than getting a branch of its own. The two are then reviewed together and published in the same merge.
+
+The dialog can be nested, e.g. adding a section from an article and then a tile from the section, and every entry created that way goes into the same pull request.
 
 - The [Editorial Workflow page](#editorial-workflow-page) shows a single card for the pull request: the card of the entry being edited, which lists the new entries, e.g. “Also adds Section: Guides”.
 - Until the pull request is published, the new entries aren’t listed in their own collections, but the Relation field shows them by their labels whenever the entry is opened. They count toward their collections’ [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), and another entry added with the same title gets a distinct slug.
 - Publishing the pull request publishes the new entries too, firing the `prePublish` and `postPublish` [event hooks](#event-hooks) for each of them.
-- The new entries can’t be edited or removed on their own before then. Discarding the pull request discards them along with the entry, and [deleting a published entry](#deleting-a-published-entry) whose pull request is still open takes them off the branch, so the removal doesn’t publish them.
+- The new entries can’t be edited or removed on their own before then. Discarding the pull request discards them along with the entry. [Deleting a published entry](#deleting-a-published-entry) whose pull request is still open takes them off the branch, so the removal doesn’t publish them.
 
-The Add button isn’t offered for the entry’s own collection: a pull request stands for a single entry, so a second entry of the same collection in it couldn’t be told apart from the first. Nor is it offered for a collection under the workflow on its own while the entry being edited is saved directly, as the new entry would skip the review.
+The Add button isn’t offered in these cases:
+
+- **For the entry’s own collection.** A pull request stands for a single entry, so a second entry of the same collection in it couldn’t be told apart from the first.
+- **For a collection under the workflow on its own, while the entry being edited is saved directly.** The new entry would skip the review.
 
 #### Checks Before Publishing
 
 The board and the editor show an entry, but publishing merges the whole pull request, with everything on its branch. So right before merging, the CMS reads the pull request again and publishes the entry only if:
 
 - the pull request still goes from a branch of the repository to the configured branch;
-- its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw. That’s the commit of the version the editor shows, or of the card the publish was confirmed for, even when the board has [picked up](#editorial-workflow-page) a newer commit since: one pushed by someone else in the meantime isn’t published unseen;
-- every file it changes is one the CMS accounts for: the entry’s own files, and those of its published version that a rename removes; assets added or replaced along with it, which are only removed when the entry is moved or deleted; the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites; the new entries [added from a Relation field](#entries-added-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch; and the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it. A file the merge would leave exactly as the configured branch already has it passes as well;
+- its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw. That’s the commit of the version the editor shows, or of the card the publish was confirmed for. This holds even when the board has [picked up](#keeping-up-with-remote-changes) a newer commit since, so a commit pushed by someone else in the meantime isn’t published unseen;
+- every file it changes is one the CMS accounts for:
+  - the entry’s own files, and those of its published version that a rename removes
+  - assets added or replaced along with it, which are only removed when the entry is moved or deleted
+  - the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites
+  - the new entries [added from a Relation field](#entries-added-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch
+  - the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it
+
+  A file the merge would leave exactly as the configured branch already has it passes as well;
+
 - every file it leaves behind is a regular file, rather than a symbolic link or a Git submodule;
 - none of its assets is in a folder the CMS itself may be served from, or is an admin page or configuration file in a folder named like one; see [Read-Only Folders](https://sveltiacms.app/en/docs/ui/asset-library#read-only-folders);
 - the list of files it changes is complete, rather than cut short by the Git service on a very large pull request.
 
-Gitea and Forgejo work out the files a pull request changes in the background after each push, so publishing right after a save can take a few seconds while the CMS waits for the list to catch up with the latest commit. If the list still lags behind the branch when the board loads — on a busy instance with a backlog of work, say — the entry is shown as of the commit the list describes, so the board never mixes the files of one commit with the content of another. Publishing or saving it is then refused until the instance has caught up and the page is reloaded.
+Otherwise the publish is refused, with a message saying why:
 
-Otherwise the publish is refused, saying why. If the branch has moved on, the message asks the user to reload the page and review the latest version. If the pull request holds anything else — a change to the site’s code, a CI workflow, configuration, another entry — the message says it comes with changes the CMS can’t show, and it has to be reviewed and merged on GitHub, GitLab, Gitea or Forgejo instead, where every change it holds is visible.
+- If the branch has moved on, the message asks the user to reload the page and review the latest version.
+- If the pull request holds anything else — a change to the site’s code, a CI workflow, configuration, another entry — the message says it comes with changes the CMS can’t show. It then has to be reviewed and merged on GitHub, GitLab, Gitea or Forgejo instead, where every change it holds is visible.
 
-Once the checks pass, the merge is pinned to the commit that was checked, so a push made in the meantime makes the merge fail rather than go along with it.
+Once the checks pass, the merge is pinned to the commit that was checked. A push made in the meantime makes the merge fail rather than go along with it.
+
+##### Changed Files on Gitea and Forgejo
+
+Gitea and Forgejo work out the files a pull request changes in the background after each push. So publishing right after a save can take a few seconds, while the CMS waits for the list to catch up with the latest commit.
+
+The list may still lag behind the branch when the board loads — on a busy instance with a backlog of work, say. The entry is then shown as of the commit the list describes, so the board never mixes the files of one commit with the content of another. Publishing or saving it is refused until the instance has caught up and the page is reloaded.
 
 #### Waiting for Required Checks
 
-The configured branch can require CI to pass before anything is merged into it: [required status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging) on GitHub, or a [successful pipeline](https://docs.gitlab.com/user/project/merge_requests/auto_merge/#require-a-successful-pipeline-for-merge) on GitLab. If they’re still running when an entry is published, which is likely right after it’s saved, the Git service can’t merge the pull request yet. The CMS then sets it to [auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request) instead, pinned to the same commit, and the Git service merges it as soon as the checks pass.
+The configured branch can require CI to pass before anything is merged into it: [required status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging) on GitHub, or a [successful pipeline](https://docs.gitlab.com/user/project/merge_requests/auto_merge/#require-a-successful-pipeline-for-merge) on GitLab.
 
-The entry isn’t taken for published until the merge has actually happened: the CMS keeps checking every 10 seconds, for up to an hour. If a check fails, the pull request is closed, someone turns the auto-merge off, or the hour runs out, the publish fails and any auto-merge still on is canceled, so the entry stays unpublished until it’s published again once the problem is fixed.
+If the checks are still running when an entry is published, which is likely right after it’s saved, the Git service can’t merge the pull request yet. The CMS then sets it to [auto-merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request) instead, pinned to the same commit. The Git service merges it as soon as the checks pass.
 
-On GitHub, the repository has to [allow auto-merge](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-auto-merge-for-pull-requests-in-your-repository), and the CMS only waits when the checks are the sole thing blocking the merge, not a required review or a conflict. Otherwise, the publish fails while the checks run, and the entry has to be published again once they’ve passed. On GitLab, auto-merge is always available.
+The entry isn’t taken for published until the merge has actually happened. The CMS keeps checking every 10 seconds, for up to an hour. The publish fails if:
+
+- a check fails
+- the pull request is closed
+- someone turns the auto-merge off
+- the hour runs out
+
+Any auto-merge still on is then canceled. The entry stays unpublished until it’s published again once the problem is fixed.
+
+On GitHub, the repository has to [allow auto-merge](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-auto-merge-for-pull-requests-in-your-repository). The CMS also only waits when the checks are the sole thing blocking the merge, not a required review or a conflict. Otherwise, the publish fails while the checks run, and the entry has to be published again once they’ve passed. On GitLab, auto-merge is always available.
 
 #### Approvals
 
-The configured branch can require a pull request to be approved before it’s merged: a [required review](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging) on GitHub, an [approval rule](https://docs.gitlab.com/user/project/merge_requests/approvals/) on GitLab, or a protected branch that requires approvals on Gitea and Forgejo. Marking an entry as Ready is how you approve it in the CMS, so moving it there from Draft or In Review also approves its pull request on your behalf, without a trip to the Git service. Publishing an entry straight from Draft, with [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview) or [direct publishing](#direct-publishing), marks it as Ready first, so it’s approved as well. The approval is given for the commit the entry was reviewed at: GitLab refuses it if the branch has moved on since, while GitHub, Gitea and Forgejo record it against that commit.
+The configured branch can require a pull request to be approved before it’s merged: a [required review](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-pull-request-reviews-before-merging) on GitHub, an [approval rule](https://docs.gitlab.com/user/project/merge_requests/approvals/) on GitLab or a protected branch that requires approvals on Gitea and Forgejo.
 
-Moving the entry back to Draft or In Review withdraws your approval, so the pull request can’t be merged on the strength of it. GitHub doesn’t let a submitted review be deleted, so it’s dismissed instead, and a protected branch may allow only some users to dismiss reviews. GitLab revokes the approval, and Gitea and Forgejo delete the review.
+Marking an entry as Ready is how you approve it in the CMS. Moving it there from Draft or In Review also approves its pull request on your behalf, without a trip to the Git service. Publishing an entry straight from Draft, with [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview) or [direct publishing](#direct-publishing), marks it as Ready first, so it’s approved as well.
+
+The approval is given for the commit the entry was reviewed at. GitLab refuses it if the branch has moved on since, while GitHub, Gitea and Forgejo record it against that commit.
+
+Moving the entry back to Draft or In Review withdraws your approval, so the pull request can’t be merged on the strength of it:
+
+- GitHub doesn’t let a submitted review be deleted, so it’s dismissed instead. A protected branch may allow only some users to dismiss reviews.
+- GitLab revokes the approval.
+- Gitea and Forgejo delete the review.
 
 Nothing is approved in these cases:
 
@@ -282,13 +357,13 @@ Saving an entry doesn’t hand it to anyone — it stays a draft until someone m
 
 When the In Review stage is left out with the [`stages`](#review-stages) option, the prompt offers **Mark as Ready** instead, which moves the entry to Ready. With [direct publishing](#direct-publishing), Save and Publish doesn’t ask anything, as there’s nothing left to do.
 
-The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone, and it’s withheld while the entry still has required fields to fill in, because there’s nothing worth handing over yet.
+The prompt only appears while an entry is still a draft. Saving one that’s already In Review or Ready leaves its status alone. The prompt is also withheld while the entry still has required fields to fill in, because there’s nothing worth handing over yet.
 
 #### Required Fields
 
 A draft is work in progress, so an entry in the Draft status can be saved with its [required fields](https://sveltiacms.app/en/docs/fields#required) left empty. Nothing is marked as an error, and the entry keeps its pull request like any other draft.
 
-Required fields are enforced as soon as the entry leaves the drafting stage. Moving it to In Review or Ready and publishing it are all refused while a required field is empty, in the entry editor and on the Editorial Workflow page alike, and the fields that need attention are marked so that they are easy to find.
+Required fields are enforced as soon as the entry leaves the drafting stage. While a required field is empty, moving the entry to In Review or Ready and publishing it are all refused, in the entry editor and on the Editorial Workflow page alike. The fields that need attention are marked so that they are easy to find.
 
 To require the fields in drafts as well, set the [`allow_incomplete_drafts`](#options) option to `false`. A draft then can’t be saved until its required fields are filled in, like any other entry.
 
@@ -296,7 +371,7 @@ Every other validation rule applies to a draft save as it always has: a value th
 
 **A draft can break your build**
 
-Saving a draft commits it to the workflow branch, so whatever builds that branch has to cope with the missing values. A framework that validates content against a schema — [Astro content collections](https://docs.astro.build/en/guides/content-collections/) with Zod, for example — will fail on a field its schema requires, and the deploy preview for the pull request goes red until the entry is filled in. Nothing reaches the configured branch until the entry is published, so the production build is unaffected.
+Saving a draft commits it to the workflow branch, so whatever builds that branch has to cope with the missing values. A framework that validates content against a schema — [Astro content collections](https://docs.astro.build/en/guides/content-collections/) with Zod, for example — will fail on a field its schema requires. The deploy preview for the pull request then goes red until the entry is filled in. Nothing reaches the configured branch until the entry is published, so the production build is unaffected.
 
 If that gets in the way, make the schema tolerant of drafts — `.optional()` or `.nullable()` on the fields in question — or keep those fields required in the CMS and fill them in before saving.
 
@@ -314,7 +389,7 @@ The [`stages`](#review-stages) option can leave out In Review or Ready.
 
 A pending deletion carries a fourth label, `sveltia-cms/pending_deletion`. It isn’t a stage — there’s no review to move it through, only the deletion itself to carry out or call off — so it doesn’t appear as a column. See [Deleting Entries](#deleting-entries).
 
-GitHub and GitLab create a label the first time it’s used. Gitea and Forgejo don’t, so the CMS creates each status label on the repository the first time an entry needs it. A label of the same name defined by the organization that owns the repository doesn’t count, because the CMS can only find pull requests by the repository’s own labels, so the repository gets its own label as well.
+GitHub and GitLab create a label the first time it’s used. Gitea and Forgejo don’t, so the CMS creates each status label on the repository the first time an entry needs it. A label of the same name defined by the organization that owns the repository doesn’t count, so the repository gets its own label as well. This is because the CMS can only find pull requests by the repository’s own labels.
 
 An entry in the Draft status is kept as a [draft pull request](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/changing-the-stage-of-a-pull-request) or [draft merge request](https://docs.gitlab.com/user/project/merge_requests/drafts/), so it can’t be merged by accident. Moving the entry to In Review or Ready marks it ready for review.
 
@@ -326,7 +401,7 @@ The three backends record this differently:
 | GitLab | A [`Draft:` prefix](https://docs.gitlab.com/user/project/merge_requests/drafts/) on the merge request title |
 | Gitea/Forgejo | A [`WIP:` prefix](https://docs.gitea.com/usage/pull-request#work-in-progress-pull-requests) on the pull request title |
 
-Sveltia CMS adds and removes the prefix automatically, so if you edit such a title by hand, keep the prefix intact while the entry is in the Draft status. Gitea and Forgejo refuse to merge a pull request whose title still carries the prefix, which is what keeps a draft from being published by accident there.
+Sveltia CMS adds and removes the prefix automatically. If you edit such a title by hand, keep the prefix intact while the entry is in the Draft status. Gitea and Forgejo refuse to merge a pull request whose title still carries the prefix, and that’s what keeps a draft from being published by accident there.
 
 #### Custom Label Prefix
 
@@ -372,7 +447,7 @@ Sveltia CMS reads the `netlify-cms/` and `decap-cms/` prefixes as well as the co
 
 #### Squash Merges
 
-You can squash all the commits in a pull/merge request into a single commit when it’s merged by adding the `squash_merges` option to the `backend` section. Otherwise, a merge commit is created. This is supported with all three backends.
+To squash all the commits in a pull/merge request into a single commit when it’s merged, add the `squash_merges` option to the `backend` section. Otherwise, a merge commit is created. This is supported with all three backends.
 
 ```yaml [YAML]
 backend:
@@ -414,13 +489,17 @@ See the [GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pul
 
 A board with a column for each status is available from the top navigation. Drag a card from one column to another to change an entry’s status, or use the status button in the entry editor. Each card also offers the actions available at that stage, and clicking the card opens the entry in the editor.
 
-The board and the [entry list](#entry-list) keep up with pull requests changed outside the CMS — opened by a colleague or a bot, relabeled, pushed to, merged or closed on GitHub, GitLab, Gitea or Forgejo — without a page reload:
+#### Keeping Up with Remote Changes
 
-- **When the configured branch moves**, which is what a merge does, the pull requests are read again on the next check for remote changes, made every minute while the tab is shown. A merged entry then leaves the board and is listed as published, and a pull request closed without merging is dropped.
+The board and the [entry list](#entry-list) keep up with pull requests changed outside the CMS, without a page reload. That includes pull requests opened by a colleague or a bot, and ones relabeled, pushed to, merged or closed on GitHub, GitLab, Gitea or Forgejo. The pull requests are read again:
+
+- **When the configured branch moves**, which is what a merge does. This is picked up on the next check for remote changes, made every minute while the tab is shown. A merged entry then leaves the board and is listed as published, and a pull request closed without merging is dropped.
 - **Every five minutes** otherwise, and whenever the user comes back to the tab after 30 seconds or more, so a pull request opened or relabeled elsewhere shows up too.
 - **On request**, with the Refresh button in the board’s toolbar.
 
-Listing the pull requests takes a couple of requests rather than the single one the branch check takes, which is why it’s done less often. Changes made in the CMS in the meantime, such as a save or a status change still on its way, aren’t undone by a refresh. An entry open in the editor keeps the version it was opened with; see [Checks Before Publishing](#checks-before-publishing) for what happens when it’s published after a newer commit has been picked up.
+Listing the pull requests takes a couple of requests, rather than the single one the branch check takes. That’s why it’s done less often.
+
+Changes made in the CMS in the meantime, such as a save or a status change still on its way, aren’t undone by a refresh. An entry open in the editor keeps the version it was opened with. See [Checks Before Publishing](#checks-before-publishing) for what happens when it’s published after a newer commit has been picked up.
 
 ### Entry List
 
@@ -437,7 +516,9 @@ Deletion goes through review like any other change, so removing an entry from th
 
 Deleting a published entry opens a pull request that removes its files. **The entry stays in the configured branch until that pull request is published.** Until then it appears in the entry list and on the Editorial Workflow page with a **Pending Deletion** badge.
 
-Because there’s nothing to review or edit, a pending deletion doesn’t move through the three stages. It carries the `sveltia-cms/pending_deletion` label rather than one of the stage labels, so it’s never mistaken for content waiting to go live — including by another CMS reading the same repository. It’s listed in its own section below the board, and its card offers two actions:
+Because there’s nothing to review or edit, a pending deletion doesn’t move through the three stages. It carries the `sveltia-cms/pending_deletion` label rather than one of the stage labels. So it’s never mistaken for content waiting to go live, including by another CMS reading the same repository.
+
+It’s listed in its own section below the board, and its card offers two actions:
 
 - **Cancel** closes the pull request and leaves the entry in place.
 - **Delete** merges the pull request, which removes the entry.
@@ -602,7 +683,12 @@ Preview Workflow is Editorial Workflow with a single stage, Draft, so everything
 - The Editorial Workflow page is called **Drafts**, and lays the unpublished entries out in a single column. If another collection uses Editorial Workflow with more than one stage, the page is a board with a column for each stage again, and an Open Authoring contributor always gets the board.
 - Every pull request counts as a draft, whatever its label says. One labeled In Review or Ready by Editorial Workflow, by [Decap CMS](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) or by hand can be published straight away, and its label is left alone.
 
-Pull requests are labeled `sveltia-cms/draft` and kept as [draft pull requests](https://sveltiacms.app/en/docs/workflows/editorial#statuses), which the Git service won’t merge. Publishing an entry therefore marks its pull request ready first, relabeling it `sveltia-cms/pending_publish`, and then merges it, [waiting for any required checks](https://sveltiacms.app/en/docs/workflows/editorial#waiting-for-required-checks) to pass. If the merge fails, the entry stays unpublished with the new label.
+Pull requests are labeled `sveltia-cms/draft` and kept as [draft pull requests](https://sveltiacms.app/en/docs/workflows/editorial#statuses), which the Git service won’t merge. So publishing an entry takes two steps:
+
+1. The CMS marks its pull request ready, relabeling it `sveltia-cms/pending_publish`.
+1. It merges the pull request, [waiting for any required checks](https://sveltiacms.app/en/docs/workflows/editorial#waiting-for-required-checks) to pass.
+
+If the merge fails, the entry stays unpublished with the new label.
 
 Switching between Preview Workflow and Editorial Workflow keeps every unpublished entry. Deleting a published entry opens a pull request that removes it, as with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-entries).
 
@@ -639,21 +725,21 @@ It builds on top of [Editorial Workflow](https://sveltiacms.app/en/docs/workflow
 
 #### GitHub
 
-For a private repository, contributors must have `read` access, the repository must be owned by an **organization** (see below), and the [authentication scope](#authentication-scope) must be `repo`.
+For a private repository, contributors must have `read` access, the repository must be owned by an **organization** (see below) and the [authentication scope](#authentication-scope) must be `repo`.
 
 **A private repository has to belong to an organization**
 
 GitHub doesn’t offer read-only collaborators on repositories owned by a personal account: [“In a private repository, repository owners can only grant write access to collaborators. Collaborators can’t have read-only access to repositories owned by a personal account.”](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository#collaborator-access-for-a-repository-owned-by-a-personal-account)
 
-That leaves nobody for Open Authoring to serve on a private personal repository: everyone you invite can write to it and keeps working on it directly, and everyone else can’t read it at all. Transfer the repository to an organization, where the **Read** role exists, and invite contributors with that role.
+That leaves nobody for Open Authoring to serve on a private personal repository. Everyone you invite can write to it and keeps working on it directly, and everyone else can’t read it at all. Transfer the repository to an organization, where the **Read** role exists, and invite contributors with that role.
 
 A **public** repository owned by a personal account is fine. Contributors there aren’t collaborators at all — anyone with a GitHub account can read it, and Open Authoring takes over from there.
 
 ##### Allowing Forks of a Private Repository
 
-Contributors work in a fork of your repository, so it has to allow forks. A public repository already does. A **private** one owned by an organization doesn’t: forking is off by default, and turning it on takes two steps, in this order.
+Contributors work in a fork of your repository, so it has to allow forks. A public repository already does. A **private** one owned by an organization doesn’t, because forking is off by default. Turning it on takes two steps, in this order.
 
-**1. Allow it for the organization.** Go to your organization’s **Settings** → **Access** → **Member privileges**, find **Repository forking**, tick **Allow forking of private repositories**, and save.
+**1. Allow it for the organization.** Go to your organization’s **Settings** → **Access** → **Member privileges**, find **Repository forking**, tick **Allow forking of private repositories** and save.
 
 **2. Allow it for the repository.** Go to the repository’s **Settings**, and under **Features**, tick **Allow forking**.
 
@@ -668,7 +754,7 @@ For a private project, contributors must be members with the **Reporter** role. 
 
 That leaves Reporter as the role for a contributor. On a **public** project no membership is needed: anyone with a GitLab account can read it, and Open Authoring takes over from there.
 
-Unlike GitHub, GitLab has no organization-level restriction on forking a private project, and a project owned by a personal namespace is fine either way — GitLab’s Reporter role works there too.
+Unlike GitHub, GitLab has no organization-level restriction on forking a private project. A project owned by a personal namespace is fine either way, because GitLab’s Reporter role works there too.
 
 ##### Allowing Forks of a Private Project
 
@@ -678,13 +764,25 @@ Contributors also need permission to create projects in their own namespace, whi
 
 #### Gitea/Forgejo
 
-For a private repository, contributors must be collaborators with the **Read** permission. As on the other backends, the level matters in both directions: someone without access can’t read the repository at all, and someone with **Write** can push to it, so the CMS treats them as a maintainer and they keep working on it directly. On a **public** repository no collaborator entry is needed — anyone with an account on the instance can read it, and Open Authoring takes over from there.
+For a private repository, contributors must be collaborators with the **Read** permission. As on the other backends, the level matters in both directions:
+
+- Someone without access can’t read the repository at all.
+- Someone with **Write** can push to it, so the CMS treats them as a maintainer and they keep working on it directly.
+
+On a **public** repository no collaborator entry is needed. Anyone with an account on the instance can read it, and Open Authoring takes over from there.
 
 Unlike GitHub, Gitea and Forgejo have no organization-level restriction on forking a private repository, and a repository owned by a personal account is fine either way, because the **Read** permission exists there too.
 
 ##### Allowing Forks
 
-Contributors work in a fork of your repository. Unlike GitHub and GitLab, Gitea and Forgejo have no per-repository switch for this, so there’s nothing to turn on: anyone who can read a repository can fork it. Forgejo can turn forking off for the whole instance with [`DISABLE_FORKS`](https://forgejo.org/docs/latest/admin/config-cheat-sheet/#repository-repository), in which case the CMS says so rather than asking the contributor whether to fork. Otherwise, what can get in the way is the instance’s own limits — an administrator can cap how many repositories a user may create with [`MAX_CREATION_LIMIT`](https://docs.gitea.com/administration/config-cheat-sheet#repository-repository), though forks are exempt from the cap unless `FORK_WITHOUT_MAXIMUM_LIMIT` has been turned off — and a user account whose repository creation has been disabled by an administrator.
+Contributors work in a fork of your repository. Unlike GitHub and GitLab, Gitea and Forgejo have no per-repository switch for this, so there’s nothing to turn on: anyone who can read a repository can fork it.
+
+Forgejo can turn forking off for the whole instance with [`DISABLE_FORKS`](https://forgejo.org/docs/latest/admin/config-cheat-sheet/#repository-repository). In that case, the CMS says so rather than asking the contributor whether to fork.
+
+Otherwise, the instance’s own limits can get in the way:
+
+- An administrator can cap how many repositories a user may create with [`MAX_CREATION_LIMIT`](https://docs.gitea.com/administration/config-cheat-sheet#repository-repository). Forks are exempt from the cap, though, unless `FORK_WITHOUT_MAXIMUM_LIMIT` has been turned off.
+- An administrator may have disabled repository creation for the contributor’s user account.
 
 If a contributor already has an unrelated repository of the same name, the instance refuses the fork rather than picking another name the way GitHub does. Sveltia CMS retries with `[REPOSITORY_OWNER]-[REPOSITORY_NAME]`, so the fork is created regardless.
 
@@ -692,7 +790,9 @@ Gitea and Forgejo don’t say why a fork couldn’t be created, so the CMS can o
 
 ### Configuration
 
-Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` or `preview` publish mode at the top level. A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here: it only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
+Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` or `preview` publish mode at the top level.
+
+A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here. It only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
 
 ```yaml [YAML]
 backend:
@@ -764,7 +864,7 @@ publish_mode: editorial_workflow
 
 This section applies to the GitHub backend. The GitLab backend always requests GitLab’s single `api` scope, and the Gitea/Forgejo backend asks for the repository, issue and user scopes it actually uses. Neither leaves anything to choose.
 
-By default, Sveltia CMS requests the `repo` OAuth scope, which grants access to **every repository the contributor owns, including their private ones**. That’s a lot to ask of someone who just wants to fix a typo, and a public repository doesn’t need it — the narrower `public_repo` scope is enough. Set the scope explicitly with the `auth_scope` option:
+By default, Sveltia CMS requests the `repo` OAuth scope, which grants access to **every repository the contributor owns, including their private ones**. That’s a lot to ask of someone who just wants to fix a typo. A public repository doesn’t need it, as the narrower `public_repo` scope is enough. Set the scope explicitly with the `auth_scope` option:
 
 ```yaml [YAML]
 backend:
@@ -806,11 +906,13 @@ auth_scope = "public_repo"
 
 A private repository always needs the full `repo` scope, so set `auth_scope: repo` in that case.
 
-Because the CMS can’t tell whether your repository is public until someone signs in, it can’t choose for you. It logs a configuration warning when `open_authoring` is enabled and `auth_scope` is left unset, so the broader scope is never requested by accident — setting either value silences it.
+The CMS can’t tell whether your repository is public until someone signs in, so it can’t choose for you. Instead, it logs a configuration warning when `open_authoring` is enabled and `auth_scope` is left unset, so the broader scope is never requested by accident. Setting either value silences it.
 
 ##### Keeping Forks in Sync with Workflow Changes
 
-Without GitHub’s `workflow` scope, a contributor’s sign-in can’t bring changes to your GitHub Actions workflow files into their fork. Once you change a workflow, the CMS can no longer [bring the fork up to date](#contributors-work-in-a-fork) on sign-in, and a fork that falls behind can lead to merge conflicts in a contributor’s pull requests. If your workflows change often, you can add the scope by giving `auth_scope` as a list, which must include `repo` or `public_repo`:
+Without GitHub’s `workflow` scope, a contributor’s sign-in can’t bring changes to your GitHub Actions workflow files into their fork. So once you change a workflow, the CMS can no longer [bring the fork up to date](#contributors-work-in-a-fork) on sign-in. A fork that falls behind can lead to merge conflicts in a contributor’s pull requests.
+
+If your workflows change often, you can add the scope by giving `auth_scope` as a list, which must include `repo` or `public_repo`:
 
 ```yaml [YAML]
 backend:
@@ -854,7 +956,12 @@ auth_scope = ["public_repo", "workflow"]
 
 The `workflow` scope lets the token create and change GitHub Actions workflows in **every repository the contributor can push to**, not only their fork, and workflows can read a repository’s secrets. GitHub shows this on the sign-in page, which may put some contributors off. Leave it out unless keeping forks in sync matters to you: the CMS still saves a contributor’s changes without it.
 
-Netlify’s OAuth, which the CMS uses when `base_url` isn’t set, passes the scope on to GitHub as is, so the option is all you need there. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) only requests the scope if its `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is set to `true`, and leaves it out of the request otherwise. A contributor who signed in before you added the scope keeps their old token until they sign out and sign in again.
+Whether the scope reaches GitHub depends on your OAuth client:
+
+- Netlify’s OAuth, which the CMS uses when `base_url` isn’t set, passes the scope on to GitHub as is, so the option is all you need there.
+- [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) only requests the scope if its `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is set to `true`, and leaves it out of the request otherwise.
+
+A contributor who signed in before you added the scope keeps their old token until they sign out and sign in again.
 
 **Your OAuth client has to honor the option**
 
@@ -876,7 +983,9 @@ The rest of this page says “pull request”, the name GitHub, Gitea and Forgej
 
 #### Maintainers Are Unaffected
 
-When someone who can push to the configured repository signs in, nothing changes: they work on the repository directly and get the full [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) experience, including the Ready stage and the publishing controls. Open Authoring only kicks in for users without write access — on GitLab, that means anyone below the **Developer** role, and on Gitea/Forgejo anyone without the **Write** permission.
+When someone who can push to the configured repository signs in, nothing changes. They work on the repository directly and get the full [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) experience, including the Ready stage and the publishing controls.
+
+Open Authoring only kicks in for users without write access. On GitLab, that means anyone below the **Developer** role, and on Gitea/Forgejo anyone without the **Write** permission.
 
 #### Contributors Work in a Fork
 
@@ -884,10 +993,25 @@ The first time a contributor signs in, Sveltia CMS asks for permission to create
 
 **A fork that has drifted**
 
-A contributor’s fork can fall behind, or gain commits of its own. What that means for their pull requests depends on the backend:
+A contributor’s fork can fall behind, or gain commits of its own. What that means for their pull requests depends on the backend.
 
-- **GitHub and GitLab** create the workflow branch at the head of your configured repository rather than at the fork’s copy of it, so a fork that has drifted passes nothing on: the pull request only ever contains the entry they edited. On GitHub, Sveltia CMS also tries to fast-forward the fork’s copy of your branch on sign-in, and a contributor can [sync it](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/syncing-a-fork) themselves if that fails. There’s one exception on GitHub: a sign-in without the [`workflow` scope](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes) can’t bring changes to your GitHub Actions workflow files into the fork, so GitHub refuses both the sync and a branch at your head once you’ve changed a workflow since the fork was last updated. The workflow branch then starts instead from the last commit your branch shares with the fork’s copy of it — or with the fork’s default branch if it has no copy, such as for a branch you created after the fork was made. The pull request still only contains the entry, but an edit to an entry that has changed in your repository since that commit can show up as a merge conflict. Syncing the fork on GitHub, where the contributor’s own sign-in can update workflow files, avoids that, and so does [adding the `workflow` scope](#keeping-forks-in-sync-with-workflow-changes) to the CMS sign-in. On GitLab, the CMS leaves the fork as it is; a contributor can bring theirs up to date with **Update fork** on the fork’s overview page if they’d like it tidy.
-- **Gitea and Forgejo** can’t create a branch in a fork from a commit that isn’t in it, so the workflow branch starts from the fork’s own copy of your branch. Keeping that copy current matters as a result, and the CMS brings it up to date on sign-in — using [`merge-upstream`](https://docs.gitea.com/api/next/#tag/repository/operation/repoMergeUpstream) on Gitea and [`sync_fork`](https://codeberg.org/api/swagger#/repository/repoSyncForkBranch) on Forgejo, which are each service’s own API for it. Gitea merges your branch in when it can’t fast-forward; Forgejo only fast-forwards and declines once the fork has commits of its own. When the sync is declined the branch starts from the fork as it is, so the pull request carries whatever the fork was already ahead by. Merging your branch into the fork clears that.
+**GitHub and GitLab** create the workflow branch at the head of your configured repository rather than at the fork’s copy of it. So a fork that has drifted passes nothing on: the pull request only ever contains the entry they edited.
+
+- On GitHub, Sveltia CMS also tries to fast-forward the fork’s copy of your branch on sign-in. A contributor can [sync it](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/syncing-a-fork) themselves if that fails.
+- On GitLab, the CMS leaves the fork as it is. A contributor can bring theirs up to date with **Update fork** on the fork’s overview page if they’d like it tidy.
+
+There’s one exception on GitHub. A sign-in without the [`workflow` scope](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps#available-scopes) can’t bring changes to your GitHub Actions workflow files into the fork. So once you’ve changed a workflow since the fork was last updated, GitHub refuses both the sync and a branch at your head.
+
+The workflow branch then starts instead from the last commit your branch shares with the fork’s copy of it. If the fork has no copy, such as for a branch you created after the fork was made, it starts from the last commit your branch shares with the fork’s default branch.
+
+The pull request still only contains the entry. But an edit to an entry that has changed in your repository since that commit can show up as a merge conflict. To avoid that, either sync the fork on GitHub, where the contributor’s own sign-in can update workflow files, or [add the `workflow` scope](#keeping-forks-in-sync-with-workflow-changes) to the CMS sign-in.
+
+**Gitea and Forgejo** can’t create a branch in a fork from a commit that isn’t in it, so the workflow branch starts from the fork’s own copy of your branch. That makes keeping the copy current important, so the CMS brings it up to date on sign-in. It uses each service’s own API for this: [`merge-upstream`](https://docs.gitea.com/api/next/#tag/repository/operation/repoMergeUpstream) on Gitea and [`sync_fork`](https://codeberg.org/api/swagger#/repository/repoSyncForkBranch) on Forgejo.
+
+- Gitea merges your branch in when it can’t fast-forward.
+- Forgejo only fast-forwards, and declines once the fork has commits of its own.
+
+When the sync is declined, the branch starts from the fork as it is, so the pull request carries whatever the fork was already ahead by. Merging your branch into the fork clears that.
 
 From then on, a banner at the top of the CMS names the fork their work is saved to, with a link to it. It’s a one-off notice — once dismissed, it stays dismissed.
 
@@ -945,7 +1069,9 @@ A maintainer writes to the configured repository, so a collection with the simpl
 
 An image or file attached to an entry is committed to the same branch as the entry, so it travels with the contribution and can be previewed in the CMS before it’s published.
 
-The [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) itself is read-only for a contributor: uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled — including the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list. [Reordering entries](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is disabled for the same reason.
+The [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) itself is read-only for a contributor. Uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled. That includes the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list.
+
+[Reordering entries](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is disabled for the same reason.
 
 #### Commit Messages
 
@@ -1013,9 +1139,16 @@ A contribution reaches you as an ordinary pull request from a fork, so everythin
 - **Closing it without merging** puts the entry back in their Draft column, so they can keep working on it or discard it.
 - **Changing its target branch** takes it off the contributor’s board, as it no longer goes to your configured branch. If they move the entry to In Review again, the CMS opens a fresh pull request rather than reopening that one.
 
-You can also push commits to a contributor’s branch: GitHub lets maintainers edit a pull request from a fork by default, and the CMS opens a GitLab merge request with **Allow commits from members who can merge to the target branch** turned on. If the contributor has the entry open when you push, the CMS warns them before they save over your commit.
+You can also push commits to a contributor’s branch:
 
-Deleting the branch after merging is optional. On GitLab, the CMS opens the merge request with **Delete source branch when merge request is accepted** selected, so merging it normally removes the branch for you. If you leave it, the CMS deletes it from the contributor’s fork the next time they load the board, so their fork doesn’t collect a branch per published entry. And if they edit the same entry again before that happens, the CMS commits onto whatever branch is still there and opens a fresh pull request, so either way it takes care of itself.
+- GitHub lets maintainers edit a pull request from a fork by default.
+- The CMS opens a GitLab merge request with **Allow commits from members who can merge to the target branch** turned on.
+
+If the contributor has the entry open when you push, the CMS warns them before they save over your commit.
+
+Deleting the branch after merging is optional. On GitLab, the CMS opens the merge request with **Delete source branch when merge request is accepted** selected, so merging it normally removes the branch for you.
+
+If you leave the branch, the CMS deletes it from the contributor’s fork the next time they load the board, so their fork doesn’t collect a branch per published entry. If they edit the same entry again before that happens, the CMS commits onto whatever branch is still there and opens a fresh pull request. Either way, it takes care of itself.
 
 **Pull CMS Changes to Your Local Repository**
 
@@ -1023,13 +1156,18 @@ Sveltia CMS commits changes to the remote repository, not to the copy on your co
 
 ### Deleting Entries
 
-A contributor can delete their own unpublished work: the Delete button closes their pull request, if there is one, and deletes the branch from their fork. Nothing was ever merged, so nothing is left behind. If the entry updates one that’s already live, the button is labeled **Discard** instead and the published version is untouched.
+A contributor can delete their own unpublished work. The Delete button closes their pull request, if there is one, and deletes the branch from their fork. Nothing was ever merged, so nothing is left behind. If the entry updates one that’s already live, the button is labeled **Discard** instead and the published version is untouched.
 
 Taking a published entry off the site is a maintainer’s job, so contributors aren’t offered it. The Delete control is hidden for them in the entry editor, and in the entry list a selection that includes a published entry can’t be deleted. Deleting a published entry yourself works as it does in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-a-published-entry).
 
 ### Security Considerations
 
-Open Authoring opens your CMS to a wider audience. On a public repository, **anyone with an account on your Git service can sign in** and read every entry the CMS is configured to show — the same content the repository already makes public. On a private repository, only the people you’ve granted read access to can get in — GitHub’s `read` permission, GitLab’s **Reporter** role, or the **Read** permission on Gitea/Forgejo. In neither case can a contributor change anything on your site without your review.
+Open Authoring opens your CMS to a wider audience:
+
+- On a public repository, **anyone with an account on your Git service can sign in** and read every entry the CMS is configured to show. That’s the same content the repository already makes public.
+- On a private repository, only the people you’ve granted read access to can get in — GitHub’s `read` permission, GitLab’s **Reporter** role or the **Read** permission on Gitea/Forgejo.
+
+In neither case can a contributor change anything on your site without your review.
 
 Keep the [`sanitize_preview` option](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) at its default of `true`. Turning it off lets a contributor inject scripts into the preview pane, which then run in the browser of anyone who opens that entry — including yours while you review it.
 

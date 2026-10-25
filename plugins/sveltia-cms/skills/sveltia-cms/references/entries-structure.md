@@ -6,13 +6,13 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Nested Entries
 
-With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily.
+With the `nested` and `meta` options, you can organize content that has a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily.
 
 **Note for Netlify/Decap CMS users**
 
 In Sveltia CMS, what was previously referred to as a **nested collection** in Netlify/Decap CMS is now called **nested entries**. This change was made to better reflect that the entries are nested in a folder tree within a single collection, rather than collections nested in each other.
 
-Sveltia CMS also fixes a number of long-standing problems with this feature, which remains in beta in Netlify/Decap CMS. These include entry paths, preview paths, media folders, folder labels and i18n support. See [Nested entry enhancements](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-collections) for the details.
+Sveltia CMS also fixes a number of long-standing problems with this feature, which remains in beta in Netlify/Decap CMS. These include entry paths, preview paths, media folders, folder labels and i18n support. See [Nested entry enhancements](https://sveltiacms.app/en/docs/successor-to-netlify-cms#nested-entries) for the details.
 
 The `nested` option turns the collection into a folder tree in the sidebar and lets entries live in subfolders of any depth. The `meta.path` option adds a Path field to the Content Editor, so editors can choose where a new entry goes and move an existing one later.
 
@@ -115,7 +115,7 @@ widget = "markdown"
 
 The `nested` option accepts the following properties:
 
-- `depth`: The maximum number of path segments below the collection `folder`, counting the file name itself. A file stored deeper than this is not part of the collection. The default is unlimited.
+- `depth`: The maximum number of path segments below the collection `folder`, counting the filename itself. A file stored deeper than this is not part of the collection. The default is unlimited.
   - In the default `subfolders` mode, where the last segment is always the index file, `depth: 3` allows up to two folder levels, such as `products/hardware/_index.md`.
   - The segments of a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) template are part of the count, too.
 - `summary`: A [summary template](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) used to label the folders in the tree. It overrides the collection’s own `summary` option, which continues to be used in the entry list. The default is the collection’s `summary` option value.
@@ -150,13 +150,18 @@ With `subfolders: false`, entries are regular files that keep their own names, a
          └─ software.md         # Software
 ```
 
-The mode determines which entries are listed when a folder is selected. In the `subfolders` mode, the list shows the entries in the immediate subfolders, plus the collection’s own index file at the root — `Products` in the tree above lists `Hardware` and `Software`, and the collection root lists `Home` and `Products`. Otherwise, the list shows the files stored directly in the selected folder, so `products` lists `Hardware` and `Software` while the root lists `Overview`.
+The mode determines which entries are listed when a folder is selected:
 
-A nested entry is identified by where it sits rather than by a name of its own, so its [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) is its path below the collection folder — `products/hardware` for the tree above. Wherever that slug is used to refer to the entry, the file name shared by every entry is left out: in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths), and in the value a [Relation field](https://sveltiacms.app/en/docs/fields/relation#value-field) stores. The collection’s own index file keeps its name, because there would be nothing left of it.
+- In the `subfolders` mode, the list shows the entries in the immediate subfolders, plus the collection’s own index file at the root. In the tree above, `Products` lists `Hardware` and `Software`, and the collection root lists `Home` and `Products`.
+- Otherwise, the list shows the files stored directly in the selected folder. In the tree above, `products` lists `Hardware` and `Software`, while the root lists `Overview`.
 
-The root index file is only picked up when it fits the collection’s file paths. With a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option such as `{{slug}}/_index`, a bare `content/pages/_index.md` has no slug folder in front of it and is therefore not part of the collection; use the [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option to bring it in, which also lets it have fields of its own.
+A nested entry is identified by where it sits rather than by a name of its own. Its [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) is therefore its path below the collection folder — `products/hardware` for the tree above.
 
-The mode also decides what happens when an entry is filed elsewhere with the [path editor](#choosing-a-parent-folder): in the `subfolders` mode the entry’s whole folder moves, taking its children along, while otherwise only the entry’s own file moves and it keeps its name.
+Wherever that slug is used to refer to the entry, the filename shared by every entry is left out. This applies to a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) and to the value a [Relation field](https://sveltiacms.app/en/docs/fields/relation#value-field) stores. The collection’s own index file keeps its name, because there would be nothing left of it otherwise.
+
+The root index file is only picked up when it fits the collection’s file paths. With a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option such as `{{slug}}/_index`, a bare `content/pages/_index.md` has no slug folder in front of it, so it’s not part of the collection. To bring it in, use the [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option, which also lets it have fields of its own.
+
+The mode also decides what happens when an entry is filed elsewhere with the [path editor](#moving-entries). In the `subfolders` mode, the entry’s whole folder moves, taking its children along. Otherwise, only the entry’s own file moves, and it keeps its name.
 
 ### Nesting Page Bundles
 
@@ -277,7 +282,9 @@ widget = "image"
 }
 ```
 
-The `path` option is optional here. For nested entries, it says where an entry sits within the folder holding it, rather than within the collection folder, so it takes the same form as in a flat collection, and its last segment — the file name — has to match `meta.path.index_file`. Leave it out and the collection takes in every file below its folder; set it and only the index files are entries, which is what you want if the same folders hold other Markdown that isn’t a page.
+The `path` option is optional here. For nested entries, it says where an entry sits within the folder holding it, rather than within the collection folder. It therefore takes the same form as in a flat collection, and its last segment — the filename — has to match `meta.path.index_file`.
+
+If you leave it out, the collection takes in every file below its folder. If you set it, only the index files are entries. That’s what you want if the same folders hold other Markdown that isn’t a page.
 
 Either way, entries can be nested to any depth, each with media of its own:
 
@@ -303,7 +310,9 @@ The collection appears in the sidebar as a tree. Selecting a folder lists its en
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/filter/FOLDER_PATH
 ```
 
-Such a link keeps working for as long as the folder does. A folder exists while it holds an entry, directly or further down, so one that has been emptied — or that never existed — shows a Not Found page rather than an empty list, and so does a folder path on a collection without the `nested` option. A folder that still holds an entry but has nothing to list, such as a page with no children, shows an empty list as usual.
+Such a link keeps working for as long as the folder does. A folder exists while it holds an entry, directly or further down. A folder that has been emptied — or that never existed — shows a Not Found page rather than an empty list. So does a folder path on a collection without the `nested` option.
+
+A folder that still holds an entry but has nothing to list, such as a page with no children, shows an empty list as usual.
 
 In the `subfolders` mode, a folder that has no subfolder of its own is left out of the tree, because such a folder is an entry rather than a container — it’s already listed in its parent folder’s entry list. Set `subfolders: false` if you want every folder to appear in the tree.
 
@@ -313,26 +322,47 @@ Each folder in the tree is labeled with the summary of its index file, falling b
 
 The `meta.path` option adds a Parent Folder field above the other fields in the Content Editor. It shows the folder the entry is filed in and opens a folder tree for choosing a different one. The option accepts the following properties:
 
-- `index_file`: The file name, without an extension, that every entry in the collection is saved as, such as `_index` or `index`. The `subfolders` mode needs it, because a folder’s own entry has to have a fixed name; without it, each entry is named after its slug and stored as a regular file in the chosen folder. It has no effect with `subfolders: false`, where entries always keep their own names.
+- `index_file`: The filename, without an extension, that every entry in the collection is saved as, such as `_index` or `index`. The `subfolders` mode needs it, because a folder’s own entry has to have a fixed name. Without it, each entry is named after its slug and stored as a regular file in the chosen folder. It has no effect with `subfolders: false`, where entries always keep their own names.
 - `widget` and `label`: Accepted for compatibility with Netlify/Decap CMS but ignored. The field is always a folder picker.
 
 **Note for Netlify/Decap CMS users**
 
 Netlify offered an [experimental `parent` widget](https://github.com/netlify-labs/netlify-cms-widget-parent) that allowed users to select a parent folder from a dropdown list rather than a string field. However, this feature was never integrated into Netlify CMS itself and is not compatible with Decap CMS. Sveltia CMS has its own built-in folder picker to improve the user experience, so the `widget` option is ignored. The `label` option is also ignored because the field is always labeled “Parent Folder”.
 
+**`index_file` vs `meta.path.index_file`**
+
+These two options look similar but do different things. The [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option includes _one_ special file, Hugo’s `_index.md`, in a regular entry collection and lets it have its own set of fields. The `meta.path.index_file` option names _every_ entry in a collection with nested entries. You can use both in the same collection if the root index file needs different fields than the section pages.
+
 The option has no effect on its own: it needs `nested`, because without a hierarchy there is no folder to choose.
+
+#### Creating Entries in a Folder
 
 When an editor creates an entry while browsing a folder, the field starts on that folder, so the new entry is filed alongside the ones already listed. The tree lists every folder in the collection, and the folder an entry occupies is left out of its own picker so it can’t be filed within itself.
 
 In the `subfolders` mode, a new entry gets a folder of its own within the chosen one, named after its [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs). Creating “Release Notes” while browsing `docs/guides` therefore stores it at `docs/guides/release-notes/_index.md`. Elsewhere, the entry is a regular file named after its slug, so the same page becomes `docs/guides/release-notes.md`.
 
-With `subfolders: false`, creating an entry never creates a folder, so the tree could otherwise only ever show the folders that already hold a file. A New Folder button below the tree fills that gap: pick the folder to create it in, give it a name, and the new folder becomes the entry’s parent. The name is normalized like an [entry slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) — “User Guides” becomes `user-guides` — and is rejected if it contains a slash, starts with a dot, which would hide the folder, keeps no letter or number once normalized, or is already used by a folder in the same parent. The folder itself reaches the repository when the entry is saved into it, because Git tracks files rather than folders and so has no way to commit an empty folder. The button isn’t shown in the `subfolders` mode, where creating an entry already creates the folder that holds it.
+#### Creating Folders
 
-Choosing a different folder for an existing entry moves its file, keeping the name it already has. To change that name instead of the folder it sits in, use the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the entry’s own folder and takes everything below it along the same way. The Save button is enabled by the folder alone, so an entry can be moved without touching its content. In the `subfolders` mode, everything below the entry’s folder moves with it in the same commit — its child entries as well as any [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) stored alongside them — so a whole section can be reorganized in one save. The CMS rejects a folder that is already taken by another entry.
+With `subfolders: false`, creating an entry never creates a folder, so the tree would only ever show folders that already contain a file. The New Folder button below the tree fills that gap. Pick the parent folder, enter a name, and the new folder becomes the parent of the entry you’re creating.
 
-**`index_file` vs `meta.path.index_file`**
+The name is normalized like an [entry slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs), so “User Guides” becomes `user-guides`. It’s rejected if it:
 
-These two options look similar but do different things. The [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option includes _one_ special file, Hugo’s `_index.md`, in a regular entry collection and lets it have its own set of fields. The `meta.path.index_file` option names _every_ entry in a collection with nested entries. You can use both in the same collection if the root index file needs different fields than the section pages.
+- contains a slash
+- starts with a dot, which would hide the folder
+- has no letters or numbers left after normalization
+- is already used by another folder in the same parent
+
+The folder reaches the repository only when you save an entry into it. Git tracks files, not folders, so it can’t commit an empty folder.
+
+The button isn’t shown in the `subfolders` mode, because creating an entry there already creates its folder.
+
+#### Moving Entries
+
+Choosing a different folder for an existing entry moves its file, keeping the name it already has. The Save button is enabled by the folder change alone, so an entry can be moved without touching its content. The CMS rejects a folder that is already taken by another entry.
+
+In the `subfolders` mode, everything below the entry’s folder moves with it in the same commit: its child entries, as well as any [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) stored alongside them. A whole section can therefore be reorganized in one save.
+
+To change the entry’s name instead of the folder it sits in, use the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel). It renames the entry’s own folder and takes everything below it along the same way.
 
 Source: https://sveltiacms.app/en/docs/collections/entries/nested
 
@@ -453,7 +483,7 @@ The file doesn’t have to exist yet: it’s created when the first entry is sav
 - The entries can always be [reordered](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) with the drag-and-drop UI, without the `reorder` option. The objects are moved within the array, and no `order` field is written.
 - Saving an entry rewrites the whole file, but only the object of that entry changes. Items that aren’t objects, and properties that aren’t defined as fields, are kept as they are.
 
-Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`, `filter`, `summary`, `sortable_fields`, `view_filters`, `view_groups`, `bulk_edit` and `media_folder`, work as usual. A relative `media_folder` is relative to the folder of the file. As all the entries share that folder and can use any image in it, images are not deleted along with an entry.
+Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`, `filter`, `summary`, `sortable_fields`, `view_filters`, `view_groups`, `bulk_edit` and `media_folder`, work as usual. A relative `media_folder` is relative to the folder of the file. Images are not deleted along with an entry, because all the entries share that folder and can use any image in it.
 
 ### Unsupported Options
 
@@ -464,7 +494,7 @@ The following entry collection options assume one file per entry, so they can’
 - `index_file`
 - `reorder`, as the entries can always be reordered
 
-Editorial Workflow is not supported either. The collection can’t use the `editorial_workflow` or `preview` [publish mode](https://sveltiacms.app/en/docs/workflows/editorial), and Open Authoring can’t be enabled. If Editorial Workflow is enabled for the whole site, set the collection’s `publish_mode` option to `simple`. For the same reason, a Relation field in the collection can’t refer to a collection that uses Editorial Workflow, as renaming or deleting an entry there would update the references to it in a pull request.
+Editorial Workflow is not supported either. The collection can’t use the `editorial_workflow` or `preview` [publish mode](https://sveltiacms.app/en/docs/workflows/editorial), and Open Authoring can’t be enabled. If Editorial Workflow is enabled for the whole site, set the collection’s `publish_mode` option to `simple`. For the same reason, a Relation field in the collection can’t refer to a collection that uses Editorial Workflow. Renaming or deleting an entry there would update the references to it in a pull request.
 
 ### Internationalization
 
@@ -500,7 +530,12 @@ All the entries are stored in one file, and Sveltia CMS doesn’t lock entries w
 
 Before saving, Sveltia CMS checks the repository for changes made by someone else, then applies only the user’s change to the file as it is now. A colleague’s change to another entry is kept.
 
-The save is refused if the entry being edited has been changed or deleted in the meantime, or another entry has moved to its position because entries were added, deleted or reordered. The user is then asked to cancel editing and open the entry again from the list to make the edits. Unlike an entry stored in a file of its own, the user can’t save over the other change, as the entry at the same position may be a different one. Deleting or reordering entries is refused the same way.
+The save is refused if, in the meantime:
+
+- the entry being edited has been changed or deleted, or
+- another entry has moved to its position because entries were added, deleted or reordered.
+
+The user is then asked to cancel editing and open the entry again from the list to make the edits. Unlike an entry stored in a file of its own, the user can’t save over the other change, as the entry at the same position may be a different one. Deleting or reordering entries is refused the same way.
 
 There is still a short window between the check and the commit itself:
 
@@ -522,20 +557,24 @@ The `preview_path` option tells Sveltia CMS where an entry lives on your site, w
 
 The `preview_path` option allows you to define a custom URL path for previewing entries on your live site. This option accepts a string with template tags that will be replaced with entry-specific values when generating the preview URL. The CMS provides links to preview the entries based on this URL structure.
 
-Without `preview_path`, the CMS can’t tell where an entry lives, so a published entry has no preview link. An unpublished entry in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still links to the root of its [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews), whose address changes with each pull request, so the link is the easiest way to find it. A `preview_path` that can’t be filled in for an entry, such as one with date tags on an entry whose date is empty, gives no link at all.
+Without `preview_path`, the CMS can’t tell where an entry lives, so a published entry has no preview link. An unpublished entry in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still links to the root of its [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews). The deploy preview’s address changes with each pull request, so the link is the easiest way to find it.
+
+A `preview_path` that can’t be filled in for an entry, such as one with date tags on an entry whose date is empty, gives no link at all.
 
 The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for how those are found.
 
 The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
 
 - `{{slug}}`: the entire slug of the entry, not just the slugified entry identifier.
-- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different top-level DateTime field. If no DateTime field is found, the `preview_path` option will be ignored, and a configuration warning is shown so the missing link doesn’t go unexplained. A field that exists but is left empty on an entry has the same effect on that entry.
+- `{{year}}`, `{{month}}`, `{{day}}`, `{{hour}}`, `{{minute}}`, `{{second}}`: these tags are based on the entry’s [DateTime field](https://sveltiacms.app/en/docs/fields/datetime). The CMS looks for the first DateTime field in the collection to extract the date and time information. Use the `preview_path_date_field` option to specify a different top-level DateTime field.
+  - If no DateTime field is found, the `preview_path` option will be ignored. A configuration warning is shown so the missing link doesn’t go unexplained.
+  - A field that exists but is left empty on an entry has the same effect on that entry.
 - `{{dirname}}`: the directory name of the entry file relative to the collection `folder`, without the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale. This is useful when using the `path` option to create subfolders.
 - `{{filename}}`: the filename of the entry without the extension. This is useful when you want to use the exact filename in the preview URL.
 - `{{extension}}`: the file extension of the entry. This is useful when you want to include the file type in the preview URL.
 - `{{locale}}`: the locale code of the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths). This is useful when you want to include the locale in the preview URL.
 
-Just like the `slug` and `path` options, any field name defined in the collection’s `fields` option can also be used as a template tag in `preview_path`. If a field’s name matches one of the predefined tags listed above or in the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags), such as `slug`, `year` or `uuid`, you need to prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the tag itself.
+Just like the `slug` and `path` options, any field name defined in the collection’s `fields` option can also be used as a template tag in `preview_path`. A field’s name may match one of the predefined tags listed above or in the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags), such as `slug`, `year` or `uuid`. If so, prefix it with `fields.`, like `{{fields.slug}}`, to avoid confusion with the tag itself.
 
 You can use [string transformations](https://sveltiacms.app/en/docs/string-transformations) with these template tags.
 
@@ -617,7 +656,7 @@ With the above configuration, a blog post created on June 15, 2025, with the tit
 Setting the `preview_path` option does two more things:
 
 - It lets the CMS keep links working when an entry is renamed. See [Redirects](#redirects) below.
-- It’s what [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) need in order to point at an entry. Without it there’s nothing to append to the site or preview address, so no preview link is shown.
+- It’s what [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) need in order to point at an entry. Without it, there’s nothing to append to the site or preview address, so no preview link is shown.
 
 The `preview_path` and `preview_path_date_field` options can also be set on each file of a [file collection](https://sveltiacms.app/en/docs/collections/files#preview-path), where the collection-level options have no effect.
 

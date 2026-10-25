@@ -6,11 +6,11 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Fields
 
-Each collection requires a `fields` property that defines the structure of the content within the collection. Fields specify the type of data to be collected, such as text, images, dates, or custom types.
+Each collection requires a `fields` property that defines the structure of the content within the collection. Fields specify the type of data to be collected, such as text, images, dates or custom types.
 
 ### Field Types
 
-A field type determines how a field is rendered and interacted with in the CMS. Each field type has its own set of options, behaviors, validations, and data formats.
+A field type determines how a field is rendered and interacted with in the CMS. Each field type has its own set of options, behaviors, validations and data formats.
 
 **Note for Netlify/Decap CMS users**
 
@@ -45,7 +45,7 @@ Sveltia CMS includes the following field types out of the box:
 
 **Breaking change from Netlify CMS**
 
-The deprecated Date widget is not supported in Sveltia CMS (and Decap CMS). Use the DateTime widget instead.
+The deprecated Date widget is not supported in Sveltia CMS (and Decap CMS). Use the DateTime field instead.
 
 #### Custom field types
 
@@ -80,14 +80,14 @@ An exception is the Hidden field type that only supports `name`, `widget`, `defa
 
 - **Type**: `string`
 
-The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields`, and so on.
+The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields` and so on.
 
 The naming convention for field names is typically `snake_case` or `camelCase` — the choice is yours, but keep the style consistent. However, it cannot contain spaces, periods (`.`), asterisks (`*`), colons (`:`) or angle brackets (`<`, `>`).
 
 There are two special field names to be aware of:
 
 - A field named `title` is treated as the default `identifier_field` for an [entry collection](https://sveltiacms.app/en/docs/collections/entries), meaning it will be used as the entry title and slug unless another field is explicitly set as the `identifier_field`.
-- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML, or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
+- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 #### Optional Options
 
@@ -140,7 +140,9 @@ Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/objec
 - **Type**: `string`
 - **Default**: `""`
 
-A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI. Basic Markdown formatting is supported, including bold, italics, strikethrough, links, and inline code. A line break can be given as a literal backslash followed by `n`, e.g. `\n` in a plain or single-quoted YAML string; in JSON or a double-quoted YAML/TOML string, escape the backslash (`\\n`). A real newline is rendered as a space. The hint is not displayed while the field is [read-only](#readonly).
+A short description or hint for the field value, which provides additional context to users. It’s displayed below the field input in the UI, but not while the field is [read-only](#readonly). Basic Markdown formatting is supported, including bold, italics, strikethrough, links and inline code.
+
+To add a line break, use a literal backslash followed by `n`. In a plain or single-quoted YAML string, that’s `\n`. In JSON or a double-quoted YAML/TOML string, escape the backslash: `\\n`. A real newline is rendered as a space.
 
 ##### `hint_localized`
 
@@ -159,7 +161,7 @@ If [i18n](https://sveltiacms.app/en/docs/i18n) is enabled, the option accepts an
 
 With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) enabled, an entry in draft can be saved with its required fields left empty, so unfinished work isn’t held up. They’re enforced again once the entry moves on from the drafting stage. See [Required Fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields).
 
-If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) is enabled, this option affects **data output** as well. The default value is `true`, meaning optional fields left empty will be omitted from the output. If set to `false`, optional fields left empty will be included in the output with a value of `null`, empty string, or empty array/object, depending on the field type.
+If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) is enabled, this option affects **data output** as well. The default value is `true`, meaning optional fields left empty will be omitted from the output. If set to `false`, optional fields left empty will be included in the output with a value of `null`, empty string or empty array/object, depending on the field type.
 
 ##### `pattern`
 
@@ -167,8 +169,8 @@ If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/do
 
 An array containing a [regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions) pattern and an error message to validate the field’s value. The regular expression can be provided in one of the following formats:
 
-- A string representing the regex pattern without delimiters, e.g., `'^[A-Za-z0-9]+$'`.
-- A string representing the regex pattern with delimiters and flags, e.g., `'/^[a-z0-9]+$/i'`. The delimiters must be slashes `/`.
+- A string representing the regex pattern without delimiters, e.g. `'^[A-Za-z0-9]+$'`.
+- A string representing the regex pattern with delimiters and flags, e.g. `'/^[a-z0-9]+$/i'`. The delimiters must be slashes `/`.
 - A `RegExp` object when using the [JavaScript API](https://sveltiacms.app/en/docs/api/initialization).
 
 For example, to restrict a string field to only alphanumeric characters, you can use the following configuration:
@@ -239,7 +241,12 @@ How values are compared:
 - An empty value is never a duplicate. A field with `required: false` can therefore be left empty in any number of entries.
 - A file just uploaded to a File or Image field is a new file, so it’s never a duplicate.
 
-The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/en/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field taking multiple values or a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component, which can appear more than once in an entry.
+The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in:
+
+- a [file collection](https://sveltiacms.app/en/docs/collections/files)
+- the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file)
+- a field taking multiple values
+- a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component, because it can appear more than once in an entry
 
 **Tip**
 
@@ -266,7 +273,14 @@ Whether to show a preview of the field’s value in the entry’s preview pane. 
 - **Type**: `boolean`, `translate`, `duplicate` or `none`
 - **Default**: `false`, or `duplicate` for a subfield of a field using `duplicate`
 
-Indicates whether the field supports internationalization (i18n). `true` (or `translate`) enables the field in all locales, while `false` (or `none`) enables it in the default locale only. `duplicate` makes the field read-only in non-default locales and copies the default locale’s value to them. `duplicate_if_empty` copies the default locale’s value only to the non-default locales where the field is empty, while the field can still be edited there; it’s available for the Code, DateTime, File, Image, Number, RichText, String and Text field types. A subfield without its own `i18n` option follows its parent’s `duplicate` strategy, while under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
+Indicates whether the field supports internationalization (i18n). The values are:
+
+- `true` (or `translate`): The field is enabled in all locales.
+- `false` (or `none`): The field is enabled in the default locale only.
+- `duplicate`: The field is read-only in non-default locales, and the default locale’s value is copied to them.
+- `duplicate_if_empty`: The default locale’s value is copied only to the non-default locales where the field is empty. The field can still be edited there. This value is available for the Code, DateTime, File, Image, Number, RichText, String and Text field types.
+
+A subfield without its own `i18n` option follows its parent’s `duplicate` strategy. Under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 
@@ -460,11 +474,11 @@ If you need to manage multiple strings, consider using the simple [List](https:/
 
 #### Editor
 
-Single-line text input field for entering short to medium-length strings. It supports standard text input features like copy-paste, undo-redo, and basic keyboard shortcuts.
+Single-line text input field for entering short to medium-length strings. It supports standard text input features like copy-paste, undo-redo and basic keyboard shortcuts.
 
 Additional text can be displayed before or after the input field using the `before_input` and `after_input` options.
 
-A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements. The counter only counts what the user types: the `prefix` and `suffix` are not included.
+A character counter can be displayed if the `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements. The counter only counts what the user types: the `prefix` and `suffix` are not included.
 
 Emoji autocomplete is enabled by default, unless the `type` option is `url` or `email`. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
 
@@ -487,7 +501,7 @@ A string. If the `required` option is set to `false` and the field is left empty
 ### Data Validation
 
 - If the `required` option is set to `true`, the string must not be empty.
-- If `minlength` and/or `maxlength` options are specified, the string length must be within the defined limits. The length doesn’t include the `prefix` and `suffix`, or leading and trailing whitespace, and an emoji counts as a single character.
+- If the `minlength` and/or `maxlength` options are specified, the string length must be within the defined limits. The length doesn’t include the `prefix` and `suffix`, or leading and trailing whitespace, and an emoji counts as a single character.
 - If the `type` option is `url` or `email`, the string must be a valid URL or email address, checked without the `prefix` and `suffix`. An email address must also have a dot in its domain name.
 - If the `pattern` option is provided, the string must match the specified regular expression pattern.
 
@@ -506,14 +520,14 @@ Must be set to `string`, but is optional since it is the default field type.
 
 ##### `default`
 
-- Type: `string`
+- **Type**: `string`
 - **Default**: `""`
 
 The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration.
 
 ##### `type`
 
-- Type: `string`
+- **Type**: `string`
 - **Default**: `""`
 
 The value type, either `url` or `email`. This option shows the matching keyboard on mobile devices, and also enables basic validation for URL or email format.
@@ -537,14 +551,14 @@ Strings to be appended to the value when saving or displaying it. If the value i
 - **Type**: `integer`
 - **Default**: `0`
 
-Minimum length of the string, not counting the `prefix` and `suffix`. This enables character counter in the UI and validation.
+Minimum length of the string, not counting the `prefix` and `suffix`. This enables a character counter in the UI and validation.
 
 ##### `maxlength`
 
 - **Type**: `integer`
 - **Default**: `Infinity`
 
-Maximum length of the string, not counting the `prefix` and `suffix`. This enables character counter in the UI and validation.
+Maximum length of the string, not counting the `prefix` and `suffix`. This enables a character counter in the UI and validation.
 
 ##### `before_input`
 
@@ -565,7 +579,9 @@ Text to display after the input field.
 - **Type**: `boolean`
 - **Default**: `true`, unless the `type` option is `url` or `email`
 
-Whether to enable emoji autocomplete in the text input. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field. The colon must be at the beginning of the input or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
+Whether to enable emoji autocomplete in the text input. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field.
+
+The colon must be at the beginning of the input or preceded by a space or an opening bracket. A colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
 
 ### Examples
 
@@ -872,9 +888,9 @@ If you need rich text formatting, consider using the [RichText](https://sveltiac
 
 #### Editor
 
-Multi-line text area for entering longer strings of text. It supports standard text input features like copy-paste, undo-redo, and basic keyboard shortcuts.
+Multi-line text area for entering longer strings of text. It supports standard text input features like copy-paste, undo-redo and basic keyboard shortcuts.
 
-A character counter can be displayed if `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements.
+A character counter can be displayed if the `minlength` or `maxlength` option is set, and a user-friendly validation message will appear if the input does not meet the specified length requirements.
 
 Emoji autocomplete is enabled by default. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
 
@@ -889,7 +905,7 @@ A string with possible line breaks (`\n` characters) representing the entered te
 ### Data Validation
 
 - If the `required` option is set to `true`, the text must not be empty.
-- If `minlength` and/or `maxlength` options are specified, the text length must be within the defined limits.
+- If the `minlength` and/or `maxlength` options are specified, the text length must be within the defined limits.
 - If the `pattern` option is provided, the text must match the specified regular expression pattern.
 
 ### Options
@@ -919,21 +935,23 @@ The default value for the field. It’s used when creating a new entry, and when
 - **Type**: `integer`
 - **Default**: `0`
 
-Minimum length of the string. This enables character counter in the UI and validation.
+Minimum length of the string. This enables a character counter in the UI and validation.
 
 ##### `maxlength`
 
 - **Type**: `integer`
 - **Default**: `Infinity`
 
-Maximum length of the string. This enables character counter in the UI and validation.
+Maximum length of the string. This enables a character counter in the UI and validation.
 
 ##### `use_emoji_autocomplete`
 
 - **Type**: `boolean`
 - **Default**: `true`
 
-Whether to enable emoji autocomplete in the text area. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field. The colon must be at the beginning of a line or preceded by a space or an opening bracket, so a colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
+Whether to enable emoji autocomplete in the text area. When set to `true`, typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis that can be inserted into the field.
+
+The colon must be at the beginning of a line or preceded by a space or an opening bracket. A colon in the middle of a word, as in `12:34`, does not trigger the suggestions.
 
 ### Examples
 
@@ -1060,7 +1078,7 @@ The Number field type allows users to input numeric values using a specialized i
 
 #### Editor
 
-Text input field that only accepts numeric values. It includes up and down arrows for incrementing or decrementing the value, as well as support for decimal points and negative numbers.
+A text input field that only accepts numeric values. It includes up and down arrows for incrementing or decrementing the value, as well as support for decimal points and negative numbers.
 
 Additional text can be displayed before or after the input field using the `before_input` and `after_input` options.
 
@@ -1078,7 +1096,7 @@ If `value_type` is other than `int` or `float`, the value will be stored as a st
 
 ### Data Validation
 
-- If the `required` option is set to `true`, the number value must not be `null` (i.e., the field must not be left empty).
+- If the `required` option is set to `true`, the number value must not be `null` (i.e. the field must not be left empty).
 - The number value must be within the range defined by the `min` and `max` options, if specified.
 - The number value must conform to the type defined by the `value_type` option.
 - The input must be a number the field can store. Text that isn’t a number, such as `abc`, an infinite number and, with `value_type: int`, an integer beyond the range JavaScript can represent exactly (2<sup>53</sup>) are reported as invalid rather than being saved as an empty value.
@@ -1110,7 +1128,7 @@ Sveltia CMS does not support the deprecated camelCase `valueType` option. Use `v
 - **Type**: `number` or `string`
 - **Default**: `null`
 
-The default value for the field. It has to be a number of the [`value_type`](#value-type): an integer for `int` and `int/string`, any number for `float` and `float/string`. A string is parsed as a number; a value that can’t be parsed is reported as a config validation error on the login screen, because the field would otherwise come up empty.
+The default value for the field. It has to be a number of the [`value_type`](#value-type): an integer for `int` and `int/string`, any number for `float` and `float/string`. A string is parsed as a number. A value that can’t be parsed is reported as a config validation error on the login screen, because the field would otherwise come up empty.
 
 ##### `value_type`
 
@@ -1126,7 +1144,7 @@ The type of value to store. Can be one of the following:
 
 **Note for Netlify/Decap CMS users**
 
-The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Number) says the `value_type` option accepts any type other than `int` and `float` , which results in the value being stored as a string. However, it actually doesn’t work in Decap CMS. So, Sveltia CMS officially supports only `int` and `float`, along with the new `int/string` and `float/string` types. For backward compatibility, other types are treated like `int/string`: the UI only accepts integer input, and the value is stored as a string.
+The [Netlify/Decap CMS document](https://decapcms.org/docs/widgets/#Number) says the `value_type` option accepts any type other than `int` and `float`, which results in the value being stored as a string. However, this doesn’t actually work in Decap CMS. So, Sveltia CMS officially supports only `int` and `float`, along with the new `int/string` and `float/string` types. For backward compatibility, other types are treated like `int/string`: the UI only accepts integer input, and the value is stored as a string.
 
 ##### `min`
 
@@ -1558,7 +1576,7 @@ For a simple true/false choice, consider using the [Boolean](https://sveltiacms.
 
 Radio buttons (single select) or checkboxes (multi select) for choosing options. If there are many entries, a dropdown with search functionality will be used instead. Use the `dropdown_threshold` option to customize when to switch to the dropdown UI.
 
-For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
+For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using the right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
 
 #### Preview
 
@@ -1574,7 +1592,8 @@ If the `required` option is set to `false` and no option is selected, the value 
 
 - If the `required` option is set to `true`, at least one option must be selected. An option with the value `null` or an empty string counts as a selection.
 - If the `multiple` option is enabled, the number of selected options must be between the `min` and `max` limits, if specified.
-- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the selected option value must match the regular expression. For multi select, the selected values joined with commas, e.g. `foo,bar,baz`, must match instead: as with Decap CMS, the pattern is tested against the whole selection rather than against each value, so use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$` to accept lowercase values only. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the selected option value must match the regular expression. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
+  - For multi select, the selected values joined with commas, e.g. `foo,bar,baz`, must match instead. As with Decap CMS, the pattern is tested against the whole selection, not against each value. To accept lowercase values only, use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$`.
 
 ### Options
 
@@ -1719,7 +1738,13 @@ options: [
 - **Type**: `string`, `number`, `boolean`, `null`, an object with `label` and `value` properties, or an array of them
 - **Default**: an empty string, `null` or `[]`
 
-The default value for the field. Should be a string, number, boolean or `null` for single select, or an array of them for multi select, depending on the `multiple` option. An option can also be copied as is from the `options` list, as an object with `label` and `value` properties, in which case only its `value` is saved. A value that isn’t one of the `options`, or an array with `multiple` off and a single value with `multiple` on, is reported as a config validation error on the login screen.
+The default value for the field. Should be a string, number, boolean or `null` for single select, or an array of them for multi select, depending on the `multiple` option. An option can also be copied as is from the `options` list, as an object with `label` and `value` properties. In that case, only its `value` is saved.
+
+The following are reported as a config validation error on the login screen:
+
+- a value that isn’t one of the `options`
+- an array with `multiple` off
+- a single value with `multiple` on
 
 ##### `dropdown_threshold`
 
@@ -2104,7 +2129,7 @@ Must be set to `color`.
 
 **Tip**
 
-Unlike most of other config options, `enableAlpha` and `allowInput` are camelCased.
+Unlike most other config options, `enableAlpha` and `allowInput` are camelCased.
 
 ##### `default`
 
@@ -2180,7 +2205,7 @@ background_color = "#FFFFFF"
 
 #### Color Field with Alpha and Input Allowed
 
-This example shows a Color field configuration with alpha channel enabled, manual input allowed, and a default value set.
+This example shows a Color field configuration with alpha channel enabled, manual input allowed and a default value set.
 
 ```yaml [YAML]
 - name: overlay_color
@@ -2277,7 +2302,7 @@ Must be set to `hidden`.
 - **Type**: `any`
 - **Default**: `""`
 
-The default value for the hidden field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. Any data type is accepted (string, number, boolean, object, array, etc.) as long as it can be serialized to the collection’s data format (YAML, JSON, TOML, etc).
+The default value for the hidden field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. Any data type is accepted (string, number, boolean, object, array, etc.) as long as it can be serialized to the collection’s data format (YAML, JSON, TOML, etc.).
 
 TOML does not support `null` values, so avoid using `null` as the default value when the collection’s data format is set to TOML.
 

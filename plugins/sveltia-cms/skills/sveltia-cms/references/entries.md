@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Entry Collections
 
-An entry collection contains multiple entries of the same type. Editors can usually create, edit, and delete entries within the collection. Typical use cases for entry collections include blog posts, tags, products or events. Each entry in the collection is represented by a separate file, or all the entries can be stored in a [single JSON file](https://sveltiacms.app/en/docs/collections/entries/single-file).
+An entry collection contains multiple entries of the same type. Editors can usually create, edit and delete entries within the collection. Typical use cases for entry collections include blog posts, tags, products or events. Each entry in the collection is represented by a separate file, or all the entries can be stored in a [single JSON file](https://sveltiacms.app/en/docs/collections/entries/single-file).
 
 **Note for Netlify/Decap CMS users**
 
@@ -85,21 +85,21 @@ The following options are commonly used when defining an entry collection:
 - `name`: (required) A unique identifier for the collection. Should not contain spaces or special characters.
 - `label`: A human-readable name for the collection. If omitted, the `name` value is used.
 - `label_singular`: A human-readable singular name for the collection. If omitted, the `label` value is used. Used in some parts of the UI like the “Create new” button.
-- `description`: A brief description of the collection, displayed in the UI. Basic Markdown formatting is supported, including bold, italic, strikethrough, code, and links.
+- `description`: A brief description of the collection, displayed in the UI. Basic Markdown formatting is supported, including bold, italic, strikethrough, code and links.
 - `folder`: (required unless `file` is used) The folder path where the entries are stored, relative to the repository’s root directory. It can be an empty string (or `.` or `/`) to store entries in the root folder. With i18n enabled, it can contain the `{{locale}}` placeholder as a folder name, e.g. `content/{{locale}}/posts`, to say where the locale folder goes. See [Custom Locale Folder Placement](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement).
 - `file`: The path to a JSON file storing all the entries as an array of objects, used instead of `folder`. See [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file).
-- `fields`: (required) An array defining the [fields](https://sveltiacms.app/en/docs/fields) for each entry in the collection. Each field has a `name`, `label`, and optional `widget` type.
+- `fields`: (required) An array defining the [fields](https://sveltiacms.app/en/docs/fields) for each entry in the collection. Each field has a `name`, `label` and optional `widget` type.
 
 ### Configuration Guides
 
 The remaining entry collection options are documented on the following pages:
 
 - [File Formats](https://sveltiacms.app/en/docs/collections/entries/formats): Choose between Markdown with front matter, YAML, JSON and TOML, and customize the file extension, front matter delimiter and body field.
-- [Slugs and File Paths](https://sveltiacms.app/en/docs/collections/entries/slugs): Generate entry slugs from fields and template tags, make slugs editable, and organize entries into subfolders and page bundles.
+- [Slugs and File Paths](https://sveltiacms.app/en/docs/collections/entries/slugs): Generate entry slugs from fields and template tags, make slugs editable and organize entries into subfolders and page bundles.
 - [Nested Entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage hierarchical content in a folder tree that editors can browse and organize.
 - [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file): Store all the entries in one JSON file, as an array of objects.
 - [Preview Paths and Redirects](https://sveltiacms.app/en/docs/collections/entries/previews): Point the CMS at an entry’s URL on your site for previews, and record redirects when slugs change.
-- [Entry Operations](https://sveltiacms.app/en/docs/collections/entries/operations): Disable creation, deletion or duplication, limit the entry count, hide the collection, and enable manual reordering.
+- [Entry Operations](https://sveltiacms.app/en/docs/collections/entries/operations): Disable creation, deletion or duplication, limit the entry count, hide the collection and enable manual reordering.
 - [Entry Listings](https://sveltiacms.app/en/docs/collections/entries/listings): Customize entry summaries and thumbnails, manage Hugo’s index file, and include or exclude entries.
 - [Entry Views](https://sveltiacms.app/en/docs/collections/entries/views): Define sorting, grouping and filtering options for the listing view.
 
@@ -109,7 +109,7 @@ Source: https://sveltiacms.app/en/docs/collections/entries
 
 ## File Formats
 
-Sveltia CMS supports various file formats for entry collections, including Markdown, YAML, JSON, and TOML. The default format is Markdown with YAML front matter.
+Sveltia CMS supports various file formats for entry collections, including Markdown, YAML, JSON and TOML. The default format is Markdown with YAML front matter.
 
 The example below defines a simple blog posts collection:
 
@@ -179,7 +179,7 @@ widget = "richtext"
 }
 ```
 
-By default, entry collections use the `title` field as the slug (filename). If neither the `format` nor the `extension` option is set, entries are Markdown files with the `md` extension, and new entries are saved with YAML front matter. See [Default Format and Extension](#default-format-and-extension) for details. A Markdown field named `body` is treated as the main content of the file, while other fields are stored in the front matter; this behavior can be configured using the [`body_field` option](#body-field-for-front-matter-formats) in the collection definition.
+By default, entry collections use the `title` field as the slug (filename). If neither the `format` nor the `extension` option is set, entries are Markdown files with the `md` extension, and new entries are saved with YAML front matter. See [Default Format and Extension](#default-format-and-extension) for details. A Markdown field named `body` is treated as the main content of the file, while other fields are stored in the front matter. This behavior can be configured using the [`body_field` option](#body-field-for-front-matter-formats) in the collection definition.
 
 If you create a blog post with the title “My First Post”, the file will be saved at `content/posts/my-first-post.md`, with the following content:
 
@@ -192,7 +192,7 @@ date: 2024-06-01T12:00:00Z
 This is the body of my first post.
 ```
 
-You can customize the file format using the `format` property of the collection. The example below shows how to use JSON for file format:
+You can customize the file format using the `format` property of the collection. The example below shows how to use JSON for the file format:
 
 ```yaml [YAML]{5}
 collections:
@@ -257,7 +257,7 @@ The following file formats are supported for entry collections. You can specify 
 - `toml-frontmatter`: Markdown files with TOML front matter, the `md` extension and the `+++` delimiter by default.
 - `json-frontmatter`: Markdown files with JSON front matter, the `md` extension and the `{` / `}` delimiter by default.
 - `frontmatter`: Markdown files with front matter in any of the supported formats. The format is automatically detected based on the front matter delimiters, and an existing entry is saved back in the format it was read in. However, when creating new entries, the format defaults to `yaml-frontmatter`. The `md` extension and `---` delimiter are used by default.
-- `raw`: Raw text files with the `txt` extension by default. When using this format, make sure to have only one field named `body` with the `widget` type set to `code`, `markdown`, `richtext` or `text`. This is useful for a file collection that manages plain text files without any front matter, such as JSON, XML, or CSV files.
+- `raw`: Raw text files with the `txt` extension by default. When using this format, make sure to have only one field named `body` with the `widget` type set to `code`, `markdown`, `richtext` or `text`. This is useful for a file collection that manages plain text files without any front matter, such as JSON, XML or CSV files.
 
 The JSON and YAML formats can be customized via the [global `output` option](https://sveltiacms.app/en/docs/data-output#controlling-data-output).
 
@@ -313,7 +313,7 @@ extension = "markdown"
 }
 ```
 
-You can use any valid file extension, such as `html`, `txt`, or `mdx`. Just make sure that the file format and extension are compatible. If there is an obvious mismatch, Sveltia CMS will raise a validation error. For example, if you use `json` format with `md` extension, it will result in an error because JSON files should have a `json` extension.
+You can use any valid file extension, such as `html`, `txt` or `mdx`. Just make sure that the file format and extension are compatible. If there is an obvious mismatch, Sveltia CMS will raise a validation error. For example, if you use the `json` format with the `md` extension, it will result in an error because JSON files should have a `json` extension.
 
 The front matter formats (`yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter` and `frontmatter`) work with any extension that isn’t tied to another format, such as `html`, `liquid`, `njk` or `txt`, just like in Netlify/Decap CMS, where the `format` option takes precedence over the extension. The exceptions are the following:
 
@@ -337,7 +337,7 @@ The `format` and `extension` options are both optional. When one or both of them
 
 **Warning**
 
-The CMS does not look at the existing files in the collection folder to guess the extension. Only files with the configured extension are listed as entries, and the extension defaults to `md`. If your collection folder contains JSON, YAML or TOML files, you must set the `extension` or `format` option; otherwise, no entries will appear. The same applies to Netlify/Decap CMS.
+The CMS does not look at the existing files in the collection folder to guess the extension. Only files with the configured extension are listed as entries, and the extension defaults to `md`. If your collection folder contains JSON, YAML or TOML files, you must set the `extension` or `format` option. Otherwise, no entries will appear. The same applies to Netlify/Decap CMS.
 
 ### Front Matter Delimiter
 
@@ -575,7 +575,7 @@ Sveltia CMS provides several ways to customize the slug (filename) of an entry i
 
 #### Global Slug Options
 
-The `slug` option defined at the top-level of the configuration file applies to all collections, including the names of entry folders created or renamed in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested). It also applies to the names of uploaded asset files and new asset folders when [filename slugification](https://sveltiacms.app/en/docs/media#slugification-of-filenames) is enabled. The default settings are as follows:
+The `slug` option defined at the top level of the configuration file applies to all collections, including the names of entry folders created or renamed in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested). It also applies to the names of uploaded asset files and new asset folders when [filename slugification](https://sveltiacms.app/en/docs/media#slugification-of-filenames) is enabled. The default settings are as follows:
 
 ```yaml [YAML]
 slug:
@@ -627,13 +627,14 @@ The available options are:
 
 - `encoding`: Specifies the encoding method for slugs. Supported values are `unicode` (default) and `ascii`.
   - `unicode`: Allows Unicode characters in slugs, preserving non-Latin scripts.
-  - `ascii`: Sanitizes slugs to ASCII characters only. The allowed characters are 0-9, a-z, A-Z, hyphen (`-`) underscore (`_`) and tilde (`~`). Other characters are replaced with the value specified in the `sanitize_replacement` option.
-- `clean_accents`: A boolean value indicating whether to remove accents from characters in slugs. If enabled, accented characters are converted to their unaccented equivalents (e.g., `é` becomes `e`). Also, certain characters like German umlauts are [transliterated](https://en.wikipedia.org/wiki/Transliteration) to their ASCII equivalents (e.g., `ß` becomes `ss`). The default value is `false`.
+  - `ascii`: Sanitizes slugs to ASCII characters only. The allowed characters are 0-9, a-z, A-Z, hyphen (`-`), underscore (`_`) and tilde (`~`). Other characters are replaced with the value specified in the `sanitize_replacement` option.
+- `clean_accents`: A boolean value indicating whether to remove accents from characters in slugs. If enabled, accented characters are converted to their unaccented equivalents (e.g. `é` becomes `e`). Also, certain characters like German umlauts are [transliterated](https://en.wikipedia.org/wiki/Transliteration) to their ASCII equivalents (e.g. `ß` becomes `ss`). The default value is `false`.
   - See the `transliterate` library’s [replacements list](https://github.com/sindresorhus/transliterate/blob/main/replacements.js) for details on how specific characters are transliterated. [Additional rules](https://github.com/sindresorhus/transliterate/blob/main/locale-replacements.js) are applied when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled for [specific locales](https://github.com/sindresorhus/transliterate#supported-locales).
 - `sanitize_replacement`: A string used to substitute invalid characters. The default value is a hyphen (`-`).
-  - The replacement can’t contain a character that slugs can’t have, such as a slash (`/`) or a question mark (`?`), as it would end up in every slug. The only exception is a plain space, which keeps the words of a filename apart for people and tools that read filenames rather than URLs, e.g. `Sourdough focaccia.md` for an [Obsidian](https://obsidian.md/) vault that links to entries by filename. Combine it with `lowercase: false` to keep the original casing. When the replacement contains a space, users can also type spaces when [editing a slug](#making-slugs-editable).
+  - The replacement can’t contain a character that slugs can’t have, such as a slash (`/`) or a question mark (`?`), because it would end up in every slug.
+  - The only exception is a plain space. It keeps the words of a filename apart for people and tools that read filenames rather than URLs, e.g. `Sourdough focaccia.md` for an [Obsidian](https://obsidian.md/) vault that links to entries by filename. Combine it with `lowercase: false` to keep the original casing. When the replacement contains a space, users can also type spaces when [editing a slug](#making-slugs-editable).
   - Filenames with spaces aren’t URL-friendly. If you use the `{{slug}}` template tag in the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, make sure your site builds the same URL.
-- `maxlength`: An integer specifying the maximum length of the slug. If the generated slug exceeds this length, it will be truncated, and any `sanitize_replacement` characters left at the end are removed unless `trim` is `false`. This is useful for CI/CD services or filesystems that impose filename length restrictions. The default value is `undefined`, meaning there is no length limit.
+- `maxlength`: An integer specifying the maximum length of the slug. If the generated slug exceeds this length, it will be truncated. Any `sanitize_replacement` characters left at the end are then removed, unless `trim` is `false`. This is useful for CI/CD services or filesystems that impose filename length restrictions. The default value is `undefined`, meaning there is no length limit.
 - `trim`: A boolean value indicating whether to trim leading and trailing `sanitize_replacement` characters from the slug. The default value is `true`.
 - `lowercase`: A boolean value indicating whether to convert the slug to lowercase. The default value is `true`. Changing this to `false` will preserve the original casing of the title or identifier field.
 - `timezone`: A string specifying the timezone to use when generating date-based slugs with [template tags](#slug-template-tags) like `{{day}}` and `{{hour}}`. The default value is `utc`. You can set this to `local` to use the local timezone of the user.
@@ -642,11 +643,11 @@ The available options are:
 
 The collection-level `slug_length` option has been deprecated in favor of the `maxlength` global slug option described above. The `slug_length` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly.
 
-#### How Slugs are Generated
+#### How Slugs Are Generated
 
 By default, Sveltia CMS uses the `title` field as the slug (filename) for entries in a collection.
 
-If a collection only has the Markdown `body` field, an entry slug will be generated from a header in the `body`, if exists. This aims to support a typical [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress) or [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus) setup. If no title or header is found, a part of a random UUID will be used to ensure uniqueness.
+If a collection only has the Markdown `body` field, an entry slug will be generated from a header in the `body`, if one exists. This aims to support a typical [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress) or [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus) setup. If no title or header is found, a part of a random UUID will be used to ensure uniqueness.
 
 #### Specifying an Identifier Field
 
@@ -832,7 +833,7 @@ By default, the entry creation date is based on the UTC timezone for backward co
 
 Additionally, the following unique identifier tags are available. These tags generate random values for each entry, ensuring uniqueness. This is particularly useful when the entry title may change later or when the title contains characters that are not suitable for filenames, such as non-Latin scripts.
 
-- `{{uuid}}`: A random UUID v4, e.g. `4fc0917c-8aea-4ad5-a476-392bdcf3b642`
+- `{{uuid}}`: A random UUID v4, e.g. `4fc0917c-8aea-4ad5-a476-392bdcf3b642`.
 - `{{uuid_short}}`: The last 12 characters of a random UUID v4, e.g. `392bdcf3b642`.
 - `{{uuid_shorter}}`: The first 8 characters of a random UUID v4, e.g. `4fc0917c`.
 
@@ -913,9 +914,9 @@ Renaming an entry changes its URL on your live site, unless your framework [redi
 
 ##### Having Users Type the Slug
 
-When the slug can’t be derived from the entry’s content, e.g. when the file name is the only place a value is stored, you can have users type the slug themselves. Set the `editable` option to allow editing on creation, without a `template`. The slug is then required: the Slug panel opens by itself when a new entry is created, and the entry can’t be saved until a slug has been entered.
+When the slug can’t be derived from the entry’s content, e.g. when the filename is the only place a value is stored, you can have users type the slug themselves. Set the `editable` option to allow editing on creation, without a `template`. The slug is then required. The Slug panel opens by itself when a new entry is created, and the entry can’t be saved until a slug has been entered.
 
-For example, a collection of languages whose file names are [BCP 47](https://en.wikipedia.org/wiki/IETF_language_tag) language codes, such as `en.json` or `pt-br.json`, can guide users with the `hint` and `pattern` options:
+For example, a collection of languages whose filenames are [BCP 47](https://en.wikipedia.org/wiki/IETF_language_tag) language codes, such as `en.json` or `pt-br.json`, can guide users with the `hint` and `pattern` options:
 
 ```yaml [YAML]{6-9}
 collections:
@@ -1070,7 +1071,11 @@ label = "Title"
 
 **Warning**
 
-As with the Number field option, Sveltia CMS doesn’t keep a counter: the next number is worked out in the browser from the entries that exist when an entry is saved. If the entry with the highest number is deleted, the next new entry is given the same number, and two users saving new entries at the same moment may get the same number. Any slug made of digits also counts, so a date-like slug such as `20260114` makes the numbering continue from there.
+As with the Number field option, Sveltia CMS doesn’t keep a counter. The next number is worked out in the browser from the entries that exist when an entry is saved. This means:
+
+- If the entry with the highest number is deleted, the next new entry is given the same number.
+- Two users saving new entries at the same moment may get the same number.
+- Any slug made of digits also counts, so a date-like slug such as `20260114` makes the numbering continue from there.
 
 The option is ignored in a collection that stores all its entries in a [single file](https://sveltiacms.app/en/docs/collections/entries/single-file), whose entries have no slugs.
 
@@ -1223,7 +1228,7 @@ Looking at the above options, the entry file path can be constructed as follows:
   ```yaml
   /<folder>/<path>.<extension>
   ```
-- With the `single_file` i18n structure
+- With the `single_file` i18n structure:
   ```yaml
   /<folder>/<path>.<extension>
   ```

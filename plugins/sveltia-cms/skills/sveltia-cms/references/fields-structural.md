@@ -31,7 +31,7 @@ If the `required` option is set to `false` and subfields are not added, the valu
 
 ### Data Validation
 
-- If the `required` option is set to `true`, the object must not be `null` (i.e., a type must be selected if using variable types).
+- If the `required` option is set to `true`, the object must not be `null` (i.e. a type must be selected if using variable types).
 
 ### Options
 
@@ -119,7 +119,7 @@ You cannot use a key that conflicts with any of the subfield names defined in th
 
 **Tip**
 
-Unlike most of other config options, `typeKey` is camelCased.
+Unlike most other config options, `typeKey` is camelCased.
 
 ### Examples
 
@@ -443,7 +443,7 @@ widget = "image"
 
 #### Variable Type
 
-The following example defines a variable type Object field named `contentBlock` with three types: `textBlock`, `imageBlock`, and `placeholderBlock`. Note that the `placeholderBlock` type does not have any subfields but is still a valid type.
+The following example defines a variable type Object field named `contentBlock` with three types: `textBlock`, `imageBlock` and `placeholderBlock`. Note that the `placeholderBlock` type does not have any subfields but is still a valid type.
 
 ```yaml [YAML]
 - name: contentBlock
@@ -650,7 +650,7 @@ The KeyValue field type allows users to create and manage a dynamic list of key-
 A dynamic list of key-value pairs, where users can add, edit, reorder and remove entries. Each entry consists of a text input for the key and a text input for the value.
 
 - Pressing Enter moves focus or adds a new row while editing.
-- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). When there are 3 or more pairs, a menu next to the handle offers Move to Top and Move to Bottom, and Move to…, which asks for the position to move the pair to. The pairs are saved in the order they are shown.
+- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). When there are 3 or more pairs, a menu next to the handle offers Move to Top, Move to Bottom and Move to…. The last one asks for the position to move the pair to. The pairs are saved in the order they are shown.
 - A field without pairs shows a blank row, like a [simple List field](https://sveltiacms.app/en/docs/fields/list#simple-list-field), so there’s always somewhere to type. The blank row isn’t saved until its key is filled in, and removing the last pair leaves one in its place.
 
 #### Preview
@@ -667,7 +667,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 
 - If the `required` option is set to `true`, at least one key-value pair must be present. A blank pair, with neither a key nor a value, doesn’t count.
 - Keys must be unique and non-empty strings. A key can contain dots (`.`), such as `example.com`; it’s saved as it is rather than being split into nested objects.
-- If `min` and/or `max` options are specified, the number of key-value pairs must be within the defined limits.
+- If the `min` and/or `max` options are specified, the number of key-value pairs must be within the defined limits.
 
 ### Options
 
@@ -710,7 +710,7 @@ The label for the value input field.
 - **Type**: `string`
 - **Default**: The value of the `label` option
 
-A label used for a single key-value pair, e.g., “Setting” for a field labeled “Settings”. It will be displayed on the Add button, just like the [`label_singular` option for the List field](https://sveltiacms.app/en/docs/fields/list#label-singular).
+A label used for a single key-value pair, e.g. “Setting” for a field labeled “Settings”. It will be displayed on the Add button, just like the [`label_singular` option for the List field](https://sveltiacms.app/en/docs/fields/list#label-singular).
 
 ##### `min`
 

@@ -10,9 +10,9 @@ Sveltia CMS provides a flexible, client-side JavaScript/TypeScript API that allo
 
 ### Accessing the `CMS` Object
 
-The main entry point for the Sveltia CMS JavaScript API is the global `CMS` object. This object exposes various methods for initializing the CMS, registering custom components, and interacting with the CMS programmatically.
+The main entry point for the Sveltia CMS JavaScript API is the global `CMS` object. This object exposes various methods for initializing the CMS, registering custom components and interacting with the CMS programmatically.
 
-There are two primary ways to access the `CMS` object: via a CDN build or by installing the NPM package.
+There are two primary ways to access the `CMS` object: via a CDN build or by installing the npm package.
 
 #### Using the CDN
 
@@ -39,9 +39,9 @@ Alternatively, you can use the ES module version, which can be imported using th
 </script>
 ```
 
-#### Using the NPM Package
+#### Using the npm Package
 
-The NPM package is a separate build of the app for use with a build tool like [Vite](https://vite.dev/) or [webpack](https://webpack.js.org/), which doesn’t load any files from CDNs. See [CDN or NPM Package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) for how it differs from the CDN builds.
+The npm package is a separate build of the app for use with a build tool like [Vite](https://vite.dev/) or [webpack](https://webpack.js.org/), which doesn’t load any files from CDNs. See [CDN or npm Package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) for how it differs from the CDN builds.
 
 Install the `@sveltia/cms` package via your preferred package manager:
 
@@ -114,11 +114,15 @@ For [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templa
 - [JSX](#using-jsx) — The familiar React syntax, which requires a build step.
 - [`h()`](#using-h) — Plain function calls, compatible with Netlify/Decap CMS.
 
-A component can be a class component, a function component, or a component wrapped with `memo` or `forwardRef`. Sveltia CMS bundles its own copy of React 19 to render them, so write your components for React 19. That copy of React is available as `CMS.React`, and as the `React` export of the NPM package, giving you the full React API, including [hooks](#using-hooks).
+A component can be a class component, a function component or a component wrapped with `memo` or `forwardRef`.
+
+Sveltia CMS bundles its own copy of React 19 to render them, so write your components for React 19. That copy is available as `CMS.React` and as the `React` export of the npm package. It gives you the full React API, including [hooks](#using-hooks).
 
 #### Using HTM
 
-[HTM](https://github.com/developit/htm) lets you write JSX-like markup in a standard JavaScript [tagged template literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates), so your components run in the browser as is, with no transpiler involved. Sveltia CMS bundles HTM and exposes the `html` tag, bound to its copy of React, on the `window` object, so no imports are necessary to use it, even if you install the NPM package:
+[HTM](https://github.com/developit/htm) lets you write JSX-like markup in a standard JavaScript [tagged template literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates), so your components run in the browser as is, with no transpiler involved.
+
+Sveltia CMS bundles HTM and exposes the `html` tag on the `window` object, bound to its copy of React. No imports are necessary to use it, even if you install the npm package:
 
 ```js
 const Greeting = ({ name }) => html`<p class="greeting">Hello, ${name}!</p>`;
@@ -131,7 +135,12 @@ The syntax is close to JSX, with a few differences:
 - Spread props with `...${props}`, e.g. `<input ...${props} />`.
 - A template can have multiple root elements, in which case it returns an array of them, so you don’t need a fragment.
 
-The template creates React elements, so props are the same as in JSX: event handlers are named `onClick`, `onChange` and so on, and a component receives whatever you pass. For convenience, you can also use HTML attribute names and values that React doesn’t accept in JSX: `class` and `for` work in place of `className` and `htmlFor`, and the `style` attribute can be a CSS string, e.g. `style="margin: 0; color: red"`, in addition to an object.
+The template creates React elements, so props are the same as in JSX. Event handlers are named `onClick`, `onChange` and so on, and a component receives whatever you pass.
+
+For convenience, you can also use some HTML attribute names and values that React doesn’t accept in JSX:
+
+- `class` and `for` work in place of `className` and `htmlFor`.
+- The `style` attribute can be a CSS string, e.g. `style="margin: 0; color: red"`, as well as an object.
 
 See the [HTM documentation](https://github.com/developit/htm#syntax-like-jsx-but-also-lit) for the full syntax.
 
@@ -147,21 +156,21 @@ Netlify/Decap CMS documents components written with plain `createElement()` call
 - `rf` — An alias for `CMS.React.Fragment`, used to create React fragments in the `h()` examples
 - `createClass` — Used to define React class components without the `class` syntax. It comes from the [`create-react-class`](https://www.npmjs.com/package/create-react-class) package, as React itself no longer provides it
 
-These are available on the `window` object when Sveltia CMS is loaded, so no imports are necessary to use them. React itself isn’t a global, so it can’t clash with another copy of React your page may load; use `CMS.React` for anything else.
+These are available on the `window` object when Sveltia CMS is loaded, so no imports are necessary to use them. React itself isn’t a global, so it can’t clash with another copy of React your page may load. Use `CMS.React` for anything else.
 
-Define the methods you pass to `createClass`, such as `render`, as function expressions rather than arrow functions. `createClass` binds each method to the component instance, which an arrow function doesn’t allow, so `this.props` would be undefined within it. Any other function, including a callback within a method, can be an arrow function.
+Define the methods you pass to `createClass`, such as `render`, as function expressions rather than arrow functions. `createClass` binds each method to the component instance, but an arrow function can’t be bound, so `this.props` would be undefined within it. Any other function, including a callback within a method, can be an arrow function.
 
 See [React Without JSX](https://legacy.reactjs.org/docs/react-without-jsx.html) for more information on how to use React without JSX.
 
 #### Using Hooks
 
-Function components can use React hooks such as `useState` and `useEffect`, as long as the hooks come from the copy of React bundled with Sveltia CMS — `CMS.React`, or the `React` export of the NPM package:
+Function components can use React hooks such as `useState` and `useEffect`, as long as the hooks come from the copy of React bundled with Sveltia CMS — `CMS.React`, or the `React` export of the npm package:
 
 ```js [CDN]
 const { useState, useEffect } = CMS.React;
 ```
 
-```js [NPM]
+```js [npm]
 import CMS, { React } from '@sveltia/cms';
 
 const { useState, useEffect } = React;
@@ -244,7 +253,12 @@ const NotesControl = ({ forID, classNameWrapper, value, onChange }) => {
 CMS.registerFieldType('notes', NotesControl);
 ```
 
-A hook imported from another copy of React, such as the `react` package in your project’s dependencies, throws an “Invalid hook call” error. If you install the NPM package, import `React` from `@sveltia/cms` and take the hooks from it. If you load Sveltia CMS from the CDN, take the hooks from `CMS.React` (`window.CMS.React`), even when you bundle your own components with a build tool — importing `@sveltia/cms` in that case would load a second copy of the CMS. Never take them from the `react` package. The JSX itself can still be compiled with your project’s `react` package, as long as it’s React 19 too, so that Sveltia CMS can render the elements it creates.
+A hook imported from another copy of React, such as the `react` package in your project’s dependencies, throws an “Invalid hook call” error. Take your hooks from the right place, and never from the `react` package:
+
+- If you install the npm package, import `React` from `@sveltia/cms` and take the hooks from it.
+- If you load Sveltia CMS from the CDN, take the hooks from `CMS.React` (`window.CMS.React`). This applies even when you bundle your own components with a build tool, because importing `@sveltia/cms` in that case would load a second copy of the CMS.
+
+The JSX itself can still be compiled with your project’s `react` package, as long as it’s React 19 too, so that Sveltia CMS can render the elements it creates.
 
 Source: https://sveltiacms.app/en/docs/api
 
@@ -264,7 +278,9 @@ CMS.init({ config });
 
 #### Parameters
 
-- `config` (optional): An object that can contain any of the configuration options available in the `config.yml` file. If provided, this configuration will be merged with the one loaded from `config.yml` (if the `load_config_file` option is `true` or omitted), with its options taking precedence over the file’s — except that arrays such as `collections` are concatenated rather than replaced, so an item can be added but not replaced — or used directly as a complete configuration (if `load_config_file` is `false`).
+- `config` (optional): An object that can contain any of the configuration options available in the `config.yml` file. If provided, how it’s used depends on the `load_config_file` option:
+  - If `load_config_file` is `true` or omitted, this configuration is merged with the one loaded from `config.yml`, and its options take precedence over the file’s. The exception is arrays such as `collections`, which are concatenated rather than replaced, so an item can be added but not replaced.
+  - If `load_config_file` is `false`, this configuration is used directly as a complete configuration.
 
 #### Return Value
 
@@ -274,7 +290,7 @@ If `config` is neither an object nor `undefined`, the Promise is rejected with a
 
 **Config File Loading Behavior**
 
-Unless you set the `load_config_file` option to `false`, the CMS will always attempt to load the `config.yml` file, even when you provide a configuration object, and raise an error if the file is not found or cannot be loaded. If you want to completely bypass loading the configuration file, make sure to set this option accordingly.
+Unless you set the `load_config_file` option to `false`, the CMS will always attempt to load the `config.yml` file, even when you provide a configuration object. It raises an error if the file is not found or cannot be loaded. If you want to completely bypass loading the configuration file, make sure to set this option accordingly.
 
 ### Usage Notes
 
@@ -296,11 +312,11 @@ If you use the UNPKG CDN, you have to set a global variable `CMS_MANUAL_INIT` to
 
 The `init` function is also exposed as the global `initCMS` variable, so code written for Netlify/Decap CMS, such as `const { CMS, initCMS: init } = window;`, works as is.
 
-For NPM installations, you don’t need this step; manual initialization is the default behavior. In other words, you always have to call `init()` yourself.
+For npm installations, you don’t need this step; manual initialization is the default behavior. In other words, you always have to call `init()` yourself.
 
 #### Registering Customizations
 
-The `register*` methods, such as `registerPreviewTemplate` and `registerFieldType`, can be called before or after `init()`. Registered items are looked up when they are needed, and the configuration is loaded asynchronously after `init()` is called, so anything registered in the same script is picked up either way.
+The `register*` methods, such as `registerPreviewTemplate` and `registerFieldType`, can be called before or after `init()`. Registered items are looked up when they are needed, and the configuration is loaded asynchronously after `init()` is called. Anything registered in the same script is therefore picked up either way.
 
 However, field type [schemas](https://sveltiacms.app/en/docs/api/field-types#field-schema), [editor component](https://sveltiacms.app/en/docs/api/editor-components) fields, [custom file formats](https://sveltiacms.app/en/docs/api/file-formats) and [custom string transformations](https://sveltiacms.app/en/docs/api/string-transformations) are used when the configuration or the content is loaded. Register them synchronously rather than in a delayed callback, so they are available by then.
 
@@ -357,7 +373,7 @@ CMS.init({
 
 #### Providing a Partial Configuration
 
-If the `load_config_file` option is set to `true` or omitted, the configuration provided here will be merged with the one loaded from `config.yml` using the [`deepmerge`](https://www.npmjs.com/package/deepmerge) library, so you can override or add specific settings. Use cases for this are more limited, but it can be useful in some scenarios.
+If the `load_config_file` option is set to `true` or omitted, the configuration provided here will be merged with the one loaded from `config.yml`. The merge uses the [`deepmerge`](https://www.npmjs.com/package/deepmerge) library, so you can override or add specific settings. Use cases for this are more limited, but it can be useful in some scenarios.
 
 For example, you could override the [backend branch](https://sveltiacms.app/en/docs/backends#branch-selection) like this:
 
@@ -432,16 +448,16 @@ The following events are supported for event hooks:
 
 Additionally, the following events are available when using [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial):
 
-- `prePublish`: Triggered before an entry is published. Unlike `preSave`, the handler can’t modify the entry: the content is already committed to the pull/merge request by this point, so a returned value is ignored.
+- `prePublish`: Triggered before an entry is published. Unlike `preSave`, the handler can’t modify the entry, and a returned value is ignored. This is because the content is already committed to the pull/merge request by this point.
 - `postPublish`: Triggered after an entry has been published.
-- `preUnpublish`: Triggered before a published entry is removed from the configured branch, which happens when a deletion is published rather than when it’s requested.
+- `preUnpublish`: Triggered before a published entry is removed from the configured branch. This happens when a deletion is published, not when it’s requested.
 - `postUnpublish`: Triggered after a published entry has been removed from the configured branch.
 
 ### Event Handler
 
 The handler function receives an object with the following properties:
 
-- `author`: The author object that contains the `login` (login name) and `name` (display name) of the user who triggered the event. Both are always strings: a value that isn’t available, such as with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), which doesn’t track user information, is an empty string.
+- `author`: The author object that contains the `login` (login name) and `name` (display name) of the user who triggered the event. Both are always strings. A value that isn’t available is an empty string, such as with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), which doesn’t track user information.
 - `entry`: The entry object serialized to an [Immutable Map](https://immutable-js.com/docs/v5/Map/). It contains the following properties:
   ```js
   {
@@ -461,7 +477,11 @@ The handler function receives an object with the following properties:
 
 <!-- any other properties? -->
 
-For the `preSave` event, the handler can return a modified entry object in Immutable Map format, or just the modified `data` Map like `entry.get('data').set('title', 'New Title')`, to change the data before it is saved. Only the changes to `data` and `i18n.*.data` are applied; changes to other properties, such as `slug`, are ignored. The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`. If multiple handlers are registered, each one receives the changes made by the previous ones.
+For the `preSave` event, the handler can change the data before it is saved. To do so, return a modified entry object in Immutable Map format, or just the modified `data` Map like `entry.get('data').set('title', 'New Title')`.
+
+Only the changes to `data` and `i18n.*.data` are applied. Changes to other properties, such as `slug`, are ignored.
+
+The handler can be asynchronous and return a Promise that resolves to the modified `entry` or entry `data`. If multiple handlers are registered, each one receives the changes made by the previous ones.
 
 For other events, the return value is ignored.
 
@@ -482,7 +502,9 @@ CMS.registerEventListener({
 
 #### Accessing I18n Data
 
-If you have [internationalization](https://sveltiacms.app/en/docs/i18n) (i18n) support enabled, localized data can be accessed and modified within the event handlers, under the `i18n` property of the entry object. The following example shows how to read and update localized fields in a pre-save hook, assuming the entry has English (default), French and other locales configured.
+If you have [internationalization](https://sveltiacms.app/en/docs/i18n) (i18n) support enabled, event handlers can access and modify localized data under the `i18n` property of the entry object.
+
+The following example shows how to read and update localized fields in a pre-save hook, assuming the entry has English (default), French and other locales configured.
 
 ```js
 CMS.registerEventListener({
@@ -503,10 +525,10 @@ The [`getIn`](<https://immutable-js.com/docs/v5/Map/#getIn()>) and [`setIn`](<ht
 
 #### Accessing Media Files
 
-The `mediaFiles` property of the entry object lists the assets referenced by the entry’s [Image](https://sveltiacms.app/en/docs/fields/image) and [File](https://sveltiacms.app/en/docs/fields/file) fields that are stored in a [collection-level or field-level media folder](https://sveltiacms.app/en/docs/media/internal). Assets in the global media folder aren’t included. Each item has the following properties:
+The `mediaFiles` property of the entry object lists the assets referenced by the entry’s [Image](https://sveltiacms.app/en/docs/fields/image) and [File](https://sveltiacms.app/en/docs/fields/file) fields. Only assets stored in a [collection-level or field-level media folder](https://sveltiacms.app/en/docs/media/internal) are listed. Assets in the global media folder aren’t included. Each item has the following properties:
 
 - `id`: The Git object ID (SHA-1 hash) of the file.
-- `name`: The file name.
+- `name`: The filename.
 - `path`: The file path, relative to the repository root.
 - `size`: The file size in bytes.
 - `url` and `displayURL`: A temporary [blob URL](https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static) for the file, or `undefined` if it hasn’t been loaded into the browser yet.
@@ -570,13 +592,22 @@ CMS.registerCustomFormat(name, extension, { fromFile, toFile });
 
 #### Parameters
 
-- `name` (string): A unique name for the custom format. This name will be used to reference the format in collection configurations. A custom format with the same name as a built-in one, such as `json`, takes precedence over the built-in format, and registering a format with the same name again replaces the previous one.
-- `extension` (string): The file extension associated with this format, without a leading dot (e.g., `json5`, `yaml`, `toml`).
+- `name` (string): A unique name for the custom format. This name will be used to reference the format in collection configurations. A custom format with the same name as a built-in one, such as `json`, takes precedence over the built-in format. Registering a format with the same name again replaces the previous one.
+- `extension` (string): The file extension associated with this format, without a leading dot (e.g. `json5`, `yaml`, `toml`).
 - `fromFile` (function): A parser function that takes a string (the content of the file, trimmed and with line breaks normalized to `\n`) and returns a JavaScript object.
 - `toFile` (function): A formatter function that takes a JavaScript object and returns a string (the content to be saved to the file). The output is trimmed and a trailing line break is added. The function also receives a context object as the second argument, which has the following property:
-  - `serialize` (function): An async function that takes a JavaScript object and returns the content the built-in formatter would save, with the same options, such as the front matter delimiters, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output). The given object is left unchanged. It’s only available when the format name is a built-in one, such as `yaml` or `yaml-frontmatter`; otherwise it throws an error. See [Post-Processing Built-In Output](#post-processing-built-in-output) for an example.
+  - `serialize` (function): An async function that takes a JavaScript object and returns the content the built-in formatter would save, with the same options, such as the front matter delimiters, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output). The given object is left unchanged. It’s only available when the format name is a built-in one, such as `yaml` or `yaml-frontmatter`. Otherwise, it throws an error. See [Post-Processing Built-In Output](#post-processing-built-in-output) for an example.
 
-You can omit either `fromFile` or `toFile` if you only need to customize one direction (parsing or formatting). If you omit `fromFile`, the CMS will use the built-in parser for the format name, if any, such as `yaml` or `json`. Similarly, if you omit `toFile`, the CMS will use the built-in formatter. If the format name isn’t a built-in one, provide both functions: without `fromFile`, files in the format can’t be loaded, and without `toFile`, saving an entry fails with an error, leaving the file untouched. The CMS logs a warning to the browser console when such a function is missing. You must provide at least one of the two functions; otherwise an error is thrown.
+You can omit either `fromFile` or `toFile` if you only need to customize one direction (parsing or formatting). You must provide at least one of the two functions, or an error is thrown.
+
+If you omit `fromFile`, the CMS will use the built-in parser for the format name, if any, such as `yaml` or `json`. Similarly, if you omit `toFile`, the CMS will use the built-in formatter.
+
+If the format name isn’t a built-in one, provide both functions:
+
+- Without `fromFile`, files in the format can’t be loaded.
+- Without `toFile`, saving an entry fails with an error, leaving the file untouched.
+
+The CMS logs a warning to the browser console when such a function is missing.
 
 The functions `fromFile` and `toFile` can also be asynchronous, allowing you to perform async operations if needed.
 
@@ -637,7 +668,7 @@ label = "Item 1"
 }
 ```
 
-You don’t need to specify the file `extension` in the collection configuration; the CMS will automatically use the extension of the registered format. If the collection has an `extension` option, it’s ignored in favor of the registered one.
+You don’t need to specify the file `extension` in the collection configuration. The CMS will automatically use the extension of the registered format. If the collection has an `extension` option, it’s ignored in favor of the registered one.
 
 ### Examples
 
@@ -728,7 +759,7 @@ If you omit `fromFile`, the CMS will fall back to the built-in parser for the fo
 
 #### Post-Processing Built-In Output
 
-Instead of formatting the data from scratch, a formatter can call the `serialize` function it receives to get the content the built-in formatter would save, then process it further. This allows you to keep the CMS’s handling of front matter, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output) while applying your own code formatter, for example to match the formatting rules of your repository:
+Instead of formatting the data from scratch, a formatter can call the `serialize` function it receives. This gives it the content the built-in formatter would save, which it can then process further. You keep the CMS’s handling of front matter, field comments and [output options](https://sveltiacms.app/en/docs/data-output#controlling-data-output) while applying your own code formatter, for example to match the formatting rules of your repository:
 
 ```js
 import * as Prettier from 'prettier/standalone';
@@ -746,7 +777,7 @@ CMS.registerCustomFormat('frontmatter', 'md', {
 });
 ```
 
-The format name must match the `format` option of your collection, which is `frontmatter` in this example. In a collection with the `frontmatter` format, which reads YAML, TOML and JSON front matter alike, `serialize` writes an existing file in the front matter format it was read in. `fromFile` is omitted, so the built-in parser is used.
+The format name must match the `format` option of your collection, which is `frontmatter` in this example. The `frontmatter` format reads YAML, TOML and JSON front matter alike. In such a collection, `serialize` writes an existing file in the front matter format it was read in. `fromFile` is omitted, so the built-in parser is used.
 
 If `serialize` or your code formatter throws an error, the entry isn’t saved and the error is shown to the user, leaving the file untouched.
 
@@ -788,7 +819,7 @@ CMS.registerCustomFormat('custom-markdown', 'md', {
 });
 ```
 
-The above example uses a regular expression to parse the Markdown content into a structured object with `title`, `cover`, `excerpt`, and `body` fields. The formatter function then converts the structured object back into the Markdown format.
+The above example uses a regular expression to parse the Markdown content into a structured object with `title`, `cover`, `excerpt` and `body` fields. The formatter function then converts the structured object back into the Markdown format.
 
 An example of a Markdown file that would be parsed by this custom format is as follows:
 
@@ -999,11 +1030,11 @@ const transform = (value, { args, locale }) => {
 };
 ```
 
-- `value`: The value of the template tag, or the output of the previous transformation if transformations are chained. It’s usually the field’s display value, such as the label of a selected option in a [Select](https://sveltiacms.app/en/docs/fields/select) or [Relation](https://sveltiacms.app/en/docs/fields/relation) field, but it’s not always a string: a [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field value may come as a boolean, and a missing value as `undefined`. Convert it with `String(value)` if you need a string.
+- `value`: The value of the template tag, or the output of the previous transformation if transformations are chained. It’s usually the field’s display value, such as the label of a selected option in a [Select](https://sveltiacms.app/en/docs/fields/select) or [Relation](https://sveltiacms.app/en/docs/fields/relation) field. It’s not always a string, though: a [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field value may come as a boolean, and a missing value as `undefined`. Convert it with `String(value)` if you need a string.
 - `args`: An array of the arguments given to the transformation in the template tag. A quoted argument comes as a string, and an unquoted one as a number. For example, `{{title | pad(10, '-')}}` gives `[10, '-']`. The array is empty if no arguments are given.
-- `locale`: The locale code of the entry content being processed, such as `en` or `ja`, which is useful for locale-aware formatting. It’s `undefined` if [internationalization](https://sveltiacms.app/en/docs/i18n) is not enabled for the collection.
+- `locale`: The locale code of the entry content being processed, such as `en` or `ja`. It’s useful for locale-aware formatting. It’s `undefined` if [internationalization](https://sveltiacms.app/en/docs/i18n) is not enabled for the collection.
 
-The function must return the result synchronously; async functions are not supported. A return value other than a string is converted to a string, with `null` and `undefined` resulting in an empty string.
+The function must return the result synchronously. Async functions are not supported. A return value other than a string is converted to a string, with `null` and `undefined` resulting in an empty string.
 
 If the function throws an error or returns a Promise, the original value is used as is, so a broken transformation doesn’t break the CMS. The error is logged to the browser console the first time it happens for each transformation.
 
@@ -1011,22 +1042,29 @@ If the function throws an error or returns a Promise, the original value is used
 
 Once registered, a custom transformation can be used in [all the contexts](https://sveltiacms.app/en/docs/string-transformations#available-contexts) where the built-in ones are supported, including the collection `summary`, `slug`, `path` and `preview_path` options, and the Compute field’s `value` option. The same [syntax rules](https://sveltiacms.app/en/docs/string-transformations#syntax) apply:
 
-- String arguments must be enclosed in single quotes, while numeric arguments should not be quoted. Other kinds of arguments, such as `true` or a field name without quotes, are not supported; the transformation is ignored if it has any of them.
+- String arguments must be enclosed in single quotes, while numeric arguments should not be quoted. Other kinds of arguments, such as `true` or a field name without quotes, are not supported. The transformation is ignored if it has any of them.
 - Custom transformations can be chained with each other and with the built-in ones, e.g. `{{title | reverse | upper | truncate(20)}}`.
 
-Like the `default` and `ternary` transformations, a string argument can contain [nested template tags](https://sveltiacms.app/en/docs/string-transformations#default) to use other field values, e.g. `{{title | wrap('[', ' {{fields.subtitle}}]')}}`.
+As with the `default` and `ternary` transformations, a string argument can contain [nested template tags](https://sveltiacms.app/en/docs/string-transformations#default) to use other field values, e.g. `{{title | wrap('[', ' {{fields.subtitle}}]')}}`.
 
 A transformation that isn’t registered is ignored, and the value is used as is.
 
 #### Missing Values
 
-Like the built-in `default` transformation, a custom transformation also runs when the field has no value, so it can provide a fallback value. In entry slugs and file paths, a template tag without a value is usually replaced with a random ID, and in the `preview_path` option, the preview link is not shown. With a custom transformation, its result is used instead, unless it’s an empty string.
+Like the built-in `default` transformation, a custom transformation also runs when the field has no value, so it can provide a fallback value.
+
+Without a custom transformation, a template tag that has no value is handled as follows:
+
+- In entry slugs and file paths, it’s usually replaced with a random ID.
+- In the `preview_path` option, the preview link is not shown.
+
+With a custom transformation, its result is used instead, unless it’s an empty string.
 
 In List and Object field summaries and editor component summaries, however, a missing value results in an empty string without running any transformations.
 
 #### When to Register
 
-Register custom transformations before or right after the CMS is initialized, in the same script, so they are available when entry summaries and field values are first rendered. Entry summaries are cached, so a transformation registered later, e.g. after a delayed callback, may not be applied to the entries that have already been displayed.
+Register custom transformations before or right after the CMS is initialized, in the same script. They are then available when entry summaries and field values are first rendered. Entry summaries are cached, so a transformation registered later, e.g. in a delayed callback, may not be applied to the entries that have already been displayed.
 
 ### Examples
 
@@ -1119,7 +1157,11 @@ Source: https://sveltiacms.app/en/docs/api/string-transformations
 
 ## Custom Pages
 
-A custom page lets you add your own page to the CMS, next to the Contents, Assets and Editorial Workflow pages. It can show a dashboard built with a React component, embed another web page, such as your analytics or deployment status, or simply link to an external site.
+A custom page lets you add your own page to the CMS, next to the Contents, Assets and Editorial Workflow pages. It can:
+
+- show a dashboard built with a React component
+- embed another web page, such as your analytics or deployment status
+- simply link to an external site
 
 ### Overview
 
@@ -1143,7 +1185,7 @@ Either `component` or `url` must be given, but not both. An invalid definition t
 
 ### Where Pages Appear
 
-On desktop, custom pages are listed in the global toolbar after the built-in pages, in the order of registration, and can be opened with the <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>9</kbd> keyboard shortcuts along with the built-in pages. A page opening in a new tab is shown as a separate button after the page buttons.
+On desktop, custom pages are listed in the global toolbar after the built-in pages, in the order of registration. Like the built-in pages, they can be opened with the <kbd>Alt</kbd>+<kbd>1</kbd>–<kbd>9</kbd> keyboard shortcuts. A page opening in a new tab is shown as a separate button after the page buttons.
 
 On mobile, the bottom navigation has little room, so custom pages are listed in the Pages section of the Menu page instead.
 
@@ -1258,7 +1300,7 @@ Many sites prevent their pages from being embedded in an iframe with the `X-Fram
 
 **Security note**
 
-A page embedded from the same origin as the CMS, e.g. a page on your own site when the CMS is served from the same domain, has full access to the CMS, including the signed-in user’s access token stored in the browser. Only embed pages you trust.
+A page embedded from the same origin as the CMS has full access to the CMS, including the signed-in user’s access token stored in the browser. This is the case, for example, with a page on your own site when the CMS is served from the same domain. Only embed pages you trust.
 
 #### Link Opening in a New Tab
 

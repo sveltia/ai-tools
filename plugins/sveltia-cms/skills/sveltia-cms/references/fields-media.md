@@ -10,7 +10,7 @@ The Image field type allows users to upload and manage images within the CMS. It
 
 The `widget` property for this field type is `image`.
 
-See the [File field documentation](https://sveltiacms.app/en/docs/fields/file) for details on the UI, data type, and available options. Note that the `select_folder` option is not available for the Image field type.
+See the [File field documentation](https://sveltiacms.app/en/docs/fields/file) for details on the UI, data type and available options. Note that the `select_folder` option is not available for the Image field type.
 
 ### Examples
 
@@ -220,10 +220,10 @@ If you need to limit uploads to images only, consider using the [Image](https://
 
 A large upload button is displayed for the File field. When it’s clicked, a file selection dialog with the following features appears:
 
-- Tabs to select files from different sources: field assets, entry assets, file assets, collection assets, and global assets (if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is enabled).
+- Tabs to select files from different sources: field assets, entry assets, file assets, collection assets and global assets (if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is enabled).
 - [Subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened with a click or the Enter key to browse them, with a breadcrumb leading back. The arrow keys move between the subfolders, like between the files. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
 - An option to upload new files by dragging and dropping them into the dialog or by selecting them from the file system.
-- An option to enter a URL to select a file from an external source (if `choose_url` option is enabled).
+- An option to enter a URL to select a file from an external source (if the `choose_url` option is enabled).
 - Integration with [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) if configured.
 - Integration with [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) for easy selection of free images (for Image fields only).
 - File type filtering based on the `accept` option.
@@ -231,7 +231,11 @@ A large upload button is displayed for the File field. When it’s clicked, a fi
 
 If the `multiple` option is enabled, users can select multiple files at once. Uploaded files are displayed as a list with options to remove or replace each file.
 
-Files in a multiple File or Image field can be reordered using the drag handle to the left of each one. With the handle focused, the Up and Down arrow keys move a file one position, while Home and End send it to the start or end of the list. On a touch screen, Move Up and Move Down buttons are shown in place of the handle, because drag and drop requires a mouse. When there are 3 or more files, a menu next to the handle or buttons offers Move to Top and Move to Bottom, and Move to…, which asks for the position to move the file to.
+Files in a multiple File or Image field can be reordered using the drag handle to the left of each one. With the handle focused, the Up and Down arrow keys move a file one position, while Home and End send it to the start or end of the list.
+
+On a touch screen, Move Up and Move Down buttons are shown in place of the handle, because drag and drop requires a mouse.
+
+When there are 3 or more files, a menu next to the handle or buttons offers Move to Top, Move to Bottom and Move to…. The last one asks for the position to move the file to.
 
 Users can paste an image from the clipboard directly into a File or Image field by clicking the Paste button or using the keyboard shortcut (Ctrl+V or Cmd+V). This works on both desktop and mobile devices.
 
@@ -250,11 +254,18 @@ With the [`select_folder`](#select-folder) option, the field takes a folder inst
 - If the `multiple` option is also enabled, several folders can be selected at once, including from different parent folders: the selection is kept while the user browses.
 - A new folder can be created from the dialog, as usual.
 
-Only repository folders with a fixed path can be browsed. [Entry-relative folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), folders whose path contains a template tag such as `{{slug}}`, [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) and the URL input are not available, and files can’t be uploaded, dropped or pasted.
+Only repository folders with a fixed path can be browsed. The following aren’t available:
+
+- [entry-relative folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders)
+- folders whose path contains a template tag such as `{{slug}}`
+- [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage)
+- the URL input
+
+Files can’t be uploaded, dropped or pasted in this dialog.
 
 #### Preview
 
-A list of uploaded file names with links to access each file. For images, a thumbnail preview is shown.
+A list of uploaded filenames with links to access each file. For images, a thumbnail preview is shown.
 
 **CSP**
 
@@ -262,7 +273,7 @@ If your site uses a Content Security Policy (CSP), you may need to update it to 
 
 ### Data Type
 
-A string representing the URL or path to a file, or the public path to a folder if the `select_folder` option is enabled. If `multiple` option is enabled, it will be an array of strings.
+A string representing the URL or path to a file, or the public path to a folder if the `select_folder` option is enabled. If the `multiple` option is enabled, it will be an array of strings.
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string or an empty array, depending on whether `multiple` is enabled.
 
@@ -273,7 +284,8 @@ By default, Sveltia CMS does not slugify uploaded filenames. If your site genera
 - If the `required` option is set to `true`, at least one file must be selected.
 - If the `multiple` option is enabled, the number of selected files must be between the `min` and `max` limits, if specified.
 - The selected file(s) must match the allowed file types specified in the `accept` option, if provided.
-- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the file path or URL must match the regular expression. A file just uploaded is tested by its name until the entry is saved. If the `multiple` option is enabled, the paths or URLs joined with commas, e.g. `/uploads/a.jpg,/uploads/b.jpg`, must match instead: as with Decap CMS, the pattern is tested against all the files rather than against each one. A pattern like `\.pdf$` would therefore only check the last file; use `^[^,]+\.pdf(,[^,]+\.pdf)*$` to accept PDF files only. The pattern is not tested while no file is selected.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the file path or URL must match the regular expression. A file just uploaded is tested by its name until the entry is saved. The pattern is not tested while no file is selected.
+  - If the `multiple` option is enabled, the paths or URLs joined with commas, e.g. `/uploads/a.jpg,/uploads/b.jpg`, must match instead. As with Decap CMS, the pattern is tested against all the files together, not against each one. A pattern like `\.pdf$` would therefore only check the last file. To accept PDF files only, use `^[^,]+\.pdf(,[^,]+\.pdf)*$`.
 
 ### Options
 
@@ -345,21 +357,29 @@ Whether to select a folder instead of a file. The public path of the selected fo
 
 A comma-separated list of allowed file types ([MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types) or file extensions) for upload. For example, to allow only PDF files, set this option to `application/pdf` or `.pdf`. To allow only image files, set it to `image/*`. If not specified, all file types are allowed. See the [`accept` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/accept) documentation on MDN for more details.
 
-Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD, TIFF are excluded, with one exception: HEIC photos are accepted when [HEIC conversion](https://sveltiacms.app/en/docs/media#heic-photos) is enabled as part of image optimization. File field has no default restriction.
+The Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD and TIFF are excluded, with one exception: HEIC photos are accepted when [HEIC conversion](https://sveltiacms.app/en/docs/media#heic-photos) is enabled as part of image optimization. The File field has no default restriction.
 
 ##### `media_library`
 
 - **Type**: `object`
 - **Default**: `undefined`
 
-Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field. Its options are merged over those of the top-level `media_library` option. It applies to the provider set with its own `name`; without a `name`, it applies to the provider named in the top-level `media_library` option, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if there is none. In the latter case, `media_library.config.max_file_size` limits the upload size for the field. Supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
+Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field. Its options are merged over those of the top-level `media_library` option.
+
+It applies to the provider set with its own `name`. Without a `name`, it applies to the provider named in the top-level `media_library` option, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if there is none. In the latter case, `media_library.config.max_file_size` limits the upload size for the field.
+
+This option is supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
 
 ##### `media_libraries`
 
 - **Type**: `object`
 - **Default**: `undefined`
 
-Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field. Each provider’s settings, including those of the internal media storage (`default`), are merged over the same provider’s top-level settings, and so is a nested object such as `config`, key by key, so only the options that differ need to be set. The merge is only one level deep, and the shared `all` options are merged shallowly, so a `transformations` map set here replaces the top-level one as a whole. Providers not defined here fall back to the top-level configuration. This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
+Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field.
+
+Each provider’s settings, including those of the internal media storage (`default`), are merged over the same provider’s top-level settings. A nested object such as `config` is merged too, key by key, so you only need to set the options that differ. However, the merge is only one level deep, and the shared `all` options are merged shallowly. A `transformations` map set here therefore replaces the top-level one as a whole. Providers not defined here fall back to the top-level configuration.
+
+This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
 
 ##### `media_folder`
 
@@ -582,7 +602,7 @@ The DateTime field type allows users to select and input dates and times using a
 
 #### Editor
 
-The browser’s native date/time picker. Depending on the configuration, it can handle date-only, time-only, or both date and time inputs.
+The browser’s native date/time picker. Depending on the configuration, it can handle date-only, time-only or both date and time inputs.
 
 **Future Plans**
 
@@ -592,25 +612,32 @@ A field with the [`auto_now`](#auto-now) option shows its value as text instead,
 
 #### Preview
 
-A string representation of the date and/or time, formatted according to the specified `format`, `date_format`, or `time_format` options, or in ISO 8601 format by default.
+A string representation of the date and/or time, formatted according to the specified `format`, `date_format` or `time_format` options, or in ISO 8601 format by default.
 
 ### Data Type
 
 A string representing the date and/or time in ISO 8601 format by default, or in a custom format if specified. The possible formats are:
 
-- Date-only: `YYYY-MM-DD` (e.g., `2025-08-15`)
+- Date-only: `YYYY-MM-DD` (e.g. `2025-08-15`)
 - Time-only:
-  - With `picker_utc`: `HH:mm:ssZ` (e.g., `14:30:00Z`).
-  - Without `picker_utc`: `HH:mm:ss` (e.g., `14:30:00`).
+  - With `picker_utc`: `HH:mm:ssZ` (e.g. `14:30:00Z`).
+  - Without `picker_utc`: `HH:mm:ss` (e.g. `14:30:00`).
 - Date and time:
-  - With `picker_utc`: `YYYY-MM-DDTHH:mm:ssZ` (e.g., `2025-08-15T14:30:00Z`).
-  - Without `picker_utc`: `YYYY-MM-DDTHH:mm:ss` (e.g., `2025-08-15T14:30:00`).
+  - With `picker_utc`: `YYYY-MM-DDTHH:mm:ssZ` (e.g. `2025-08-15T14:30:00Z`).
+  - Without `picker_utc`: `YYYY-MM-DDTHH:mm:ss` (e.g. `2025-08-15T14:30:00`).
 
 If the `format`, `date_format` or `time_format` option is specified, the string will follow the custom Day.js format defined.
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string.
 
-If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value, or date-time value, depending on the configuration, unless a custom `format` is specified. A value set or changed in the editor carries millisecond precision, so the examples above are written as `2025-08-15T14:30:00.000` and `14:30:00.000`. A value read from an existing file that isn’t edited is written back as it appears there, e.g. `2025-08-15T14:30:00Z`, with any finer precision kept. Note also that TOML has no offset-time type, so a UTC time-only value loses its `Z` suffix and is written as a local time (e.g., `14:30:00.000`). This also applies to TOML front matter, and a value that isn’t a valid date or time, such as `TBD` in an existing file, is kept as a quoted string.
+#### TOML Output
+
+If the output format is TOML, the date-time string will be represented as a native, unquoted TOML date value, time value or date-time value, depending on the configuration, unless a custom `format` is specified. This also applies to TOML front matter.
+
+- A value set or changed in the editor carries millisecond precision, so the examples above are written as `2025-08-15T14:30:00.000` and `14:30:00.000`.
+- A value read from an existing file that isn’t edited is written back as it appears there, e.g. `2025-08-15T14:30:00Z`, with any finer precision kept.
+- TOML has no offset-time type, so a UTC time-only value loses its `Z` suffix and is written as a local time (e.g. `14:30:00.000`).
+- A value that isn’t a valid date or time, such as `TBD` in an existing file, is kept as a quoted string.
 
 ### Data Validation
 
@@ -663,9 +690,9 @@ Whether to set the field to the current date and time automatically when an entr
 
 Use `[create]` for a creation date and `true` for a last modified date.
 
-Unlike `default: '{{now}}'`, which fills in the current date and time when a new entry draft is created, this option sets the value at the time of saving. The value is stored in the same format as other values, with the other options such as `format`, `input_timezone` and `output_utc` applied, but it includes seconds. All the fields and locales saved together get the same value.
+Unlike `default: '{{now}}'`, which fills in the current date and time when a new entry draft is created, this option sets the value at the time of saving. The value is stored in the same format as other values, with options such as `format`, `input_timezone` and `output_utc` applied, but it includes seconds. All the fields and locales saved together get the same value.
 
-The field is read-only: its value is shown as text rather than an input, and it’s not validated. The field is hidden while a new entry is being created, as it has no value until the entry is saved. All locales get the same date and time, written in each locale’s language with the [`localize_format`](#localize-format) option.
+The field is read-only: its value is shown as text rather than an input, and it’s not validated. The field is hidden while a new entry is being created, because it has no value until the entry is saved. All locales get the same date and time; with the [`localize_format`](#localize-format) option, it’s written in each locale’s language.
 
 **Limitations**
 
@@ -696,7 +723,7 @@ The [`min`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attribut
 ##### `max`
 
 - **Type**: `string`
-- **Default**: `9999-12-31T23:59` for `datetime-local`, `9999-12-31` for `date`, and `undefined` for `time`
+- **Default**: `9999-12-31T23:59` for `datetime-local`, `9999-12-31` for `date` and `undefined` for `time`
 
 The [`max`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/max) HTML attribute value for the date/time input. The expected format depends on the `type` option:
 
@@ -738,7 +765,7 @@ Timezone used by the date/time input. This option supersedes `picker_utc`. Accep
 
 - `local` (default): The browser’s local timezone is used.
 - `utc`: UTC is used.
-- Custom timezone name: A timezone from the [IANA timezone database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) can be provided, e.g., `America/New_York`, `Asia/Tokyo`.
+- Custom timezone name: A timezone from the [IANA timezone database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) can be provided, e.g. `America/New_York`, `Asia/Tokyo`.
 
 ##### `output_utc`
 
@@ -749,9 +776,9 @@ Whether to convert stored values to UTC. This option supersedes `picker_utc`.
 
 If `false` (default), output values preserve the timezone semantics of `input_timezone`:
 
-- `local`: Omits timezone information (e.g., `2025-08-15T14:30:00`).
-- `utc`: Appends a `Z` suffix to indicate UTC (e.g., `2025-08-15T14:30:00Z`).
-- Custom timezone: Preserves the timezone offset (e.g., `2025-08-15T14:30:00-04:00` for `America/New_York`, Eastern Daylight Time).
+- `local`: Omits timezone information (e.g. `2025-08-15T14:30:00`).
+- `utc`: Appends a `Z` suffix to indicate UTC (e.g. `2025-08-15T14:30:00Z`).
+- Custom timezone: Preserves the timezone offset (e.g. `2025-08-15T14:30:00-04:00` for `America/New_York`, Eastern Daylight Time).
 
 If `true`, the input value is converted to UTC for storage. When no custom `format` is specified, a `Z` suffix is appended to the ISO 8601 output. When a custom `format` is used, the value is stored in UTC but formatted according to that pattern — which won’t include an explicit timezone indicator unless the format itself contains `Z`.
 
@@ -761,7 +788,9 @@ Note that `input_timezone: utc` already implies UTC semantics, so `output_utc` h
 
 **Limited Timezone Support for Time-only Fields**
 
-For time-only fields (`type: time` or `date_format: false`), the only timezone setting that affects the stored value is `input_timezone: utc`, which appends a `Z` suffix (e.g., `14:30:00Z`). A custom `input_timezone` and `output_utc` are ignored, and the time is stored as entered (e.g., `14:30:00`), because converting a wall-clock time to another timezone requires a reference date. Use a date/time field if you need the value converted.
+For time-only fields (`type: time` or `date_format: false`), the only timezone setting that affects the stored value is `input_timezone: utc`, which appends a `Z` suffix (e.g. `14:30:00Z`).
+
+A custom `input_timezone` and `output_utc` are ignored, and the time is stored as entered (e.g. `14:30:00`). This is because converting a wall-clock time to another timezone requires a reference date. Use a date/time field if you need the value converted.
 
 ##### `format`
 
@@ -772,7 +801,7 @@ A custom format for displaying and storing the date and/or time using [Day.js fo
 
 **Format Recommendation**
 
-For data portability, we recommend saving date/time values in ISO 8601 format by omitting the `format` option. Formatting is better handled in your application code. Using custom formats is generally discouraged unless you have a specific need for it, e.g., integrating with a framework that doesn’t support date formatting or requires a specific format.
+For data portability, we recommend saving date/time values in ISO 8601 format by omitting the `format` option. Formatting is better handled in your application code. Using custom formats is generally discouraged unless you have a specific need for it, e.g. integrating with a framework that doesn’t support date formatting or requires a specific format.
 
 ##### `localize_format`
 
@@ -785,11 +814,19 @@ Whether to write the locale-dependent parts of a custom [`format`](#format), suc
 - `true`: The locale of the content is used. With [i18n support](https://sveltiacms.app/en/docs/i18n) enabled, each locale gets the value in its own language, e.g. `1 March 2026` in English and `1 März 2026` in German.
 - A locale code, e.g. `de` or `pt-BR`: That locale is used for every value. This also works without i18n support, e.g. on a German-only site.
 
-Values are read in the same locale, so an existing value is shown in the date/time picker as usual. With `true`, a value copied to another locale, as with the `duplicate` [i18n strategy](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration), when a locale is enabled for an entry, or with bulk editing, is written again in that locale. The locale also applies to the `date` [string transformation](https://sveltiacms.app/en/docs/string-transformations), entry summaries, sorting and filtering.
+Values are read in the same locale, so an existing value is shown in the date/time picker as usual.
 
-The option has no effect without a custom format, as an ISO 8601 value doesn’t depend on the locale. A locale code Day.js doesn’t [support](https://github.com/iamkun/dayjs/tree/dev/src/locale) falls back to English. Both cases are reported as a warning in the browser console, as is `true` in a collection without i18n support.
+With `true`, a value copied to another locale is written again in that locale. A value is copied in these cases:
 
-The locale data is loaded from the UNPKG CDN when the CMS starts, or bundled with the [NPM package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package). If it can’t be loaded, values are written in English.
+- with the `duplicate` [i18n strategy](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration)
+- when a locale is enabled for an entry
+- with bulk editing
+
+The locale also applies to the `date` [string transformation](https://sveltiacms.app/en/docs/string-transformations), entry summaries, sorting and filtering.
+
+The option has no effect without a custom format, because an ISO 8601 value doesn’t depend on the locale. A locale code Day.js doesn’t [support](https://github.com/iamkun/dayjs/tree/dev/src/locale) falls back to English. Both cases are reported as a warning in the browser console, as is `true` in a collection without i18n support.
+
+The locale data is loaded from the UNPKG CDN when the CMS starts, or bundled with the [npm package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package). If it can’t be loaded, values are written in English.
 
 **Limitations**
 
@@ -1233,7 +1270,7 @@ To write the value in a single language on a site without i18n support, set the 
 
 #### Date with Constraints
 
-Use `min`, `max`, and `step` to restrict the allowed date range and increment. For example, to limit a booking date to the first quarter of 2026 with weekly steps:
+Use `min`, `max` and `step` to restrict the allowed date range and increment. For example, to limit a booking date to the first quarter of 2026 with weekly steps:
 
 ```yaml [YAML]
 - name: bookingDate
@@ -1473,7 +1510,7 @@ eventTime = 2025-08-15T18:30:00Z
 
 #### Local Timezone with Custom Format
 
-Combine `input_timezone`, `output_utc`, and `format` to store values in a custom format while maintaining timezone awareness:
+Combine `input_timezone`, `output_utc` and `format` to store values in a custom format while maintaining timezone awareness:
 
 ```yaml [YAML]
 - name: publishTime
@@ -1538,7 +1575,7 @@ Source: https://sveltiacms.app/en/docs/fields/datetime
 
 ## Map Field
 
-The Map field type allows users to select geographic locations using an interactive map interface. It supports selecting single points, lines, or polygons, and stores the selected geometry as a GeoJSON string.
+The Map field type allows users to select geographic locations using an interactive map interface. It supports selecting single points, lines or polygons, and stores the selected geometry as a GeoJSON string.
 
 ### User Interface
 
@@ -1591,7 +1628,7 @@ If the `required` option is set to `false` and locations are not selected, the v
 ### Data Validation
 
 - If the `required` option is set to `true`, a valid GeoJSON string must be provided.
-- The GeoJSON string must conform to the specified geometry `type` (Point, LineString, or Polygon).
+- The GeoJSON string must conform to the specified geometry `type` (Point, LineString or Polygon).
 - Coordinates must be valid latitude and longitude values.
 
 ### Options

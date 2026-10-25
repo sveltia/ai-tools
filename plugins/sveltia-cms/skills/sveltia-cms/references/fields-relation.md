@@ -19,7 +19,7 @@ The Content Editor comes with the [Backlinks sidebar panel](https://sveltiacms.a
 
 Radio buttons (single select) or checkboxes (multi select) for choosing related entries from another collection. If there are many entries, a dropdown with search functionality will be used instead. Use the `dropdown_threshold` option to customize when to switch to the dropdown UI.
 
-For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
+For multi-select options with many entries, a tag input UI will be used instead of checkboxes to save space. Items can be reordered by dragging and dropping or using the right/left arrow keys. Items can also be removed by clicking the ✕ icon on each item.
 
 The options are listed in the order defined by the [`sort_by`](#sort-by) option, if any. Otherwise, they are listed in the following order:
 
@@ -30,11 +30,15 @@ The options are listed in the order defined by the [`sort_by`](#sort-by) option,
 
 #### Creating Related Entries
 
-When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry being edited, so users don’t have to save their work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
+When the related collection is an entry collection, the field also offers an **Add** button labeled with the collection’s singular label, e.g. “Add Tag” or “Add Author”. It opens a dialog to create a related entry without leaving the entry being edited. Users don’t have to save their work, go to the other collection, create the entry there and come back — or pick a wrong entry just to be able to save.
 
-The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets users fill in each of them. Clicking **Add** validates the new entry the same way a save does; if a required field is empty, the dialog stays open and the error is shown on the field. Once added, the new entry is selected in the Relation field right away, listed among the options like any other entry, and shown by its label in the Preview Pane.
+The dialog is a single-pane editor with all the fields of the related collection. If the collection has [multiple locales](https://sveltiacms.app/en/docs/i18n), a locale switcher in the dialog header lets users fill in each of them. Clicking **Add** validates the new entry the same way a save does. If a required field is empty, the dialog stays open and the error is shown on the field.
 
-The new entry is not saved on its own. It’s kept with the draft and committed **together with the entry being edited** when the user saves, in a single commit, so the two never go out of sync: a blog post and the tags created for it land in the repository at the same time. Until then, the entry only exists in the draft:
+Once added, the new entry is selected in the Relation field right away. It’s listed among the options like any other entry, and shown by its label in the Preview Pane.
+
+The new entry is not saved on its own. It’s kept with the draft and committed **together with the entry being edited** when the user saves, in a single commit. This way, the two never go out of sync: a blog post and the tags created for it land in the repository at the same time.
+
+Until then, the entry only exists in the draft:
 
 - If the user deselects the new entry before saving, it’s dropped rather than created for nothing.
 - If the user adds two entries with the same title, the second one gets a distinct slug, e.g. `svelte-1`, the same way it would if they were created one after another.
@@ -42,11 +46,13 @@ The new entry is not saved on its own. It’s kept with the draft and committed 
 - Files attached to the new entry, such as an author’s avatar, are uploaded in the same commit.
 - The pending entries are part of the [auto-saved draft](https://sveltiacms.app/en/docs/ui/content-editor#auto-saving-drafts), so they survive a page reload along with the rest of the changes.
 
-With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the new entry goes into the **pull request** of the entry being edited, so it’s reviewed and published along with that entry, in the same merge. An article and the section created for it can’t go live one without the other. The new entry doesn’t get a card of its own on the Editorial Workflow page; the card of the entry it was created from lists it instead, e.g. “Also adds Section: Guides”. See [Entries Added from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-from-a-relation-field) for details.
+With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the new entry goes into the **pull request** of the entry being edited. It’s reviewed and published along with that entry, in the same merge, so an article and the section created for it can’t go live one without the other.
+
+The new entry doesn’t get a card of its own on the Editorial Workflow page. Instead, the card of the entry it was created from lists it, e.g. “Also adds Section: Guides”. See [Entries Added from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-from-a-relation-field) for details.
 
 The button is not offered in the following cases:
 
-- The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), with the [`file`](#file) option. The button creates a new entry, but such a field selects an item from a list within an existing file. Adding an item would mean editing that file from another entry, which could conflict with changes made to the file elsewhere, so the item is added by editing the file itself instead.
+- The related collection is a [file collection](https://sveltiacms.app/en/docs/collections/files), with the [`file`](#file) option. The button creates a new entry, but such a field selects an item from a list within an existing file. Adding an item would mean editing that file from another entry, which could conflict with changes made to the file elsewhere. Add the item by editing the file itself instead.
 - The related collection has the [`create: false`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) option.
 - The related collection has reached its [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), counting the entries pending in the draft and, with the Editorial Workflow, the new entries waiting in pull requests. The button is then shown disabled.
 - The Relation field is read-only.
@@ -69,19 +75,40 @@ If the `required` option is set to `false` and no related entries are selected, 
 
 Like a relational database that cascades an update of a referenced key, Sveltia CMS keeps Relation field values pointing at the right entry when the entry they reference is renamed. Renaming a related entry in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) rewrites every entry referencing it, in the same commit as the rename, so no references are left dangling.
 
-This applies whenever the stored value is derived from the related entry’s identity, which covers the default `{{slug}}`, any template containing `{{slug}}`, such as `{{locale}}/{{slug}}`, and the canonical slug key. It does not apply to a `value_field` pointing at an ordinary content field, such as `{{title}}`, because such a value doesn’t change when the entry is renamed — but it does break if somebody edits that field. It’s one more reason to prefer the default `{{slug}}`, as noted under [`value_field`](#value-field).
+This applies whenever the stored value is derived from the related entry’s identity:
+
+- the default `{{slug}}`
+- any template containing `{{slug}}`, such as `{{locale}}/{{slug}}`
+- the canonical slug key
+
+It does not apply to a `value_field` pointing at an ordinary content field, such as `{{title}}`, because such a value doesn’t change when the entry is renamed. It does break, however, if somebody edits that field. It’s one more reason to prefer the default `{{slug}}`, as noted under [`value_field`](#value-field).
 
 #### Cascading Deletions
 
-Deletions are cascaded in the same way. When an entry is deleted, whether from the Content Editor or by [selecting one or more entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list, every entry referencing it through a Relation field is rewritten in the same commit as the deletion: a single-select field is cleared, and the deleted entry is dropped from a multi-select field’s list. The confirmation dialog tells the user how many entries will be updated. Unlike a rename, this applies whatever the `value_field` is, because references are matched on the stored value rather than derived from the slug. With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the updates go into the same pull request as the deletion.
+Deletions are cascaded in the same way. An entry can be deleted from the Content Editor or by [selecting one or more entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list. Either way, every entry referencing it through a Relation field is rewritten in the same commit as the deletion:
 
-A reference is never removed at the cost of the referencing entry’s validity, though. If clearing it would break the field’s own [validation rules](#data-validation) — a `required` field left with nothing selected, or a multi-select field left with fewer than `min` items — the deletion is refused, and the dialog lists the entries and fields standing in the way so that the user can update them first. The check covers the whole selection: deleting two entries at once may be refused where deleting either on its own would go through. The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so users can see what a deletion would touch before they start.
+- A single-select field is cleared.
+- The deleted entry is dropped from a multi-select field’s list.
+
+The confirmation dialog tells the user how many entries will be updated.
+
+Unlike a rename, this applies whatever the `value_field` is, because references are matched on the stored value rather than derived from the slug. With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the updates go into the same pull request as the deletion.
+
+A reference is never removed at the cost of the referencing entry’s validity, though. The deletion is refused if clearing the reference would break the field’s own [validation rules](#data-validation) by leaving:
+
+- a `required` field with nothing selected
+- a multi-select field with fewer than `min` items
+
+The dialog then lists the entries and fields standing in the way, so that the user can update them first. The check covers the whole selection: deleting two entries at once may be refused where deleting either on its own would go through.
+
+The [Backlinks sidebar panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) shows what references an entry, so users can see what a deletion would touch before they start.
 
 ### Data Validation
 
 - If the `required` option is set to `true`, at least one related entry must be selected.
 - If the `multiple` option is enabled, the number of selected entries must be between the `min` and `max` limits, if specified.
-- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the stored value of the selected entry, as defined by the `value_field` option, must match the regular expression. For multi select, the stored values joined with commas, e.g. `foo,bar,baz`, must match instead: as with Decap CMS, the pattern is tested against the whole selection rather than against each value, so use `^[a-z-]+(,[a-z-]+)*$` rather than `^[a-z-]+$` to accept lowercase slugs only. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
+- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the stored value of the selected entry, as defined by the `value_field` option, must match the regular expression. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
+  - For multi select, the stored values joined with commas, e.g. `foo,bar,baz`, must match instead. As with Decap CMS, the pattern is tested against the whole selection, not against each value. To accept lowercase slugs only, use `^[a-z-]+(,[a-z-]+)*$` rather than `^[a-z-]+$`.
 
 ### Options
 
@@ -126,32 +153,34 @@ The name of a file within the target [file collection](https://sveltiacms.app/en
 The field from the related collection to use as the value for the relation. This field’s value will be stored in the entry using the Relation field. It can be one of the following:
 
 - `{{slug}}`: Use the slug of the related entry.
-- A field name from the related collection, e.g., `id` or `title`.
+- A field name from the related collection, e.g. `id` or `title`.
 - A template string that references fields in the related collection using the syntax `{{field_name}}`. For example, `{{fields.id}}` or `{{fields.title}}`.
 - `translationKey`, or any other key configured with the `i18n.canonical_slug.key` option: Use the canonical slug of the related entry, which is shared across locales. See [below](#referencing-entries-across-locales).
 
 The `{{locale}}` template tag can be used to include the current locale in the value field, e.g. `{{locale}}/{{slug}}`, which is useful for [i18n support](https://sveltiacms.app/en/docs/i18n).
 
-In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared file name is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths): an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
+In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested), an entry’s slug is its path below the collection folder, so `{{slug}}` resolves to something like `company/about`. Where every entry is stored as an index file, the shared filename is left out of that path, exactly as it is in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths). For example, an entry stored at `content/pages/company/about/_index.md` is referenced as `company/about`, not `company/about/_index`. The collection’s own index file is the exception, keeping its name so that a reference to it isn’t empty.
 
 In a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file), an entry’s slug is its position in the array, which changes when the entries are reordered or one is deleted. The value field must therefore refer to a field, preferably one with a unique value like an ID; `{{slug}}`, including the default, is reported as invalid.
 
 When using template strings, keep the following in mind:
 
 - A field named `slug` must be prefixed with `fields.` like `{{fields.slug}}` to avoid ambiguity with the special `{{slug}}` variable.
-- Nested fields can also be referenced using dot notation, e.g., `{{author.name}}`.
-- To reference list items, use a wildcard `*` for the index, e.g., `{{tags.*}}` or `{{gallery.*.image}}`. This works for a list field with the `field` or `fields` option.
+- Nested fields can also be referenced using dot notation, e.g. `{{author.name}}`.
+- To reference list items, use a wildcard `*` for the index, e.g. `{{tags.*}}` or `{{gallery.*.image}}`. This works for a list field with the `field` or `fields` option.
 
 A plain field name or dot-notation path without the curly brackets, such as `title`, `name.first` or `cities.*.id`, is treated as if it were enclosed in `{{…}}`. The same applies to `display_fields` and `search_fields`. The exception is a bare `slug`, which refers to the field named `slug` (`{{fields.slug}}`), not the entry slug; use `{{slug}}` for the latter.
 
-The stored value comes from the referenced field’s value as saved in the related entry, not as it’s displayed: a number without thousands separators, the value of a Select field option rather than its label, a date in its stored format, and so on. An entry where any field in the value field template is empty is not offered as an option, because the stored value couldn’t identify it.
+The stored value comes from the referenced field’s value as saved in the related entry, not as it’s displayed: a number without thousands separators, the value of a Select field option rather than its label, a date in its stored format and so on.
+
+An entry where any field in the value field template is empty is not offered as an option, because the stored value couldn’t identify it.
 
 The value field must be unique across all entries in the related collection to avoid conflicts. For example, using `{{title}}` as the value field is not recommended unless you can guarantee that all titles are unique. That’s why the default is `{{slug}}`, which is unique by design.
 
 ##### `display_fields`
 
 - **Type**: `array` of `strings`
-- **Default**: `["title"]` if `value_field` is `{{slug}}`, otherwise the value of `value_field` option
+- **Default**: `["title"]` if `value_field` is `{{slug}}`, otherwise the value of the `value_field` option
 
 The fields from the related collection to display in the Relation field UI when selecting related entries. This should be an array of field names. The values of these fields will be concatenated and shown as the label for each related entry.
 
@@ -202,13 +231,13 @@ display_fields = ["first_name", "last_name"]
 ##### `search_fields`
 
 - **Type**: `array` of `strings`
-- **Default**: value of `display_fields` option
+- **Default**: value of the `display_fields` option
 
 The fields from the related collection to search against when filtering related entries in the Relation field UI. This should be an array of field names, which can also be string templates, just like `display_fields`. By default, it uses the same fields as specified in the `display_fields` option.
 
 ##### `default`
 
-- **Type**: `string`, `number`, `array of strings`, or `array of numbers`
+- **Type**: `string`, `number`, `array of strings` or `array of numbers`
 - **Default**: `null` or `[]`
 
 The default value for the field. Should be a string or number for single select, or an array of strings or numbers for multi select, depending on the `multiple` option. An array with `multiple` off, or a single value with `multiple` on, is reported as a config validation error on the login screen.
@@ -248,9 +277,11 @@ The maximum number of related entries allowed. This enables validation to preven
 
 An array of filter objects to limit the related entries shown in the Relation field UI. Each filter object has the following properties:
 
-- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug or `fields.fieldName` to filter by a content field named `fieldName` (the `fields.` prefix is required to disambiguate from the entry slug when the field is literally named `slug`). A `slug` filter matches the same form the value takes, so in a collection with nested entries it’s the entry’s path without the shared index file name. If the field holds multiple values, such as a [Select](https://sveltiacms.app/en/docs/fields/select) field with `multiple: true` or a [List](https://sveltiacms.app/en/docs/fields/list) field without subfields, an entry matches when any of its values is included in `values`.
+- `field`: The field name in the **related** collection to filter on. Use `slug` to filter by entry slug, or `fields.fieldName` to filter by a content field named `fieldName`. The `fields.` prefix is required when the field is literally named `slug`, to tell it apart from the entry slug.
+  - A `slug` filter matches the same form the value takes. In a collection with nested entries, it’s the entry’s path without the shared index filename.
+  - If the field holds multiple values, such as a [Select](https://sveltiacms.app/en/docs/fields/select) field with `multiple: true` or a [List](https://sveltiacms.app/en/docs/fields/list) field without subfields, an entry matches when any of its values is included in `values`.
 - `values`: An array of strings or numbers representing the values to match. A value may be one of the following template tags, which are resolved from the **current** entry being edited. The tag has to be the whole value, not part of a longer string like `tag-{{slug}}`:
-  - `{{slug}}`: Resolved to the current entry's slug.
+  - `{{slug}}`: Resolved to the current entry’s slug.
   - `{{fields.fieldName}}`: Resolved to the value of a field named `fieldName` in the current entry. If the field holds multiple values, the template is expanded to all of them, so an entry matches when it shares any of them with the current entry.
 
   Unresolvable templates (e.g. `{{slug}}` for a new, unsaved entry, or `{{fields.fieldName}}` for a field with no values) are ignored, causing the filter to be skipped.
@@ -354,7 +385,7 @@ exclude = true
 
 Defines the order of the related entries in the Relation field UI. The object has the following properties:
 
-- `field`: The field name in the **related** collection to sort by. Nested fields can be specified with dot notation, like `meta.date`. The field type is respected: [DateTime](https://sveltiacms.app/en/docs/fields/datetime) fields are sorted by date, [Number](https://sveltiacms.app/en/docs/fields/number) fields numerically, and others alphabetically. You can also use `slug` (entry slug), `commit_author`, `commit_date`, or `_manual` (the manual order of a collection with the [`reorder`](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) option).
+- `field`: The field name in the **related** collection to sort by. Nested fields can be specified with dot notation, like `meta.date`. The field type is respected: [DateTime](https://sveltiacms.app/en/docs/fields/datetime) fields are sorted by date, [Number](https://sveltiacms.app/en/docs/fields/number) fields numerically and others alphabetically. You can also use `slug` (entry slug), `commit_author`, `commit_date` or `_manual` (the manual order of a collection with the [`reorder`](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) option).
 - `direction` _(optional)_: `ascending` or `descending`. Default: `ascending`.
 
 Entries without a value come last in either direction. Entries with the same value are sorted by their labels. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the values are read from the current locale, falling back to the default locale.
@@ -758,9 +789,9 @@ search_fields = ["{{cities.*.name}}"]
 }
 ```
 
-Note that a wildcard (`*`) is used in the `value_field`, `display_fields`, and `search_fields` options to reference list items within the `cities` field.
+Note that a wildcard (`*`) is used in the `value_field`, `display_fields` and `search_fields` options to reference list items within the `cities` field.
 
-Output example when the selected favorite cities are “San Francisco”, “Tokyo”, and “Paris”:
+Output example when the selected favorite cities are “San Francisco”, “Tokyo” and “Paris”:
 
 ```yaml [YAML]
 favorite_cities:
@@ -903,7 +934,9 @@ The value can be computed using a template string that references other fields. 
 
 **Warning**
 
-To be kept, a UUID variable has to be at either end of the template, or only be separated from the ends by literal text and other UUID variables, like `{{fields.slug}}-{{uuid_short}}`. A UUID variable sitting between two field references, such as `{{fields.a}}{{uuid}}{{fields.b}}`, can’t be told apart from the values around it once saved, so a new UUID is generated whenever the entry is opened. The same applies when a string transformation changes the shape of the UUID, e.g. `truncate`; `upper` and `lower` are fine.
+To be kept, a UUID variable has to be at either end of the template, or only be separated from the ends by literal text and other UUID variables, like `{{fields.slug}}-{{uuid_short}}`.
+
+A UUID variable sitting between two field references, such as `{{fields.a}}{{uuid}}{{fields.b}}`, can’t be told apart from the values around it once saved. A new UUID is therefore generated whenever the entry is opened. The same applies when a string transformation changes the shape of the UUID, e.g. `truncate`; `upper` and `lower` are fine.
 
 #### Optional Options
 
@@ -930,7 +963,7 @@ If the [`value_type`](#value-type) option is set to anything other than `string`
 - The `+` (addition), `-` (subtraction or negation), `*` (multiplication), `/` (division) and `%` (remainder) operators. Multiplication, division and remainder are evaluated before addition and subtraction.
 - Parentheses to group operations, like `({{fields.a}} + {{fields.b}}) / 2`.
 - The following functions:
-  - `round(x)` rounds `x` to the nearest integer, and `round(x, digits)` to the given number of decimal places, e.g. `round({{fields.price}} * 1.13, 2)`. Halves are rounded away from zero, so `round(2.5)` is `3` and `round(-2.5)` is `-3`, and the result has no floating-point error: `round(1.005, 2)` is `1.01`.
+  - `round(x)` rounds `x` to the nearest integer, and `round(x, digits)` to the given number of decimal places, e.g. `round({{fields.price}} * 1.13, 2)`. Halves are rounded away from zero, so `round(2.5)` is `3` and `round(-2.5)` is `-3`. The result has no floating-point error: `round(1.005, 2)` is `1.01`.
   - `floor(x)` and `ceil(x)` round `x` down or up to an integer.
   - `abs(x)` returns the absolute value of `x`.
 - The following aggregate functions, which take any number of values, including every item of a list:
@@ -939,9 +972,26 @@ If the [`value_type`](#value-type) option is set to anything other than `string`
   - `min(x, y, …)` and `max(x, y, …)` return the smallest or largest of the values.
   - `count(x, y, …)` returns the number of values, which don’t have to be numbers, e.g. `count({{fields.lines.*.name}})`.
 
-A field reference passed directly to an aggregate function can cover every item of a list: the last `*` in it stands for every item rather than the current one, so `sum({{fields.lines.*.amount}})` adds up the `amount` of every item in the `lines` list, even in a field of a `lines` item. Any other `*` still stands for the current item if the Compute field is in that list, so `sum({{fields.orders.*.lines.*.amount}})` in a field of an `orders` item adds up the lines of that order only. Empty values are left out, so an item that has yet to be filled in doesn’t empty the result; `avg`, `min` and `max` leave the result empty if there is no value at all.
+#### Aggregating List Items
 
-Each field reference is used as a number: the stored value of a Number field or another Compute field that yields a number, or the text of any other field, which must be a number like `12.5`. If a referenced field is empty or doesn’t hold a number, or the result isn’t a finite number, as with a division by zero, the value is left empty. Small floating-point errors are removed from the result, so `0.1 * 3` is stored as `0.3` rather than `0.30000000000000004`.
+A field reference passed directly to an aggregate function can cover every item of a list. The last `*` in it stands for every item rather than the current one. So `sum({{fields.lines.*.amount}})` adds up the `amount` of every item in the `lines` list, even in a field of a `lines` item.
+
+Any other `*` still stands for the current item if the Compute field is in that list. So `sum({{fields.orders.*.lines.*.amount}})` in a field of an `orders` item adds up the lines of that order only.
+
+Empty values are left out, so an item that has yet to be filled in doesn’t empty the result. However, `avg`, `min` and `max` leave the result empty if there is no value at all.
+
+#### Number Conversion
+
+Each field reference is used as a number:
+
+- the stored value of a Number field, or of another Compute field that yields a number
+- the text of any other field, which must be a number like `12.5`
+
+The value is left empty if a referenced field is empty or doesn’t hold a number, or if the result isn’t a finite number, as with a division by zero.
+
+Small floating-point errors are removed from the result, so `0.1 * 3` is stored as `0.3` rather than `0.30000000000000004`.
+
+#### Errors and Circular References
 
 An invalid expression or a UUID variable in it is reported as a configuration error.
 
@@ -1029,7 +1079,7 @@ value = "{{fields.first_name}} {{fields.last_name}}"
 }
 ```
 
-Output example when `first_name` is “John” and `last_name` is “Doe“:
+Output example when `first_name` is “John” and `last_name` is “Doe”:
 
 ```yaml [YAML]
 first_name: John
@@ -1126,7 +1176,7 @@ value = "mailto:{{fields.contact_email}}?subject=Inquiry"
 }
 ```
 
-Output example when `contact_email` is “contact@example.com“:
+Output example when `contact_email` is “contact@example.com”:
 
 ```yaml [YAML]
 contact_email: contact@example.com
@@ -1239,7 +1289,7 @@ value = "{{index}}"
 }
 ```
 
-Output example when three items are added with names “Apple“, “Banana“, and “Cherry“:
+Output example when three items are added with names “Apple”, “Banana” and “Cherry”:
 
 ```yaml [YAML]
 items:
@@ -1345,7 +1395,7 @@ value = "{{fields.title | slugify}}-{{uuid_shorter}}"
 }
 ```
 
-Output example when `title` is “Hello World“:
+Output example when `title` is “Hello World”:
 
 ```yaml [YAML]
 title: Hello World
@@ -1674,7 +1724,10 @@ The UUID field type provides a read-only field that automatically generates and 
 
 Read-only display of a [UUID](https://developer.mozilla.org/en-US/docs/Glossary/UUID) (Universally Unique Identifier) value. The UUID is automatically generated when a new entry is created and can’t be modified by default, because the [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) option defaults to `true` for this field type. Set it to `false` to make the value editable.
 
-A duplicated entry gets a new UUID, and so does a duplicated List item. With [i18n](https://sveltiacms.app/en/docs/i18n), a field with the `i18n: duplicate` option, or one inside a List or Object field with that option, has the same UUID in every locale, while a field with `i18n: true` gets a different one for each locale, including a locale enabled later for an existing entry.
+A duplicated entry gets a new UUID, and so does a duplicated List item. With [i18n](https://sveltiacms.app/en/docs/i18n):
+
+- A field with the `i18n: duplicate` option, or one inside a List or Object field with that option, has the same UUID in every locale.
+- A field with `i18n: true` gets a different UUID for each locale, including a locale enabled later for an existing entry.
 
 #### Preview
 
@@ -1682,9 +1735,9 @@ A read-only view of the UUID value.
 
 ### Data Type
 
-A string representing a UUID in the standard 36-character format (e.g., `df733d7e-d2f7-4e4f-8f27-803046b64040`). Alphabetic characters are in lowercase.
+A string representing a UUID in the standard 36-character format (e.g. `df733d7e-d2f7-4e4f-8f27-803046b64040`). Alphabetic characters are in lowercase.
 
-If `use_b32_encoding` is set to true, the UUID will be represented in a 26-character lowercase [Base32](https://en.wikipedia.org/wiki/Base32) format (e.g., `c5t6kx3m6n7g4y2z2a5b7c3d4e`).
+If `use_b32_encoding` is set to true, the UUID will be represented in a 26-character lowercase [Base32](https://en.wikipedia.org/wiki/Base32) format (e.g. `c5t6kx3m6n7g4y2z2a5b7c3d4e`).
 
 ### Data Validation
 
