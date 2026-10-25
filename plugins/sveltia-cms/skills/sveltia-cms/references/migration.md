@@ -376,6 +376,7 @@ Some features have different names in Sveltia CMS compared to Netlify/Decap CMS.
 | --- | --- |
 | [Media library](https://decapcms.org/docs/configuration-options/#media-library) | [Media storage provider](https://sveltiacms.app/en/docs/media) |
 | [Folder collection](https://decapcms.org/docs/collection-folder/) | [Entry collection](https://sveltiacms.app/en/docs/collections/entries) |
+| [Nested collection](https://decapcms.org/docs/collection-nested/) | [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) |
 | [Widget](https://decapcms.org/docs/widgets/) | [Field type](https://sveltiacms.app/en/docs/fields) |
 | [Summary string transformation](https://decapcms.org/docs/summary-strings/) | [String transformation](https://sveltiacms.app/en/docs/string-transformations) |
 
@@ -385,7 +386,7 @@ Sveltia CMS marks required fields for efficient data entry. This is the opposite
 
 When [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, Sveltia CMS requires all locales to have values for required fields. In contrast, Netlify/Decap CMS only enforces this for the default locale. This change ensures that content is complete across all locales. If you rely on the previous behavior, you can set the `required` [field-level configuration](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) to include only specific locales.
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
+In a collection of [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) with the `meta.path` option, the field that decides where an entry goes works differently. Netlify/Decap CMS asks for the full path of the folder that will hold the entry’s file, typed by hand. Sveltia CMS shows a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) picker listing the folders that already exist, and names the new entry’s own folder after its slug:
 
 ```yaml
 # Netlify/Decap CMS: path "products/hardware"
@@ -584,7 +585,7 @@ A Pages CMS `collection` is an [entry collection](https://sveltiacms.app/en/docs
 | `filename.field: true` | `slug.editable: true` (default) |
 | `format` | [`format`](https://sveltiacms.app/en/docs/collections/entries/formats#format). The values `yaml-frontmatter`, `json-frontmatter`, `toml-frontmatter`, `yaml`, `json`, `toml` and `raw` are the same. Use `raw` for `code` and `datagrid` |
 | `delimiters` | [`frontmatter_delimiter`](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter) |
-| `subfolders: true` | [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested) or the [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option |
+| `subfolders: true` | [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) or the [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option |
 | `list: true` on a file | A [top-level List field](https://sveltiacms.app/en/docs/fields/list#top-level-list), or a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file) for a JSON file |
 | `exclude` | No filename-based option. Use [`filter`](https://sveltiacms.app/en/docs/collections/entries/listings#filtering-entries) to filter entries by field value |
 | `operations.create`, `operations.delete` | [`create`, `delete`](https://sveltiacms.app/en/docs/collections/entries/operations#disabling-creation-and-deletion) |
@@ -620,7 +621,7 @@ The `view` options are converted as follows. See [Entry Listings](https://svelti
 | `view.sort` | [`sortable_fields`](https://sveltiacms.app/en/docs/collections/entries/views#sorting) |
 | `view.default.sort`, `view.default.order` | `sortable_fields.default.field`, `sortable_fields.default.direction` (`ascending` or `descending`) |
 | `view.search` | Not needed, as all entries are searchable |
-| `view.layout: tree`, `view.node` | [Nested collections](https://sveltiacms.app/en/docs/collections/entries/nested) |
+| `view.layout: tree`, `view.node` | [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) |
 
 #### Fields
 

@@ -1,16 +1,18 @@
 # Entry Collections: Nested, Single-File and Preview Paths
 
-Nested collections, single-file collections and preview paths. For collection options, file formats and slugs, see `entries.md`. For listing, view and operation options, see `entries-listing.md`.
+Nested entries, single-file collections and preview paths. For collection options, file formats and slugs, see `entries.md`. For listing, view and operation options, see `entries-listing.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
-## Nested Collections
+## Nested Entries
 
 With the `nested` and `meta` options, you can organize contents that have a hierarchical relationship, such as categories and subcategories, and allow editors to create nested entries easily.
 
 **Note for Netlify/Decap CMS users**
 
-Sveltia CMS fixes a number of long-standing problems with this feature, which remains in beta in Netlify/Decap CMS. These include entry paths, preview paths, media folders, folder labels and i18n support. See [Nested collection enhancements](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-collections) for the details.
+In Sveltia CMS, what was previously referred to as a **nested collection** in Netlify/Decap CMS is now called **nested entries**. This change was made to better reflect that the entries are nested in a folder tree within a single collection, rather than collections nested in each other.
+
+Sveltia CMS also fixes a number of long-standing problems with this feature, which remains in beta in Netlify/Decap CMS. These include entry paths, preview paths, media folders, folder labels and i18n support. See [Nested entry enhancements](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-collections) for the details.
 
 The `nested` option turns the collection into a folder tree in the sidebar and lets entries live in subfolders of any depth. The `meta.path` option adds a Path field to the Content Editor, so editors can choose where a new entry goes and move an existing one later.
 
@@ -109,7 +111,7 @@ widget = "markdown"
 }
 ```
 
-### Nested Collection Options
+### Nested Entry Options
 
 The `nested` option accepts the following properties:
 
@@ -150,7 +152,7 @@ With `subfolders: false`, entries are regular files that keep their own names, a
 
 The mode determines which entries are listed when a folder is selected. In the `subfolders` mode, the list shows the entries in the immediate subfolders, plus the collection’s own index file at the root — `Products` in the tree above lists `Hardware` and `Software`, and the collection root lists `Home` and `Products`. Otherwise, the list shows the files stored directly in the selected folder, so `products` lists `Hardware` and `Software` while the root lists `Overview`.
 
-An entry in a nested collection is identified by where it sits rather than by a name of its own, so its [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) is its path below the collection folder — `products/hardware` for the tree above. Wherever that slug is used to refer to the entry, the file name shared by every entry is left out: in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths), and in the value a [Relation field](https://sveltiacms.app/en/docs/fields/relation#value-field) stores. The collection’s own index file keeps its name, because there would be nothing left of it.
+A nested entry is identified by where it sits rather than by a name of its own, so its [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) is its path below the collection folder — `products/hardware` for the tree above. Wherever that slug is used to refer to the entry, the file name shared by every entry is left out: in a [preview path](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths), and in the value a [Relation field](https://sveltiacms.app/en/docs/fields/relation#value-field) stores. The collection’s own index file keeps its name, because there would be nothing left of it.
 
 The root index file is only picked up when it fits the collection’s file paths. With a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option such as `{{slug}}/_index`, a bare `content/pages/_index.md` has no slug folder in front of it and is therefore not part of the collection; use the [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option to bring it in, which also lets it have fields of its own.
 
@@ -275,7 +277,7 @@ widget = "image"
 }
 ```
 
-The `path` option is optional here. In a nested collection it says where an entry sits within the folder holding it, rather than within the collection folder, so it takes the same form as in a flat collection, and its last segment — the file name — has to match `meta.path.index_file`. Leave it out and the collection takes in every file below its folder; set it and only the index files are entries, which is what you want if the same folders hold other Markdown that isn’t a page.
+The `path` option is optional here. For nested entries, it says where an entry sits within the folder holding it, rather than within the collection folder, so it takes the same form as in a flat collection, and its last segment — the file name — has to match `meta.path.index_file`. Leave it out and the collection takes in every file below its folder; set it and only the index files are entries, which is what you want if the same folders hold other Markdown that isn’t a page.
 
 Either way, entries can be nested to any depth, each with media of its own:
 
@@ -330,7 +332,7 @@ Choosing a different folder for an existing entry moves its file, keeping the na
 
 **`index_file` vs `meta.path.index_file`**
 
-These two options look similar but do different things. The [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option includes _one_ special file, Hugo’s `_index.md`, in a regular entry collection and lets it have its own set of fields. The `meta.path.index_file` option names _every_ entry in a nested collection. You can use both in the same collection if the root index file needs different fields than the section pages.
+These two options look similar but do different things. The [`index_file`](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) collection option includes _one_ special file, Hugo’s `_index.md`, in a regular entry collection and lets it have its own set of fields. The `meta.path.index_file` option names _every_ entry in a collection with nested entries. You can use both in the same collection if the root index file needs different fields than the section pages.
 
 Source: https://sveltiacms.app/en/docs/collections/entries/nested
 

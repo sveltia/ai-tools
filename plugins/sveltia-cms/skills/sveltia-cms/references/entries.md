@@ -1,6 +1,6 @@
 # Entry Collections: Formats and Slugs
 
-Entry collections in depth: collection options, file formats and slugs. For nested collections, single-file collections and preview paths, see `entries-structure.md`. For listing, view and operation options, see `entries-listing.md`.
+Entry collections in depth: collection options, file formats and slugs. For nested entries, single-file collections and preview paths, see `entries-structure.md`. For listing, view and operation options, see `entries-listing.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -96,7 +96,7 @@ The remaining entry collection options are documented on the following pages:
 
 - [File Formats](https://sveltiacms.app/en/docs/collections/entries/formats): Choose between Markdown with front matter, YAML, JSON and TOML, and customize the file extension, front matter delimiter and body field.
 - [Slugs and File Paths](https://sveltiacms.app/en/docs/collections/entries/slugs): Generate entry slugs from fields and template tags, make slugs editable, and organize entries into subfolders and page bundles.
-- [Nested Collections](https://sveltiacms.app/en/docs/collections/entries/nested): Manage hierarchical content in a folder tree that editors can browse and organize.
+- [Nested Entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage hierarchical content in a folder tree that editors can browse and organize.
 - [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file): Store all the entries in one JSON file, as an array of objects.
 - [Preview Paths and Redirects](https://sveltiacms.app/en/docs/collections/entries/previews): Point the CMS at an entry’s URL on your site for previews, and record redirects when slugs change.
 - [Entry Operations](https://sveltiacms.app/en/docs/collections/entries/operations): Disable creation, deletion or duplication, limit the entry count, hide the collection, and enable manual reordering.
@@ -575,7 +575,7 @@ Sveltia CMS provides several ways to customize the slug (filename) of an entry i
 
 #### Global Slug Options
 
-The `slug` option defined at the top-level of the configuration file applies to all collections, including the names of entry folders created or renamed in a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested). It also applies to the names of uploaded asset files and new asset folders when [filename slugification](https://sveltiacms.app/en/docs/media#slugification-of-filenames) is enabled. The default settings are as follows:
+The `slug` option defined at the top-level of the configuration file applies to all collections, including the names of entry folders created or renamed in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested). It also applies to the names of uploaded asset files and new asset folders when [filename slugification](https://sveltiacms.app/en/docs/media#slugification-of-filenames) is enabled. The default settings are as follows:
 
 ```yaml [YAML]
 slug:

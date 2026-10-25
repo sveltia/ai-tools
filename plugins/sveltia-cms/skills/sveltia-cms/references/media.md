@@ -673,11 +673,11 @@ Assets stored in entry-relative folders are only accessible by the associated en
 
 This only applies when the entry has a folder of its own, for example with a `path` option like `{{slug}}/index`. When entries are files sharing one folder, the media files in that folder can belong to any of them, so they are left alone when an entry is deleted.
 
-In a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
+In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 
 To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to look for media files in the same folder as the content files.
 
-This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
+This only makes each entry’s media its own if the entry has a folder of its own to keep it in. The [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option gives it one, as in the example below, and so does the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). Without either, entries are files sharing one folder, so a relative `media_folder` resolves to the collection folder and the media is shared as well.
 
 **Tip**
 
@@ -876,7 +876,7 @@ cover: images/image1.jpg
 Content goes here...
 ```
 
-Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a [nested collection](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
+Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
 
 #### File-Level Configuration
 
