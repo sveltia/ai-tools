@@ -18,7 +18,9 @@ To register a custom editor component, use the `registerEditorComponent` method 
 CMS.registerEditorComponent(definition);
 ```
 
-Registering a component with the same `id` again replaces the previous one. The component `definition` object includes the following properties:
+Registering a component with the same `id` again replaces the previous one. The component `definition` object includes the following properties.
+
+These properties describe a field-based component, which is edited with its fields. A component with the `type` option set to `inline` is a [pattern-based inline component](#pattern-based-inline-components) instead, which works like the one in Decap CMS and takes different properties.
 
 #### Required Properties
 
@@ -177,6 +179,81 @@ In an HTML field, the component is saved as `<figure><img src="/images/photo.jpg
 Since the element is built with text and attributes only, it’s also safe to display as the preview, which isn’t sanitized because it’s a DOM element. The image source is replaced with a URL that works, as described in [Displaying Assets](#displaying-assets).
 
 The `<img>` element within the `<figure>` is part of the component, so the built-in `image` component doesn’t take it.
+
+### Pattern-Based Inline Components
+
+A pattern-based inline component has no fields. Its data comes from the Markdown it matches within a paragraph, and the editor shows its preview right in the text. This kind of component is compatible with [Decap CMS](https://decapcms.org/docs/custom-widgets/#inline-components), so a wikilink, mention or Hugo `ref` shortcode component written for Decap CMS works as is.
+
+To edit the data, the component provides its own UI, such as a dialog for picking a page, through the `onInsert` and `onEdit` functions.
+
+#### Properties
+
+The following properties are required:
+
+- `id` (string): A unique identifier for the component, like that of a field-based component.
+- `type` (string): Must be `inline`.
+- `pattern` (RegExp): A regular expression that matches an instance within a paragraph.
+  - A leading `^` is ignored, and so are the `g` and `y` flags.
+  - Use a non-greedy quantifier like `.+?`, or a specific character class like `[^\]]+`, so a match doesn’t run on to the next instance on the same line.
+  - A pattern with the `m` or `s` flag, or one that contains `[\s\S]`, causes a configuration warning, as an inline component can’t span lines.
+- `toInline` (function): A function that takes the component data and returns its Markdown. It’s called with an empty object for a component inserted without `onInsert`, so it must handle missing values.
+
+The following properties are optional:
+
+- `label` (string): The label of the item in the Insert menu. Defaults to the `id` value.
+- `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name for the menu item.
+- `fromInline` (function): A function that takes a regex match array and returns the component data. It can be omitted if the `pattern` has [named capture groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group), which are then used as the data.
+- `toPreview` (function): A function that takes the component data and returns its preview, which is shown both in the editor and in the Preview Pane. It can return a string, a DOM element or a React element, like the [preview output](#preview-output) of a field-based component. Without it, the editor shows the Markdown returned by `toInline` as plain text.
+- `trigger` (string): Literal text every instance starts with, e.g. `[[` or `@`. If given, the editor only matches the `pattern` where this text is found, instead of running the pattern across the paragraph. Unlike the `trigger` option of a field-based component, it doesn’t choose the toolbar UI. A pattern-based inline component always appears under the Insert menu.
+- `onInsert` (function): An async function called when the component is inserted from the toolbar. It receives an object with `selectedText`, the text selected in the editor, and returns the data of the new component, which replaces the selected text. Return `null` or `undefined` to cancel the insertion and leave the text as is. Without this function, the component is inserted with empty data.
+- `onEdit` (function): An async function called when the component is clicked, or activated with the Enter or Space key. It receives an object with `data`, the current data, and returns the new data. Return `null` or `undefined` to leave the component unchanged. Without this function, the component can only be removed.
+
+As in Decap CMS, `fromBlock` and `toBlock` are accepted in place of `fromInline` and `toInline`.
+
+#### Wikilink Example
+
+This example creates a wikilink component that asks for the page name when it’s inserted or clicked:
+
+```js
+CMS.registerEditorComponent({
+  id: 'wikilink',
+  label: 'Wikilink',
+  icon: 'link',
+  type: 'inline',
+  pattern: /\[\[(?<page>[^\]]+)\]\]/,
+  trigger: '[[',
+  toInline: ({ page = '' }) => `[[${page}]]`,
+  toPreview: ({ page = '' }) => {
+    const link = document.createElement('a');
+
+    link.href = `/${encodeURIComponent(page)}`;
+    link.textContent = page;
+
+    return link;
+  },
+  onInsert: async ({ selectedText }) => {
+    const page = window.prompt('Page name', selectedText);
+
+    return page ? { page } : null;
+  },
+  onEdit: async ({ data }) => {
+    const page = window.prompt('Page name', data.page);
+
+    return page ? { page } : null;
+  },
+});
+```
+
+In this example, selecting “Home” in a paragraph and choosing Wikilink from the Insert menu turns the text into `[[Home]]`. The editor shows the link within the text, and clicking it lets you change the page name. A link in the preview doesn’t navigate away from the editor when it’s clicked.
+
+#### Behavior and Limitations
+
+- A string preview is parsed as inline Markdown and always sanitized in the editor. A DOM element or React element is inserted as is, so escape any user-provided content in it, as the example does by setting `textContent`.
+- The component can be removed with the Backspace or Delete key when it’s focused, or with the Backspace key when the cursor is right after it, like a character.
+- An insertion or edit made through `onInsert` or `onEdit` can be undone and redone like any other change.
+- An error thrown by `onInsert` or `onEdit` is logged to the browser console, and the insertion or edit is canceled.
+- In the plain text mode, `onInsert` is not called. Choosing the component from the Insert menu there inserts the Markdown that `toInline` returns for empty data, if any.
+- The component is available in RichText and Markdown fields with the default `markdown` format, but not with the `html` format.
 
 ### Using Components
 

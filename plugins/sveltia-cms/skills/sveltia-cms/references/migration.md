@@ -110,7 +110,6 @@ These options were added to Sveltia CMS 0.x but are now deprecated and will be r
 - The `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags: Use the [`editable` and `i18n` slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) instead. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
 - The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead.
 - The `yaml_quote` collection option: `yaml_quote: true` is equivalent to `quote: double` in the [new YAML format options](https://sveltiacms.app/en/docs/data-output#controlling-data-output).
-- The `read_only` [UUID field](https://sveltiacms.app/en/docs/fields/uuid) option: Use the [`readonly` common field option](https://sveltiacms.app/en/docs/fields#readonly) instead (which defaults to `true` for UUID fields).
 
 The deprecated `logo_url` option will be removed in the future. Use the [new `logo.src` option](https://sveltiacms.app/en/docs/customization#custom-logo) instead.
 
@@ -190,6 +189,9 @@ The following features will not be implemented in Sveltia CMS due to various rea
 - Local proxy server: Our [local development workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates the need for a proxy server. For security and performance reasons, we don’t support `netlify-cms-proxy-server` or `decap-server`. The `local_backend` option is ignored.
 - The global [`issue_reports`](https://decapcms.org/docs/configuration-options/#issue-reports) option: The Report Issue link in the Help menu always points to the Sveltia CMS issue tracker, and the `url` option is ignored.
 - The global [`locale`](https://decapcms.org/docs/configuration-options/#locale) option and `CMS.registerLocale` method: Sveltia CMS automatically detects the user’s preferred language and changes the [UI locale](https://sveltiacms.app/en/docs/ui#localization).
+- The [`editor.notes`](https://decapcms.org/docs/notes/) option: Decap CMS stores notes as comments on a GitHub or GitLab issue. We plan to implement a Conversation Panel as part of [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions#features) instead, and the option is ignored. Any notes saved with Decap CMS will not be loaded.
+- The [`editor.visualEditing`](https://decapcms.org/docs/configuration-options/#editor) option: Sveltia CMS has the same [click-to-highlight feature](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-content-preview) enabled by default, so there is nothing to opt in to. The option is ignored at both the collection and field levels.
+- The [`preview_path_preserve_slashes`](https://decapcms.org/docs/configuration-options/#preview_path_preserve_slashes) collection option: Sveltia CMS inserts field values into the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) as they are, without making them URL-safe, so slashes are always kept, as if the option were set to `true`. Decap CMS replaces slashes by default, except in nested collections. If your preview paths relied on that, use [string transformations](https://sveltiacms.app/en/docs/string-transformations) to shape the value.
 
 ##### Undocumented Features
 

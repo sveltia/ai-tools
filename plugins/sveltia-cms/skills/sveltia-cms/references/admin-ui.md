@@ -525,7 +525,7 @@ If entry slugs are [localized](https://sveltiacms.app/en/docs/i18n/slugs), the p
 
 In a new entry, the panel shows the slug the entry will be saved with. It follows the entry’s content as it is edited.
 
-- A slug containing a date and time, such as `{{year}}-{{month}}-{{day}}-{{slug}}`, is shown with the current date and time, and gets the date and time of the save.
+- A slug containing a date and time, such as `{{year}}-{{month}}-{{day}}-{{slug}}`, is shown with the [entry date](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) once its date field is filled in. Until then, or if the collection has no such field, it’s shown with the current date and time, and gets the date and time of the save.
 - A random ID, such as `{{uuid_short}}`, is kept until the entry is saved, so the entry is saved with the slug shown.
 
 Once a user gives a custom slug with the pencil button, it no longer follows the entry’s content. To go back to the generated slug, edit the slug and empty it.

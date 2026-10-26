@@ -1758,10 +1758,6 @@ Must be set to `uuid`.
 
 #### Optional Options
 
-**Deprecation Notice**
-
-The `read_only` option has been deprecated in favor of the `readonly` common field option. The `read_only` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly.
-
 ##### `default`
 
 - **Type**: `string`
@@ -1775,6 +1771,13 @@ The default value for the field. If not provided, a new UUID will be generated w
 - **Default**: `""`
 
 A string prefix to prepend to the generated UUID. Useful for adding context or categorization to the UUID.
+
+##### `read_only`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+Whether to make the field read-only. Set it to `false` to let users change the generated value. This option is compatible with Decap CMS. The [`readonly`](https://sveltiacms.app/en/docs/fields#readonly) common field option, which also defaults to `true` for the UUID field type, works the same way and takes precedence if both are set.
 
 ##### `use_b32_encoding`
 

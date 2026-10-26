@@ -634,10 +634,10 @@ The available options are:
   - The replacement can’t contain a character that slugs can’t have, such as a slash (`/`) or a question mark (`?`), because it would end up in every slug.
   - The only exception is a plain space. It keeps the words of a filename apart for people and tools that read filenames rather than URLs, e.g. `Sourdough focaccia.md` for an [Obsidian](https://obsidian.md/) vault that links to entries by filename. Combine it with `lowercase: false` to keep the original casing. When the replacement contains a space, users can also type spaces when [editing a slug](#making-slugs-editable).
   - Filenames with spaces aren’t URL-friendly. If you use the `{{slug}}` template tag in the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, make sure your site builds the same URL.
-- `maxlength`: An integer specifying the maximum length of the slug. If the generated slug exceeds this length, it will be truncated. Any `sanitize_replacement` characters left at the end are then removed, unless `trim` is `false`. This is useful for CI/CD services or filesystems that impose filename length restrictions. The default value is `undefined`, meaning there is no length limit.
-- `trim`: A boolean value indicating whether to trim leading and trailing `sanitize_replacement` characters from the slug. The default value is `true`.
+- `maxlength`: An integer specifying the maximum number of characters in a generated slug. If the generated slug exceeds this length, it will be truncated. Any dots and `sanitize_replacement` characters left at the end are then removed, though the replacement characters are kept if `trim` is `false`. This is useful for CI/CD services or filesystems that impose filename length restrictions. The default value is `undefined`. Without it, a generated slug is limited to 200 bytes in UTF-8 instead, like Decap CMS, so the filename stays within the 255-byte limit of most filesystems and the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) branch name stays valid. The limit is lower if the collection name is very long. A Chinese, Japanese or Korean character takes 3 bytes, so a slug written in one of these languages can have about 66 characters. Existing entries are never renamed.
+- `trim`: A boolean value indicating whether to trim leading and trailing `sanitize_replacement` characters from the slug. The default value is `true`. Leading and trailing dots are always removed, whatever this option is set to: a leading dot would make a hidden file, and a Git branch name can’t end with a dot.
 - `lowercase`: A boolean value indicating whether to convert the slug to lowercase. The default value is `true`. Changing this to `false` will preserve the original casing of the title or identifier field.
-- `timezone`: A string specifying the timezone to use when generating date-based slugs with [template tags](#slug-template-tags) like `{{day}}` and `{{hour}}`. The default value is `utc`. You can set this to `local` to use the local timezone of the user.
+- `timezone`: A string specifying the timezone to use when generating date-based slugs with [template tags](#slug-template-tags) like `{{day}}` and `{{hour}}`. The default value is `utc`. You can set this to `local` to use the local timezone of the user. It applies to the [entry date](#slug-template-tags) taken from a DateTime field as well, unless the field stores a date only.
 
 **Deprecation Notice**
 
@@ -719,7 +719,7 @@ widget = "richtext"
 
 The `slug` option allows you to define a custom template for generating entry slugs using various [template tags](#slug-template-tags) and field names.
 
-For example, to create slugs that include the year and month of creation along with the entry slug, you can use the following configuration:
+For example, to create slugs that include the year and month of the entry date along with the entry slug, you can use the following configuration:
 
 ```yaml [YAML]{5}
 collections:
@@ -822,14 +822,16 @@ The `slug` option can also be an object, whose `template` option specifies the t
 The following template tags are supported in the `slug` option:
 
 - `{{slug}}`: The slugified version of the entry’s `title` field (or the field defined with the [`identifier_field` option](#specifying-an-identifier-field)).
-- `{{year}}`: 4-digit year of the entry creation date.
-- `{{month}}`: 2-digit month of the entry creation date.
-- `{{day}}`: 2-digit day of the entry creation date.
-- `{{hour}}`: 2-digit hour of the entry creation date.
-- `{{minute}}`: 2-digit minute of the entry creation date.
-- `{{second}}`: 2-digit second of the entry creation date.
+- `{{year}}`: 4-digit year of the entry date.
+- `{{month}}`: 2-digit month of the entry date.
+- `{{day}}`: 2-digit day of the entry date.
+- `{{hour}}`: 2-digit hour of the entry date.
+- `{{minute}}`: 2-digit minute of the entry date.
+- `{{second}}`: 2-digit second of the entry date.
 
-By default, the entry creation date is based on the UTC timezone for backward compatibility with Netlify/Decap CMS. To use the local timezone of the user instead, set the `timezone` option to `local` in the [global slug options](#global-slug-options).
+The entry date is the value of the first DateTime field named `date`, `publishDate` or `publish_date`, so a backdated post is named after its own date. In a multilingual collection, the value in the default locale is used. If the collection has no such field, or it’s left empty, the date and time the entry is first saved are used instead. The slug is only generated when the entry is first saved, so changing the date later doesn’t rename the file.
+
+By default, the entry date is based on the UTC timezone for compatibility with Netlify/Decap CMS. To use the local timezone of the user instead, set the `timezone` option to `local` in the [global slug options](#global-slug-options). A DateTime field that stores a date only, without a time, gives that date as is in either case.
 
 Additionally, the following unique identifier tags are available. These tags generate random values for each entry, ensuring uniqueness. This is particularly useful when the entry title may change later or when the title contains characters that are not suitable for filenames, such as non-Latin scripts.
 
@@ -1095,7 +1097,7 @@ By default, Sveltia CMS saves entries directly under the specified `folder` usin
 
 Just like the [`slug` option](#defining-entry-slugs) described above, the `path` option can use template tags to create dynamic folder structures. The [slug template tags](#slug-template-tags) and [string transformations](https://sveltiacms.app/en/docs/string-transformations) can be used in the `path` option, along with any field names defined in the collection’s `fields` option. For nested fields, use dot notation, e.g. `{{author.name}}`.
 
-For example, to save blog posts in subfolders based on the year and month of creation, you can use the following configuration:
+For example, to save blog posts in subfolders based on the year and month of the [entry date](#slug-template-tags), you can use the following configuration:
 
 ```yaml [YAML]{5}
 collections:

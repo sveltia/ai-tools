@@ -273,10 +273,10 @@ The preview component receives the following props:
 
 - `value` (any): The current field value to display in the preview.
 - `field` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): An Immutable Map of the current field configuration. Use `field.get('name')` to access properties.
-- `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the field’s key path, so it works for a field nested in an Object or List field too. For relation fields, it contains referenced entry data. Use Immutable Map methods to access nested data.
+- `metadata` (Immutable Map): Any available metadata for the current field, looked up in `fieldsMetaData` by the names of the field and its parent fields, so it works for a field nested in an Object or List field too. For relation fields, it contains referenced entry data. Use Immutable Map methods to access nested data.
 - `entry` ([Immutable Map](https://immutable-js.com/docs/v5/Map/)): The data of the entry being edited, with the same structure as the [`entry` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. Read the content with `entry.getIn(['data', 'fieldName'])`.
 - `getAsset` (function): Returns an asset object for a given file path, or `undefined` if not found. Use its `url` property to display an image. The path can also be a temporary `blob:` URL returned from the [`addFile`](#uploading-files) or [`pickFile`](#picking-files) prop. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the object’s properties.
-- `fieldsMetaData` (Immutable Map): Metadata for each field in the entry keyed by the field’s key path, same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
+- `fieldsMetaData` (Immutable Map): Metadata for each field in the entry, keyed by the field’s name, with the names of its parent fields first for a nested field. It’s the same as the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template. `metadata` is the item of this map for the current field.
 
 #### Summary Component
 

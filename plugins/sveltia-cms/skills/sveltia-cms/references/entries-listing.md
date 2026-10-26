@@ -1836,9 +1836,27 @@ widget = "richtext"
 }
 ```
 
+Each item in the `sortable_fields` list can also be an object with the following options, as in [Decap CMS](https://decapcms.org/docs/configuration-options/#sortable_fields). Objects and field names can be mixed in the same list.
+
+- `field`: The field name or special key to sort by. Required.
+- `label`: The text shown in the Sort menu. Defaults to the field’s label.
+- `default_sort`: Makes the field the default sort key. Use `asc` or `true` for ascending order, or `desc` for descending order.
+
+The example below sorts the entries by `published_date` in descending order by default, and shows the field as “Publish date” in the Sort menu:
+
+```yaml
+sortable_fields:
+  - title
+  - { field: published_date, label: Publish date, default_sort: desc }
+  - author.name
+  - category
+```
+
+Only one item can have the `default_sort` option. Giving it to more than one item is reported as a config validation error on the login screen. The default sort applies until the user picks another sort key or order in the Sort menu, which Sveltia CMS remembers for the collection.
+
 **Extended syntax**
 
-Sveltia CMS supports an extended syntax used in [Static CMS](https://staticjscms.netlify.app/docs/collection-overview#sortable-fields) to define a default sort field and direction. This is useful if you want entries to be sorted by a date field in descending order by default. Here is the same configuration using the extended syntax:
+Sveltia CMS supports an extended syntax used in [Static CMS](https://staticjscms.netlify.app/docs/collection-overview#sortable-fields) to define a default sort field and direction. This is useful if you want entries to be sorted by a date field in descending order by default. Here is the same default sort using the extended syntax:
 
 ```yaml
 sortable_fields:

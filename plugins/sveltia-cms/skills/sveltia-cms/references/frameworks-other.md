@@ -128,7 +128,7 @@ collections:
       - { name: body, label: Body, widget: markdown }
 ```
 
-If you don’t need a `date` field, the `{{year}}-{{month}}-{{day}}-{{slug}}` template creates the prefix from the entry creation date instead.
+The `{{year}}-{{month}}-{{day}}-{{slug}}` template also takes the date from the `date` field, but [in UTC by default](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags), which can be a day off from the date shown in the field. If you don’t need a `date` field, that template creates the prefix from the date the post is first saved instead.
 
 The Hidden field adds `layout: post` to every new post without showing it in the Content Editor. You can remove it if you set the default layout with [front matter defaults](https://jekyllrb.com/docs/configuration/front-matter-defaults/) in `_config.yml`.
 
@@ -195,7 +195,7 @@ end
 
 With this configuration, posts are stored in `source/blog` with names like `2026-10-01-hello-world.html.md`. The matching Sveltia CMS entry collection needs three options to follow the pattern:
 
-- `slug` creates the date prefix from the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) `{{year}}`, `{{month}}` and `{{day}}`, which are based on the entry creation date.
+- `slug` creates the date prefix from the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) `{{year}}`, `{{month}}` and `{{day}}`, which are based on the date the post is first saved.
 - `extension` is set to `html.md`, because Middleman uses the double extension to determine the output format (`html`) and the template engine (Markdown).
 - `format` is set to `frontmatter` so the files are read as Markdown with front matter despite the custom extension.
 
@@ -219,7 +219,7 @@ collections:
 
 `title` is the only required front matter property in middleman-blog, and posts with `published: false` are treated as drafts that only appear on the development server.
 
-The post date is taken from the filename. If you also want editors to set the date, add a DateTime field named `date` and build the slug from it with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date), so the filename follows the selected date instead of the creation date:
+The post date is taken from the filename. If you also want editors to set the date, add a DateTime field named `date`. The date tags then follow the selected date instead of the save date, but [in UTC by default](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags), which can be a day off from the date in the front matter. To keep the date as selected, build the slug from the field with the [`date` transformation](https://sveltiacms.app/en/docs/string-transformations#date):
 
 ```yaml
 slug: "{{date | date('YYYY-MM-DD')}}-{{slug}}"

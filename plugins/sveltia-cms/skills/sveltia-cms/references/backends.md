@@ -279,6 +279,8 @@ When a user signs in with OAuth, Sveltia CMS opens an authorization URL made of 
 
 With [PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) (`auth_type: pkce`), the GitLab defaults are `https://gitlab.com` and `oauth/authorize` instead, because the CMS talks to GitLab directly.
 
+With the [`forgejo` backend name](https://sveltiacms.app/en/docs/backends/gitea-forgejo#forgejo-backend-name), the default `base_url` is derived from `api_root` instead, e.g. `https://codeberg.org` from `https://codeberg.org/api/v1`.
+
 You usually only need to change `base_url`. Set `auth_endpoint` if your OAuth client or Git service serves the authorization page at a different path:
 
 ```yaml [YAML]{4-5}
@@ -566,6 +568,61 @@ How the prompt works:
 
 The default is `false`, which commits the generated messages without asking. The option is not available with the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
 
+##### Signing Off Commits
+
+Some projects require every commit to be signed off under the [Developer Certificate of Origin](https://developercertificate.org/) (DCO). Set the `signoff_commits` option to `true` to add a `Signed-off-by` trailer with the name and email of the signed-in user to each commit made with Sveltia CMS:
+
+```yaml [YAML]{4}
+backend:
+  name: github
+  repo: user/repo
+  signoff_commits: true
+```
+
+```toml [TOML]{4}
+[backend]
+name = "github"
+repo = "user/repo"
+signoff_commits = true
+```
+
+```json [JSON]{5}
+{
+  "backend": {
+    "name": "github",
+    "repo": "user/repo",
+    "signoff_commits": true
+  }
+}
+```
+
+```js [JavaScript]{5}
+{
+  backend: {
+    name: 'github',
+    repo: 'user/repo',
+    signoff_commits: true,
+  },
+}
+```
+
+With the above configuration, a commit message looks like this:
+
+```
+Update Post “hello-world”
+
+Signed-off-by: Jane Doe <jane@example.com>
+```
+
+How it works:
+
+- The trailer is added after a blank line, or to the trailers the message already ends with. If the message already has a sign-off with the user’s email, for example from a [commit message template](#commit-message-templates), no second one is added.
+- The name is the user’s display name on the Git hosting service, or their username if no display name is set.
+- The email comes from the user’s profile on the Git hosting service. If it’s not available, for example on GitHub when the user hasn’t made their email public, the commit is made without the trailer and a warning is shown in the browser console.
+- With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the merge commit made when an entry is published doesn’t get the trailer.
+
+The default is `false`. The option is available with the GitHub, GitLab and Gitea/Forgejo backends. It doesn’t apply to [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits) made with the local development workflow.
+
 ##### Skipping CI/CD
 
 It’s also possible to add the `[skip ci]` prefix to commit messages to prevent triggering CI/CD pipelines. See the [deployments guide](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) for more details.
@@ -645,7 +702,7 @@ In your Gitea or Forgejo instance, you may need to enable Cross-Origin Resource 
 
 ### Configuration
 
-The base configuration for the Gitea/Forgejo backend is straightforward. You need to specify the `name` of the backend as `gitea` and provide the `repo` option with the format `owner/repo`, where `owner` is your Gitea/Forgejo username or organization name, and `repo` is the repository name.
+The base configuration for the Gitea/Forgejo backend is straightforward. You need to specify the `name` of the backend as `gitea` (or [`forgejo`](#forgejo-backend-name)) and provide the `repo` option with the format `owner/repo`, where `owner` is your Gitea/Forgejo username or organization name, and `repo` is the repository name.
 
 ```yaml [YAML]
 backend:
@@ -761,13 +818,56 @@ api_root = "https://codeberg.org/api/v1"
 
 The API version for Gitea/Forgejo is `v1`, so make sure to include `/api/v1` in the `api_root` option.
 
-The `base_url` option is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. This is because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client. The `base_url` is not inferred from `api_root`, so you have to set both options.
+The `base_url` option is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. This is because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client. With the `gitea` backend name, the `base_url` is not inferred from `api_root`, so you have to set both options. The [`forgejo` backend name](#forgejo-backend-name) infers it instead.
 
 The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
 
 **Breaking change from Netlify/Decap CMS**
 
 In Netlify/Decap CMS, the default origin of the `base_url` and `api_root` backend options is set to `https://try.gitea.io` (test instance). In Sveltia CMS, we changed it to `https://gitea.com` (public free service). In most cases, anyway, you need to set these options explicitly to point to your own Gitea/Forgejo instance.
+
+#### Forgejo Backend Name
+
+Decap CMS 3.15 added a separate `forgejo` backend. Sveltia CMS accepts that name too, so a Decap CMS configuration for Forgejo or Codeberg works unchanged. It uses the same Gitea/Forgejo backend, with every feature on this page, but the instance URL options work differently:
+
+- `api_root` is required, because there’s no default instance.
+- `base_url` is optional. It defaults to `api_root` without the `/api/v1` path, e.g. `https://codeberg.org`, so you only need one URL.
+
+```yaml [YAML]{2,4}
+backend:
+  name: forgejo
+  repo: owner/repo
+  api_root: https://codeberg.org/api/v1
+```
+
+```toml [TOML]{2,4}
+[backend]
+name = "forgejo"
+repo = "owner/repo"
+api_root = "https://codeberg.org/api/v1"
+```
+
+```json [JSON]{3,5}
+{
+  "backend": {
+    "name": "forgejo",
+    "repo": "owner/repo",
+    "api_root": "https://codeberg.org/api/v1"
+  }
+}
+```
+
+```js [JavaScript]{3,5}
+{
+  backend: {
+    name: "forgejo",
+    repo: "owner/repo",
+    api_root: "https://codeberg.org/api/v1",
+  },
+}
+```
+
+Unlike Decap CMS, which defaults the `branch` option to `main` with this backend name, Sveltia CMS uses the repository’s default branch when `branch` is omitted, the same as with the `gitea` name.
 
 ### Authentication
 

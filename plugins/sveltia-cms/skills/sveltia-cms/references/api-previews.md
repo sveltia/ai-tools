@@ -64,10 +64,13 @@ The component you register receives the following props during render:
 - `getCollection` (function): Async function that returns entries from a specified collection. Each entry is an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
   - `collectionName` (string): Name of the collection to query. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). The Promise is rejected if the collection is not found.
   - `slug` (string, optional): Entry slug to fetch a specific entry, or the filename in a file collection or the singleton collection. If omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
-- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s key path. Useful for accessing related entry data from relation fields. A trailing index is removed from the key path, so the subfield of a List field with a single `field` uses the List field’s key path, e.g. `tags` instead of `tags.0`. Other examples of key paths:
-  - `author` for a top-level field
-  - `details.author` for a field nested in an Object field
-  - `authors.0.person` for one in a List item
+- `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s name, as in Netlify/Decap CMS. Useful for accessing related entry data from relation fields: `fieldsMetaData.getIn([fieldName, collectionName, value])` returns the referenced entry’s content. For a field inside an Object or List field, start the path with the names of the parent fields. List item indexes are not part of the path, so the metadata of all the items is merged. Examples of paths for a relation field referencing the `authors` collection:
+  - `['author', 'authors', value]` for a top-level field, with or without the `multiple` option
+  - `['details', 'author', 'authors', value]` for a field nested in an Object field named `details`
+  - `['books', 'author', 'authors', value]` for one in the items of a List field named `books`
+  - `['tags', 'tag', 'authors', value]` for the single `field` named `tag` of a List field named `tags`
+
+  The metadata of a nested field is also available under its key path without a trailing index, e.g. `details.author`, `books.0.author` or `tags` for the single `field` of a List field, for compatibility with earlier versions of Sveltia CMS. These keys are deprecated and will be removed in a future release.
 - `document` (Document): The preview pane iframe’s Document object. Use this instead of the global `document` to manipulate the preview DOM.
 - `window` (Window): The preview pane iframe’s Window object. Use this instead of the global `window` to access the preview window context.
 
@@ -960,7 +963,7 @@ The attributes are primarily for internal use. The rest of the markup, such as c
 
 **Why “key path”?**
 
-The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object keyed by these paths, so the term is used throughout the app and its API, e.g. in the `fieldsMetaData` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
+The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object keyed by these paths, so the term is used throughout the app and its API, e.g. in the `widgetFor` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
 
 ### Showcase
 

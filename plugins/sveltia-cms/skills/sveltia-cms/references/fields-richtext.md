@@ -114,7 +114,23 @@ The default content for the field, written in Markdown or HTML depending on the 
 - **Type**: `boolean`
 - **Default**: `false`
 
-Whether to limit the editor height. When set to `true`, the editor height is limited to 240 pixels and a scrollbar appears when the content exceeds the height.
+Whether to make the editor compact. When set to `true`, the editor starts at the height of a single line rather than several, grows with the content and stops at 240 pixels, where a scrollbar appears.
+
+##### `multiline`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+Whether the content can span multiple paragraphs and lines. Set it to `false` for short text with inline formatting that should stay on one line, such as a title or caption. The editor then works as follows:
+
+- The Enter key doesn’t start a new paragraph or line, in both the rich text and `raw` modes.
+- Pasted text is joined into a single line, with a space where each paragraph or line break was.
+- Only the inline formatting [buttons](#buttons) (`bold`, `italic`, `strikethrough`, `code` and `link`) and inline [editor components](#editor-components), such as `image`, are available. Any other button or component listed in the `buttons` or `editor_components` option is ignored, with a warning in the browser console.
+- Horizontal rules and tables in Markdown are kept as plain text.
+- With the `html` [format](#format), the `raw` mode is not available, as the HTML source could hold several paragraphs on one line.
+- An existing value with several paragraphs is kept as is until the content is changed. Then the paragraphs are joined into one.
+
+The editor also starts at the height of a single line, as with the [`minimal`](#minimal) option.
 
 ##### `modes`
 
@@ -276,6 +292,7 @@ The following options can be defined globally:
 - `format` (RichText field type only)
 - `default`
 - `minimal`
+- `multiline`
 - `modes`
 - `buttons`
 - `editor_components`
@@ -440,6 +457,51 @@ buttons = ["bold", "italic", "link"]
   default: "To get started, write your **Markdown** content here.",
   minimal: true,
   buttons: ["bold", "italic", "link"],
+}
+```
+
+#### Single-Line Field with Inline Formatting
+
+This example shows a title field that allows bold and italic text and links, but no paragraph or line breaks. The empty `editor_components` list turns off the editor components, including `image`.
+
+```yaml [YAML]
+- name: title
+  label: Title
+  widget: richtext
+  multiline: false
+  buttons: [bold, italic, link]
+  editor_components: []
+```
+
+```toml [TOML]
+[[fields]]
+name = "title"
+label = "Title"
+widget = "richtext"
+multiline = false
+buttons = ["bold", "italic", "link"]
+editor_components = []
+```
+
+```json [JSON]
+{
+  "name": "title",
+  "label": "Title",
+  "widget": "richtext",
+  "multiline": false,
+  "buttons": ["bold", "italic", "link"],
+  "editor_components": []
+}
+```
+
+```js [JavaScript]
+{
+  name: "title",
+  label: "Title",
+  widget: "richtext",
+  multiline: false,
+  buttons: ["bold", "italic", "link"],
+  editor_components: [],
 }
 ```
 

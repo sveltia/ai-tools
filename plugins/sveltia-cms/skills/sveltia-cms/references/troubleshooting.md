@@ -103,7 +103,7 @@ See [discussion #544](https://github.com/sveltia/sveltia-cms/discussions/544) fo
 
 #### Excessively Long Slugs
 
-By default, Sveltia CMS does not limit the length of generated slugs, which can lead to build errors in some CI services that have a maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
+By default, Sveltia CMS limits generated slugs to 200 bytes, which keeps filenames and branch names valid but can still lead to build errors in some CI services that have a lower maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
 
 Source: https://sveltiacms.app/en/docs/troubleshooting
 
@@ -134,10 +134,12 @@ Sveltia CMS employs multiple layers of security measures to protect data and ens
 - **AI-assisted coding**: Claude and GPT assistants are used to ensure secure coding practices and identify potential vulnerabilities during development.
 - **Dependency security**: Constant full updates with `ncu -u && pnpm up`, manual and CI-driven [`pnpm audit`](https://pnpm.io/cli/audit) and Dependabot alerts deal with vulnerabilities quickly. `pnpm`’s `minimumReleaseAge` option [protects against supply chain attacks](https://pnpm.io/supply-chain-security).
 - **Transparent releases**: We use pnpm, Vite, GitHub Actions and [npm package provenance](https://github.blog/security/supply-chain-security/introducing-npm-package-provenance/) for verifiable, reliable releases.
+- **Immutable releases**: Newer releases are [immutable](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases) and cannot be modified after publishing. This ensures that users can trust the integrity of the software they install.
 - **Frequent releases**: Regular releases ensure users get the latest security fixes and improvements promptly. Timely dependency updates also reduce the risk of vulnerabilities in third-party packages.
 - **Publishing security**: [Trusted publishing](https://docs.npmjs.com/trusted-publishers) and [2FA](https://docs.npmjs.com/requiring-2fa-for-package-publishing-and-settings-modification) enabled.
 - **Responsible disclosure**: We publish a [security policy](https://github.com/sveltia/sveltia-cms/security/policy) and encourage the responsible disclosure of vulnerabilities. We maintain a public list of [security advisories](https://github.com/sveltia/sveltia-cms/security/advisories) to keep users informed about issues and their resolutions. We give credit to security researchers who report vulnerabilities, although we do not offer bounties.
-- **Swift response**: We prioritize security fixes and aim to address vulnerabilities within 8 hours of discovery, regardless of severity. In fact, we fixed the [first XSS vulnerability](https://github.com/sveltia/sveltia-cms/security/advisories/GHSA-97r8-rf7q-wmjw) reported to us in just two hours, despite it being low severity with no known exploits.
+- **Swift response**: We prioritize security fixes and aim to address vulnerabilities as quickly as possible, regardless of severity. In fact, we implemented and shipped fixes for the vulnerabilities reported in the past within a few hours of them being reported, even though there were no known exploits.
+- **Communication**: We announce security updates through GitHub, Discord and Bluesky.
 
 ### What You Can Do
 
