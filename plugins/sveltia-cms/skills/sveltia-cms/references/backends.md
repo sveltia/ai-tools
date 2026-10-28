@@ -1435,6 +1435,10 @@ If you or a small team of developers are the only users of your CMS instance, yo
 
 Click the “Sign In with Token” button on the login screen. The prompt dialog provides a link to the token generation page on GitLab with the required scopes pre-selected. Generate a new token, copy it to the clipboard and paste it into the prompt dialog to sign in. The token will be stored in the browser’s local storage and used for subsequent API requests.
 
+**Fine-grained tokens not supported yet**
+
+GitLab’s [fine-grained personal access tokens](https://docs.gitlab.com/auth/tokens/fine_grained_access_tokens/) don’t work with Sveltia CMS yet. They can’t read the project permissions the CMS checks when you sign in, because GitLab hasn’t finished adding fine-grained token support to its GraphQL API. Use a legacy token instead. See [this discussion](https://github.com/sveltia/sveltia-cms/discussions/1121) for details.
+
 You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
 
 #### PKCE Authorization (Recommended) {#pkce-authorization}
