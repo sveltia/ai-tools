@@ -400,10 +400,16 @@ There are some syntax rules to keep in mind when using string transformations:
 - String arguments must be enclosed in single quotes.
 - Numeric arguments should not be quoted.
 - No spaces are allowed between the transformation name and the opening parenthesis.
-- No spaces are allowed after the starting curly braces (`{{`) or before the ending curly braces (`}}`).
-- A space is required before and after the pipe character (`|`).
 
-We might relax some of these rules in future releases.
+Spaces inside the curly braces and around the pipe character (`|`) are optional, so `{{ title | upper }}` and `{{title|upper}}` are the same as `{{title | upper}}`. This applies to every template tag in the configuration, not only the ones with transformations, e.g. `{{ slug }}` in the `path` option or `{{ locale }}` in the `folder` option.
+
+#### Escaping Template Tags
+
+To output a template tag as is rather than have Sveltia CMS fill it in, put a backslash (`\`) right before the opening curly braces. The backslash is removed, and the rest of the tag is kept verbatim. This is useful when a value contains a template for another tool that uses the same double curly brace syntax, such as a static site generator like [Eleventy](https://www.11ty.dev/) or [Hugo](https://gohugo.io/). For example, `portfolio/\{{ title | slugify }}/index.html` becomes `portfolio/{{ title | slugify }}/index.html`.
+
+In a string format where the backslash is itself an escape character, write two backslashes (`\\{{`) so that one remains in the value. This applies to double-quoted strings in YAML and TOML, JSON and JavaScript. A single-quoted or unquoted YAML string takes a single backslash.
+
+Escaping is supported in all the [available contexts](#available-contexts) except the `slug` and `path` options of an entry collection.
 
 ### Available Transformations
 

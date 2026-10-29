@@ -2313,7 +2313,7 @@ A string `default` value supports the following template tags, which are filled 
 - `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags).
 - `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/en/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) because the user is not authenticated via a Git backend.
 
-[String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option.
+[String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option. Any other tag, such as `{{title}}`, is replaced with an empty string. To keep a template tag for your static site generator, [escape it](https://sveltiacms.app/en/docs/string-transformations#escaping-template-tags) with a backslash. See the [example below](#passing-a-template-to-a-static-site-generator).
 
 ### Examples
 
@@ -2388,6 +2388,43 @@ default = "{{author-name}}"
   label: 'Author Name',
   widget: 'hidden',
   default: '{{author-name}}',
+}
+```
+
+#### Passing a Template to a Static Site Generator
+
+This example shows how to store an [Eleventy permalink](https://www.11ty.dev/docs/permalinks/) template that Eleventy fills in at build time. The backslash before the curly braces keeps Sveltia CMS from processing the template tag, and is removed from the saved value, which is `portfolio/{{ title | slugify }}/index.html`.
+
+```yaml [YAML]
+- name: permalink
+  label: Permalink
+  widget: hidden
+  default: 'portfolio/\{{ title | slugify }}/index.html'
+```
+
+```toml [TOML]
+[[fields]]
+name = "permalink"
+label = "Permalink"
+widget = "hidden"
+default = "portfolio/\\{{ title | slugify }}/index.html"
+```
+
+```json [JSON]
+{
+  "name": "permalink",
+  "label": "Permalink",
+  "widget": "hidden",
+  "default": "portfolio/\\{{ title | slugify }}/index.html"
+}
+```
+
+```js [JavaScript]
+{
+  name: 'permalink',
+  label: 'Permalink',
+  widget: 'hidden',
+  default: 'portfolio/\\{{ title | slugify }}/index.html',
 }
 ```
 
