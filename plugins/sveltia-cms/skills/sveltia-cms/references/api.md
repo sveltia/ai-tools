@@ -373,7 +373,7 @@ CMS.init({
 
 #### Providing a Partial Configuration
 
-If the `load_config_file` option is set to `true` or omitted, the configuration provided here will be merged with the one loaded from `config.yml`. The merge uses the [`deepmerge`](https://www.npmjs.com/package/deepmerge) library, so you can override or add specific settings. Use cases for this are more limited, but it can be useful in some scenarios.
+If the `load_config_file` option is set to `true` or omitted, the configuration provided here will be merged with the one loaded from `config.yml`. The merge uses the [`@fastify/deepmerge`](https://www.npmjs.com/package/@fastify/deepmerge) library, so you can override or add specific settings. Use cases for this are more limited, but it can be useful in some scenarios.
 
 For example, you could override the [backend branch](https://sveltiacms.app/en/docs/backends#branch-selection) like this:
 

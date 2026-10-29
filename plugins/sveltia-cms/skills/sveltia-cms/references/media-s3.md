@@ -1,6 +1,6 @@
 # S3-Compatible Media Storage Providers
 
-Amazon S3 and providers that expose an S3-compatible API: Backblaze B2, Bunny Storage, Cloudflare R2, DigitalOcean Spaces, Scaleway Object Storage and Supabase Storage.
+Amazon S3 and providers that expose an S3-compatible API: Backblaze B2, Bunny Storage, Cloudflare R2, DigitalOcean Spaces, Neon Object Storage, Scaleway Object Storage and Supabase Storage.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -1127,6 +1127,188 @@ The files and folders are browsed [folder by folder](https://sveltiacms.app/en/d
 - Folders can be created, renamed and deleted.
 
 Source: https://sveltiacms.app/en/docs/media/digitalocean-spaces
+
+---
+
+## Neon Object Storage Integration
+
+[Neon Object Storage](https://neon.com/docs/storage/overview) is S3-compatible object storage that comes with every Neon project and is branched along with the database. Sveltia CMS supports it as a media storage backend through its [S3-compatible API](https://neon.com/docs/storage/s3-compatibility), with direct browser-to-storage uploads using AWS Signature Version 4 — no backend proxy is required.
+
+### Requirements
+
+- A Neon project in a region that offers Object Storage: `aws-us-east-1`, `aws-us-east-2`, `aws-eu-central-1` or `aws-ap-southeast-1`.
+- A bucket on the branch you want to use, with `public_read` access or a CDN in front of it (see [Public Read Access](#public-read-access) below).
+- A storage access key pair (see [Credentials](#credentials) below).
+
+#### CSP
+
+If your site uses a Content Security Policy (CSP), you need to allow your branch’s storage endpoint. See [Content Security Policy](#content-security-policy) below for details.
+
+### Setup
+
+#### Endpoint
+
+Each Neon branch has its own storage endpoint, e.g. `https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech`. Find it as `AWS_ENDPOINT_URL_S3` under **Neon Console > [project] > Connect > Storage**, and set it as `endpoint` in your config.
+
+The endpoint can’t be built from the project or branch ID, because its hostname also includes a cell ID (`c-1` above). Copy it as is.
+
+Sveltia CMS only accepts an HTTPS endpoint on a Neon storage hostname (`*.storage.*.aws.neon.tech`). Any other URL is ignored, and the storage won’t be available. This keeps the signed requests, which carry your credentials, from being sent to another host by mistake.
+
+The region is read from the endpoint’s hostname (`us-east-2` above), so you don’t need to set `region`.
+
+#### Credentials
+
+Create a storage access key pair in one of these ways:
+
+- In **Neon Console > [project] > Connect > Storage**.
+- With the Neon CLI: `neon credentials create --scope storage:read --scope storage:write`.
+
+See [Authentication](https://neon.com/docs/storage/authentication) in the Neon documentation for details.
+
+The resulting **Access Key ID** (`nak_live_…`) goes in `access_key_id` in your config. The **Secret Access Key** (`nsk_live_…`) is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
+
+**Tip**
+
+Use a key pair with both the `storage:read` and `storage:write` scopes, so that uploads, renames and deletions work.
+
+#### Public Read Access
+
+Neon sets access per bucket, as either `private` or `public_read`, in the Neon Console, CLI or API.
+
+A `public_read` bucket serves its files anonymously at `{endpoint}/{bucket}/{key}`, which is the URL Sveltia CMS uses for asset previews and stores in your entries by default.
+
+A `private` bucket returns an error for anonymous requests, so preview images fail to load and the stored URLs don’t work on your site. To use a private bucket, put a CDN in front of it and set its URL as `public_url`. See [CDN / Custom Domain](#cdn-custom-domain) below.
+
+#### CORS
+
+No CORS configuration is needed. Neon Object Storage allows cross-origin requests from any origin by default, so listing, uploading, renaming and deleting from the browser work out of the box.
+
+### Configuration
+
+Here’s an example configuration for Neon Object Storage:
+
+```yaml [YAML]
+media_libraries:
+  neon_object_storage:
+    access_key_id: nak_live_0123456789abcdef0123456789abcdef
+    bucket: media
+    endpoint: https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech
+    prefix: cms-uploads/ # Optional
+```
+
+```toml [TOML]
+[media_libraries.neon_object_storage]
+access_key_id = "nak_live_0123456789abcdef0123456789abcdef"
+bucket = "media"
+endpoint = "https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech"
+prefix = "cms-uploads/" # Optional
+```
+
+```json [JSON]
+{
+  "media_libraries": {
+    "neon_object_storage": {
+      "access_key_id": "nak_live_0123456789abcdef0123456789abcdef",
+      "bucket": "media",
+      "endpoint": "https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech",
+      "prefix": "cms-uploads/"
+    }
+  }
+}
+```
+
+```js [JavaScript]
+{
+  media_libraries: {
+    neon_object_storage: {
+      access_key_id: 'nak_live_0123456789abcdef0123456789abcdef',
+      bucket: 'media',
+      endpoint: 'https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech',
+      prefix: 'cms-uploads/', // Optional
+    },
+  },
+}
+```
+
+**Warning**
+
+Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
+
+#### Configuration Properties
+
+| Property | Required | Description |
+| --- | --- | --- |
+| `access_key_id` | Yes | Neon storage Access Key ID, e.g. `nak_live_…`. Safe to store in config. |
+| `bucket` | Yes | The bucket name. |
+| `endpoint` | Yes | The branch’s storage endpoint (`AWS_ENDPOINT_URL_S3`), e.g. `https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech`. See [Endpoint](#endpoint) above. |
+| `region` | No | The region used to sign requests. Defaults to the region in the endpoint’s hostname, e.g. `us-east-2`. There is normally no reason to set it. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `public_url` | No | CDN or custom domain URL for asset previews. Required for a `private` bucket. See [CDN / Custom Domain](#cdn-custom-domain) below. |
+
+### CDN / Custom Domain
+
+By default, asset URLs use the branch endpoint: `{endpoint}/{bucket}/{key}`. To serve assets through a CDN or a custom domain in front of the bucket, set `public_url` to its URL:
+
+```yaml
+public_url: 'https://cdn.example.com'
+```
+
+Asset URLs are then constructed as `{public_url}/{key}` (using the full object key, including any `prefix`).
+
+### Content Security Policy
+
+API calls (list, upload, rename, delete) go to the branch endpoint, which also serves the assets by default:
+
+```
+connect-src https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech;
+img-src     https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech;
+```
+
+If using a CDN or custom domain via `public_url`:
+
+```
+connect-src https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech
+            https://cdn.example.com;
+img-src     https://cdn.example.com;
+```
+
+Replace the endpoint and domain with your own.
+
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+
+See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+
+### Neon Object Storage-Specific Notes
+
+#### Branches
+
+Object Storage is branched along with the database, and each branch has its own endpoint. The CMS uses the branch whose endpoint is in your config, so files uploaded through the CMS go to that branch only.
+
+The stored asset URLs include the endpoint, so they keep pointing to that branch even if you later change the config to another branch.
+
+#### No Per-Object ACLs
+
+Neon Object Storage doesn’t implement the `x-amz-acl` header for per-object access control. Access is set per bucket instead (see [Public Read Access](#public-read-access) above). Sveltia CMS doesn’t send the header to Neon.
+
+### Accessing the Storage
+
+There are two ways to use Neon Object Storage in Sveltia CMS:
+
+#### File and Image Fields
+
+When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Neon Object Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media to your bucket or select existing media.
+
+#### Asset Library
+
+Neon Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+
+The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+
+- Subfolders are listed ahead of the files.
+- Uploads go to the folder being viewed.
+- Folders can be created, renamed and deleted.
+
+Source: https://sveltiacms.app/en/docs/media/neon-object-storage
 
 ---
 

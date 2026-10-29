@@ -173,7 +173,7 @@ You can specify multiple configuration files by adding multiple `<link>` tags. S
 
 **Limitations**
 
-YAML anchors, aliases and merge keys only work if they are in the same file. This is because the files are parsed as separate JavaScript objects and then merged using the [`deepmerge`](https://www.npmjs.com/package/deepmerge) library.
+YAML anchors, aliases and merge keys only work if they are in the same file. This is because the files are parsed as separate JavaScript objects and then merged using the [`@fastify/deepmerge`](https://www.npmjs.com/package/@fastify/deepmerge) library.
 
 Also, modularized configuration files may raise errors if you enable JSON schema validation in your code editor, as the schema expects a complete configuration object.
 

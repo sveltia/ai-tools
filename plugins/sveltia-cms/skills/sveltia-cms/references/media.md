@@ -25,6 +25,7 @@ Sveltia CMS supports integrations with popular cloud-based media storage provide
   - [Bunny Storage](https://sveltiacms.app/en/docs/media/bunny-storage)
   - [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2)
   - [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces)
+  - [Neon Object Storage](https://sveltiacms.app/en/docs/media/neon-object-storage)
   - [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage)
   - [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage)
   - Any other S3-compatible service, including self-hosted servers such as [Garage](https://garagehq.deuxfleurs.fr/) and [MinIO](https://www.min.io/), through the Amazon S3 integration’s `endpoint` option. See [Self-Hosted Storage](https://sveltiacms.app/en/docs/media/amazon-s3#self-hosted-storage) for details.
