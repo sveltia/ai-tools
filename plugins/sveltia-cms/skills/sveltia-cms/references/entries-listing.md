@@ -910,6 +910,8 @@ The following template tags are supported in the `summary` option, in addition t
 - `{{commit_date}}`: The last commit date of the entry file from Git history (if available).
 - `{{locales}}`: The enabled locales for the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n).
 
+Each file in a [file collection](https://sveltiacms.app/en/docs/collections/files#summaries) can have a `summary` option of its own, and so can an entry collection’s [special index file](#managing-hugo-s-special-index-file).
+
 **Known issue**
 
 Git commit information is not available with the GitLab backend due to API limitations.
@@ -1207,6 +1209,7 @@ index_file:
   format: frontmatter # File format. Default: detected from the extension, or the collection’s format
   label: Index File # Human-readable file label. Default: Index File
   icon: home # Material Symbols icon name. Default: home
+  summary: '{{title}} ({{locales}})' # Summary template. Default: the label
   fields: # Fields for the index file. If omitted, regular entry fields are used
     ...
   editor:
@@ -1220,6 +1223,7 @@ extension = "md"
 format = "frontmatter"
 label = "Index File"
 icon = "home"
+summary = "{{title}} ({{locales}})"
 # fields would be defined as [[index_file.fields]] elements
 # editor configuration
 [index_file.editor]
@@ -1234,6 +1238,7 @@ preview = false
     "format": "frontmatter",
     "label": "Index File",
     "icon": "home",
+    "summary": "{{title}} ({{locales}})",
     "fields": [],
     "editor": {
       "preview": false
@@ -1250,6 +1255,7 @@ preview = false
     format: "frontmatter",
     label: "Index File",
     icon: "home",
+    summary: "{{title}} ({{locales}})",
     fields: [],
     editor: {
       preview: false,
@@ -1257,6 +1263,8 @@ preview = false
   },
 }
 ```
+
+The index file is listed with its `label` by default. To show something about its content instead, set the `summary` option. It works like the collection’s [`summary` option](#summaries), with two differences: it uses the index file’s own `fields`, and if no `title`, `name` or `label` field or header in the Markdown body has a value, `{{title}}` falls back to the label instead of the slug. The index file’s template replaces the collection’s wherever the collection’s would be used, such as in the entry list and search results.
 
 If your regular entry fields and index file fields are identical and you don’t need any options, simply write:
 

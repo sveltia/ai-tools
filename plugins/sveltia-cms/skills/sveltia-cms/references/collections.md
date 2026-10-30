@@ -388,6 +388,7 @@ A file definition within a file collection supports the following options:
 - `name`: A unique identifier for the file within the collection. Required.
 - `label`: A human-readable name for the file. Optional.
 - `icon`: A Material Symbols icon name to represent the file in the CMS UI. Optional.
+- `summary`: A template for the text shown in place of the label in the file list. Optional. [See below](#summaries) for details.
 - `file`: The path to the file in the content repository. Required.
 - `format`: The file format (e.g. `yaml`, `json`, `toml`, `yaml-frontmatter`, etc.). Optional. [See below](#file-format-and-extension) for details.
 - `frontmatter_delimiter`: The front matter delimiter. Optional. [See below](#front-matter-delimiter) for details.
@@ -764,6 +765,111 @@ widget = "richtext"
   ],
 }
 ```
+
+### Summaries
+
+The file list shows each file’s `label`, or its `name` if the label is missing. To show something about the file’s content instead, such as the locales it’s available in, set the `summary` option on the file. It works like the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of an entry collection. It can contain basic Markdown formatting, the values of the file’s own `fields`, transformations and the same special template tags, with the following differences:
+
+- `{{slug}}` is the file’s `name` option value.
+- `{{dirname}}` is the directory of the `file` path, relative to the repository’s root directory, since a file collection has no `folder`.
+- If the `title` field is missing or empty, `{{title}}` falls back to the `name` or `label` field, then to a header in the Markdown body, and finally to the file’s label instead of the slug.
+
+For example, with [i18n support](https://sveltiacms.app/en/docs/i18n) set up at the top level, the following configuration shows the page title along with the locales the file is available in:
+
+```yaml [YAML]{9}
+collections:
+  - name: pages
+    label: Pages
+    i18n: true
+    files:
+      - name: about
+        label: About Page
+        file: content/pages/about.{{locale}}.md
+        summary: '{{title}} ({{locales}})'
+        i18n: true
+        fields:
+          - { name: title, label: Title, i18n: true }
+          - { name: body, label: Body, widget: richtext, i18n: true }
+```
+
+```toml [TOML]{10}
+[[collections]]
+name = "pages"
+label = "Pages"
+i18n = true
+
+[[collections.files]]
+name = "about"
+label = "About Page"
+file = "content/pages/about.{{locale}}.md"
+summary = "{{title}} ({{locales}})"
+i18n = true
+
+[[collections.files.fields]]
+name = "title"
+label = "Title"
+i18n = true
+
+[[collections.files.fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+i18n = true
+```
+
+```json [JSON]{12}
+{
+  "collections": [
+    {
+      "name": "pages",
+      "label": "Pages",
+      "i18n": true,
+      "files": [
+        {
+          "name": "about",
+          "label": "About Page",
+          "file": "content/pages/about.{{locale}}.md",
+          "summary": "{{title}} ({{locales}})",
+          "i18n": true,
+          "fields": [
+            { "name": "title", "label": "Title", "i18n": true },
+            { "name": "body", "label": "Body", "widget": "richtext", "i18n": true }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+```js [JavaScript]{12}
+{
+  collections: [
+    {
+      name: "pages",
+      label: "Pages",
+      i18n: true,
+      files: [
+        {
+          name: "about",
+          label: "About Page",
+          file: "content/pages/about.{{locale}}.md",
+          summary: "{{title}} ({{locales}})",
+          i18n: true,
+          fields: [
+            { name: "title", label: "Title", i18n: true },
+            { name: "body", label: "Body", widget: "richtext", i18n: true },
+          ],
+        },
+      ],
+    },
+  ],
+}
+```
+
+With English and French enabled and an English title of “About Us”, the file is listed as “About Us (en, fr)”. The field values are taken from the default locale. A file that doesn’t exist in the repository yet has no content to fill in the template, so it’s listed with its label until it’s first saved.
+
+The `summary` option is only used in the file list. A [singleton](https://sveltiacms.app/en/docs/collections/singletons) has no file list, so the option has no effect there.
 
 ### Singletons
 
