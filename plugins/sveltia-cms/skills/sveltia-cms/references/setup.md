@@ -415,7 +415,7 @@ This document provides information about Sveltia CMS releases, including how to 
 
 ### Release Frequency
 
-Sveltia CMS ships new versions frequently, usually multiple times per week or even multiple times per day. Instead of following a strict release schedule, we prioritize releasing updates as soon as they are ready. This approach allows us to deliver new features, improvements and bug fixes to users more rapidly.
+Sveltia CMS ships new versions quite frequently, usually several times a week or even multiple times a day. Instead of following a strict release schedule, we prioritize releasing updates as soon as they are ready. This approach allows us to deliver new features, improvements and bug fixes to users more rapidly.
 
 And this approach works because our product is a [CDN-served SPA](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works). As long as you use the CDN script without pinning to a specific version, there is no maintenance overhead for users to update their installations. End users can always access the latest version of Sveltia CMS without needing to manually update their software.
 
@@ -465,13 +465,15 @@ The npm package includes all of these files instead, so the CMS contacts no CDN.
 
 Some of those files, including libraries like [Leaflet](https://leafletjs.com/) for the Map field and the syntax highlighting definitions, come with packages that your package manager installs as dependencies of Sveltia CMS. If your site uses one of them too, both can share a single copy.
 
-**Advanced Usage of the npm Package**
+**Security Risk**
+
+Using the npm version means that you will not receive any updates, including important bug fixes and security patches, until you manually update the package. This can lead to potential security risks and increased maintenance costs.
+
+Sveltia CMS is designed to [update automatically](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works), and our [security practices](https://sveltiacms.app/en/docs/security#security-practices) include mitigating supply chain attacks. Use the CDN version unless you require advanced framework integration or a strictly privacy-compliant setup.
+
+**No Support for npm Package Setup**
 
 The npm package is aimed at advanced users who are familiar with build tools and JavaScript modules. We do not provide support for using it. If you are not comfortable with build tools, we recommend using the CDN builds instead.
-
-**Breaking Change in v0.221.0**
-
-Earlier versions of the npm package pointed to the CDN module, `dist/sveltia-cms.mjs`, so `import CMS from '@sveltia/cms'` gave you the same self-contained file as the CDN. It now points to the npm build described above, which needs a build tool. If you load the package without one, for example through an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script/type/importmap), use the CDN module URL instead. Also note that the npm build no longer shows update notifications, and doesn’t generate PDF thumbnails.
 
 **PDF Thumbnails in the npm Package**
 
@@ -509,6 +511,14 @@ Earlier versions of Sveltia CMS were bundled as a [JavaScript module](https://de
 <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs" type="module"></script>
 ```
 
+You can also explicitly import the script to use the [JavaScript API](https://sveltiacms.app/en/docs/api#using-the-cdn):
+
+```html
+<script type="module">
+  import CMS from 'https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs';
+</script>
+```
+
 The CMS also periodically checks for updates and notifies users when a new version is available. When the notification appears, simply click the “Update Now” button to refresh the application and load the latest version.
 
 To avoid major version updates that may include breaking changes, you can pin to a specific major version using the caret symbol (`^`) followed by the major version number:
@@ -527,11 +537,13 @@ You can also pin to an exact version, but this is not recommended unless you hav
 <script src="https://unpkg.com/@sveltia/cms@1.2.3/dist/sveltia-cms.js"></script>
 ```
 
+Please [report any regressions](https://sveltiacms.app/en/feedback#bug-reports) you encounter to us. Keep in mind that pinning is only a temporary solution and that unreported bugs may be overlooked forever. Reported bugs are usually solved within 8 hours.
+
 **Security Risk**
 
-Pinning to an exact version means that you will not receive any updates, including important bug fixes and security patches, until you manually update the version number in your script tag. This can lead to a degraded experience and potential security risks.
+If you pin to an exact version, you will not receive any updates, including important bug fixes and security patches, until you manually update the version number in your script tag. This can lead to potential security risks and increased maintenance costs.
 
-Because our [security practices](https://sveltiacms.app/en/docs/security#security-practices) include regular dependency updates and supply chain attack mitigations, pinning to an exact version is discouraged for long-term use.
+Sveltia CMS is designed to [update automatically](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works), and our [security practices](https://sveltiacms.app/en/docs/security#security-practices) include mitigating supply chain attacks. It is discouraged to pin to an exact version for long-term use, as the disadvantages outweigh the advantages.
 
 #### npm Package Usage
 
