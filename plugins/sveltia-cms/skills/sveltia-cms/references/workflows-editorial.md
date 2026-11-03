@@ -261,21 +261,24 @@ If its base branch is changed to something else, the CMS stops treating it as th
 
 Likewise, a pull request from the entry’s branch that holds a different entry isn’t offered in the entry’s editor.
 
-#### Entries Added from a Relation Field
+#### Entries Added or Edited from a Relation Field
 
-A [Relation](https://sveltiacms.app/en/docs/fields/relation) field can [create a related entry](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) on the fly with its **Add** button, e.g. a new section for a help center article. With the Editorial Workflow, the new entry is committed to the **pull request of the entry being edited** rather than getting a branch of its own. The two are then reviewed together and published in the same merge.
+A [Relation](https://sveltiacms.app/en/docs/fields/relation) field can [create a related entry](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) on the fly with its **Add** button, e.g. a new section for a help center article, and [edit a selected one](https://sveltiacms.app/en/docs/fields/relation#editing-related-entries) with its **Edit** button, e.g. to fix a typo in an author’s bio. With the Editorial Workflow, the new entry or the changes are committed to the **pull request of the entry being edited** rather than getting a branch of their own. They’re then reviewed together and published in the same merge.
 
-The dialog can be nested, e.g. adding a section from an article and then a tile from the section, and every entry created that way goes into the same pull request.
+The dialog can be nested, e.g. adding a section from an article and then a tile from the section, and every entry created or edited that way goes into the same pull request.
 
-- The [Editorial Workflow page](#editorial-workflow-page) shows a single card for the pull request: the card of the entry being edited, which lists the new entries, e.g. “Also adds Section: Guides”.
+- The [Editorial Workflow page](#editorial-workflow-page) shows a single card for the pull request: the card of the entry being edited, which lists the new entries, e.g. “Also adds Section: Guides”, and the edited ones, e.g. “Also changes Author: Ada Lovelace”.
 - Until the pull request is published, the new entries aren’t listed in their own collections, but the Relation field shows them by their labels whenever the entry is opened. They count toward their collections’ [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count), and another entry added with the same title gets a distinct slug.
-- Publishing the pull request publishes the new entries too, firing the `prePublish` and `postPublish` [event hooks](#event-hooks) for each of them.
-- The new entries can’t be edited or removed on their own before then. Discarding the pull request discards them along with the entry. [Deleting a published entry](#deleting-a-published-entry) whose pull request is still open takes them off the branch, so the removal doesn’t publish them.
+- An edited entry stays listed in its own collection as published. The Relation field shows it, and edits it again, as the pull request has it. Opening the entry on its own shows a notice that its changes are waiting in the other entry’s pull request. It can still be saved, but the two sets of changes then have to be combined when the pull request is published, which fails if they overlap.
+- Publishing the pull request publishes the new and edited entries too, firing the `prePublish` and `postPublish` [event hooks](#event-hooks) for each of them.
+- The new entries can’t be edited or removed on their own before then, only edited again from the Relation field. Discarding the pull request discards them, and the changes to the edited entries, along with the entry. [Deleting a published entry](#deleting-a-published-entry) whose pull request is still open takes the new entries off the branch and puts the edited ones back as they are published, so the removal doesn’t publish them.
 
-The Add button isn’t offered in these cases:
+The Add and Edit buttons aren’t offered in these cases:
 
 - **For the entry’s own collection.** A pull request stands for a single entry, so a second entry of the same collection in it couldn’t be told apart from the first.
-- **For a collection under the workflow on its own, while the entry being edited is saved directly.** The new entry would skip the review.
+- **For a collection under the workflow on its own, while the entry being edited is saved directly.** The new entry or the changes would skip the review.
+
+The Edit button isn’t offered either for an entry that has a pull request of its own, or whose changes are already waiting in the pull request of another entry.
 
 #### Checks Before Publishing
 
@@ -287,7 +290,8 @@ The board and the editor show an entry, but publishing merges the whole pull req
   - the entry’s own files, and those of its published version that a rename removes
   - assets added or replaced along with it, which are only removed when the entry is moved or deleted
   - the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites
-  - the new entries [added from a Relation field](#entries-added-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch
+  - the new entries [added from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch
+  - the existing entries [edited from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists as well. That includes the entries whose references a rename rewrites
   - the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it
 
   A file the merge would leave exactly as the configured branch already has it passes as well;

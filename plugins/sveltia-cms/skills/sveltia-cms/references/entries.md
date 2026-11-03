@@ -1,6 +1,6 @@
 # Entry Collections: Formats and Slugs
 
-Entry collections in depth: collection options, file formats and slugs. For nested entries, single-file collections and preview paths, see `entries-structure.md`. For listing, view and operation options, see `entries-listing.md`.
+Entry collections in depth: collection options, file formats and slugs. For nested entries, single-file collections and preview paths, see `entries-structure.md`. For listing and view options, see `entries-listing.md`. For operation options, see `entries-operations.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 

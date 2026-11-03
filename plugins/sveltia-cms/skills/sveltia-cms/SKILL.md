@@ -127,7 +127,10 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | `backend`, OAuth clients, authentication | `references/backends.md` |
 | Collection types, file collections, singletons | `references/collections.md` |
 | Planning collections; complete example configs for common site types | `references/content-modeling.md` |
-| Entry collection paths, slugs, sorting, filtering, nested collections | `references/entries.md` |
+| Entry collection options, file formats, slugs | `references/entries.md` |
+| Nested entries, single-file collections, preview paths | `references/entries-structure.md` |
+| Summaries, thumbnails, index files, table view, sorting, grouping, filtering | `references/entries-listing.md` |
+| Create/delete/duplicate controls, entry limits, read-only content, reordering, bulk editing | `references/entries-operations.md` |
 | Shared field options; String, Text, Number, Boolean, Select, Color | `references/fields.md` |
 | List field | `references/fields-list.md` |
 | Object, KeyValue fields | `references/fields-structural.md` |
@@ -138,7 +141,9 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Cloudinary, Uploadcare, Azure Blob Storage, stock photos | `references/media-external.md` |
 | Amazon S3 and S3-compatible storage (R2, B2, Spaces, Bunny, Scaleway, Supabase) | `references/media-s3.md` |
 | Multilingual content, `i18n` options, translation services | `references/i18n.md` |
+| I18n file structures (single file, multiple files/folders), localized slugs | `references/i18n-structures.md` |
 | Moving from Netlify CMS, Decap CMS or Static CMS; version upgrades | `references/migration.md` |
+| Recipes: entry tags, raw text files, deployment config files, conditional fields, soft line breaks | `references/how-tos.md` |
 | Blank page, auth failures, build errors, CSP, FAQs | `references/troubleshooting.md` |
 | Local development, simple workflow, deploy previews | `references/workflows.md` |
 | Editorial workflow, open authoring | `references/workflows-editorial.md` |

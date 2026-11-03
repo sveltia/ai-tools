@@ -48,7 +48,7 @@ Until then, the entry only exists in the draft:
 
 With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the new entry goes into the **pull request** of the entry being edited. It’s reviewed and published along with that entry, in the same merge, so an article and the section created for it can’t go live one without the other.
 
-The new entry doesn’t get a card of its own on the Editorial Workflow page. Instead, the card of the entry it was created from lists it, e.g. “Also adds Section: Guides”. See [Entries Added from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-from-a-relation-field) for details.
+The new entry doesn’t get a card of its own on the Editorial Workflow page. Instead, the card of the entry it was created from lists it, e.g. “Also adds Section: Guides”. See [Entries Added or Edited from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-or-edited-from-a-relation-field) for details.
 
 The button is not offered in the following cases:
 
@@ -58,6 +58,36 @@ The button is not offered in the following cases:
 - The Relation field is read-only.
 - The entry being edited is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and the related collection is the entry’s own collection, e.g. a post referring to other posts. A pull request stands for a single entry, and a second entry of the same collection in it couldn’t be told apart from the first. Create the related entry on its own instead.
 - The entry being edited is saved directly, but the related collection is under the Editorial Workflow on its own, with the collection-level [`publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) option. The new entry would be committed along with the entry being edited, skipping the review the related collection asks for. Create the related entry in its own collection instead.
+
+#### Editing Related Entries
+
+When a related entry is selected, the field also offers an **Edit** button, e.g. “Edit Ada Lovelace”, to make changes to that entry without leaving the entry being edited: fix a typo in an author’s bio while writing a post, for example. If the field allows [multiple values](#multiple), the button is labeled with the collection’s singular label, e.g. “Edit Author”, and opens a menu listing the selected entries.
+
+The button opens the same dialog as the [**Add**](#creating-related-entries) button, with the entry’s current values filled in. Clicking **Update** validates the changes. Like a new entry, the edited entry is not saved on its own: the changes are committed **together with the entry being edited** when the user saves, in a single commit. The entry being edited can be saved even if nothing else in it has changed.
+
+An entry created with the **Add** button can be edited the same way until it’s saved, e.g. to fix a typo in the name of a new tag. If its slug comes from a field that has changed, such as the title, the slug is updated too, along with the value selected in the field.
+
+A few things to note:
+
+- If the changes alter the value the field stores, e.g. the name of an author referenced by name, the field is updated to the new value. Other entries referring to the old value are not updated, the same as when the related entry is edited on its own.
+- If someone else changes the related entry before the user saves, the save fails with an error instead of overwriting their changes. Open the entry again from the field: the dialog warns about the change and shows the user’s changes on top of the latest version of the entry, so they can be reviewed before saving again. If the related entry has been deleted instead, remove it from the field to save the entry.
+- Clicking **Update** without changing anything just closes the dialog, so the related entry isn’t rewritten for nothing.
+- DateTime fields with the [`auto_now`](https://sveltiacms.app/en/docs/fields/datetime) option are set to the time the user clicks **Update**, rather than the time the entry is saved.
+- If the user deselects the edited entry before saving, the changes are dropped.
+- Changes that would move the entry to another file path, e.g. through a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#file-paths) template using one of its fields, can’t be made in the dialog, because moving an entry may also move its assets and nested entries. Edit the entry on its own instead.
+
+With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the changes go into the **pull request** of the entry being edited. They’re reviewed and published along with that entry, in the same merge. The card of that entry on the Editorial Workflow page lists the edited entry, e.g. “Also changes Author: Ada Lovelace”. See [Entries Added or Edited from a Relation Field](https://sveltiacms.app/en/docs/workflows/editorial#entries-added-or-edited-from-a-relation-field) for details.
+
+Besides the cases where the **Add** button is not offered because of the field, such as a [file collection](https://sveltiacms.app/en/docs/collections/files) or a read-only field, the **Edit** button is not offered for an existing entry in the following cases:
+
+- The entry being edited is saved through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), and the related entry belongs to the entry’s own collection, for the same reason as the **Add** button.
+- The entry being edited is saved directly, but the related collection is under the Editorial Workflow on its own. The changes would skip the review the related collection asks for. Edit the related entry on its own instead.
+- The related entry has a pull request of its own, or its changes are already waiting in the pull request of another entry.
+- The related entry is the collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugos-special-index-file), which has fields of its own.
+- The related collection is a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file), where all the entries are stored in one file.
+- The related collection or entry is read-only.
+- The related entry is the entry being edited itself.
+- The selected value matches more than one entry, e.g. a title two entries share, so there’s no telling which entry to edit.
 
 #### Preview
 

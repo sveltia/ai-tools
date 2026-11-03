@@ -270,17 +270,18 @@ Whether to show a preview of the field’s value in the entry’s preview pane. 
 
 ##### `i18n`
 
-- **Type**: `boolean`, `translate`, `duplicate` or `none`
-- **Default**: `false`, or `duplicate` for a subfield of a field using `duplicate`
+- **Type**: `boolean`, `translate`, `duplicate`, `sync`, `duplicate_if_empty` or `none`
+- **Default**: `false`, or the parent field’s option for a subfield whose parent uses `duplicate` or `sync`
 
 Indicates whether the field supports internationalization (i18n). The values are:
 
 - `true` (or `translate`): The field is enabled in all locales.
 - `false` (or `none`): The field is enabled in the default locale only.
 - `duplicate`: The field is read-only in non-default locales, and the default locale’s value is copied to them.
-- `duplicate_if_empty`: The default locale’s value is copied only to the non-default locales where the field is empty. The field can still be edited there. This value is available for the Code, DateTime, File, Image, Number, RichText, String and Text field types.
+- `sync`: The field can be edited in every locale, and a change made in any locale is copied to the other locales, so every locale keeps the same value.
+- `duplicate_if_empty`: The default locale’s value is copied only to the non-default locales where the field is empty. The field can still be edited there. This value is available for the Code, DateTime, File, Image, Number, Relation, RichText, Select, String and Text field types.
 
-A subfield without its own `i18n` option follows its parent’s `duplicate` strategy. Under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
+A subfield without its own `i18n` option follows its parent’s `duplicate` or `sync` strategy. Under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 
