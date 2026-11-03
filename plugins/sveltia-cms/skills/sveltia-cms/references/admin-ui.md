@@ -70,7 +70,7 @@ Content editing in Sveltia CMS is designed to be intuitive and efficient. Key fe
 
 Users can switch between light and dark themes in the CMS interface. The theme setting is **Automatic** by default, meaning the CMS follows the system’s light or dark appearance and switches with it right away. Users can pick Dark or Light at any time in the application settings.
 
-More appearance options will be added in future releases. Stay tuned!
+More appearance options may be added in future releases.
 
 #### Localization
 
@@ -427,7 +427,7 @@ Manage assets with a variety of operations:
 
 **Future Plans**
 
-Image editing capabilities, such as cropping and resizing, will be added in future releases. Advanced DAM features, such as tagging and metadata management, are also planned for future updates.
+Image editing capabilities, such as cropping and resizing, may be added in future releases. Advanced DAM features, such as tagging and metadata management, are also planned for future updates.
 
 Source: https://sveltiacms.app/en/docs/ui/asset-library
 
@@ -467,7 +467,7 @@ The Content Editor includes a sidebar that provides additional information and t
 - **History**: Shows the commit history of the current content file. Each commit is listed with its author and date, and with the first line of its message when the [`prompt_commit_messages`](https://sveltiacms.app/en/docs/backends#prompting-for-commit-messages) option is enabled. Without it, the messages the CMS writes for an entry are all the same, so they’re not shown. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
 - **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). Clicking a backlink opens the referenced content file in the editor. For example, users can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
 
-More panels will be added in the future.
+More panels may be added in the future.
 
 #### Auto-Saving Drafts
 
@@ -592,7 +592,7 @@ Sveltia CMS includes several keyboard shortcuts to enhance productivity while ed
 - Save an entry: `Ctrl+S` (Windows/Linux) or `Command+S` (macOS)
 - Cancel entry editing: `Escape`
 
-Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, `Ctrl+K`/`Command+K` to insert a link and `Tab` to indent a list item. The bold, italic and link shortcuts work in both the rich text and raw Markdown editing modes.
+Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, `Ctrl+K`/`Command+K` to insert a link and `Tab` to indent a list item. The bold, italic and link shortcuts work in both the rich text and raw Markdown editing modes. `Ctrl+Shift+V`/`Command+Shift+V` (`Command+Option+Shift+V` in Safari) pastes the text on the clipboard as [Markdown](https://sveltiacms.app/en/docs/fields/richtext), converting it to formatted content in the rich text mode.
 
 ### Linking to Content Editor
 
@@ -631,8 +631,8 @@ https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/new?field1=value1&field2
 Where `field1`, `field2`, etc. are the names of the fields to pre-fill with `value1`, `value2`, etc. Some notes on using this feature:
 
 - Make sure to [URL-encode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent) the parameter values.
-- Use dot notation to target nested fields (e.g. `author.name=John%20Doe`).
-- Use a comma-separated list (e.g. `tags=value1,value2`) or multiple query parameters (e.g. `tags=value1&tags=value2`) for multi-select fields.
+- Use dot notation to target nested fields (e.g. `author.name=John%20Doe`). An optional Object field is created when one of its fields gets a value this way.
+- Use a comma-separated list (e.g. `tags=value1,value2`) or multiple query parameters (e.g. `tags=value1&tags=value2`) for multi-select fields. In a List field with a single `field`, each value is converted to the type the subfield takes, e.g. a number for a Number subfield or `true` and `false` for a Boolean subfield.
 
 For example, given the following collection configuration:
 

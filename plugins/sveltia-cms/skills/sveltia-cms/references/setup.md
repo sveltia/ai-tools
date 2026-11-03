@@ -604,7 +604,7 @@ Here are some resources to help you get started with Sveltia CMS in various fram
 
 </div>
 
-More framework guides will be added over time.
+More framework guides may be added over time.
 
 Our [Showcase](https://sveltiacms.app/en/showcase) section features real-world examples of Sveltia CMS integrated with various frameworks, including links to their source code repositories. This can be a valuable resource for providing inspiration and practical insights for your own projects.
 

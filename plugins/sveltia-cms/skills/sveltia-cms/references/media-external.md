@@ -10,7 +10,7 @@ Sveltia CMS supports integration with various third-party services to enhance it
 
 **Future Plans**
 
-More integration options, including stock video providers, analytics tools and AI-powered content generation services, will be added in future releases.
+More integration options, including stock video providers, analytics tools and AI-powered content generation services, may be added in future releases.
 
 ### Media Storage Providers
 
@@ -845,7 +845,7 @@ Currently, Sveltia CMS supports the following free stock photo providers:
 
 **Future Plans**
 
-More providers, including paid stock photo services, will be added in future releases.
+More providers, including paid stock photo services, may be added in future releases.
 
 #### Note on Lorem Picsum
 

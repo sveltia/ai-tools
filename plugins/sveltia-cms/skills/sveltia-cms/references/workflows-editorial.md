@@ -194,6 +194,8 @@ The Publish Entry button is also available at every stage, in the entry editor a
 
 Required fields have to be filled in either way, as the entry goes live.
 
+Entries [added or edited from a Relation field](#entries-added-or-edited-from-a-relation-field) are published along with the entry, so they can only skip the review if their own collections allow it too. While the entry has such an entry in a collection without `direct_publish: true`, **Save and Publish** is disabled, and its label says the related entries need a review. For the same reason, the Publish Entry button only appears at the last stage then.
+
 The option isn’t offered:
 
 - for a collection with [`publish: false`](#restricting-publishing-and-deletion)
