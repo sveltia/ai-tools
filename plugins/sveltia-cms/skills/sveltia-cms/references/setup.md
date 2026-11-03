@@ -579,7 +579,9 @@ Source: https://sveltiacms.app/en/docs/releases
 
 ## Framework Guides
 
-Sveltia CMS is designed to be framework-agnostic, allowing you to integrate it with a wide range of frameworks and [static site generators](https://jamstack.org/generators/) (SSGs). Whether you’re using Astro, Eleventy, Hugo, Jekyll, Next.js or another framework — or even vanilla JavaScript — Sveltia CMS can fit seamlessly into your development workflow.
+Designed to be framework-agnostic, Sveltia CMS can be integrated with a wide range of frameworks and [static site generators](https://jamstack.org/generators/) (SSGs). Whether you use Astro, Eleventy, Hugo, Jekyll, Next.js or another framework, Sveltia CMS can fit seamlessly into your development workflow.
+
+It also works with framework-less sites built using vanilla JavaScript or custom tooling. It can even be used for non-website projects where content management is required.
 
 ### Getting Started
 
