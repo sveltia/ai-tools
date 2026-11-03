@@ -592,7 +592,7 @@ Sveltia CMS includes several keyboard shortcuts to enhance productivity while ed
 - Save an entry: `Ctrl+S` (Windows/Linux) or `Command+S` (macOS)
 - Cancel entry editing: `Escape`
 
-Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, `Ctrl+K`/`Command+K` to insert a link and `Tab` to indent a list item. The bold, italic and link shortcuts work in both the rich text and raw Markdown editing modes. `Ctrl+Shift+V`/`Command+Shift+V` (`Command+Option+Shift+V` in Safari) pastes the text on the clipboard as [Markdown](https://sveltiacms.app/en/docs/fields/richtext), converting it to formatted content in the rich text mode.
+Standard keyboard shortcuts are also available in the Markdown editor, including `Ctrl+B`/`Command+B` for bold text, `Ctrl+I`/`Command+I` for italics, `Ctrl+K`/`Command+K` to insert a link and `Tab` to indent a list item. The bold, italic and link shortcuts work in both the rich text and raw Markdown editing modes. `Ctrl+Shift+V`/`Command+Shift+V` (`Command+Option+Shift+V` in Safari) [pastes the text on the clipboard as Markdown](https://sveltiacms.app/en/docs/fields/richtext#editor), converting it to formatted content in the rich text mode.
 
 ### Linking to Content Editor
 

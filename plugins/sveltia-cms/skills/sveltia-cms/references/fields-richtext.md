@@ -32,7 +32,9 @@ Tables can be inserted and edited with the [`table`](#editor-components) editor 
 
 Local/remote images can be pasted or dropped into the editor to insert them. Note: pasting multiple images is [not supported in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=864052).
 
-Pasted text keeps the formatting it was copied with, so text copied from a code editor or a terminal becomes a code block, while Markdown copied as plain text, like `- item`, is inserted as literal text. To paste the text as Markdown instead, converting it to formatted content such as a list, paste it as plain text with `Ctrl+Shift+V` (Windows/Linux) or `Command+Shift+V` (macOS). In Safari, use `Command+Option+Shift+V`.
+Pasted text keeps the formatting it was copied with. Text copied from a code editor or a terminal becomes a code block, and Markdown copied as plain text, like `- item`, is inserted as literal text.
+
+To paste text as Markdown instead, converting it to formatted content such as a list, use the browser’s shortcut to paste plain text: `Ctrl+Shift+V` (Windows/Linux) or `Command+Shift+V` (macOS). In Safari, use `Command+Option+Shift+V`.
 
 Emoji autocomplete is enabled by default. Typing a colon followed by one or more characters, such as `:smi`, brings up a list of matching emojis, the same way it works on GitHub, Slack and other apps. Use the arrow keys to move through the list, the Enter or Tab key to insert the selected emoji, and the Escape key to dismiss the list. This can be turned off with the `use_emoji_autocomplete` option.
 

@@ -36,7 +36,7 @@ summary = "{{title}} ({{date}})"
 }
 ```
 
-Basic Markdown syntax is supported in the `summary` option, including bold, italics and inline code. The `<strong>`, `<em>` and `<code>` HTML tags work as well, while any other tag in a field value is shown as text, so a title like `Vec<T> in Rust` shows in full. For example:
+Basic Markdown syntax is supported in the `summary` option, including bold, italics and inline code. The `<strong>`, `<em>` and `<code>` HTML tags work as well. Any other tag is shown as text, so a title like `Vec<T> in Rust` shows in full. For example:
 
 ```yaml [YAML]
 summary: '**{{title}}** - _{{date}}_ `{{status}}`'

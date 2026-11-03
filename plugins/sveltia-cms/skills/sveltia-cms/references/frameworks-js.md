@@ -451,6 +451,10 @@ Source: https://sveltiacms.app/en/docs/frameworks/nuxt
 
 This guide provides resources and information for integrating Sveltia CMS with [Starlight](https://starlight.astro.build/), a documentation website framework built on [Astro](https://sveltiacms.app/en/docs/frameworks/astro).
 
+### Examples
+
+See real-world examples of Starlight integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=starlight). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Starlight.
+
 ### Setup
 
 #### Adding the Admin Page
