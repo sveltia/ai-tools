@@ -174,7 +174,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
   - Performance: Sveltia CMS uses the GraphQL API to retrieve multiple files at once, so it’s already fast. Using a proxy is a bad idea!
   - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature.
   - User management, roles and credentials: We plan to implement these features with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component.
-  - Deploy status: Sveltia CMS partially implements it as part of [deploy previews](https://sveltiacms.app/en/docs/workflows/deploy-previews).
+  - Deploy status: Sveltia CMS partially implements it as part of [deploy previews](https://sveltiacms.app/en/docs/deployments/previews).
 - [Gatsby plugin](https://github.com/decaporg/gatsby-plugin-decap-cms): In light of Gatsby’s [uncertainty](https://github.com/gatsbyjs/gatsby/discussions/39062), we won’t be investing time in developing a plugin for it. Gatsby users can still create `index.html` themselves. Note: We don’t support Netlify Identity Widget; the favicon can be specified with the `logo.src` option.
 - Performance-related options: Sveltia CMS has [drastically improved performance](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-performance) with GraphQL enabled by default, so these are no longer relevant:
   - Global: [`search`](https://decapcms.org/docs/configuration-options/#search)

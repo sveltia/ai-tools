@@ -557,11 +557,11 @@ The `preview_path` option tells Sveltia CMS where an entry lives on your site, w
 
 The `preview_path` option allows you to define a custom URL path for previewing entries on your live site. This option accepts a string with template tags that will be replaced with entry-specific values when generating the preview URL. The CMS provides links to preview the entries based on this URL structure.
 
-Without `preview_path`, the CMS can’t tell where an entry lives, so a published entry has no preview link. An unpublished entry in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still links to the root of its [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews). The deploy preview’s address changes with each pull request, so the link is the easiest way to find it.
+Without `preview_path`, the CMS can’t tell where an entry lives, so a published entry has no preview link. An unpublished entry in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still links to the root of its [deploy preview](https://sveltiacms.app/en/docs/deployments/previews). The deploy preview’s address changes with each pull request, so the link is the easiest way to find it.
 
 A `preview_path` that can’t be filled in for an entry, such as one with date tags on an entry whose date is empty, gives no link at all.
 
-The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for how those are found.
+The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) for how those are found.
 
 The [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
 
@@ -656,7 +656,7 @@ With the above configuration, a blog post created on June 15, 2025, with the tit
 Setting the `preview_path` option does two more things:
 
 - It lets the CMS keep links working when an entry is renamed. See [Redirects](#redirects) below.
-- It’s what [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) need in order to point at an entry. Without it, there’s nothing to append to the site or preview address, so no preview link is shown.
+- It’s what [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) need in order to point at an entry. Without it, there’s nothing to append to the site or preview address, so no preview link is shown.
 
 The `preview_path` and `preview_path_date_field` options can also be set on each file of a [file collection](https://sveltiacms.app/en/docs/collections/files#preview-path), where the collection-level options have no effect.
 

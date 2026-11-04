@@ -178,7 +178,7 @@ Commits are still made to the repository as a whole. The `{{path}}` [template ta
 
 With the [local workflow](https://sveltiacms.app/en/docs/workflows/local), select the root directory of the repository, not the directory of the site, when the CMS asks for it. The CMS finds the site’s directory within it.
 
-If the sites are deployed separately, for example as several Netlify sites built from the same repository, set the [`preview_context`](https://sveltiacms.app/en/docs/workflows/deploy-previews#specifying-a-status-context) option so the CMS links to the right [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews). A build that was canceled or skipped because the commit didn’t touch the site is ignored either way.
+If the sites are deployed separately, for example as several Netlify sites built from the same repository, set the [`preview_context`](https://sveltiacms.app/en/docs/deployments/previews#specifying-a-status-context) option so the CMS links to the right [deploy preview](https://sveltiacms.app/en/docs/deployments/previews). A build that was canceled or skipped because the commit didn’t touch the site is ignored either way.
 
 **Warning**
 
@@ -971,7 +971,7 @@ Both Gitea and Forgejo support CI/CD pipelines that can be used to automate the 
 - [Gitea Actions](https://docs.gitea.com/usage/actions/overview)
 - [Forgejo Actions](https://forgejo.org/docs/latest/user/actions/reference/)
 
-Entries can link to the [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews) built for their pull request, and report whether the build has finished, when the workflow posts the preview address as a commit status. See [Reporting a Preview from Gitea/Forgejo Actions](https://sveltiacms.app/en/docs/workflows/deploy-previews#gitea-forgejo-actions).
+Entries can link to the [deploy preview](https://sveltiacms.app/en/docs/deployments/previews) built for their pull request, and report whether the build has finished, when the workflow posts the preview address as a commit status. See [Reporting a Preview from Gitea/Forgejo Actions](https://sveltiacms.app/en/docs/deployments/previews#gitea-forgejo-actions).
 
 Source: https://sveltiacms.app/en/docs/backends/gitea-forgejo
 

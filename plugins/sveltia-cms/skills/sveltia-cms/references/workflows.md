@@ -23,7 +23,7 @@ There are three main workflows for production use:
 Additionally, the following features enhance the content management experience:
 
 - [Open Authoring](https://sveltiacms.app/en/docs/workflows/open): allows external contributors to submit changes via pull requests.
-- [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews): links each entry to the build made for it, and shows whether that build has finished.
+- [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews): links each entry to the build made for it, and shows whether that build has finished.
 
 These production workflows can be used locally or remotely. Not all workflows are supported by every backend; refer to the specific workflow documentation for details.
 
@@ -275,7 +275,7 @@ This works in both production workflows. With [Editorial Workflow](https://svelt
 
 Nothing needs to be turned on. Set a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on the collections you want entry links for. Without it, only the root of a deploy preview is linked.
 
-See [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) for which providers are recognized and how the links behave while a build is running.
+See [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) for which providers are recognized and how the links behave while a build is running.
 
 ### Disabling Automatic Deployments
 
@@ -285,7 +285,7 @@ With Sveltia CMS, you can disable automatic deployments by default and manually 
 
 **No build, no preview**
 
-A skipped commit produces no build, so there’s nothing for [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) to report and the entry keeps its plain live-site link. This applies to Editorial Workflow saves too, where the prefix is added to the pull request’s commits. Deletion commits are never skipped.
+A skipped commit produces no build, so there’s nothing for [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) to report and the entry keeps its plain live-site link. This applies to Editorial Workflow saves too, where the prefix is added to the pull request’s commits. Deletion commits are never skipped.
 
 #### Configuration
 
@@ -636,4 +636,4 @@ Setting this option narrows the search deliberately. If nothing matches, the CMS
 - On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to the branch. A project that deploys more often than that may push a Review App out of range. Its commit status still covers it then.
 - A preview behind access control, such as Vercel’s Deployment Protection, answers the liveness check with an authentication error rather than a page. The CMS treats that as “can’t tell” and leaves the link alone, since it works for anyone signed in.
 
-Source: https://sveltiacms.app/en/docs/workflows/deploy-previews
+Source: https://sveltiacms.app/en/docs/deployments/previews

@@ -1279,6 +1279,6 @@ When i18n is enabled for an entry collection, you can manage preview paths for e
 
 The `omit_default_locale_from_preview_path` option can be used to omit the locale code from the preview path for the default locale. For example, if `en` is the default locale and `omit_default_locale_from_preview_path` is set to `true`, the preview URL for the English version of the entry would be `/my-post`, while the preview URL for the French version would still be `/fr/my-post`.
 
-Both options apply to [Deploy Previews](https://sveltiacms.app/en/docs/workflows/deploy-previews) as well, so each translation of an unpublished entry links to its own page on the preview build. The per-locale links are offered from the locale pane’s options menu in the Content Editor.
+Both options apply to [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) as well, so each translation of an unpublished entry links to its own page on the preview build. The per-locale links are offered from the locale pane’s options menu in the Content Editor.
 
 Source: https://sveltiacms.app/en/docs/i18n/slugs

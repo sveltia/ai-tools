@@ -679,7 +679,7 @@ See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collect
 
 ### Preview Path
 
-A file has no preview link by default. To link it to its page on the live site, or on a [deploy preview](https://sveltiacms.app/en/docs/workflows/deploy-previews), set the `preview_path` option on the file. It works like the collection-level [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) of an entry collection, with the following differences:
+A file has no preview link by default. To link it to its page on the live site, or on a [deploy preview](https://sveltiacms.app/en/docs/deployments/previews), set the `preview_path` option on the file. It works like the collection-level [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) of an entry collection, with the following differences:
 
 - `{{slug}}` is the file’s `name` option value.
 - `{{dirname}}` is the directory of the `file` path, relative to the repository’s root directory, since a file collection has no `folder`.
