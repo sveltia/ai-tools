@@ -98,7 +98,7 @@ The remaining entry collection options are documented on the following pages:
 - [Slugs and File Paths](https://sveltiacms.app/en/docs/collections/entries/slugs): Generate entry slugs from fields and template tags, make slugs editable and organize entries into subfolders and page bundles.
 - [Nested Entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage hierarchical content in a folder tree that editors can browse and organize.
 - [Single-File Collections](https://sveltiacms.app/en/docs/collections/entries/single-file): Store all the entries in one JSON file, as an array of objects.
-- [Preview Paths and Redirects](https://sveltiacms.app/en/docs/collections/entries/previews): Point the CMS at an entry’s URL on your site for previews, and record redirects when slugs change.
+- [Preview Paths, Permalinks and Redirects](https://sveltiacms.app/en/docs/collections/entries/previews): Point the CMS at an entry’s URL on your site for previews, store each entry’s path in its front matter, and record redirects when slugs change.
 - [Entry Operations](https://sveltiacms.app/en/docs/collections/entries/operations): Disable creation, deletion or duplication, limit the entry count, hide the collection and enable manual reordering.
 - [Entry Listings](https://sveltiacms.app/en/docs/collections/entries/listings): Customize entry summaries and thumbnails, manage Hugo’s index file, and include or exclude entries.
 - [Entry Views](https://sveltiacms.app/en/docs/collections/entries/views): Define sorting, grouping and filtering options for the listing view.

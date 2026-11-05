@@ -279,13 +279,14 @@ Some notes on this configuration:
 
 - The `images` media folder also needs a passthrough file copy, such as `addPassthroughCopy('images')`, to be included in the output.
 - The layout and the `posts` tag shared by all posts are usually defined in a [directory data file](https://www.11ty.dev/docs/data-template-dir/) like `posts/posts.json` instead of the front matter of each post. Eleventy merges the `tags` in the front matter with the ones in the data file, so editors only need to add extra tags. The data file itself can be managed in the same collection, as explained below.
-- Eleventy uses the filename as the URL of a post by default, such as `/posts/hello-world/`. Each post can override it with a [`permalink`](https://www.11ty.dev/docs/permalinks/) property, which can be added as a String field if needed.
+- Eleventy uses the filename as the URL of a post by default, such as `/posts/hello-world/`. Each post can override it with a [`permalink`](https://www.11ty.dev/docs/permalinks/) property, which can be added as a String field if needed, or [filled in by the CMS](https://sveltiacms.app/en/docs/collections/entries/previews#permalinks).
 
 ### Support for Eleventy
 
 We have implemented specific features to enhance the integration of Sveltia CMS with Eleventy:
 
 - [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a folder tree of pages in the sidebar with the `subfolders: false` mode, where every file is a page at its own [path-based permalink](https://www.11ty.dev/docs/permalinks/) and editors can create new folders as needed.
+- [Permalinks](https://sveltiacms.app/en/docs/collections/entries/previews#permalinks): Set the `permalink_field` option to `true` to fill Eleventy’s [`permalink` front matter property](https://www.11ty.dev/docs/permalinks/) from the `preview_path` option each time an entry is saved.
 - [Directory data files](https://sveltiacms.app/en/docs/collections/entries/listings#managing-eleventy-s-directory-data-file): Manage a folder’s [directory data file](https://www.11ty.dev/docs/data-template-dir/), like `posts/posts.json`, beside the Markdown entries it applies to, using the `index_file` option with an `extension` or `format` of its own.
 - [Editor components](https://sveltiacms.app/en/docs/api/editor-components#styled-separator): An example of a custom component that inserts an Eleventy [shortcode](https://www.11ty.dev/docs/shortcodes/) into Markdown content.
 

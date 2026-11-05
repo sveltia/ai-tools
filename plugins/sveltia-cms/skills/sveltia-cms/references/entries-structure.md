@@ -549,9 +549,9 @@ Source: https://sveltiacms.app/en/docs/collections/entries/single-file
 
 ---
 
-## Preview Paths and Redirects
+## Preview Paths, Permalinks and Redirects
 
-The `preview_path` option tells Sveltia CMS where an entry lives on your site, which enables site previews, deploy previews and automatic redirects when an entry’s slug changes.
+The `preview_path` option tells Sveltia CMS where an entry lives on your site, which enables site previews, deploy previews, permalinks stored in the entry itself, and automatic redirects when an entry’s slug changes.
 
 ### Preview Paths
 
@@ -655,10 +655,131 @@ With the above configuration, a blog post created on June 15, 2025, with the tit
 
 Setting the `preview_path` option does two more things:
 
+- It lets the CMS tell your framework where to build an entry. See [Permalinks](#permalinks) below.
 - It lets the CMS keep links working when an entry is renamed. See [Redirects](#redirects) below.
 - It’s what [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) need in order to point at an entry. Without it, there’s nothing to append to the site or preview address, so no preview link is shown.
 
 The `preview_path` and `preview_path_date_field` options can also be set on each file of a [file collection](https://sveltiacms.app/en/docs/collections/files#preview-path), where the collection-level options have no effect.
+
+### Permalinks
+
+Some frameworks read an entry’s output path from a front matter property. Sveltia CMS can fill that property from the [`preview_path` option](#preview-paths), so your site is built at the same path the CMS links to. You don’t have to reproduce the framework’s slug rules in `preview_path` or add the slug to each entry by hand.
+
+This is turned off by default. Set the `permalink_field` option on an entry collection to enable it:
+
+- `true`: use the `permalink` property.
+- a string: use a property of that name, such as `url`.
+- `false`: leave the property alone.
+
+The example below stores the path in the `permalink` property, which [Eleventy](https://www.11ty.dev/docs/permalinks/) reads:
+
+```yaml [YAML]{5-6}
+collections:
+  - name: portfolio
+    label: Portfolio
+    folder: /content/portfolio
+    preview_path: 'portfolio/{{slug}}/'
+    permalink_field: true
+```
+
+```toml [TOML]{5-6}
+[[collections]]
+name = "portfolio"
+label = "Portfolio"
+folder = "/content/portfolio"
+preview_path = "portfolio/{{slug}}/"
+permalink_field = true
+```
+
+```json [JSON]{7-8}
+{
+  "collections": [
+    {
+      "name": "portfolio",
+      "label": "Portfolio",
+      "folder": "/content/portfolio",
+      "preview_path": "portfolio/{{slug}}/",
+      "permalink_field": true
+    }
+  ]
+}
+```
+
+```js [JavaScript]{7-8}
+{
+  collections: [
+    {
+      name: "portfolio",
+      label: "Portfolio",
+      folder: "/content/portfolio",
+      preview_path: "portfolio/{{slug}}/",
+      permalink_field: true,
+    },
+  ],
+}
+```
+
+Saving an entry titled “Hello World” then results in the following front matter:
+
+```yaml [YAML]
+---
+permalink: /portfolio/hello-world/
+title: Hello World
+---
+```
+
+```toml [TOML]
++++
+permalink = "/portfolio/hello-world/"
+title = "Hello World"
++++
+```
+
+```json [JSON]
+{
+  "permalink": "/portfolio/hello-world/",
+  "title": "Hello World"
+}
+```
+
+#### Supported Frameworks
+
+These frameworks set a page’s whole output path from a front matter property. Use the `permalink_field` value that matches yours:
+
+| Framework | `permalink_field` value | Notes |
+| --- | --- | --- |
+| [Eleventy](https://www.11ty.dev/docs/permalinks/) | `true` | The path must end with a slash or a file extension. Otherwise, the build fails. |
+| [Hexo](https://hexo.io/docs/front-matter) | `true` | The path must end with a slash or `.html`. |
+| [Hugo](https://gohugo.io/content-management/urls/#url) | `url` | On a multilingual site, include the `{{locale}}` tag in `preview_path` where the language prefix belongs. |
+| [Jekyll](https://jekyllrb.com/docs/permalinks/) | `true` |  |
+| [Lume](https://lume.land/docs/creating-pages/urls/) | `url` | A path without a trailing slash or file extension creates a file without an extension. |
+| [VuePress](https://vuepress.vuejs.org/reference/frontmatter.html) | `true` |  |
+| [Zola](https://www.getzola.org/documentation/content/page/#front-matter) | `path` |  |
+
+[Docusaurus](https://docusaurus.io/docs/create-doc) is different: its `slug` property is relative to the plugin’s route base path, such as `/docs`. Set `permalink_field` to `slug` only if `preview_path` leaves that base path out, which means the preview links won’t include it either.
+
+Frameworks that define routes in code, such as Astro, Next.js and SvelteKit, have no such property, but you can read one in your own route code.
+
+#### How the Property Is Updated
+
+- The path is filled in each time an entry is saved, for both new and existing entries, because it can depend on the slug and on any field.
+- An existing entry gets the property the next time it’s saved. The CMS doesn’t update entries in bulk when you enable the option.
+- [Bulk editing](https://sveltiacms.app/en/docs/collections/entries/operations#bulk-editing-entries), [relation updates](https://sveltiacms.app/en/docs/fields/relation#cascading-updates) and moving a folder of [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) also update the entries they rewrite. Renaming an asset and reordering entries don’t, so an entry whose path depends on an asset or its order is updated the next time it’s saved.
+- The path always starts with a slash, whether or not `preview_path` does. The rest is kept as written, so a trailing slash has to come from `preview_path`.
+- If the path can’t be filled in, such as when an entry’s date is empty, the property is removed so an outdated path can’t remain.
+
+The CMS leaves the property alone in these cases:
+
+- Its value isn’t a string, such as Eleventy’s `permalink: false`, which keeps a page from being built.
+- The `preview_path` option isn’t defined.
+- A field with the same name is defined in the `fields` option. The property is then left to the editor to manage.
+- The entry is the collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file).
+
+The option replaces any other string in the property, including a template you wrote by hand for your framework.
+
+**Warning**
+
+The path is stored exactly as filled in. Eleventy renders a `permalink` value as a template, so a template tag that an editor types in a field referenced by `preview_path` would run at build time. Prefer `{{slug}}`, which can’t contain curly braces, over free-text fields such as `{{fields.title}}`.
 
 ### Redirects
 
@@ -671,7 +792,7 @@ This requires the [`preview_path` option](#preview-paths), because that option i
 
 Entry slugs can be changed in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) of the Content Editor’s sidebar.
 
-With the `preview_path` configuration shown above, renaming a June 2025 blog post from `my-first-post` to `hello-world` results in the following front matter:
+With the `preview_path` configuration shown under [Preview Paths](#preview-paths), renaming a June 2025 blog post from `my-first-post` to `hello-world` results in the following front matter:
 
 ```yaml
 ---
