@@ -187,31 +187,36 @@ Developer Mode can be enabled in the Developer tab of the Settings dialog. When 
 
 ### Accessibility
 
-Sveltia CMS is built with accessibility as a core principle, ensuring all users can effectively navigate and use the application.
+Sveltia CMS is meant to be usable by everyone who edits content, however they work: with a keyboard, a screen reader, voice control, a touchscreen or a mouse.
 
-We have conducted an automated [WCAG 2.2](https://w3c.github.io/wcag/guidelines/22/) self-audit. We’ll continue to test and improve the application for accessibility, and we welcome feedback from users. If you encounter any accessibility issues, please report them by [creating an issue](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) on our GitHub repository.
+We work toward [WCAG 2.2](https://w3c.github.io/wcag/guidelines/22/) Level AA. This is our target, not a claim of conformance: we have conducted an automated self-audit, which can’t find every barrier, and we’ll continue to test and improve the application.
+
+Our [accessibility statement](https://github.com/sveltia/sveltia-cms/blob/main/ACCESSIBILITY.md) covers supported environments, known limitations and how we respond to reports. If you encounter any accessibility issues, please report them by [creating an issue](https://github.com/sveltia/sveltia-cms/issues/new?type=bug) on our GitHub repository or by emailing [hello@sveltia.dev](mailto:hello@sveltia.dev).
 
 #### Keyboard Navigation
 
 - Navigate through UI elements using the Tab, Space, Enter and arrow keys.
-- Other [keyboard shortcuts](#keyboard-shortcuts) are also available for common actions.
-- Features that require mouse interaction, such as drag-and-drop, have alternative keyboard-accessible methods.
-- Our [custom UI component library](https://github.com/sveltia/sveltia-ui) is designed for optimal keyboard usability without compromising accessibility.
+- [Keyboard shortcuts](#keyboard-shortcuts) are also available for common actions.
+- Mouse interactions, such as drag-and-drop, have keyboard alternatives.
+- Our [custom UI component library](https://github.com/sveltia/sveltia-ui) is built with keyboard use in mind.
 
 #### Screen Reader Support
 
-- Full [WAI-ARIA](https://w3c.github.io/aria/) support for screen readers like NVDA and VoiceOver.
+- The UI uses [WAI-ARIA](https://w3c.github.io/aria/) roles and labels to support screen readers like NVDA and VoiceOver.
 - Announcements are read out when the user navigates to another page.
+
+#### Rich Text Editor
+
 - The rich text editor is built with [Lexical](https://lexical.dev/), which follows accessibility best practices and includes [Dragon NaturallySpeaking support](https://lexical.dev/docs/packages/lexical-dragon).
 
 #### Visual Design
 
-- Sufficient contrast between foreground text and background colors.
-- Links are underlined by default for easy recognition (configurable in Accessibility Settings).
+- We aim for sufficient contrast between foreground text and background colors.
+- Links are underlined by default for easy recognition (configurable in the Accessibility tab of the Settings dialog).
 
 #### System Preferences
 
-- Honors the operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) and [high contrast](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) settings.
+- The CMS honors the operating system’s [reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), [reduced transparency](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency) and [increased contrast](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast) settings.
 
 ### Supported Browsers
 
