@@ -381,6 +381,8 @@ Each provider’s settings, including those of the internal media storage (`defa
 
 This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
 
+With a cloud storage provider, the `prefix` option set here can contain template tags to keep the files of each entry in a folder of their own. See [Entry-Based Folders](https://sveltiacms.app/en/docs/media#entry-based-folders).
+
 ##### `media_folder`
 
 - **Type**: `string`

@@ -806,12 +806,6 @@ contact_email_link = "mailto:contact@example.com?subject=Inquiry"
 }
 ```
 
-```js [JavaScript]
-{
-  contact_email_link: 'mailto:contact@example.com?subject=Inquiry';
-}
-```
-
 Alternatively, you can use a Compute field to generate the full email link based on a separate email String field, as shown in the [Compute field documentation](https://sveltiacms.app/en/docs/fields/compute#email-link).
 
 #### Hashtag Field

@@ -780,8 +780,9 @@ Do not write your SAS token in the configuration file, as it should be kept conf
 | `account_name` | Yes | The storage account name. Used to construct the Blob service endpoint, `https://{account_name}.blob.core.windows.net`. Not required if `endpoint` is given. |
 | `container` | Yes | The blob container name. |
 | `public_url` | No | Public URL for asset downloads. Required unless the container allows anonymous read access, because the URL stored in your entries can’t contain the SAS token. |
-| `prefix` | No | Path prefix within the container, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the container, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `endpoint` | No | Custom Blob service endpoint, including the account path where applicable, e.g. the [Azurite emulator](https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azurite) URL `http://127.0.0.1:10000/devstoreaccount1`. Overrides `account_name`. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### Content Security Policy
 

@@ -441,7 +441,9 @@ Before the entry is saved, the field shows the file with its new filename, and t
 
 In a multilingual entry, the tags are filled with the content of the default locale, so a file used in several locales has the same name everywhere. If the user renames the file by hand before saving the entry, the template no longer applies to the file.
 
-A file uploaded in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) or to an external storage provider is renamed right away, without an entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
+A file uploaded from an entry to an external storage provider is renamed right away with the entry’s values at that time, and its name doesn’t follow later changes. Fill in the fields the template depends on first: a tag with no value yet is replaced with a random value.
+
+A file uploaded in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) has no entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
 
 The option can also be set for a specific File or Image field, under the field’s `media_libraries` option. For example, to name the cover images of blog posts after the entry:
 
@@ -457,6 +459,155 @@ collections:
             config:
               filename_template: '{{slug}}-cover'
 ```
+
+### Cloud Storage Options
+
+The following options apply to Amazon S3, S3-compatible providers and Azure Blob Storage.
+
+#### Custom Storage Name
+
+Each cloud storage provider appears in the CMS under its own name. To show another name, set the `label` option. This is useful when the [Amazon S3 integration](https://sveltiacms.app/en/docs/media/amazon-s3#self-hosted-storage) connects to a self-hosted server, where “Amazon S3” would mislead your editors.
+
+```yaml [YAML]
+media_libraries:
+  aws_s3:
+    label: Garage
+    endpoint: https://s3.example.com
+    region: garage
+    access_key_id: YOUR_ACCESS_KEY_ID
+    bucket: my-website-assets
+```
+
+```toml [TOML]
+[media_libraries.aws_s3]
+label = "Garage"
+endpoint = "https://s3.example.com"
+region = "garage"
+access_key_id = "YOUR_ACCESS_KEY_ID"
+bucket = "my-website-assets"
+```
+
+```json [JSON]
+{
+  "media_libraries": {
+    "aws_s3": {
+      "label": "Garage",
+      "endpoint": "https://s3.example.com",
+      "region": "garage",
+      "access_key_id": "YOUR_ACCESS_KEY_ID",
+      "bucket": "my-website-assets"
+    }
+  }
+}
+```
+
+```js [JavaScript]
+{
+  media_libraries: {
+    aws_s3: {
+      label: 'Garage',
+      endpoint: 'https://s3.example.com',
+      region: 'garage',
+      access_key_id: 'YOUR_ACCESS_KEY_ID',
+      bucket: 'my-website-assets',
+    },
+  },
+}
+```
+
+The name appears in the Asset Library, the Select File and Select Image dialogs, and the Settings dialog. The `label` option isn’t localized, and it’s only read from the top-level options, so it’s ignored in the `media_libraries` option of a field.
+
+#### Entry-Based Folders
+
+A File or Image field can use template tags in the `prefix` option to keep the files of each entry in a folder of their own. Editors then don’t have to create the folder themselves. For example, the following field stores its files in a folder named after the entry’s `release` field, such as `12/`:
+
+```yaml [YAML]
+fields:
+  - name: release
+    label: Episode Number
+    widget: number
+    value_type: int
+  - name: audio
+    label: Audio
+    widget: file
+    media_libraries:
+      aws_s3:
+        prefix: '{{fields.release}}/'
+```
+
+```toml [TOML]
+[[fields]]
+name = "release"
+label = "Episode Number"
+widget = "number"
+value_type = "int"
+
+[[fields]]
+name = "audio"
+label = "Audio"
+widget = "file"
+
+[fields.media_libraries.aws_s3]
+prefix = "{{fields.release}}/"
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "release",
+      "label": "Episode Number",
+      "widget": "number",
+      "value_type": "int"
+    },
+    {
+      "name": "audio",
+      "label": "Audio",
+      "widget": "file",
+      "media_libraries": {
+        "aws_s3": {
+          "prefix": "{{fields.release}}/"
+        }
+      }
+    }
+  ]
+}
+```
+
+```js [JavaScript]
+{
+  fields: [
+    {
+      name: 'release',
+      label: 'Episode Number',
+      widget: 'number',
+      value_type: 'int',
+    },
+    {
+      name: 'audio',
+      label: 'Audio',
+      widget: 'file',
+      media_libraries: {
+        aws_s3: {
+          prefix: '{{fields.release}}/',
+        },
+      },
+    },
+  ],
+}
+```
+
+The other options of the provider, including the required ones such as `bucket`, are taken from the top-level `media_libraries` option, so the field only needs to set `prefix`.
+
+Keep the following in mind:
+
+- **Tags:** Use `{{fields.name}}` for a field value. The `{{slug}}` tag and date/time tags such as `{{year}}` work too, as do [string transformations](https://sveltiacms.app/en/docs/string-transformations). A tag can’t refer to the list item a file belongs to, so a field in a list item needs its full path, e.g. `{{fields.episodes.0.release}}`.
+- **Field level only:** The top-level `prefix` option can’t contain template tags, because there’s no entry to read the values from. The CMS shows a warning if they’re used there.
+- **Values:** Each value is slugified, so it always stands for a single folder. For example, `Season 1/Pilot` becomes `season-1-pilot`.
+- **Empty fields:** Until the fields used in the prefix have values, the dialog asks the editor to fill them in, and files can’t be listed or uploaded. This keeps files from ending up in the wrong folder.
+- **Browsing:** The dialog only lists the files under the prefix, so an editor can’t pick a file from another entry’s folder there. The Asset Library has no entry to read from, so it uses the provider’s top-level options.
+- **Later changes:** Changing a field value doesn’t move files that have already been uploaded. Their URLs stay valid, and new uploads go to the new folder.
+- **Not access control:** The prefix organizes files, but it doesn’t restrict them. An editor’s credentials still have the access you gave them.
 
 Source: https://sveltiacms.app/en/docs/media
 

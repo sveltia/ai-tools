@@ -511,6 +511,54 @@ For example, if the `title` field has the value `Hello, World! This is a Test`, 
 hello-world-this-is-a-test
 ```
 
+#### `plainify`
+
+Convert a Markdown or HTML string to plain text by removing the Markdown syntax and HTML tags. Line breaks are collapsed into spaces, and character references like `&amp;` are decoded.
+
+```
+{{value | plainify}}
+```
+
+This is useful for generating a description or an excerpt from a [RichText field](https://sveltiacms.app/en/docs/fields/richtext) with a [Compute field](https://sveltiacms.app/en/docs/fields/compute).
+
+Configuration example:
+
+```yaml [YAML]
+value: "{{fields.body | plainify | truncate(160, '...')}}"
+```
+
+```toml [TOML]
+value = "{{fields.body | plainify | truncate(160, '...')}}"
+```
+
+```json [JSON]
+{
+  "value": "{{fields.body | plainify | truncate(160, '...')}}"
+}
+```
+
+```js [JavaScript]
+{
+  value: "{{fields.body | plainify | truncate(160, '...')}}",
+}
+```
+
+For example, if the `body` field has the value `Let’s **welcome** our [guest](https://example.com)`, the result will be:
+
+```
+Let’s welcome our guest
+```
+
+Put `plainify` before `truncate` so the limit applies to the visible text and the Markdown syntax isn’t cut in the middle.
+
+**Notes**
+
+- The value is always parsed as Markdown and HTML, so only use `plainify` on fields that contain them. A plain string can lose text, e.g. `Vec<T>` becomes `Vec`, and `1. Introduction` becomes `Introduction`.
+- Images are removed along with their alternative text. Syntax that isn’t Markdown or HTML, like Hugo shortcodes, is left as is.
+- Unlike Hugo’s `plainify` function, which only removes HTML tags, this transformation also removes the Markdown syntax.
+- The result is plain text, not sanitized HTML. It can contain markup after decoding, e.g. `&lt;img&gt;` becomes `<img>`, so escape it in your site templates.
+- A [List](https://sveltiacms.app/en/docs/fields/list) or [Object](https://sveltiacms.app/en/docs/fields/object) field’s `summary` already shows a RichText field as plain text, so `plainify` isn’t needed there.
+
 #### `truncate`
 
 Truncate the string to a specified length, optionally adding a suffix.

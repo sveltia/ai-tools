@@ -154,10 +154,11 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | AWS Access Key ID (safe to store in config). |
 | `bucket` | Yes | The S3 bucket name. |
 | `region` | Yes | AWS region, e.g. `us-east-1`, `eu-west-1`. With a custom `endpoint`, the region of your server; see [Self-Hosted Storage](#self-hosted-storage) below. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `force_path_style` | No | Use path-style URLs (`s3.region.amazonaws.com/bucket`) instead of virtual-hosted-style (`bucket.s3.region.amazonaws.com`). Defaults to `false`. Has no effect with `endpoint`, which always uses path-style URLs. |
 | `endpoint` | No | Custom endpoint URL for another S3-compatible service, such as [Garage](https://garagehq.deuxfleurs.fr/) or [MinIO](https://www.min.io/), e.g. `https://s3.example.com`. Objects are addressed as `{endpoint}/{bucket}/{key}`. See [Self-Hosted Storage](#self-hosted-storage) below. |
 | `public_url` | No | Custom domain for asset URLs (e.g. a CloudFront distribution). See [Custom Domain](#custom-domain) below. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### Custom Domain
 
@@ -226,6 +227,7 @@ public_url = "https://my-website-assets.web.example.com"
 
 Keep the following in mind:
 
+- **Name in the CMS:** The storage is called Amazon S3 in the CMS by default. Set the [`label` option](https://sveltiacms.app/en/docs/media#custom-storage-name) to show the name of your server instead, e.g. `label: Garage`.
 - **Path-style URLs:** With a custom `endpoint`, objects are always addressed as `{endpoint}/{bucket}/{key}`, so the server doesn’t need a wildcard DNS record or a TLS certificate for bucket subdomains. `force_path_style` has no effect.
 - **Region:** The region isn’t part of the URL, but it’s used to sign every request. It must therefore match the region the server is configured with. For Garage, that’s the `s3_region` option (`garage` in the sample configuration). For MinIO, it’s `us-east-1` unless you’ve changed it. A mismatch makes every request fail with a signature error.
 - **CORS:** The server must allow cross-origin requests from the CMS origin, as described in [CORS](#cors) above. With Garage, apply the same policy to the bucket through its S3 API, e.g. with `aws s3api put-bucket-cors --endpoint-url https://s3.example.com`. MinIO allows any origin by default. If you’ve restricted it, add the CMS origin to its `cors_allow_origin` setting.
@@ -467,8 +469,9 @@ Do not write your Application Key (secret) in the configuration file, as it shou
 | `access_key_id` | Yes | B2 Application Key ID (keyID). Safe to store in config. |
 | `bucket` | Yes | The B2 bucket name. |
 | `region` | Yes | B2 region, e.g. `us-west-001`, `us-east-005`, `eu-central-003`. See [B2 regions list](https://www.backblaze.com/docs/cloud-storage-regions-and-endpoints). |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. Only required for **private buckets**. Public buckets serve objects directly via the S3 endpoint. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### Public Buckets vs. Private Buckets
 
@@ -672,7 +675,8 @@ Do not write your storage zone password in the configuration file, as it should 
 | `region` | Yes | Two-letter [region code](#regions) of the storage zone’s main region, e.g. `de`. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Pull zone hostname for asset previews and downloads, e.g. `https://my-zone.b-cdn.net`. Required because the storage endpoint always requires authentication. |
 | `access_key_id` | No | Defaults to `bucket`, as the storage zone name serves as the access key ID. There is normally no reason to set it. |
-| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### Content Security Policy
 
@@ -866,8 +870,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `bucket` | Yes | The R2 bucket name. |
 | `account_id` | Yes | Your Cloudflare account ID. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Public URL for asset previews and downloads. Required because the R2 S3 API always requires authentication. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `jurisdiction` | No | Cloudflare R2 [jurisdictional restriction](#jurisdictional-restrictions) for the bucket. One of `'default'`, `'eu'`, `'fedramp'`. Defaults to `'default'`. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 #### Jurisdictional Restrictions
 
@@ -1063,8 +1068,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | Spaces Access Key. Safe to store in config. |
 | `bucket` | Yes | The Space name. |
 | `region` | Yes | Spaces region, e.g. `nyc3`, `sfo2`, `ams3`, `sgp1`, `fra1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom subdomain URL for asset previews. See [CDN Endpoint](#cdn-endpoint) below. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### CDN Endpoint
 
@@ -1242,8 +1248,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `bucket` | Yes | The bucket name. |
 | `endpoint` | Yes | The branch’s storage endpoint (`AWS_ENDPOINT_URL_S3`), e.g. `https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech`. See [Endpoint](#endpoint) above. |
 | `region` | No | The region used to sign requests. Defaults to the region in the endpoint’s hostname, e.g. `us-east-2`. There is normally no reason to set it. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. Required for a `private` bucket. See [CDN / Custom Domain](#cdn-custom-domain) below. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### CDN / Custom Domain
 
@@ -1413,8 +1420,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `access_key_id` | Yes | Scaleway IAM Access Key ID. Safe to store in config. |
 | `bucket` | Yes | The bucket name. |
 | `region` | Yes | Scaleway region: `fr-par`, `nl-ams`, `pl-waw` or `it-mil`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. See [CDN / Custom Domain](#cdn-custom-domain) below. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### CDN / Custom Domain
 
@@ -1582,8 +1590,9 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 | `project_id` | Yes | Supabase Project ID. Used to construct the S3 API endpoint and public URL. |
 | `bucket` | Yes | The storage bucket name. |
 | `region` | No | The project region shown on the Storage S3 configuration page, e.g. `eu-central-1`. Defaults to `us-east-1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
 | `public_url` | No | Custom domain URL for asset previews. See [Custom Domain](#custom-domain) below. |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
 
 ### Custom Domain
 

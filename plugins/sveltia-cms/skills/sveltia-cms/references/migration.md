@@ -431,7 +431,7 @@ Sveltia CMS is still in beta. Although it’s already being used in production b
 
 ### Examples
 
-See the following examples of sites that have been migrated from Pages CMS to see how other users have successfully transitioned to Sveltia CMS.
+The following examples of sites that have been migrated from Pages CMS show how other users have successfully transitioned to Sveltia CMS.
 
 - [Examples of sites migrated from Pages CMS](https://sveltiacms.app/en/showcase?migrated-from=pages-cms)
 
@@ -460,8 +460,12 @@ We plan to support user management and roles with [Sveltia CMS Additions](https:
 
 The following Pages CMS features have no direct equivalent in Sveltia CMS:
 
-- **Branch switching**: Pages CMS reads `.pages.yml` from the branch being edited and lets users switch branches. Sveltia CMS works on the single branch specified with the `branch` [backend option](https://sveltiacms.app/en/docs/backends). The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) can be used to review changes in separate branches before publishing them.
+- **Branch switching**: Pages CMS reads `.pages.yml` from the branch being edited and lets users switch and create branches. Sveltia CMS works on the single branch specified with the `branch` [backend option](https://sveltiacms.app/en/docs/backends#branch-selection), and the CMS has no branch list. The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) can be used to review changes in separate branches before publishing them.
+  - As a workaround, [manual initialization](https://sveltiacms.app/en/docs/api/initialization#providing-a-partial-configuration) can set the branch when the CMS starts, for example from a URL parameter, so your own links can open the CMS on another branch. Each switch reloads the page, and the configuration still comes from the deployed site rather than the selected branch. A draft backup from one branch can also be offered on another branch for the same entry.
+  - The [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button doesn’t tell GitHub Actions which branch is open. A `repository_dispatch` event always runs the workflow on the default branch.
 - **Actions**: Pages CMS can run GitHub Actions workflows from buttons with custom inputs. When automatic deployments are disabled, Sveltia CMS can trigger a deployment with the [Publish Changes](https://sveltiacms.app/en/docs/deployments#manual-deployment-trigger) button. The button sends a `repository_dispatch` event to GitHub Actions, creates a GitLab CI/CD pipeline or calls a webhook. Other workflows and inputs are not supported.
+  - As a workaround, a [custom page](https://sveltiacms.app/en/docs/api/custom-pages) can provide your own form and start a workflow through the GitHub API. It appears as a separate page rather than as buttons on entry, collection or media pages. The CMS doesn’t give the page the user’s access token, so the page has to handle authentication itself.
+  - [Event hooks](https://sveltiacms.app/en/docs/api/events) such as `postSave` and `postPublish` can start a workflow automatically, but not on demand.
 - **Commit identity**: Pages CMS can commit as the GitHub App. Sveltia CMS always commits as the signed-in user.
 - **Raw and datagrid editors**: Pages CMS provides a plain text editor for files without fields and a spreadsheet-like editor for CSV files. Sveltia CMS can manage such files with the [`raw` format](https://sveltiacms.app/en/docs/collections/entries/formats#format) and a single [Code](https://sveltiacms.app/en/docs/fields/code) or [Text](https://sveltiacms.app/en/docs/fields/text) field named `body`, but there is no table editor.
 - **Random filenames**: The `rename: random` media option is not supported. The `rename: safe` option is supported as `slugify_filename`.
@@ -852,7 +856,7 @@ collections:
 | `settings.content.merge` | Not needed. Sveltia CMS always keeps the properties that are not defined in the configuration, placing them after the configured fields. |
 | `settings.commit.templates` | [`commit_messages`](https://sveltiacms.app/en/docs/backends#commit-messages) backend option. The template tags are different, e.g. `{{collection}}`, `{{slug}}` and `{{path}}` |
 | `settings.commit.identity` | Not supported. Commits are always made by the signed-in user |
-| `settings.hide` | Not needed, as there is no settings page |
+| `settings.hide` | Not needed, as there is no page for editing the configuration |
 
 ### Migration Steps
 

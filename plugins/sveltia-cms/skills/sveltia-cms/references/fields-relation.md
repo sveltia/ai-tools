@@ -1133,14 +1133,6 @@ full_name = "John Doe"
 }
 ```
 
-```js [JavaScript]
-{
-  first_name: 'John',
-  last_name: 'Doe',
-  full_name: 'John Doe',
-}
-```
-
 #### Email Link
 
 This example demonstrates a Compute field that generates a mailto link using an email address from another String field.
@@ -1227,10 +1219,85 @@ contact_email_link = "mailto:contact@example.com?subject=Inquiry"
 }
 ```
 
+#### Generating a Description
+
+This example generates a `description` from the beginning of a [RichText field](https://sveltiacms.app/en/docs/fields/richtext) named `body`. The [`plainify`](https://sveltiacms.app/en/docs/string-transformations#plainify) transformation removes the Markdown syntax and HTML tags, and [`truncate`](https://sveltiacms.app/en/docs/string-transformations#truncate) then shortens the result to 50 characters.
+
+```yaml [YAML]
+fields:
+  - name: body
+    label: Body
+    widget: richtext
+  - name: description
+    label: Description
+    widget: compute
+    value: "{{fields.body | plainify | truncate(50, '...')}}"
+```
+
+```toml [TOML]
+[[fields]]
+name = "body"
+label = "Body"
+widget = "richtext"
+[[fields]]
+name = "description"
+label = "Description"
+widget = "compute"
+value = "{{fields.body | plainify | truncate(50, '...')}}"
+```
+
+```json [JSON]
+{
+  "fields": [
+    {
+      "name": "body",
+      "label": "Body",
+      "widget": "richtext"
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "widget": "compute",
+      "value": "{{fields.body | plainify | truncate(50, '...')}}"
+    }
+  ]
+}
+```
+
 ```js [JavaScript]
 {
-  contact_email: 'contact@example.com',
-  contact_email_link: 'mailto:contact@example.com?subject=Inquiry';
+  fields: [
+    {
+      name: 'body',
+      label: 'Body',
+      widget: 'richtext',
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      widget: 'compute',
+      value: "{{fields.body | plainify | truncate(50, '...')}}",
+    },
+  ],
+}
+```
+
+Output example when `body` has a bold word and a link:
+
+```yaml [YAML]
+body: Let’s **welcome** our [guest](https://example.com) for a chat about the new season of the show.
+description: Let’s welcome our guest for a chat about the new s...
+```
+
+```toml [TOML]
+body = "Let’s **welcome** our [guest](https://example.com) for a chat about the new season of the show."
+description = "Let’s welcome our guest for a chat about the new s..."
+```
+
+```json [JSON]
+{
+  "body": "Let’s **welcome** our [guest](https://example.com) for a chat about the new season of the show.",
+  "description": "Let’s welcome our guest for a chat about the new s..."
 }
 ```
 
@@ -1443,13 +1510,6 @@ id = "hello-world-e7bc7d91"
 {
   "title": "Hello World",
   "id": "hello-world-e7bc7d91"
-}
-```
-
-```js [JavaScript]
-{
-  title: 'Hello World',
-  id: 'hello-world-e7bc7d91',
 }
 ```
 
@@ -1716,29 +1776,6 @@ amount = 12.75
   ],
   "discount": 20,
   "total": 30.2
-}
-```
-
-```js [JavaScript]
-{
-  lines: [
-    {
-      line: 1,
-      name: 'Beans',
-      price: 12.5,
-      quantity: 2,
-      amount: 25,
-    },
-    {
-      line: 2,
-      name: 'Filters',
-      price: 4.25,
-      quantity: 3,
-      amount: 12.75,
-    },
-  ],
-  discount: 20,
-  total: 30.2,
 }
 ```
 
