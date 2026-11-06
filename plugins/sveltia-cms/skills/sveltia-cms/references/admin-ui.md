@@ -442,8 +442,7 @@ Source: https://sveltiacms.app/en/docs/ui/asset-library
 
 Sveltia CMS provides a powerful Content Editor that allows users to create and modify content entries stored in their Git repository. This document outlines the key features and functionalities of the Content Editor.
 
-![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-light.webp?20261016)
-![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-dark.webp?20261016)
+![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-light.webp?20261016) ![The Content Editor with a blog post in the Edit Pane on the left and a live preview on the right](/images/landing/entry-editor-dark.webp?20261016)
 
 ### Features
 
@@ -544,6 +543,7 @@ In a saved entry, the pencil button renames the entry. The new slug takes effect
 - **Renames the file.** The entry moves to the file path matching its new slug. Git records this as a rename, so the file’s history is preserved.
 
   For a nested entry, its folder is renamed instead, and everything below it moves along: the entries stored there and, with [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), the files of each [page bundle](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles). The entry keeps its place in the tree. Renaming never files it under a different parent; that’s what the [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#moving-entries) field is for.
+
 - **Adds a redirect.** If the collection has a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) option, the entry’s previous URL is recorded in its data so the framework can redirect visitors from the old URL to the new one. See [Redirects](https://sveltiacms.app/en/docs/collections/entries/previews#redirects).
 - **Updates references.** Every entry that points at this one through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) is rewritten to reference the new slug, so no links between entries are left dangling. The Backlinks panel of the [sidebar](#sidebar) shows which entries will be updated before saving.
 
@@ -779,6 +779,7 @@ Several people can work on a site at the same time. Sveltia CMS keeps an eye on 
 - **While a user edits**, the check is repeated every minute and whenever they come back to the tab. It’s a single small request to the backend, and only files that have actually changed are fetched. So the entry and asset lists follow the repository without a reload.
 
   If someone changes the entry that is open, a notice appears at the top of the editor saying who changed it and when. Reload Entry starts over from their version, after asking if there are unsaved changes. Dismissing the notice lets the user carry on with their own.
+
 - **When a user saves**, the branch is checked once more. If the entry has been changed or deleted since it was opened, a dialog says so, and nothing is written until the user chooses Save Anyway. Saving over a change replaces it with theirs; saving a deleted entry creates it again.
 - **On GitHub**, the commit also names the branch head it expects, so a commit against a branch that moved in the last moment is refused by GitHub rather than applied. Sveltia CMS then explains what happened, and saving again picks the other change up first.
 
@@ -883,11 +884,18 @@ second_pane = false
 
 ### Preview Pane
 
-Developers can enhance the content editing experience by providing real-time previews of how the content will appear on the live site. Sveltia CMS offers several options for customizing and controlling the preview feature.
+Sveltia CMS offers several options for customizing and controlling the real-time preview feature in the Content Editor.
 
-**Info**
+#### Customizing Previews
 
-Please note that, due to the nature of framework-agnostic design, we don’t plan to support live site previews that fetch data from the actual website. If this feature is needed, consider using a framework-specific CMS solution.
+Without customization, the Preview Pane uses the default styles and templates provided by Sveltia CMS. This is because the CMS cannot determine how the site is built due to its framework-agnostic, headless nature. The default preview is a basic rendering of the content and may differ from the live site’s appearance.
+
+However, developers can customize it to better match the live site’s appearance and behavior. This can be done by providing custom styles and templates for the Preview Pane.
+
+- [Custom Preview Styles](https://sveltiacms.app/en/docs/api/preview-styles): Register custom CSS styles for the Preview Pane, allowing for better visual fidelity with the live site.
+- [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates): Create custom preview templates for specific collections or files, allowing for tailored preview experiences.
+
+Currently, there is no simple way to embed the development server’s rendered pages in the Preview Pane. We are exploring the possibility of adding live preview functionality in [issue #169](https://github.com/sveltia/sveltia-cms/issues/169).
 
 #### Disabling Previews
 
@@ -1072,17 +1080,6 @@ preview = false
   ],
 }
 ```
-
-#### Advanced Customization
-
-Sveltia CMS allows developers to create custom preview templates and styles to provide a more accurate representation of how the content will appear on the live site.
-
-- [Custom Preview Styles](https://sveltiacms.app/en/docs/api/preview-styles): Register custom CSS styles for the preview pane, allowing for better visual fidelity with the live site.
-- [Custom Preview Templates](https://sveltiacms.app/en/docs/api/preview-templates): Create custom preview templates for specific collections or files, allowing for tailored preview experiences.
-
-#### Live Preview
-
-Sveltia CMS does not plan to support WYSIWYG live site previews that fetch data from the actual website, due to its framework-agnostic design. If this feature is required, consider using a framework-specific CMS solution.
 
 #### User Settings
 

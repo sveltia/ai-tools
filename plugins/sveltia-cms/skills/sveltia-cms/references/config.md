@@ -230,6 +230,10 @@ For JSON files:
 
 The configuration file location varies by framework and project structure, so adjust the path accordingly. For example, if you use Hugo, the file is typically located in the `/static/admin/` directory.
 
+**Updating the Schema**
+
+VS Code caches the schema file and will not update it automatically when a new version of the CMS is released. To update the schema locally, reload your project’s editor by pressing `Ctrl+Shift+P` (Windows/Linux) or `Command+Shift+P` (macOS) and selecting “Developer: Reload Window.” Alternatively, relaunch VS Code.
+
 ##### Other Editors
 
 Check your code editor or IDE documentation to see if it supports JSON schema validation for YAML, TOML or JSON files. If supported, use the following schema URL:
