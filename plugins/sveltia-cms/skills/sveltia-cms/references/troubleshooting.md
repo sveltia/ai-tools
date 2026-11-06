@@ -448,7 +448,9 @@ We receive financial support from our users through [GitHub Sponsors](https://gi
 
 The ongoing development of Sveltia CMS is currently funded by the maintainer personally. Our predecessor, Netlify CMS, was also free and open source software, and we want to continue that tradition with Sveltia CMS. The product’s target audience is individual developers and small teams who may prefer a simple CMS solution without recurring costs.
 
-Fortunately, aside from the maintainer’s time and effort, the maintenance costs of Sveltia CMS are relatively low. Since it’s not SaaS, we don’t manage any cloud infrastructure. Services we use for distribution and hosting, such as GitHub, npm, UNPKG and Cloudflare Pages, are all available for free. We still need to cover some expenses like domain registration and development tools, but these are manageable for a single developer.
+Fortunately, aside from the maintainer’s time and effort, the maintenance costs of Sveltia CMS are relatively low. Since it’s not SaaS, we don’t manage any cloud infrastructure. Services we use for distribution and hosting, such as GitHub, npm, UNPKG and Cloudflare Pages, are all available for free.
+
+Our biggest expense is the monthly US$100 Claude subscription. We are grateful for [your donation](https://github.com/sponsors/kyoshino), which helps to cover this cost.
 
 #### Can I use Sveltia CMS for commercial projects?
 
@@ -466,9 +468,7 @@ However, breaking changes may occur during the beta phase. We recommend keeping 
 
 #### When will Sveltia CMS reach version 1.0 (GA)?
 
-As outlined in the [roadmap](https://sveltiacms.app/en/docs/roadmap), the tentative timeline for the 1.0 release is late 2026. However, this date may change depending on various factors such as development progress, user feedback and unforeseen challenges.
-
-We are committed to delivering a high-quality product, so we won’t rush the release just to meet a deadline. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
+As outlined in the [roadmap](https://sveltiacms.app/en/docs/roadmap), the tentative timeline for the 1.0 release is late 2026. We are committed to delivering a high-quality product, so we won’t rush the release just to meet a deadline. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
 
 As [mentioned above](#can-i-use-sveltia-cms-even-though-it-s-still-in-beta), being in beta doesn’t mean the product is unreliable. We have already implemented many features and improvements, and we are implementing the rest of the features planned for 1.0 in the current beta releases. We encourage you to try it out and provide feedback to help us improve the product.
 
@@ -492,25 +492,17 @@ Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify
 
 Yes, for now. Sveltia CMS is currently maintained by a single developer, who is also the creator of the project. The [maintainer](https://sveltiacms.app/en/docs/intro#about-the-author) has over 20 years of experience with a generalist skill set that covers web development, UX/UI design, localization, documentation and marketing.
 
-At this point, the codebase still requires significant refactoring and improvements in test coverage, so pull requests from the community are not being accepted yet. However, we welcome feedback, suggestions and bug reports in our GitHub repository.
+At this point, pull requests from the community are not being accepted yet for [various reasons](https://github.com/sveltia/sveltia-cms/issues/966#issuecomment-5645271030). However, we welcome feedback, suggestions and bug reports in our GitHub repository.
 
 We’ll create contributor documentation in the future to encourage community contributions, once the codebase is more stable and maintainable.
 
-#### Is Sveltia CMS a hobby project?
-
-Absolutely not. Sveltia CMS is a serious project developed by an experienced UX engineer, with the goal of providing a reliable and high-quality CMS solution for developers and content creators. It was originally created for the maintainer’s own clients who needed a better alternative to Netlify CMS.
-
-A hobby project wouldn’t [solve hundreds of issues](https://sveltiacms.app/en/docs/successor-to-netlify-cms) from a predecessor project, implement numerous new features, maintain a high level of quality and performance or create comprehensive 100+ page documentation.
-
-Thousands of users worldwide trust Sveltia CMS, including government agencies, universities and nonprofit organizations. Visit our [Showcase](https://sveltiacms.app/en/showcase) page to see some of the real-world projects that are using our platform.
-
 #### Is Sveltia CMS a student project?
 
-Absolutely not. The maintainer is a seasoned professional with over 20 years of experience in web development and open source. Because [he looks half his age](https://github.com/kyoshino#fun-facts-about-me), some people mistakenly assume he is a student. But rest assured, Sveltia CMS is a serious project developed by an experienced UX engineer.
+No. The maintainer is a seasoned professional with over 20 years of experience in web development and open source. Because [he doesn’t age](https://github.com/kyoshino#fun-facts-about-me), some people mistakenly assume he is a student. But rest assured, Sveltia CMS is a serious project developed by an experienced UX engineer.
 
 #### Why did you create Sveltia CMS?
 
-Sveltia CMS was originally created for the maintainer’s freelance clients who wanted to replace their existing Netlify CMS installations, which were becoming increasingly difficult to maintain due to unresolved issues and lack of active development. I18n support was a key requirement for these clients, as they needed to manage content in multiple languages.
+Sveltia CMS was originally created for the maintainer’s freelance clients who wanted to replace their existing Netlify CMS installations, which were becoming increasingly difficult to maintain due to unresolved issues and lack of active development. [I18n support](https://sveltiacms.app/en/docs/i18n) was a key requirement for these clients, as they needed to manage content in multiple languages.
 
 #### Why is it called Sveltia CMS?
 
@@ -524,11 +516,11 @@ Sveltia CMS itself is [framework-agnostic](https://sveltiacms.app/en/docs/framew
 
 No. Although we did not receive an endorsement from Netlify nor take over the ownership, Sveltia CMS stands strong as the de facto successor to Netlify CMS. It continues to address issues reported to the predecessor’s repository while maintaining high compatibility.
 
-In contrast, the official successor, Decap CMS, has been neglected, leaving most issues unresolved. It doesn’t even provide a migration guide for Netlify CMS users.
+In contrast, the official successor, Decap CMS, has been incredibly neglected, leaving most issues unresolved. It doesn’t even provide a migration guide for Netlify CMS users.
 
 You wouldn’t call LibreOffice a spiritual [successor to OpenOffice.org](https://www.libreoffice.org/libreoffice-vs-openoffice/); it’s the de facto successor. The official successor, Apache OpenOffice, is effectively defunct. Similarly, Sveltia CMS is the de facto successor to Netlify CMS, not a spiritual one.
 
-The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained, reliable, compatible with its predecessor and continuously dealing with issues. See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed explanation.
+The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained and reliable, is highly compatible with its predecessor, and deals with issues continuously, whereas Decap CMS has been stagnant for years. See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed explanation.
 
 Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be considered a spiritual successor. Inspired by Netlify CMS, it has a similar YAML configuration format but a different architecture. We could have taken the same approach, but we deliberately chose a more difficult path by voluntarily carrying over hundreds of issues from Netlify CMS.
 
@@ -615,13 +607,13 @@ Usually several times a week, depending on the number of changes and fixes. We f
 
 #### How can I contribute to Sveltia CMS?
 
-See the [Contributing page](https://github.com/sveltia/sveltia-cms/blob/main/CONTRIBUTING.md) for guidelines on how to contribute to Sveltia CMS. We welcome contributions in various forms, including bug reports, feature requests and documentation improvements. Pull requests are not being accepted at this time, but we encourage you to share your ideas and feedback.
+See the [Contributing page](https://github.com/sveltia/sveltia-cms/blob/main/CONTRIBUTING.md) for guidelines on how to contribute to Sveltia CMS. We welcome contributions in various forms, including donations, bug reports, feature requests and documentation improvements. Pull requests are not being accepted at this time, but we encourage you to share your ideas and feedback.
 
 ### Features and Functionality
 
 #### How does Sveltia CMS compare to other CMSs?
 
-We don’t directly compare our product to other CMS solutions because each one tries to solve different problems for different target audiences. Within the small Git-based [headless CMS](https://jamstack.org/headless-cms/) category alone, it would be unfair to compare community-driven projects like Sveltia CMS with company-owned offerings that have more resources for development, support and marketing.
+We don’t directly compare our product with other CMS solutions because they each try to solve different problems for different target audiences. Furthermore, it would be unfair to compare community-driven projects like Sveltia CMS with company-owned offerings, which typically have greater resources available for development, support, and marketing.
 
 The only comparable product is our predecessor, Netlify/Decap CMS, which is the very particular reason why Sveltia CMS exists in the first place. We have a detailed comparison of the two products on the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page.
 
@@ -697,6 +689,6 @@ We started developing Sveltia CMS before the recent surge in AI agents, so much 
 
 However, due to limited resources and an increasingly complex product, we have adapted our workflow to make extensive use of AI agents. Most tasks are now done by Claude, including implementing new features, fixing bugs, refactoring, generating test cases and writing documentation.
 
-If you find our product useful and would like to support us, please consider [sponsoring the maintainer](https://github.com/sponsors/kyoshino), which would help to cover the monthly cost of the Claude subscription (CA$140). Your support would be greatly appreciated!
+If you find our product useful and would like to support us, please consider [sponsoring the maintainer](https://github.com/sponsors/kyoshino), which would help to cover the monthly cost of the Claude subscription (US$100). Your support would be greatly appreciated!
 
 Source: https://sveltiacms.app/en/docs/faq
