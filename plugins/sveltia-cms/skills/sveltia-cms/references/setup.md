@@ -152,7 +152,7 @@ Sveltia CMS is a single-page application (SPA) distributed as a small JavaScript
 
 **Common Mistakes**
 
-Some AI agents, namely Claude, include a stylesheet `<link>` tag in Sveltia CMS setups, apparently due to confusion with [Static CMS](https://staticjscms.netlify.app/docs/add-to-your-site-cdn), a now-discontinued fork of Netlify CMS. However, Sveltia CMS does not require any additional CSS files, as all the necessary styles are bundled within the JavaScript file. The link is invalid and can be safely omitted.
+Some AI agents include a stylesheet `<link>` tag in Sveltia CMS setups, apparently due to confusion with [Static CMS](https://staticjscms.netlify.app/docs/add-to-your-site-cdn), a now-discontinued fork of Netlify CMS. However, Sveltia CMS does not require any additional CSS files, as all the necessary styles are bundled within the JavaScript file. The link is invalid and can be safely omitted.
 
 ```diff
 -<link rel="stylesheet" href="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.css" />
@@ -164,6 +164,15 @@ Similarly, some agents and templates add a `type="module"` attribute to the `<sc
 -<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
 +<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 ```
+
+Pinning to a specific version is [discouraged](https://sveltiacms.app/en/docs/releases#cdn-usage), as this increases maintenance burden and security risks. Use the unversioned script URL to ensure you always get the latest version.
+
+```diff
+-<script src="https://unpkg.com/@sveltia/cms@1.2.3/dist/sveltia-cms.js"></script>
++<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+```
+
+The CMS script should be included in a static `index.html` file. Having it in a page managed by a front-end framework, such as `admin.astro`, `admin.njk` or `+page.svelte`, may cause the [UI](https://sveltiacms.app/en/docs/troubleshooting#resolving-broken-ui-caused-by-css-conflicts) and [local workflow](https://sveltiacms.app/en/docs/workflows/local#troubleshooting) to break.
 
 **Advanced Setup: Using a Package Manager**
 
