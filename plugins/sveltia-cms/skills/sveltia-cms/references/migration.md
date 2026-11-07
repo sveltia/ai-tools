@@ -93,7 +93,7 @@ This page documents the key changes and deprecations when upgrading from earlier
 
 ### Breaking Changes
 
-Check the [release notes](https://github.com/sveltia/sveltia-cms/releases?q=breaking+change&expanded=true) for other changes that may affect your project when upgrading to the latest version of Sveltia CMS.
+Check the [release notes](https://github.com/sveltia/sveltia-cms/releases?q=breaking+change&expanded=true) for changes that may affect your project during the beta period.
 
 ### Version 0.x to 1.0
 
@@ -111,7 +111,12 @@ These options were added to Sveltia CMS 0.x but are now deprecated and will be r
 - The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead.
 - The `yaml_quote` collection option: `yaml_quote: true` is equivalent to `quote: double` in the [new YAML format options](https://sveltiacms.app/en/docs/data-output#controlling-data-output).
 
-The deprecated `logo_url` option will be removed in the future. Use the [new `logo.src` option](https://sveltiacms.app/en/docs/customization#custom-logo) instead.
+#### Future Plans
+
+These features and options will be removed in a future release:
+
+- The `logo_url` option: Use the [new `logo.src` option](https://sveltiacms.app/en/docs/customization#custom-logo) instead.
+- The flat keys of the [`fieldsMetaData` prop](https://sveltiacms.app/en/docs/api/preview-templates): Use the nested path instead: `fieldsMetaData.getIn(['books', 'author'])` rather than `fieldsMetaData.get('books.0.author')`, and `fieldsMetaData.getIn(['tags', 'tag'])` rather than `fieldsMetaData.get('tags')` for the single `field` of a List field.
 
 Source: https://sveltiacms.app/en/docs/migration/earlier-versions
 
