@@ -239,7 +239,12 @@ When there are 3 or more files, a menu next to the handle or buttons offers Move
 
 Users can paste an image from the clipboard directly into a File or Image field by clicking the Paste button or using the keyboard shortcut (Ctrl+V or Cmd+V). This works on both desktop and mobile devices.
 
-On desktop, users can drag and drop file(s) directly onto the field to attach them without opening the file selection dialog.
+On desktop, users can drag and drop file(s) directly onto the field to attach them without opening the file selection dialog. This is only possible when exactly one location can store them, so it’s clear where they go:
+
+- the [internal media storage](https://sveltiacms.app/en/docs/media/internal), or
+- a single [external storage provider](https://sveltiacms.app/en/docs/media#external-storage) that supports uploads.
+
+A provider that only takes files through its own widget, like [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary), doesn’t count. With more than one location, upload the files from the dialog instead. If the provider needs credentials the user hasn’t entered yet, the dialog asks for them, and the dropped files are uploaded once they’re entered.
 
 Unsaved files can be renamed.
 

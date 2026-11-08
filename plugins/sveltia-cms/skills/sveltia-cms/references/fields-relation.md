@@ -211,7 +211,7 @@ The value field must be unique across all entries in the related collection to a
 ##### `display_fields`
 
 - **Type**: `array` of `strings`
-- **Default**: `["title"]` if `value_field` is `{{slug}}`, otherwise the value of the `value_field` option
+- **Default**: if `value_field` is `{{slug}}`, whether set explicitly or left out, the related collection’s [identifier field](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field), usually `["title"]`; otherwise the value of the `value_field` option
 
 The fields from the related collection to display in the Relation field UI when selecting related entries. This should be an array of field names. The values of these fields will be concatenated and shown as the label for each related entry.
 

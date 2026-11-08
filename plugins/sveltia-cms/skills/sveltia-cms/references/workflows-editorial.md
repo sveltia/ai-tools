@@ -294,7 +294,7 @@ The board and the editor show an entry, but publishing merges the whole pull req
 - every file it changes is one the CMS accounts for:
   - the entry’s own files, and those of its published version that a rename removes
   - assets added or replaced along with it, which are only removed when the entry is moved or deleted
-  - the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites
+  - the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites, including the references to the other entries [deleted along with it](#deleting-several-entries-at-once)
   - the new entries [added from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch
   - the existing entries [edited from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists as well. That includes the entries whose references a rename rewrites
   - the entries below a [nested](https://sveltiacms.app/en/docs/collections/entries/nested) entry that move along with it
@@ -538,10 +538,26 @@ Opening a pending deletion in the entry editor shows its content for reference o
 
 Decap CMS has a separate Unpublish action, and its Delete button removes the entry from the configured branch immediately. Sveltia CMS has no Unpublish action: deleting a published entry _is_ the unpublish process, so making the change and releasing it stay separate, the same as with any edit. See [issue #770](https://github.com/sveltia/sveltia-cms/issues/770).
 
+##### Deleting Several Entries at Once
+
+[Selecting several entries](https://sveltiacms.app/en/docs/ui/content-library#bulk-actions) in the entry list and deleting them opens a pull request for each entry. Each one also removes the [Relation](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions) references to every entry in the selection.
+
+To tell which pull requests belong together, the CMS records the selection in each description as a hidden HTML comment:
+
+```html
+<!-- sveltia-cms:deletion-group=ID -->
+```
+
+Don’t remove or edit this comment. When one of the deletions is published, the [checks before publishing](#checks-before-publishing) accept rewritten references to the entries recorded in the same selection, and to no others. Without the comment, the pull request may be refused for holding changes the CMS can’t account for.
+
+An entry deleted on its own, from the Content Editor or as the only entry of its collection selected, gets no such comment. Its pull request removes only the references to that entry, and it’s published on its own.
+
 #### Deleting an Unpublished Entry
 
 - If the entry has **never been published**, deleting it closes its pull request. Nothing is left behind, because nothing was ever merged into the configured branch.
-- If the entry **updates a published one**, the button is labeled **Discard** instead. Discarding closes the pull request and restores the published version, which stays in the configured branch. The entry itself isn’t deleted.
+- If the entry **updates a published one**, it can be discarded or deleted:
+  - **Discard** closes the pull request and restores the published version, which stays in the configured branch. The entry itself isn’t deleted.
+  - **Delete** takes the entry off the site. Its pull request is reused for the removal, which drops the pending changes, and then works like [deleting a published entry](#deleting-a-published-entry). Deleting the entry from the entry list does the same.
 
 ### Restricting Publishing and Deletion
 

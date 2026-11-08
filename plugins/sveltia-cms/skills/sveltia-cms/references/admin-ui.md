@@ -328,9 +328,14 @@ Click the empty area of the list, or select a folder with a single click or the 
 
 Folders can be managed like assets:
 
-- **Create** a folder with the **New Folder** button in the toolbar. A Git repository can’t hold an empty folder, so the CMS commits a `.gitkeep` placeholder file to keep it in the repository until something is uploaded to it. The name is sanitized like a filename, and [slugified](https://sveltiacms.app/en/docs/media#slugification-of-filenames) as well if that option is enabled.
+- **Create** a folder with the **New Folder** button in the toolbar. A Git repository can’t hold an empty folder, so the CMS commits a `.gitkeep` placeholder file to keep it in the repository until something is uploaded to it. The name is sanitized like a filename, and [slugified](https://sveltiacms.app/en/docs/media#slugification-of-filenames) as well if that option is enabled. It’s rejected if it:
+  - contains a slash
+  - starts with a dot, which would hide the folder, even if slugification would remove the dot
+  - has nothing usable left after sanitization
+  - is `admin` or `cms`, the folders the CMS itself is usually served from
+  - is already used by another file or folder in the current folder, ignoring case
 - **Upload** files into the current folder: both the Upload button and drag and drop save the files there.
-- **Rename** a folder from its options menu. Every asset in the folder, at any depth, is moved along in the same commit, and the File and Image fields and Markdown images that reference them are updated with the new paths.
+- **Rename** a folder from its options menu. The new name follows the same rules as a new folder’s. Every asset in the folder, at any depth, is moved along in the same commit, and the File and Image fields and Markdown images that reference them are updated with the new paths.
 - **Delete** a folder and everything in it from its options menu. As with [deleting assets](#asset-management), the entries referencing any of the assets are updated in the same commit, and the confirmation dialog says how many. The deletion is refused if clearing a reference would break a field’s validation rules.
 
 Subfolder browsing applies to any global, collection or [asset collection](https://sveltiacms.app/en/docs/media/internal#asset-collections) folder with a fixed path.
@@ -549,7 +554,7 @@ In a saved entry, the pencil button renames the entry. The new slug takes effect
 
 In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) where every entry is stored as an index file, the folder holding an entry is what identifies it. So the panel shows that folder’s name, rather than the path leading to it, with a Rename Folder button. The folder is shared by every locale unless the slugs are localized.
 
-A name is only in the way if another folder in the same parent already uses it, so the same name can appear elsewhere in the tree. The rules differ slightly from a slug’s. Spaces are allowed and become hyphens, while a name is rejected if it:
+A name is only in the way if another folder in the same parent already uses it, so the same name can appear elsewhere in the tree. Upper and lower case aren’t told apart in that check, because a repository is often checked out on a file system that treats `Docs` and `docs` as the same folder. The rules differ slightly from a slug’s. Spaces are allowed and become hyphens, while a name is rejected if it:
 
 - starts with a dot, which would hide the folder
 - has no letters or numbers left after normalization
@@ -1151,6 +1156,8 @@ Assets stored in a [collection media folder](https://sveltiacms.app/en/docs/medi
 Users can select multiple entries to delete them at once, streamlining content management tasks.
 
 Entries referencing any of them through a [Relation field](https://sveltiacms.app/en/docs/fields/relation) are updated in the same commit. The deletion is refused if that would leave one of those fields invalid; see [Cascading Deletions](https://sveltiacms.app/en/docs/fields/relation#cascading-deletions).
+
+With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), each selected entry that has been published gets a deletion pull request of its own, and one that has never been published has its pull request closed. See [Deleting Several Entries at Once](https://sveltiacms.app/en/docs/workflows/editorial#deleting-several-entries-at-once).
 
 #### Content Search
 

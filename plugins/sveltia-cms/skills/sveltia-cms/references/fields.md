@@ -1173,11 +1173,11 @@ Set it to `-1` to hide the up and down buttons and disable stepping with the arr
 
 Whether to number the entries automatically when they’re saved, like an `AUTO_INCREMENT` column in a relational database. This is useful for an invoice number, a podcast episode number or any other sequential ID. See the [example](#sequential-number) below.
 
-- A new entry is given the integer after the highest number any entry in the collection has, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The first entry is numbered `1`, or the [`min`](#min) value if it’s set, so `min: 1000` starts the numbering from `1000`.
+- A new entry is given the integer after the highest number any entry in the collection has, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The first entry is numbered `1`, or the [`min`](#min) value if it’s set, so `min: 1000` starts the numbering from `1000`, and `min: 0` from `0`.
 - The number is assigned when the entry is saved, before its slug is created, so it can be used in the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs) template.
 - An existing entry keeps its number. An entry saved before the option was enabled is given one the next time it’s saved.
 - A duplicated entry is given a new number.
-- With `value_type: int/string`, the number is stored as a string.
+- With a [`value_type`](#value-type) that stores the value as a string, such as `int/string`, the number is stored as a string.
 
 If the number is only used as the slug and doesn’t need to be stored in the entry, use the collection’s [`slug.auto_increment`](https://sveltiacms.app/en/docs/collections/entries/slugs#numbering-slugs-automatically) option instead.
 
@@ -1455,6 +1455,13 @@ The preview shows the boolean value as `true` or `false`.
 ### Data Type
 
 A boolean. If the `required` option is set to `false` and the field is left empty, the value will be `false`.
+
+An existing entry may store the value as a string or a number instead, as files written for a YAML 1.1 parser like Jekyll’s often do. Sveltia CMS reads such a value the way that parser does, ignoring case:
+
+- `yes`, `on`, `y` and `1`, as well as `true`, are read as `true`.
+- `no`, `off`, `n` and `0`, as well as `false`, are read as `false`.
+
+The value is then saved as a real boolean. Any other value is replaced with the [default value](#default).
 
 ### Data Validation
 
@@ -2307,6 +2314,11 @@ A string `default` value supports the following template tags, which are filled 
 - `{{datetime}}`: The current date/time in [ISO 8601 format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).
 - `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags).
 - `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/en/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) because the user is not authenticated via a Git backend.
+
+The default value is also applied again in the following cases:
+
+- When an entry is duplicated, or a [List](https://sveltiacms.app/en/docs/fields/list) item holding the field is duplicated or pasted, the field gets its default value again, with any tags filled in anew, so the copy doesn’t share a UUID or a date with its original.
+- When a locale is enabled for an existing entry, a translatable field (`i18n: true`) whose default contains a tag gets the tags filled in for the new locale, e.g. `{{locale}}` becomes the new locale code. If the default has no tag, the value is copied from the default locale like any other field’s.
 
 [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option. Any other tag, such as `{{title}}` or `{{slug}}`, is replaced with an empty string. The slug isn’t known until the entry is saved, so to store a path containing it, use the [`permalink_field` option](https://sveltiacms.app/en/docs/collections/entries/previews#permalinks). To keep a template tag for your static site generator, [escape it](https://sveltiacms.app/en/docs/string-transformations#escaping-template-tags) with a backslash. See the [example below](#passing-a-template-to-a-static-site-generator).
 

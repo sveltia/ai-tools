@@ -468,7 +468,7 @@ Sveltia CMS is published as the [`@sveltia/cms`](https://www.npmjs.com/package/@
 | Updates | Automatic | Automatic | With your package manager |
 | Files loaded from CDNs | Yes | Yes | No |
 
-The CDN builds are self-contained scripts that work on any site. To keep them small, they load some files from public CDNs as needed: fonts from jsDelivr, and admin interface translations, additional libraries, image decoders and syntax highlighting definitions from UNPKG. This is still the case if you copy the script to your own site. See the [privacy notes](https://sveltiacms.app/en/docs/privacy#content-delivery-networks) and the [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) guide for details.
+The CDN builds are self-contained scripts that work on any site. To keep them small, they load some files from public CDNs as needed: fonts from jsDelivr, and admin interface translations, additional libraries, image decoders and syntax highlighting definitions from UNPKG. This is still the case if you copy the script to your own site. Parts of the app that only some sites need, such as the GitLab and Gitea/Forgejo backends, are loaded from the `chunks` folder next to the script, so copy `dist/chunks` along with it, or they’re loaded from UNPKG as well. See the [privacy notes](https://sveltiacms.app/en/docs/privacy#content-delivery-networks) and the [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) guide for details.
 
 The npm package includes all of these files instead, so the CMS contacts no CDN. Your build tool processes them along with the rest of your site and loads each one only when it’s needed. This requires a build tool that supports JavaScript modules, workers and assets referenced with `new URL()`, such as [Vite](https://vite.dev/) and [webpack](https://webpack.js.org/) 5.
 
@@ -528,13 +528,15 @@ You can also explicitly import the script to use the [JavaScript API](https://sv
 </script>
 ```
 
-The CMS also periodically checks for updates and notifies users when a new version is available. When the notification appears, simply click the “Update Now” button to refresh the application and load the latest version.
+The CMS also periodically checks for updates and notifies users when a new version is available. When the notification appears, simply click the “Update Now” button to refresh the application and load the latest version. This works with both the classic `sveltia-cms.js` script and the `sveltia-cms.mjs` module.
 
 To avoid major version updates that may include breaking changes, you can pin to a specific major version using the caret symbol (`^`) followed by the major version number:
 
 ```html
 <script src="https://unpkg.com/@sveltia/cms@^1/dist/sveltia-cms.js"></script>
 ```
+
+With such a version range, the notification appears for a new version within the range, which a reload picks up. A release outside the range, or any release when you pin to an exact version, only logs a warning in the browser console, because reloading wouldn’t load it.
 
 **Stable Version Not Yet Available**
 

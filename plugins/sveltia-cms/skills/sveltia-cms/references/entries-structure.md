@@ -350,7 +350,7 @@ The name is normalized like an [entry slug](https://sveltiacms.app/en/docs/colle
 - contains a slash
 - starts with a dot, which would hide the folder
 - has no letters or numbers left after normalization
-- is already used by another folder in the same parent
+- is already used by another folder in the same parent, ignoring case
 
 The folder reaches the repository only when you save an entry into it. Git tracks files, not folders, so it can’t commit an empty folder.
 

@@ -630,6 +630,7 @@ The available options are:
   - `ascii`: Sanitizes slugs to ASCII characters only. The allowed characters are 0-9, a-z, A-Z, hyphen (`-`), underscore (`_`) and tilde (`~`). Other characters are replaced with the value specified in the `sanitize_replacement` option.
 - `clean_accents`: A boolean value indicating whether to remove accents from characters in slugs. If enabled, accented characters are converted to their unaccented equivalents (e.g. `é` becomes `e`). Also, certain characters like German umlauts are [transliterated](https://en.wikipedia.org/wiki/Transliteration) to their ASCII equivalents (e.g. `ß` becomes `ss`). The default value is `false`.
   - See the `transliterate` library’s [replacements list](https://github.com/sindresorhus/transliterate/blob/main/replacements.js) for details on how specific characters are transliterated. [Additional rules](https://github.com/sindresorhus/transliterate/blob/main/locale-replacements.js) are applied when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled for [specific locales](https://github.com/sindresorhus/transliterate#supported-locales).
+  - The CDN version of Sveltia CMS loads the library from [UNPKG](https://unpkg.com/) when the option is enabled. If it can’t be loaded, e.g. because a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) blocks UNPKG, accents are still removed, but other characters, such as `ß`, aren’t transliterated, and an error is logged in the browser console. The [npm package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) includes the library.
 - `sanitize_replacement`: A string used to substitute invalid characters. The default value is a hyphen (`-`).
   - The replacement can’t contain a character that slugs can’t have, such as a slash (`/`) or a question mark (`?`), because it would end up in every slug.
   - The only exception is a plain space. It keeps the words of a filename apart for people and tools that read filenames rather than URLs, e.g. `Sourdough focaccia.md` for an [Obsidian](https://obsidian.md/) vault that links to entries by filename. Combine it with `lowercase: false` to keep the original casing. When the replacement contains a space, users can also type spaces when [editing a slug](#making-slugs-editable).
@@ -814,6 +815,8 @@ slug = "{{date | date('YYYY-MM-DD')}}-{{fields.slug}}"
 **Tip**
 
 The `slug` option value should not contain slashes (`/`). If you need to create a nested folder structure for entries, use the [`path` option](#using-subfolders) instead.
+
+A slash inside the argument of a [string transformation](https://sveltiacms.app/en/docs/string-transformations) is fine, as in `{{date | date('DD/MM/YYYY')}}`, because the value of a template tag is slugified, which replaces the slash.
 
 The `slug` option can also be an object, whose `template` option specifies the template, along with the options to [make slugs editable](#making-slugs-editable).
 
@@ -1143,6 +1146,8 @@ path = "{{year}}/{{month}}/{{slug}}"
 
 With the above configuration, a blog post created on June 15, 2025, with the title “My First Post” will be saved at `content/posts/2025/06/my-first-post.md`.
 
+If the collection uses [entry-relative media folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), the post’s media files are stored in a folder named after the entry file, next to it: `content/posts/2025/06/my-first-post/`.
+
 ##### Creating Page Bundles
 
 You can create nested structures like Hugo’s [page bundles](https://gohugo.io/content-management/page-bundles/), or Zola’s [asset colocation](https://www.getzola.org/documentation/content/overview/#asset-colocation), which uses the same `index.md` convention, using the `path`, [`media_folder` and `public_folder` options](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) together. For example, to create a leaf bundle for each blog post, you can use the following configuration:
@@ -1220,7 +1225,7 @@ A folder collection’s file path is determined by multiple factors: the `i18n`,
   - It can also contain slashes to create a nested folder structure.
 - The [`slug`](#entry-slugs) collection option (optional)
   - It defaults to `{{title}}`, which is the entry’s `title` field value’s slugified version.
-  - It can contain template tags but _cannot_ contain slashes.
+  - It can contain template tags but _cannot_ contain slashes, except inside the argument of a string transformation.
 - The [`extension`](https://sveltiacms.app/en/docs/collections/entries/formats#extension) collection option (optional)
   - It defaults to `md`.
 

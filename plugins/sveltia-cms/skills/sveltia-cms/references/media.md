@@ -850,13 +850,13 @@ Some frameworks and static site generators support organizing content and media 
 
 Assets stored in entry-relative folders are only accessible by the associated entry and not available for other entries. Therefore, Sveltia CMS automatically deletes these assets when the associated entry is deleted. When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the empty enclosing folder is also deleted.
 
-This only applies when the entry has a folder of its own, for example with a `path` option like `{{slug}}/index`. When entries are files sharing one folder, the media files in that folder can belong to any of them, so they are left alone when an entry is deleted.
+This only applies when the entry has a folder of its own, for example with a `path` option like `{{slug}}/index` or `{{year}}/{{month}}/{{slug}}`. When entries are files sharing one folder, the media files in that folder can belong to any of them, so they are left alone when an entry is deleted.
 
 In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 
 Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
 
-To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to look for media files in the same folder as the content files.
+To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to store media files in each entry’s own folder.
 
 This only makes each entry’s media its own if the entry has a folder of its own to keep it in. Two options give it one:
 
@@ -864,6 +864,11 @@ This only makes each entry’s media its own if the entry has a folder of its ow
 - the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles)
 
 Without either, entries are files sharing one folder. A relative `media_folder` then resolves to the collection folder, and the media is shared as well.
+
+Where the entry’s folder is depends on how the `path` option ends:
+
+- **A fixed filename**, as in `{{slug}}/index`, gives the entry file a folder of its own. The media is stored in that folder, beside the file, e.g. `content/posts/my-post/cover.png` for `content/posts/my-post/index.md`.
+- **A template tag**, as in `{{year}}/{{month}}/{{slug}}`, puts the entry file in subfolders it shares with other entries. The media is stored in a folder named after the entry file, next to it, e.g. `content/posts/2025/06/my-post/cover.png` for `content/posts/2025/06/my-post.md`. An existing file next to the entry file, e.g. one saved by an earlier version, is still found.
 
 **Tip**
 
@@ -970,7 +975,7 @@ Content goes here...
 
 ###### Multilingual Entries
 
-With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, an entry-relative file is stored once, not once per locale.
+With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, an entry-relative file that every locale uses is stored once, not once per locale.
 
 The `multiple_files` and `single_file` structures keep every locale’s content in the folder holding the entry, so the media already sits beside all of them. This is how [Hugo’s page bundles](https://gohugo.io/content-management/page-bundles/) are usually organized:
 
@@ -980,7 +985,12 @@ content/posts/my-first-post/index.de.md   # cover: image1.jpg
 content/posts/my-first-post/image1.jpg
 ```
 
-The `multiple_folders` and `multiple_root_folders` structures give each locale a folder of its own. The file is saved in the default locale’s folder, and every locale’s entry refers to it by the same relative path, so the media is never duplicated:
+The `multiple_folders` and `multiple_root_folders` structures give each locale a folder of its own. Where a file is saved then depends on the field’s [`i18n` option](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration):
+
+- A file in a field with `i18n: duplicate` or `i18n: sync`, which holds the same value in every locale, is saved once, in the default locale’s folder. Every locale’s entry refers to it by the same relative path, so the media is never duplicated.
+- A file uploaded to a translatable field, with `i18n: true`, is saved in the folder of the locale it’s uploaded in, as each locale can have a file of its own.
+
+For example, with a `cover` field set to `i18n: duplicate`:
 
 ```yaml
 content/posts/en/my-first-post/index.md   # cover: image1.jpg
@@ -988,7 +998,7 @@ content/posts/de/my-first-post/index.md   # cover: image1.jpg
 content/posts/en/my-first-post/image1.jpg
 ```
 
-Sveltia CMS resolves that path across locales, so the image appears in the content editor whichever locale the user is editing.
+Sveltia CMS looks for the file in the locale’s own folder first, then in the default locale’s, so the image appears in the Content Editor whichever locale the user is editing.
 
 Your framework may not do the same. Taken literally from the German entry’s own folder, `image1.jpg` points at a file that isn’t there. Hugo resolves it for page bundles, where [a bundle inherits the resources of its translated pages](https://gohugo.io/content-management/multilingual/), as long as the two are linked as translations. If your framework has no such mechanism, prefer the `multiple_files` structure, which keeps the media next to every locale’s file.
 

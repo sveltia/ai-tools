@@ -565,7 +565,7 @@ Put `plainify` before `truncate` so the limit applies to the visible text and th
 
 #### `truncate`
 
-Truncate the string to a specified length, optionally adding a suffix.
+Truncate the string to a specified length, adding a suffix if anything is cut off.
 
 ```
 {{value | truncate(<length>)}}
@@ -575,7 +575,9 @@ Truncate the string to a specified length, optionally adding a suffix.
 {{value | truncate(<length>, '<suffix>')}}
 ```
 
-The `length` argument specifies the maximum number of characters to keep. If the string exceeds this length, it will be truncated. The optional `suffix` argument allows you to specify a string to append to the truncated string (e.g. an ellipsis).
+The `length` argument specifies the maximum number of characters to keep. If the string exceeds this length, it’s truncated, and the suffix is appended.
+
+The optional `suffix` argument defaults to an ellipsis (`…`). Specify another string to use instead, e.g. `'...'`, or an empty string (`''`) to cut the string without adding anything.
 
 Configuration examples:
 
@@ -627,7 +629,7 @@ Provide a default value if the original value is null or empty.
 {{value | default('<default_value>')}}
 ```
 
-The `default_value` is returned if the original value is null or an empty string; otherwise, the original value is returned.
+The `default_value` is returned if the original value is null or an empty string; otherwise, the original value is returned. The `default_value` can also be an empty string, e.g. `default('')`.
 
 Configuration example:
 
@@ -1062,6 +1064,7 @@ Here are some key aspects of data output in Sveltia CMS:
 - **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
   - `required: false` makes data input optional, but doesn’t make data output optional.
   - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
+  - That option never omits a List item. An item whose subfields are all empty is kept as an empty object (`{}`), so the other items keep their positions.
 
 #### Format-Specific Conventions
 
