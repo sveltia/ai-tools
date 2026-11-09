@@ -1,6 +1,6 @@
 # Installation and Framework Setup
 
-How to install Sveltia CMS, how it loads, how to check and update the installed version, and the list of framework guides. For a specific framework, see `frameworks-js.md` or `frameworks-other.md`.
+How to install Sveltia CMS, how it loads, how to check and update the installed version, the list of framework guides, and setup without a framework, using vanilla JavaScript or custom tooling such as Vite or a hand-written build script. For a specific framework, see `frameworks-js.md` or `frameworks-other.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -359,11 +359,11 @@ Since the CDN always serves the latest version, you never need to manually updat
 
 #### Single-Page Application
 
-When the HTML file is opened in a browser, Sveltia CMS initializes completely client-side as a [single-page application](https://developer.mozilla.org/en-US/docs/Glossary/SPA) (SPA) using [hash routing](https://developer.mozilla.org/en-US/docs/Glossary/Hash_routing) for navigation. All content processing and user interface rendering happen in the browser without needing a backend server (authentication with GitHub is the only exception).
+When the HTML file is opened in a browser, Sveltia CMS initializes completely client-side as a [single-page application](https://developer.mozilla.org/en-US/docs/Glossary/SPA) (SPA) using [hash routing](https://developer.mozilla.org/en-US/docs/Glossary/Hash_routing) for navigation. All content processing and user interface rendering happen in the browser without needing a backend server (the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) for GitHub is the only exception).
 
 #### YAML Configuration
 
-On startup, Sveltia CMS automatically reads `config.yml` from the same directory as the HTML file — no path specification needed. This configuration file defines your backend, media folders and content collections.
+On startup, Sveltia CMS automatically reads `config.yml` from the same directory as the HTML file — no path specification needed. This [configuration file](https://sveltiacms.app/en/docs/config-basics) defines your [backend](https://sveltiacms.app/en/docs/backends), [media folders](https://sveltiacms.app/en/docs/media) and [content collections](https://sveltiacms.app/en/docs/collections).
 
 #### Git Backend
 
@@ -594,7 +594,7 @@ Designed to be framework-agnostic, Sveltia CMS can be integrated with a wide ran
 
 It also works with framework-less sites built using vanilla JavaScript or custom tooling. It can even be used for non-website projects where content management is required.
 
-### Getting Started
+### Framework-Specific Guides
 
 Here are some resources to help you get started with Sveltia CMS in various frameworks:
 
@@ -606,37 +606,41 @@ Here are some resources to help you get started with Sveltia CMS in various fram
 - [Hugo](https://sveltiacms.app/en/docs/frameworks/hugo)
 - [Jekyll](https://sveltiacms.app/en/docs/frameworks/jekyll)
 - [Middleman](https://sveltiacms.app/en/docs/frameworks/middleman)
+- [MkDocs](https://sveltiacms.app/en/docs/frameworks/mkdocs)
 - [Next.js](https://sveltiacms.app/en/docs/frameworks/next)
 - [Nuxt](https://sveltiacms.app/en/docs/frameworks/nuxt)
 - [Starlight](https://sveltiacms.app/en/docs/frameworks/starlight)
 - [SvelteKit](https://sveltiacms.app/en/docs/frameworks/sveltekit)
+- [TanStack Start](https://sveltiacms.app/en/docs/frameworks/tanstack-start)
 - [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress)
 - [Zola](https://sveltiacms.app/en/docs/frameworks/zola)
 
 </div>
 
-More framework guides may be added over time.
-
 Our [Showcase](https://sveltiacms.app/en/showcase) section features real-world examples of Sveltia CMS integrated with various frameworks, including links to their source code repositories. This can be a valuable resource for providing inspiration and practical insights for your own projects.
 
-Using no framework? No problem! Check out our [Vanilla JavaScript Integration Guide](https://sveltiacms.app/en/docs/frameworks/none) for tips on how to use Sveltia CMS with plain JavaScript projects. It’s actually a popular choice among Sveltia CMS users, as the chart below shows.
+### Framework-Less Integration
+
+Using no framework? No problem! Check out our [Vanilla JavaScript Integration Guide](https://sveltiacms.app/en/docs/frameworks/vanilla) for tips on how to use Sveltia CMS with plain JavaScript projects. It’s actually a popular choice among Sveltia CMS users, as the chart below shows.
+
+If you build your site with your own tooling, such as a Vite app or a hand-written build script, see the [Custom Tooling Integration Guide](https://sveltiacms.app/en/docs/frameworks/custom).
 
 ### Popular Frameworks
 
 The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 761 sites in the showcase, sorted by popularity:
+Framework distribution across 771 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 281 | 36.9% |
-| Vanilla JavaScript | 119 | 15.6% |
-| Eleventy | 89 | 11.7% |
-| Hugo | 67 | 8.8% |
-| Custom Tooling | 61 | 8.0% |
+| Astro | 288 | 37.4% |
+| Vanilla JavaScript | 120 | 15.6% |
+| Eleventy | 89 | 11.5% |
+| Hugo | 67 | 8.7% |
+| Custom Tooling | 63 | 8.2% |
 | Jekyll | 39 | 5.1% |
 | Next.js | 36 | 4.7% |
-| SvelteKit | 18 | 2.4% |
+| SvelteKit | 18 | 2.3% |
 | React Router | 10 | 1.3% |
 | React | 10 | 1.3% |
 | MkDocs | 4 | 0.5% |
@@ -662,28 +666,340 @@ Source: https://sveltiacms.app/en/docs/frameworks
 
 ## Vanilla JavaScript Integration Guide
 
-Sveltia CMS works seamlessly with vanilla JavaScript projects — no framework required. This guide shows you how to manage content through Sveltia CMS and consume it directly in your JavaScript applications.
+Sveltia CMS works with plain HTML, CSS and JavaScript sites, with no framework or build tools required. It’s a popular choice for small business sites, portfolios and event pages that need editable content without the overhead of a framework.
 
-### Overview
+### How It Works
 
-Sveltia CMS operates as a [CDN-served single-page application](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works), so you can load it directly in your project without any build tools or server-side rendering. Simply include an HTML file with the CMS script and start managing your content.
+Your repository holds the HTML pages, scripts and content files, and the hosting service publishes them as is:
 
-Once configured, the CMS generates static JSON or Markdown files that you consume on the client side. This approach works well for lightweight projects that need dynamic content management without framework overhead — perfect for event listings, announcements, portfolios or any site where you want managed content instead of hardcoded data.
+1. Editors change content in Sveltia CMS, which commits JSON files to the repository.
+2. The hosting service publishes the new commit, with no build step.
+3. When a visitor opens a page, its JavaScript fetches the JSON files and renders the content.
 
-### Implementation
-
-The implementation is straightforward, leveraging native browser APIs and simple libraries:
-
-#### JSON Files
-
-Fetch the JSON files generated by Sveltia CMS and parse them using the native [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). This allows you to dynamically render content on your pages without any additional dependencies.
-
-#### Markdown Files
-
-Use a library like [Marked](https://marked.js.org/) to parse Markdown files. The CDN version can be included directly in your HTML, allowing you to render Markdown content without any build step. Simply fetch the Markdown file, parse it with Marked, and insert the resulting HTML into your page.
+Sveltia CMS itself is a [single-page application served from a CDN](https://sveltiacms.app/en/docs/architecture#how-sveltia-cms-works), so the admin page doesn’t need a build step either.
 
 ### Examples
 
-Check out [real-world examples](https://sveltiacms.app/en/showcase?framework=vanilla) in our Showcase demonstrating vanilla JavaScript setups with Sveltia CMS. These implementations can help you get started with your own project.
+See real-world examples of vanilla JavaScript sites in our [Showcase](https://sveltiacms.app/en/showcase?framework=vanilla). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
 
-Source: https://sveltiacms.app/en/docs/frameworks/none
+### Setup
+
+#### Adding the Admin Page
+
+Create `admin/index.html` and `admin/config.yml` in the folder your site is published from, usually the repository root, as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. The admin page is then available at `/admin/`.
+
+#### Linking to the Admin Page
+
+Link to the admin page with a regular `<a>` element:
+
+```html
+<a href="/admin/">Edit content</a>
+```
+
+### Configuration
+
+#### Storing Content as JSON
+
+Store content in JSON files, which browsers can parse without a library. The following example manages the home page in one file and a list of team members in another:
+
+```yaml [admin/config.yml]
+media_folder: images/uploads
+public_folder: /images/uploads
+collections:
+  - name: pages
+    label: Pages
+    files:
+      - name: home
+        label: Home Page
+        file: data/home.json
+        fields:
+          - { name: title, label: Title }
+          - { name: body, label: Body, widget: markdown }
+  - name: members
+    label: Team Members
+    label_singular: Team Member
+    file: data/members.json
+    identifier_field: name
+    fields:
+      - { name: id, label: ID }
+      - { name: name, label: Name }
+      - { name: role, label: Role, required: false }
+      - { name: photo, label: Photo, widget: image, required: false }
+```
+
+The two collections work differently:
+
+- The `pages` collection is a [file collection](https://sveltiacms.app/en/docs/collections/files). Each file holds the content of one page or section, and the format is determined by the `.json` extension.
+- The `members` collection is a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file). Editors add, edit, delete and reorder members one by one, and all of them are stored in `data/members.json` as an array of objects.
+
+#### Avoiding One File per Entry
+
+An entry collection with the `folder` option stores each entry in a file of its own. Avoid it on a vanilla JavaScript site. A browser can’t list the files in a folder, so your script can’t find the entries without an index.
+
+Use a single-file collection instead, as in the example above. If you need one file per entry, e.g. for long blog posts, you have to generate an index file at deploy time, such as with a small script in a GitHub Actions workflow. At that point, a build step that renders the pages may be simpler. See the [Custom Tooling Integration Guide](https://sveltiacms.app/en/docs/frameworks/custom).
+
+#### Images
+
+The `media_folder` is where uploaded images are stored in the repository, and the `public_folder` is the URL path written to the content. Start the `public_folder` with a slash, so the image paths work on every page, including pages in subfolders.
+
+If your site is served from a subfolder, e.g. a GitHub Pages project site at `https://username.github.io/repo/`, include the subfolder in the `public_folder`, such as `/repo/images/uploads`.
+
+### Loading Content
+
+#### Fetching JSON Files
+
+Fetch the JSON files with the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). The following script renders the home page title and the list of team members from the example above:
+
+```js [js/main.js]
+const loadJSON = async (path) => {
+  const response = await fetch(path, { cache: 'no-cache' });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load ${path}: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+const home = await loadJSON('/data/home.json');
+
+document.querySelector('#title').textContent = home.title;
+
+const members = await loadJSON('/data/members.json');
+
+document.querySelector('#members').replaceChildren(
+  ...members.map(({ name, role }) => {
+    const item = document.createElement('li');
+
+    item.textContent = role ? `${name} (${role})` : name;
+
+    return item;
+  }),
+);
+```
+
+Load the script as a module, which allows top-level `await`:
+
+```html
+<script type="module" src="/js/main.js"></script>
+```
+
+The `cache: 'no-cache'` option makes the browser check for a newer version of the file on every visit. Without it, visitors may see outdated content for a while after an update. GitHub Pages, for example, lets browsers cache files for 10 minutes.
+
+#### Rendering Text Safely
+
+Set plain text with the `textContent` property, as in the example above, rather than `innerHTML`. A value like `<b>Jane</b>` is then shown as is instead of being interpreted as HTML. This also protects the page from cross-site scripting (XSS) if the content contains a malicious script.
+
+#### Rendering Markdown
+
+The [RichText field](https://sveltiacms.app/en/docs/fields/richtext), set with `widget: markdown` in the example above, saves Markdown text. Convert it to HTML with a library like [Marked](https://marked.js.org/), and sanitize the HTML with [DOMPurify](https://github.com/cure53/DOMPurify) before inserting it into the page. Add the imports to the top of the script, and render the body after loading the home page data:
+
+```js [js/main.js]
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked@18/lib/marked.esm.js';
+import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.es.mjs';
+
+// ...
+
+document.querySelector('#body').innerHTML = DOMPurify.sanitize(marked.parse(home.body));
+```
+
+Both libraries are loaded from a CDN as JavaScript modules, so no installation is needed.
+
+### Publishing Changes
+
+Since there’s no build step, the hosting service only has to publish the files in the repository. GitHub Pages with the “Deploy from a branch” option, as well as Netlify and Cloudflare Pages without a build command, publish every new commit automatically. Content changes made in the CMS usually go live within a minute or two.
+
+### Limitations
+
+Content rendered by JavaScript isn’t part of the HTML that the server sends. Google can render JavaScript, but some search engines and most social media link previews read only the HTML, so they don’t see the content.
+
+If search engine optimization matters for your site, render the pages at build time with a static site generator or your own build script. See the [Framework Guides](https://sveltiacms.app/en/docs/frameworks) and the [Custom Tooling Integration Guide](https://sveltiacms.app/en/docs/frameworks/custom).
+
+### Support for Vanilla JavaScript
+
+We have implemented specific features to enhance the integration of Sveltia CMS with vanilla JavaScript sites:
+
+- [Single-file collections](https://sveltiacms.app/en/docs/collections/entries/single-file): Store all the entries of an entry collection in a single JSON file as an array of objects, which your script can fetch with one request. Editors still add, edit, delete and reorder the entries one by one.
+- [Top-level List fields](https://sveltiacms.app/en/docs/fields/list#top-level-list): Edit a JSON file whose root is an array, such as a navigation menu, as a single entry of a file collection, using the `root` option.
+
+Source: https://sveltiacms.app/en/docs/frameworks/vanilla
+
+---
+
+## Custom Tooling Integration Guide
+
+Many sites don’t use a framework or static site generator. Instead, they’re built with their own tooling, usually one of these:
+
+- a [Vite](https://vite.dev/) app, with or without a UI library like React or Vue
+- a hand-written build script in Node.js, Python or another language that turns content files into HTML pages
+
+Since every setup is different, this guide gives general advice rather than step-by-step instructions. Sveltia CMS only reads and writes files in your Git repository, so it works with any tooling that can read those files.
+
+### Examples
+
+See real-world examples of custom tooling in our [Showcase](https://sveltiacms.app/en/showcase?framework=custom). Many sites listed under [React](https://sveltiacms.app/en/showcase?framework=react) and [Vue](https://sveltiacms.app/en/showcase?framework=vue) are Vite apps as well. Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
+
+### Vite
+
+#### Adding the Admin Page
+
+Vite copies the files in the [`public` folder](https://vite.dev/guide/assets#the-public-directory) to the build output unaltered. Create `public/admin/index.html` and `public/admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. The admin page is then available at `/admin/` on the built site.
+
+The development server started with `vite` is different. Its fallback for single-page apps serves your app’s own `index.html` for `/admin/` and `/admin`, so only `/admin/index.html` shows the admin page. To fix this, add a small plugin to the Vite configuration that rewrites these paths:
+
+```js [vite.config.js]
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    {
+      name: 'sveltia-cms-admin',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/admin' || req.url === '/admin/') {
+            req.url = '/admin/index.html';
+          }
+          next();
+        });
+      },
+    },
+  ],
+});
+```
+
+The built site doesn’t have this problem on common hosting services. On Netlify, Vercel and Cloudflare Pages, a rewrite rule that sends every path to `index.html` doesn’t apply to files that exist, so `/admin/` still gets the admin page.
+
+#### Linking to the Admin Page
+
+Link to the admin page with a regular `<a>` element and a trailing slash:
+
+```html
+<a href="/admin/">Edit content</a>
+```
+
+The trailing slash matters on `vite preview` and some hosting services, which serve your app instead of the admin page at `/admin`. If your app uses a client-side router, avoid its link component, such as React Router’s `<Link>`. The router handles the link itself and shows its own “not found” page.
+
+#### Configuration
+
+Store content files under `src`, e.g. in `src/content`, and import them into your app as described [below](#loading-content). Avoid putting them in `public`, because Vite would publish the raw files as well as bundle them. The following example manages site settings in a single JSON file and blog posts as Markdown files, with images in `public/uploads`:
+
+```yaml [public/admin/config.yml]
+media_folder: public/uploads
+public_folder: /uploads
+collections:
+  - name: settings
+    label: Settings
+    files:
+      - name: site
+        label: Site Settings
+        file: src/content/site.json
+        fields:
+          - { name: title, label: Site Title }
+          - { name: description, label: Description, widget: text }
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: src/content/posts
+    create: true
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, type: date }
+      - { name: image, label: Cover Image, widget: image, required: false }
+      - { name: body, label: Body, widget: markdown }
+```
+
+The `media_folder` must be inside `public` so the images are copied to the build output, while the `public_folder` is the URL path written to the content. See [Internal Media Storage](https://sveltiacms.app/en/docs/media/internal) for more options.
+
+If your site is served from a subfolder, e.g. a GitHub Pages project site with the [`base`](https://vite.dev/config/shared-options#base) option set to `/repo/`, image paths like `/uploads/photo.jpg` don’t include the subfolder. Prefix them with `import.meta.env.BASE_URL` when you render them.
+
+#### Loading Content
+
+Vite bundles the content files with your app at build time, so there’s no need to fetch them on the client side.
+
+##### JSON Files
+
+Vite can import JSON files directly. This works well for a file in a [file collection](https://sveltiacms.app/en/docs/collections/files):
+
+```js
+import site from './content/site.json';
+```
+
+An [entry collection](https://sveltiacms.app/en/docs/collections/entries) stores each entry in its own file. Vite’s [`import.meta.glob`](https://vite.dev/guide/features#glob-import) function imports all the files in a folder. The following example reads products from a collection with the [`format`](https://sveltiacms.app/en/docs/collections/entries/formats#format) option set to `json`:
+
+```ts [src/lib/products.ts]
+type Product = { name: string; price: number; image: string };
+
+const files = import.meta.glob<Product>('../content/products/*.json', {
+  import: 'default',
+  eager: true,
+});
+
+export const products = Object.entries(files).map(([path, product]) => ({
+  slug: path.match(/([^/]+)\.json$/)![1],
+  ...product,
+}));
+```
+
+##### YAML Files
+
+Vite can’t import YAML files by itself. Add the [`@rollup/plugin-yaml`](https://github.com/rollup/plugins/tree/master/packages/yaml) plugin to the `plugins` option in the Vite configuration, and then import YAML files the same way as JSON files.
+
+##### Markdown Files
+
+Add `query: '?raw'` to the `import.meta.glob` options to import each Markdown file as a string. Then split the front matter from the body and parse it with a YAML library like [yaml](https://eemeli.org/yaml/):
+
+```ts [src/lib/posts.ts]
+import { parse } from 'yaml';
+
+const files = import.meta.glob<string>('../content/posts/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+export const posts = Object.entries(files).map(([path, raw]) => {
+  const [, frontMatter = '', body = raw] =
+    raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/) ?? [];
+
+  return { slug: path.match(/([^/]+)\.md$/)![1], ...parse(frontMatter), body };
+});
+```
+
+Render the `body` with a Markdown library like [Marked](https://marked.js.org/). Avoid [gray-matter](https://github.com/jonschlinkert/gray-matter) in browser code, because it relies on the Node.js `Buffer` API and throws an error in the browser.
+
+### Custom Build Scripts
+
+#### Adding the Admin Page
+
+A build script usually copies a folder of static files, like CSS and images, to the output folder. Create `admin/index.html` and `admin/config.yml` in that folder as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide, or have the script copy the `admin` folder to the output separately.
+
+Make sure the script copies both files unaltered. A template engine or HTML minifier may change the admin page, e.g. by removing the CMS script.
+
+Link to the admin page with `<a href="/admin/">`.
+
+#### Configuration
+
+Set the `media_folder` to a folder that the script copies to the output, and the `public_folder` to the URL path of that folder on the site. Content files can be stored anywhere outside the output folder, because the script reads them.
+
+#### Loading Content
+
+Read the content files with the file system API of your language and parse them with a library for the format:
+
+- JSON files: use the built-in parser, such as `JSON.parse()` in JavaScript or the `json` module in Python.
+- YAML files: use a library like [yaml](https://eemeli.org/yaml/) or [js-yaml](https://github.com/nodeca/js-yaml) for Node.js, or [PyYAML](https://pyyaml.org/) for Python.
+- Markdown files: split the front matter from the body with [gray-matter](https://github.com/jonschlinkert/gray-matter) for Node.js or [python-frontmatter](https://github.com/eyeseast/python-frontmatter) for Python, then render the body with a Markdown library.
+
+The DateTime field with `type: date` saves an unquoted date like `2026-10-01`. Parsers don’t agree on how to read it:
+
+- gray-matter, PyYAML and js-yaml 4 return a date object.
+- yaml and js-yaml 5 return a string.
+
+Check what your parser returns before formatting or sorting dates.
+
+### Publishing Changes
+
+Either way, the content is built into your site, so the site must be rebuilt to reflect content changes made in the CMS. Most hosting services, including Netlify, Vercel and Cloudflare, can run your build command automatically when a commit is pushed to the repository. For GitHub Pages, use a GitHub Actions workflow that runs the build and deploys the output.
+
+If you’d rather skip the build step for content, place the files in a published folder, such as `public` in a Vite app, and fetch them on the client side, as described in the [Vanilla JavaScript Integration Guide](https://sveltiacms.app/en/docs/frameworks/vanilla).
+
+Source: https://sveltiacms.app/en/docs/frameworks/custom

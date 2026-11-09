@@ -1,6 +1,6 @@
-# Framework Guides: Hugo, Jekyll, Middleman and Zola
+# Framework Guides: Hugo, Jekyll, Middleman, MkDocs and Zola
 
-Setting up Sveltia CMS with static site generators written in Go, Ruby and Rust: where the admin page goes and example collections. For JavaScript frameworks, see `frameworks-js.md`.
+Setting up Sveltia CMS with static site generators written in Go, Ruby, Python and Rust: where the admin page goes and example collections. For JavaScript frameworks, see `frameworks-js.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -230,6 +230,128 @@ slug: "{{date | date('YYYY-MM-DD')}}-{{slug}}"
 Keep in mind that middleman-blog stops the build if the date in the front matter doesn’t match the one in the filename. The filename is set when a post is first saved. If an editor changes the date of an existing post, they also need to update the date in the slug from the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which renames the file.
 
 Source: https://sveltiacms.app/en/docs/frameworks/middleman
+
+---
+
+## MkDocs Integration Guide
+
+This guide provides resources and information for integrating Sveltia CMS with [MkDocs](https://www.mkdocs.org/), a Python-based static site generator for project documentation. Many MkDocs sites use the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme, which this guide also covers.
+
+### Examples
+
+See real-world examples of MkDocs integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=mkdocs). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with MkDocs.
+
+### Setup
+
+#### Adding the Admin Page
+
+MkDocs copies every file in the [`docs` folder](https://www.mkdocs.org/user-guide/configuration/#docs_dir) that isn’t Markdown to the built site [unaltered](https://www.mkdocs.org/user-guide/writing-your-docs/#file-layout). Create `docs/admin/index.html` and `docs/admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. The admin page is then available at `/admin/` on the development server started with `mkdocs serve` as well as on the built site.
+
+If you changed the `docs_dir` option in `mkdocs.yml`, put the `admin` folder in that folder instead.
+
+Keep Markdown files out of the `admin` folder, because MkDocs renders them as pages. A `README.md` file there conflicts with `index.html`, so MkDocs leaves it out of the site with a warning.
+
+#### Linking to the Admin Page
+
+Link to the admin page with a relative path to its `index.html` file, as you would link to any other file in the `docs` folder. The path is relative to the Markdown file, so from `docs/guide/setup.md`, for example, the link looks like this:
+
+```md [docs/guide/setup.md]
+[Edit content](../admin/index.html)
+```
+
+MkDocs checks the link and [converts it](https://www.mkdocs.org/user-guide/writing-your-docs/#linking-to-pages) to a URL relative to the page, such as `../../admin/`. Unlike a link to `/admin/`, it keeps working when the site is served from a subfolder, e.g. a GitHub Pages project site at `https://username.github.io/repo/`.
+
+Material for MkDocs’ [instant loading](https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#instant-loading) feature only handles links to the pages listed in the site’s sitemap. The admin page isn’t listed there, so the link opens it as a regular page.
+
+### Configuration
+
+#### Pages
+
+Every Markdown file in the `docs` folder becomes a page at its own path. A collection of [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) in the `subfolders: false` mode manages this structure as a folder tree:
+
+```yaml [docs/admin/config.yml]
+media_folder: docs/assets/images
+public_folder: /assets/images
+collections:
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: docs
+    create: true
+    nested:
+      subfolders: false
+    meta: { path: {} }
+    fields:
+      - { name: title, label: Title }
+      - { name: description, label: Description, required: false }
+      - { name: body, label: Body, widget: markdown }
+```
+
+The `title` field corresponds to the [`title` meta-data](https://www.mkdocs.org/user-guide/writing-your-docs/#meta-data) option. MkDocs can take the page title from the first heading instead. However, the `title` field is required here, because Sveltia CMS uses it to generate the filename of a new page. The `description` field sets the [page description](https://squidfunk.github.io/mkdocs-material/reference/#setting-the-page-description) in Material for MkDocs.
+
+##### Navigation
+
+If `mkdocs.yml` has no [`nav`](https://www.mkdocs.org/user-guide/configuration/#nav) option, MkDocs builds the navigation from all the Markdown files, sorted alphanumerically and nested by folder. A page created in the CMS then appears in the navigation automatically.
+
+If you define the `nav` option, a page that isn’t listed in it is still built, but it’s not linked from the navigation. Someone has to add every new page to `mkdocs.yml` outside the CMS, so consider leaving out the `nav` option if editors create pages.
+
+##### Images
+
+MkDocs leaves [absolute paths](https://www.mkdocs.org/user-guide/configuration/#validation-of-absolute-links) like `/assets/images/photo.jpg` as is, which breaks images when the site is served from a subfolder. Since MkDocs 1.6, the `relative_to_docs` validation option makes MkDocs resolve such paths against the `docs` folder, check them and convert them to relative paths:
+
+```yaml [mkdocs.yml]
+validation:
+  links:
+    absolute_links: relative_to_docs
+```
+
+With this option, the global `media_folder` and `public_folder` options in the example above work wherever the site is served from.
+
+#### Blog Posts
+
+Material for MkDocs comes with a [blog plugin](https://squidfunk.github.io/mkdocs-material/plugins/blog/), which reads posts from the `docs/blog/posts` folder. Enable it in `mkdocs.yml`, and create `docs/blog/index.md` for the blog’s index page:
+
+```yaml [mkdocs.yml]
+plugins:
+  - blog
+```
+
+The following collection manages the posts. Images inserted into a post are stored in the `images` folder next to the posts. MkDocs resolves their relative paths against each post file, so they work wherever the post is published:
+
+```yaml [docs/admin/config.yml]
+collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: docs/blog/posts
+    create: true
+    media_folder: images
+    public_folder: images
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, default: '{{now}}' }
+      - { name: description, label: Description, required: false }
+      - { name: categories, label: Categories, widget: list, required: false }
+      - { name: draft, label: Draft, widget: boolean, required: false }
+      - { name: body, label: Body, widget: markdown }
+```
+
+Some notes on the fields:
+
+- The [`date`](https://squidfunk.github.io/mkdocs-material/plugins/blog/#meta.date) property is required, and the build fails without it. For a date without a time, add the [`type: date`](https://sveltiacms.app/en/docs/fields/datetime#type) option. Avoid the `format` option: a custom format like `DD/MM/YYYY` isn’t read as a date in YAML, so the plugin rejects it.
+- [Categories](https://squidfunk.github.io/mkdocs-material/plugins/blog/#meta.categories) are free-form strings. If you limit them with the [`categories_allowed`](https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.categories_allowed) plugin option, use a Select field with the same values as `options` and `multiple: true` instead of a List field.
+- [Authors](https://squidfunk.github.io/mkdocs-material/plugins/blog/#meta.authors) are defined in the `docs/blog/.authors.yml` file, and the front matter refers to them by key, such as `authors: [jane]`. Since the file is a map keyed by author, it can’t be edited easily in the CMS. However, a Select field with the keys as `options` and `multiple: true` lets editors pick authors from the list.
+
+The `pages` collection in the [previous section](#pages) also covers the `docs/blog/posts` folder. Each file belongs to the collection with the deepest matching folder, so the posts only appear in the `posts` collection.
+
+### Support for MkDocs
+
+We have implemented specific features to enhance the integration of Sveltia CMS with MkDocs:
+
+- If an entry collection has only a Markdown `body` field, the [slug](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) and [summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of the entries will be generated from a header in the Markdown content, if one exists. ([Discussion](https://github.com/sveltia/sveltia-cms/issues/230))
+- [Nested entries](https://sveltiacms.app/en/docs/collections/entries/nested): Manage a [docs folder tree](https://www.mkdocs.org/user-guide/writing-your-docs/#file-layout) in the sidebar with the `subfolders: false` mode, where every file is a page at its own path and editors can create new folders as needed.
+
+Source: https://sveltiacms.app/en/docs/frameworks/mkdocs
 
 ---
 

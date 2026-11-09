@@ -1,6 +1,6 @@
 # Framework Guides: JavaScript Frameworks
 
-Setting up Sveltia CMS with Astro, Docusaurus, Eleventy, Next.js, Nuxt, Starlight, SvelteKit and VitePress: where the admin page goes, how to serve and link to it, and example collections. For Hugo, Jekyll, Middleman and Zola, see `frameworks-other.md`.
+Setting up Sveltia CMS with Astro, Docusaurus, Eleventy, Next.js, Nuxt, Starlight, SvelteKit, TanStack Start and VitePress: where the admin page goes, how to serve and link to it, and example collections. For Hugo, Jekyll, Middleman, MkDocs and Zola, see `frameworks-other.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 
@@ -661,6 +661,132 @@ Some notes on this setup:
 This approach was shared in a [community discussion](https://github.com/sveltia/sveltia-cms/discussions/665) and should work similarly with other frameworks that let you turn off SSR per page, such as Astro.
 
 Source: https://sveltiacms.app/en/docs/frameworks/sveltekit
+
+---
+
+## TanStack Start Integration Guide
+
+This guide provides resources and information for integrating Sveltia CMS with [TanStack Start](https://tanstack.com/start), a full-stack framework for React and Solid built on TanStack Router and Vite. The code examples use React. For Solid, import from `@tanstack/solid-router` instead of `@tanstack/react-router`.
+
+### Examples
+
+See real-world examples of TanStack Start integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=tanstack-start). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with TanStack Start.
+
+### Setup
+
+#### Adding the Admin Page
+
+TanStack Start serves static files from the `public` folder. Create `public/admin/index.html` and `public/admin/config.yml` as described in the [Getting Started](https://sveltiacms.app/en/docs/start#manual-installation) guide. The admin page is then available at `/admin/` on the development server started with `vite dev` as well as on the production server built with [Nitro](https://tanstack.com/start/latest/docs/framework/react/guide/hosting). Both servers also serve it at `/admin` and `/admin/index.html`.
+
+Static files take precedence over your routes on the server, so a catch-all route like `src/routes/$.tsx` doesn’t hide the admin page.
+
+#### Linking to the Admin Page
+
+The admin page isn’t part of your route tree, so the `<Link>` component can’t link to it. In TypeScript, its `to` prop only accepts the paths of your routes. Without type checking, the router handles the link on the client side and shows its “not found” page.
+
+Use a regular `<a>` element instead, which loads the admin page as a separate document:
+
+```tsx
+<a href="/admin/">Edit content</a>
+```
+
+If you prefer the `<Link>` component, add an `admin` route that redirects to the admin page with a full page load:
+
+```tsx [src/routes/admin.tsx]
+import { createFileRoute, redirect } from '@tanstack/react-router';
+
+export const Route = createFileRoute('/admin')({
+  beforeLoad: () => {
+    throw redirect({ href: '/admin/index.html', reloadDocument: true });
+  },
+});
+```
+
+`<Link to="/admin">` then works, because the router runs the route’s `beforeLoad` function on the client side and leaves the app. A direct visit to `/admin/`, e.g. from a bookmark, still gets the admin page from the server, since static files take precedence there.
+
+### Configuration
+
+TanStack Start doesn’t have a built-in content folder, so you can store content files anywhere in the repository. The following example stores blog posts in `src/content/posts` and images in `public/images`:
+
+```yaml [public/admin/config.yml]
+media_folder: public/images
+public_folder: /images
+collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: src/content/posts
+    create: true
+    fields:
+      - { name: title, label: Title }
+      - { name: date, label: Date, widget: datetime, type: date }
+      - { name: description, label: Description, required: false }
+      - { name: image, label: Cover Image, widget: image, required: false }
+      - { name: body, label: Body, widget: markdown }
+```
+
+The `media_folder` must be inside `public` so the images are served by TanStack Start, while the `public_folder` is the URL path written to the content. See [Internal Media Storage](https://sveltiacms.app/en/docs/media/internal) for more options.
+
+Entries don’t have to be Markdown. For data like products or team members, set the [`format`](https://sveltiacms.app/en/docs/collections/entries/formats#format) option to `json` to store each entry as a JSON file.
+
+### Loading Content
+
+TanStack Start doesn’t load content files by itself. There are two common ways to read them at build time.
+
+#### Using Content Collections
+
+The official [Rendering Markdown](https://tanstack.com/start/latest/docs/framework/react/guide/rendering-markdown) guide uses [Content Collections](https://www.content-collections.dev/docs/quickstart/tanstack-start), which reads Markdown files, validates their front matter with a [Zod](https://zod.dev/) schema and generates typed data for your routes. A collection matching the configuration above looks like this:
+
+```ts [content-collections.ts]
+import { defineCollection, defineConfig } from '@content-collections/core';
+import { z } from 'zod';
+
+const posts = defineCollection({
+  name: 'posts',
+  directory: 'src/content/posts',
+  include: '*.md',
+  schema: z.object({
+    title: z.string(),
+    date: z.string(),
+    description: z.string().optional(),
+    image: z.string().optional(),
+    content: z.string(),
+  }),
+});
+
+export default defineConfig({
+  content: [posts],
+});
+```
+
+Some notes on the schema:
+
+- The DateTime field with `type: date` saves a date like `2026-10-01`. Content Collections reads it as a string, so validate it with `z.string()` instead of `z.date()`.
+- Content Collections always puts the Markdown body in the `content` property, whatever the body field is called in the CMS configuration.
+- Sveltia CMS saves empty optional fields as an empty string by default, which may not pass a stricter schema, such as `z.string().url().optional()`. Set the [`omit_empty_optional_fields`](https://sveltiacms.app/en/docs/data-output#controlling-data-output) output option to `true` to leave them out of the front matter instead.
+
+#### Using `import.meta.glob`
+
+For JSON files, or if you want to avoid extra dependencies, Vite’s [`import.meta.glob`](https://vite.dev/guide/features#glob-import) function imports all the files in a folder at build time. The following example reads products stored as JSON files in `src/content/products`:
+
+```ts [src/lib/products.ts]
+type Product = { name: string; price: number; image: string };
+
+const files = import.meta.glob<{ default: Product }>('../content/products/*.json', {
+  eager: true,
+});
+
+export const products = Object.entries(files).map(([path, file]) => ({
+  slug: path.match(/([^/]+)\.json$/)![1],
+  ...file.default,
+}));
+```
+
+For Markdown files, add `query: '?raw'` to the options to import each file as a string, then parse the front matter with a library like [gray-matter](https://github.com/jonschlinkert/gray-matter).
+
+Either way, content files are bundled with your site, so the site must be rebuilt to reflect content changes made in the CMS. Most hosting services, including Vercel, Netlify and Cloudflare, rebuild the site automatically when a commit is pushed to the repository.
+
+Source: https://sveltiacms.app/en/docs/frameworks/tanstack-start
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: sveltia-cms
-description: Set up, configure and debug Sveltia CMS, the Git-based headless CMS that replaces Netlify CMS and Decap CMS. Use when adding a CMS to a static site (Astro, Eleventy, Hugo, Jekyll, Next.js, Nuxt, SvelteKit, VitePress, Zola or any other), writing or reviewing an admin config file (config.yml, config.toml, config.json) with backend, collections, fields or i18n options, migrating from Netlify/Decap/Static CMS, or troubleshooting a CMS admin page that shows a blank screen, fails to authenticate, or reports config validation errors on the login screen. Also use whenever a project contains a config file with a `backend` and `collections` structure, or an admin page loading sveltia-cms.js.
+description: Set up, configure and debug Sveltia CMS, the Git-based headless CMS that replaces Netlify CMS and Decap CMS. Use when adding a CMS to a static site (Astro, Eleventy, Hugo, Jekyll, MkDocs, Next.js, Nuxt, SvelteKit, TanStack Start, VitePress, Zola, a Vite app, a custom build script or any other), writing or reviewing an admin config file (config.yml, config.toml, config.json) with backend, collections, fields or i18n options, migrating from Netlify/Decap/Static CMS, or troubleshooting a CMS admin page that shows a blank screen, fails to authenticate, or reports config validation errors on the login screen. Also use whenever a project contains a config file with a `backend` and `collections` structure, or an admin page loading sveltia-cms.js.
 license: MIT
 compatibility: Works anywhere. No tools, dependencies or network access are required.
 metadata:
@@ -98,7 +98,7 @@ Put the `admin` folder inside the framework's static folder, so the page is serv
 | Nikola | `/files` |
 | VuePress | `<source folder>/.vuepress/public` |
 
-Check the framework's own documentation if it is not listed. Eleventy, Hexo, Lume, Middleman, Pelican and Sphinx need extra configuration so the admin files are copied as is — see `references/setup.md`. Some dev servers (Astro, SvelteKit, VitePress) and Next.js don't serve `/admin/` as `/admin/index.html`, and client-side routers can intercept links to the admin page — see the framework guides in `references/frameworks-js.md` and `references/frameworks-other.md`.
+Check the framework's own documentation if it is not listed. Eleventy, Hexo, Lume, Middleman, Pelican and Sphinx need extra configuration so the admin files are copied as is — see `references/setup.md`. Some dev servers (Astro, SvelteKit, VitePress, plain Vite) and Next.js don't serve `/admin/` as `/admin/index.html`, and client-side routers can intercept links to the admin page — see the framework guides in `references/frameworks-js.md` and `references/frameworks-other.md`, and the custom tooling guide in `references/setup.md` for a Vite app or a hand-written build script.
 
 ## Validate the configuration
 
@@ -120,9 +120,9 @@ Read the file that covers the area before writing options. Each is plain Markdow
 
 | Working on | Read |
 | --- | --- |
-| Installing, static folders, how the CMS loads | `references/setup.md` |
-| Astro, Docusaurus, Eleventy, Next.js, Nuxt, Starlight, SvelteKit, VitePress | `references/frameworks-js.md` |
-| Hugo, Jekyll, Middleman, Zola | `references/frameworks-other.md` |
+| Installing, static folders, how the CMS loads; vanilla JavaScript, Vite apps, custom build scripts | `references/setup.md` |
+| Astro, Docusaurus, Eleventy, Next.js, Nuxt, Starlight, SvelteKit, TanStack Start, VitePress | `references/frameworks-js.md` |
+| Hugo, Jekyll, Middleman, MkDocs, Zola | `references/frameworks-other.md` |
 | Global options, config file formats, output and slug options | `references/config.md` |
 | `backend`, OAuth clients, authentication | `references/backends.md` |
 | Collection types, file collections, singletons | `references/collections.md` |
