@@ -984,13 +984,13 @@ The `workflow` scope lets the token create and change GitHub Actions workflows i
 Whether the scope reaches GitHub depends on your OAuth client:
 
 - Netlify’s OAuth, which the CMS uses when `base_url` isn’t set, passes the scope on to GitHub as is, so the option is all you need there.
-- [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) only requests the scope if its `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is set to `true`, and leaves it out of the request otherwise.
+- [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) used with an OAuth app only requests the scope if its `GITHUB_ALLOW_WORKFLOW_SCOPE` environment variable is set to `true`, and leaves it out of the request otherwise. With a GitHub App, which is now recommended, scopes don’t apply, and Open Authoring isn’t supported, as the app would have to be installed on each contributor’s fork.
 
 A contributor who signed in before you added the scope keeps their old token until they sign out and sign in again.
 
 **Your OAuth client has to honor the option**
 
-The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honors it, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
+The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honors it when used with an OAuth app, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
 
 The option only applies to the [OAuth sign-in flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow); it has no effect on access token sign-in.
 

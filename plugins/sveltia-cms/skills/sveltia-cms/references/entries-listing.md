@@ -1222,6 +1222,24 @@ view_groups:
     gte: '{{today}}'
 ```
 
+#### Collapsing Groups by Default
+
+Users can expand or collapse each group in the entry list, or all of them at once with the Expand All and Collapse All items in the Group menu. Their choices are remembered for each view group. By default, all groups start expanded, which can make the list very long when there are many groups.
+
+To start the groups collapsed, set the `collapsed` option of a view group to `true`. This works with both the list and the [extended syntax](#grouping):
+
+```yaml
+view_groups:
+  groups:
+    - name: category
+      label: Category
+      field: category
+      collapsed: true
+  default: category
+```
+
+When the entries are grouped this way, each group stays collapsed until the user expands it. This includes groups that appear later, such as one for a new category. The groups the user has expanded are remembered as usual.
+
 ### Filtering
 
 The `view_filters` option allows you to define preset filters that editors can quickly apply to the entry listing view. This is useful for quickly accessing specific subsets of entries based on common criteria.

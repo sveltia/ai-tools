@@ -1192,13 +1192,15 @@ PKCE authorization is the recommended way to authenticate with GitHub. However, 
 
 #### Authorization Code Flow
 
-The authorization code flow requires you to set up an OAuth app on GitHub and deploy an OAuth client server to handle the authentication process.
+The authorization code flow requires you to register a GitHub App or an OAuth app on GitHub and deploy an OAuth client server to handle the authentication process.
 
 There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS or using Netlify as an OAuth provider.
 
 ##### Using Sveltia CMS Authenticator
 
-We provide our own OAuth client called [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) that you can deploy on Cloudflare Workers. Follow the instructions in the repository to deploy the authenticator and update your CMS configuration file to include the `base_url` option pointing to your authenticator URL:
+We provide our own OAuth client called [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) that you can deploy on Cloudflare Workers. It works with a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps), which only gets access to the repositories it’s installed on, with the permissions it needs. Users therefore don’t have to grant access to all of their repositories, including private ones, as they do with an OAuth app. Expired access tokens are renewed automatically. Note that [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) isn’t supported with a GitHub App.
+
+Follow the instructions in the repository to register a GitHub App, deploy the authenticator and update your CMS configuration file to include the `base_url` option pointing to your authenticator URL:
 
 ```yaml [YAML]{4}
 backend:
@@ -1497,11 +1499,13 @@ Users’ OAuth tokens will be automatically renewed as needed, so there’s no n
 
 PKCE authorization is the recommended way to authenticate with GitLab. However, if you need to use the authorization code flow for some reason, you can follow the instructions below. This method requires a backend server to keep the client secret safe.
 
-There are multiple options for the OAuth client, including our own Sveltia CMS Authenticator, third-party OAuth clients made for Netlify/Decap CMS or using Netlify as an OAuth provider.
+You can use a third-party OAuth client made for Netlify/Decap CMS or use Netlify as an OAuth provider. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) no longer supports GitLab, as PKCE authorization makes it unnecessary.
 
-##### Using Sveltia CMS Authenticator
+##### Using Third-Party OAuth Client
 
-We provide our own OAuth client called [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) that you can deploy on Cloudflare Workers. Follow the instructions in the repository to deploy the authenticator and update your CMS configuration file to include the `base_url` option pointing to your authenticator URL:
+You can use [third-party OAuth clients](https://decapcms.org/docs/external-oauth-clients/) made for Netlify/Decap CMS. These clients support various languages and hosting services, and they should work with Sveltia CMS as well without any modifications.
+
+Register a new OAuth app on GitLab and configure the client with the app credentials. Then, update your CMS configuration file to include the `base_url` option pointing to your OAuth client URL:
 
 ```yaml [YAML]{4}
 backend:
@@ -1537,12 +1541,6 @@ base_url = "YOUR_CLIENT_URL"
 }
 ```
 
-##### Using Third-Party OAuth Client
-
-You can also use [third-party OAuth clients](https://decapcms.org/docs/external-oauth-clients/) made for Netlify/Decap CMS. These clients support various languages and hosting services, and they should work with Sveltia CMS as well without any modifications.
-
-The setup process is similar to using Sveltia CMS Authenticator. You need to register a new OAuth app on GitLab and configure the third-party client with the app credentials. Then, update your CMS configuration to include the `base_url` option pointing to your OAuth client URL, like in the example above.
-
 The authorization URL is `base_url` followed by `/auth` by default, which is what clients made for Netlify/Decap CMS expect. If the client uses a different path, set the [`auth_endpoint`](https://sveltiacms.app/en/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option as well.
 
 **Disclaimer**
@@ -1553,7 +1551,7 @@ Third-party clients are not reviewed or maintained by the Sveltia CMS team. Use 
 
 For backward compatibility with Netlify CMS, Sveltia CMS supports the authorization code flow using Netlify as an OAuth client. It’s the default authentication method if you don’t configure authentication explicitly, and you don’t need to set up a backend server yourself.
 
-If your site is hosted on Netlify, you don’t need to install Sveltia CMS Authenticator or any other OAuth client. Instead, register a new OAuth app on GitLab and link it to your Netlify site. Here’s how:
+If your site is hosted on Netlify, you don’t need to install an OAuth client. Instead, register a new OAuth app on GitLab and link it to your Netlify site. Here’s how:
 
 1. Follow the instructions in the [GitLab documentation](https://docs.gitlab.com/integration/oauth_provider/) to create a new OAuth application.
 1. Set the **Redirect URI** to `https://api.netlify.com/auth/done`.
