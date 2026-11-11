@@ -21,7 +21,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 ### Examples
 
-See real-world examples of Hugo integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=hugo). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Hugo.
+See real-world examples of Hugo integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=hugo). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Hugo.
 
 ### Setup
 
@@ -95,7 +95,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 ### Examples
 
-See real-world examples of Jekyll integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=jekyll). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Jekyll.
+See real-world examples of Jekyll integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=jekyll). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Jekyll.
 
 ### Setup
 
@@ -168,7 +168,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of Middleman integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=middleman). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Middleman.
+See real-world examples of Middleman integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=middleman). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Middleman.
 
 ### Setup
 
@@ -239,7 +239,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of MkDocs integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=mkdocs). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with MkDocs.
+See real-world examples of MkDocs integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=mkdocs). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with MkDocs.
 
 ### Setup
 
@@ -371,7 +371,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 ### Examples
 
-See real-world examples of Zola integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=zola). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Zola.
+See real-world examples of Zola integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=zola). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Zola.
 
 ### Setup
 

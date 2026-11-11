@@ -1317,6 +1317,6 @@ collections:
 
 ### Real-World Examples
 
-To see how others have structured their content models using Sveltia CMS, check out our [Showcase](https://sveltiacms.app/en/showcase) page. It features a variety of websites using Sveltia CMS. Most of them include a link to their source code, which can provide valuable insights into different content modeling approaches.
+To see how others have structured their content models using Sveltia CMS, check out our [showcase](https://sveltiacms.app/en/showcase). It features a variety of websites using Sveltia CMS. Most of them include a link to their source code, which can provide valuable insights into different content modeling approaches.
 
 Source: https://sveltiacms.app/en/docs/content-modeling

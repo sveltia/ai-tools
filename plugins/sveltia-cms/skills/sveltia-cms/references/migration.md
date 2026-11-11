@@ -18,7 +18,7 @@ Sveltia CMS is designed to be a direct [successor to Netlify CMS](https://svelti
 
 - [Migrating from Netlify CMS or Decap CMS](https://sveltiacms.app/en/docs/migration/netlify-decap-cms)
 
-Our [Showcase](https://sveltiacms.app/en/showcase) also features various sites that have been migrated from Netlify CMS and Decap CMS. Check out these examples to see how other users have successfully transitioned to Sveltia CMS.
+Our [showcase](https://sveltiacms.app/en/showcase) also features various sites that have been migrated from Netlify CMS and Decap CMS. Check out these examples to see how other users have successfully transitioned to Sveltia CMS.
 
 - [Examples of sites migrated from Netlify CMS](https://sveltiacms.app/en/showcase?migrated-from=netlify-cms)
 - [Examples of sites migrated from Decap CMS](https://sveltiacms.app/en/showcase?migrated-from=decap-cms)
@@ -45,7 +45,7 @@ We’ll continue to expand our migration resources to cover popular headless CMS
 
 If your current CMS is Git-based, the migration process should be relatively straightforward. Typically, you will need to configure your Sveltia CMS setup to match your existing content structure.
 
-See our [Showcase](https://sveltiacms.app/en/showcase) for examples of sites that have successfully migrated from other headless CMS platforms to Sveltia CMS.
+See our [showcase](https://sveltiacms.app/en/showcase) for examples of sites that have successfully migrated from other headless CMS platforms to Sveltia CMS.
 
 - [Examples of sites migrated from TinaCMS](https://sveltiacms.app/en/showcase?migrated-from=tinacms)
 - [Examples of sites migrated from Keystatic](https://sveltiacms.app/en/showcase?migrated-from=keystatic)
@@ -57,7 +57,7 @@ More and more users are choosing to switch from traditional CMS platforms, espec
 
 The migration process involves exporting content as static files, typically in Markdown format, and creating a new site from scratch using your preferred framework. Our [Start Guide](https://sveltiacms.app/en/docs/start) can help you get started with Sveltia CMS.
 
-Our [Showcase](https://sveltiacms.app/en/showcase) also features various sites that have been migrated from WordPress and other platforms, demonstrating the possibilities and benefits of using Sveltia CMS.
+Our [showcase](https://sveltiacms.app/en/showcase) also features various sites that have been migrated from WordPress and other platforms, demonstrating the possibilities and benefits of using Sveltia CMS.
 
 - [Examples of sites migrated from WordPress](https://sveltiacms.app/en/showcase?migrated-from=wordpress)
 - [Examples of sites migrated from Joomla](https://sveltiacms.app/en/showcase?migrated-from=joomla)
@@ -68,7 +68,7 @@ Our [Showcase](https://sveltiacms.app/en/showcase) also features various sites t
 
 Users are also migrating from website builders like Wix and Squarespace to Sveltia CMS. The migration process is similar to that of traditional CMS platforms, involving exporting content and creating a new site with Sveltia CMS.
 
-See our [Showcase](https://sveltiacms.app/en/showcase) for examples of sites that have successfully migrated from these website builders to Sveltia CMS.
+See our [showcase](https://sveltiacms.app/en/showcase) for examples of sites that have successfully migrated from these website builders to Sveltia CMS.
 
 - [Examples of sites migrated from Wix](https://sveltiacms.app/en/showcase?migrated-from=wix)
 - [Examples of sites migrated from Squarespace](https://sveltiacms.app/en/showcase?migrated-from=squarespace)

@@ -24,7 +24,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 ### Examples
 
-See real-world examples of Astro integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=astro). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Astro.
+See real-world examples of Astro integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=astro). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Astro.
 
 ### Setup
 
@@ -117,7 +117,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of Docusaurus integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=docusaurus). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Docusaurus.
+See real-world examples of Docusaurus integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=docusaurus). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Docusaurus.
 
 ### Setup
 
@@ -238,7 +238,7 @@ These third-party resources are not necessarily reviewed by the Sveltia CMS team
 
 ### Examples
 
-See real-world examples of Eleventy integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=eleventy). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Eleventy.
+See real-world examples of Eleventy integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=eleventy). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Eleventy.
 
 ### Setup
 
@@ -300,7 +300,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of Next.js integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=next). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Next.js.
+See real-world examples of Next.js integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=next). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Next.js.
 
 ### Setup
 
@@ -372,7 +372,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of Nuxt integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=nuxt). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Nuxt.
+See real-world examples of Nuxt integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=nuxt). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Nuxt.
 
 ### Setup
 
@@ -454,7 +454,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of Starlight integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=starlight). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Starlight.
+See real-world examples of Starlight integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=starlight). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with Starlight.
 
 ### Setup
 
@@ -558,7 +558,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of SvelteKit integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=sveltekit). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with SvelteKit.
+See real-world examples of SvelteKit integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=sveltekit). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with SvelteKit.
 
 ### Setup
 
@@ -670,7 +670,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of TanStack Start integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=tanstack-start). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with TanStack Start.
+See real-world examples of TanStack Start integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=tanstack-start). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with TanStack Start.
 
 ### Setup
 
@@ -796,7 +796,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 
 ### Examples
 
-See real-world examples of VitePress integrations in our [Showcase](https://sveltiacms.app/en/showcase?framework=vitepress). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with VitePress.
+See real-world examples of VitePress integrations in our [showcase](https://sveltiacms.app/en/showcase?framework=vitepress). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS with VitePress.
 
 ### Setup
 

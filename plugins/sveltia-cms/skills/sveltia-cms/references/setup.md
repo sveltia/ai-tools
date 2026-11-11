@@ -617,7 +617,7 @@ Here are some resources to help you get started with Sveltia CMS in various fram
 
 </div>
 
-Our [Showcase](https://sveltiacms.app/en/showcase) section features real-world examples of Sveltia CMS integrated with various frameworks, including links to their source code repositories. This can be a valuable resource for providing inspiration and practical insights for your own projects.
+Our [showcase](https://sveltiacms.app/en/showcase) section features real-world examples of Sveltia CMS integrated with various frameworks, including links to their source code repositories. This can be a valuable resource for providing inspiration and practical insights for your own projects.
 
 ### Framework-Less Integration
 
@@ -627,20 +627,20 @@ If you build your site with your own tooling, such as a Vite app or a hand-writt
 
 ### Popular Frameworks
 
-The chart below shows the distribution of frameworks used by sites in our [Showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
+The chart below shows the distribution of frameworks used by sites in our [showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 771 sites in the showcase, sorted by popularity:
+Framework distribution across 780 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 288 | 37.4% |
-| Vanilla JavaScript | 120 | 15.6% |
-| Eleventy | 89 | 11.5% |
-| Hugo | 67 | 8.7% |
-| Custom Tooling | 63 | 8.2% |
-| Jekyll | 39 | 5.1% |
-| Next.js | 36 | 4.7% |
-| SvelteKit | 18 | 2.3% |
+| Astro | 291 | 37.3% |
+| Vanilla JavaScript | 122 | 15.6% |
+| Eleventy | 90 | 11.5% |
+| Hugo | 67 | 8.6% |
+| Custom Tooling | 65 | 8.3% |
+| Jekyll | 39 | 5.0% |
+| Next.js | 36 | 4.6% |
+| SvelteKit | 19 | 2.4% |
 | React Router | 10 | 1.3% |
 | React | 10 | 1.3% |
 | MkDocs | 4 | 0.5% |
@@ -680,7 +680,7 @@ Sveltia CMS itself is a [single-page application served from a CDN](https://svel
 
 ### Examples
 
-See real-world examples of vanilla JavaScript sites in our [Showcase](https://sveltiacms.app/en/showcase?framework=vanilla). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
+See real-world examples of vanilla JavaScript sites in our [showcase](https://sveltiacms.app/en/showcase?framework=vanilla). Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
 
 ### Setup
 
@@ -837,7 +837,7 @@ Since every setup is different, this guide gives general advice rather than step
 
 ### Examples
 
-See real-world examples of custom tooling in our [Showcase](https://sveltiacms.app/en/showcase?framework=custom). Many sites listed under [React](https://sveltiacms.app/en/showcase?framework=react) and [Vue](https://sveltiacms.app/en/showcase?framework=vue) are Vite apps as well. Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
+See real-world examples of custom tooling in our [showcase](https://sveltiacms.app/en/showcase?framework=custom). Many sites listed under [React](https://sveltiacms.app/en/showcase?framework=react) and [Vue](https://sveltiacms.app/en/showcase?framework=vue) are Vite apps as well. Most of the listed sites include links to their source code, so you can explore how they implemented Sveltia CMS.
 
 ### Vite
 

@@ -529,7 +529,7 @@ Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be consi
 
 Sveltia CMS was created before Decap CMS and was never intended to replace or compete with it. However, as Decap CMS has been neglected and many issues remain unresolved, Sveltia CMS can be considered the de facto successor to Decap CMS as well. It’s a more reliable and actively maintained alternative for users looking to migrate from Decap CMS.
 
-In fact, as our [Showcase](https://sveltiacms.app/en/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
+In fact, as our [showcase](https://sveltiacms.app/en/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
 
 See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
 
@@ -555,19 +555,19 @@ That’s what we signed up for as the [true successor to Netlify CMS](https://sv
 
 #### Who’s using Sveltia CMS?
 
-Sveltia CMS is already being used by thousands of individuals and organizations for their websites and projects, and the number is growing rapidly. See the [Showcase](https://sveltiacms.app/en/showcase) page for various real-world examples of Sveltia CMS in action.
+Sveltia CMS is already being used by thousands of individuals and organizations for their websites and projects, and the number is growing rapidly. See the [showcase](https://sveltiacms.app/en/showcase) for various real-world examples of Sveltia CMS in action.
 
-Please note that the Showcase page only features a small fraction of our users because many prefer to keep their projects private. Additionally, political and religious projects are excluded because we aim to maintain a neutral stance and avoid controversy.
+Please note that the showcase only features a small fraction of our users because many prefer to keep their projects private. Additionally, political and religious projects are excluded because we aim to maintain a neutral stance and avoid controversy.
 
 #### How is the Showcase curated?
 
-We constantly [search GitHub](https://github.com/search?q=sveltia&type=commits&s=committer-date&o=desc) for new Sveltia CMS users and add them to our Showcase page if they meet our criteria. We monitor hundreds of repositories that have installed the CMS, adding new ones as sites are launched. It’s a lot of work for such a small project, but we want to recognize our users and demonstrate the growing popularity of Sveltia CMS.
+We constantly [search GitHub](https://github.com/search?q=sveltia&type=commits&s=committer-date&o=desc) for new Sveltia CMS users and add them to our showcase if they meet our criteria. We monitor hundreds of repositories that have installed the CMS, adding new ones as sites are launched. It’s a lot of work for such a small project, but we want to recognize our users and demonstrate the growing popularity of Sveltia CMS.
 
-[Let us know](https://github.com/sveltia/sveltia-cms/discussions/593) if you want to be featured on the Showcase page!
+[Let us know](https://github.com/sveltia/sveltia-cms/discussions/593) if you want to be featured on the showcase!
 
 #### What are the criteria for being featured on the Showcase?
 
-When deciding which projects to feature on the Showcase page, we generally consider the following criteria and perform basic due diligence:
+When deciding which projects to feature on the showcase, we generally consider the following criteria and perform basic due diligence:
 
 - Projects must represent a real-world use case of Sveltia CMS. Demo projects, test sites and under-construction sites are not eligible.
 - Projects must be publicly accessible as live websites or applications so visitors can see Sveltia CMS in action.
@@ -582,7 +582,7 @@ When deciding which projects to feature on the Showcase page, we generally consi
   - We may still feature moderate grassroots campaigns and charities that primarily focus on issues such as civil rights and humanitarianism.
 - Personal blogs and websites will only be featured if they have a significant online presence and credibility, such as having hundreds of followers.
 
-Templates will not be featured on the Showcase page, but we can list them in our [Start Guide](https://sveltiacms.app/en/docs/start) and [Framework Guides](https://sveltiacms.app/en/docs/frameworks) if they are publicly available. Ping the maintainer on Discord, Bluesky or GitHub Discussions if you want your template to be listed.
+Templates will not be featured on the showcase, but we can list them in our [Start Guide](https://sveltiacms.app/en/docs/start) and [Framework Guides](https://sveltiacms.app/en/docs/frameworks) if they are publicly available. Ping the maintainer on Discord, Bluesky or GitHub Discussions if you want your template to be listed.
 
 #### Are there any plans for a hosted version of Sveltia CMS?
 
@@ -620,7 +620,7 @@ The only comparable product is our predecessor, Netlify/Decap CMS, which is the 
 
 To decide which CMS solution is right for your project, we recommend evaluating your specific needs and requirements, and comparing the features, pricing and support options of different solutions to find the best fit for you.
 
-Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [Showcase](https://sveltiacms.app/en/showcase).
+Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [showcase](https://sveltiacms.app/en/showcase).
 
 #### Is Sveltia CMS framework-agnostic?
 
