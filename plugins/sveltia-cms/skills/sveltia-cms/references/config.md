@@ -1077,6 +1077,8 @@ Here are some key aspects of data output in Sveltia CMS:
 
   Dates are not quoted, so they are still read as dates.
 
+- **Multi-Line Strings in YAML**: A string with line breaks is written as a literal block scalar (`|`) by default (configurable). See [below](#multi-line-strings-in-yaml) for details.
+- **Comments in YAML**: To add a comment before a field in a YAML file or YAML front matter, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment). Other comments in an existing file aren’t kept when the entry is saved, because the CMS writes the whole file from the entry data. The same goes for other formatting details, such as the quote style of a string or extra blank lines.
 - **JSON and YAML Formatting Options**: Fully configurable in the [output options](#controlling-data-output).
 - **Empty List Items in TOML**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
 - **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
@@ -1125,6 +1127,7 @@ output:
     quote: none # or single or double
     indent_size: 2
     indent_sequences: true # false for compact style
+    block_quote: true # or literal, folded or false
 ```
 
 ```toml [TOML]
@@ -1138,6 +1141,7 @@ indent_size = 2
 quote = "none" # or "single" or "double"
 indent_size = 2
 indent_sequences = true # false for compact style
+block_quote = true # or "literal", "folded" or false
 ```
 
 ```json [JSON]
@@ -1152,7 +1156,8 @@ indent_sequences = true # false for compact style
     "yaml": {
       "quote": "none",
       "indent_size": 2,
-      "indent_sequences": true
+      "indent_sequences": true,
+      "block_quote": true
     }
   }
 }
@@ -1171,12 +1176,48 @@ indent_sequences = true # false for compact style
       quote: 'none',
       indent_size: 2,
       indent_sequences: true,
+      block_quote: true,
     },
   },
 }
 ```
 
 For JSON, `indent_size` is the number of spaces or tabs per indent level; it defaults to `2` with `indent_style: space` and `1` with `indent_style: tab`. For YAML, `quote: none` leaves string values unquoted unless quotes are required, while `single` and `double` wrap them in single or double quotes.
+
+#### Multi-Line Strings in YAML
+
+The `block_quote` option for YAML controls how a string with line breaks is written. It only applies when `quote` is `none`. With `single` or `double`, multi-line strings are quoted like any other string.
+
+- `true` or `literal` (default): a literal block scalar (`|`), which keeps line breaks as they are.
+- `folded`: a folded block scalar (`>`). A single line break in a folded scalar is read as a space, so each line break in the value is written as a blank line. Long lines still aren’t wrapped, as [string folding](#format-specific-conventions) is disabled.
+- `false`: a quoted string, with a blank line for each line break. It’s single-quoted, unless the string contains a single quote, in which case it’s double-quoted.
+
+For example, a value with two paragraphs is written as follows:
+
+```yaml [true]
+about: |-
+  First paragraph.
+
+  Second paragraph.
+```
+
+<!-- prettier-ignore -->
+```yaml [folded]
+about: >-
+  First paragraph.
+
+
+  Second paragraph.
+```
+
+```yaml [false]
+about: 'First paragraph.
+
+
+  Second paragraph.'
+```
+
+The block chomping indicator after `|` or `>` can’t be configured, because it depends on the value: `-` if the value has no trailing line break, no indicator if it has one, and `+` if it has more.
 
 ### Understanding Exceptions
 
