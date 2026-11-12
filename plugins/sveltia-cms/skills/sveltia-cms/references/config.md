@@ -1094,19 +1094,19 @@ Formatting details, such as the quote style of a YAML string, aren’t kept. Nei
   Dates aren’t quoted, so they are still read as dates.
 
 - **Multi-Line Strings**: A string with line breaks is written as a literal block scalar (`|`) by default (configurable). See [Multi-Line Strings in YAML](#multi-line-strings-in-yaml) for details.
-- **Comments**: To add a comment before a field in a YAML file or YAML front matter, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment). Comments at the top of an existing file or front matter block are kept when the entry is saved, as long as a blank line separates them from the first key. A comment directly above the first key is treated as belonging to that key, like one added with the `comment` option, so it isn’t kept. Other comments aren’t kept either, because the CMS writes the whole file from the entry data. The same goes for other formatting details, such as the quote style of a string or extra blank lines.
+- **Comments**: When an entry is saved, comments at the top of an existing file or front matter block are kept, as long as a blank line separates them from the first key. Other comments aren’t kept, because the CMS writes the whole file from the entry data. To add a comment before a field, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment).
 
   ```yaml
-  # This comment is kept.
-  # So is this one.
+  # Kept
+  # Also kept
 
-  # This comment is not kept, because it's directly above the first key.
+  # Not kept: directly above the first key
   title: Hello
   ```
 
 ##### TOML
 
-- **Comments**: As with YAML, comments at the top of an existing file or front matter block are kept when the entry is saved, as long as a blank line separates them from the first key or table. Other comments aren’t kept, and the `comment` field option isn’t supported.
+- **Comments**: As with YAML, when an entry is saved, comments at the top of an existing file or front matter block are kept, as long as a blank line separates them from the first key or table. Other comments aren’t kept, and the `comment` field option isn’t supported.
 - **Empty List Items**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
 - **DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
 
