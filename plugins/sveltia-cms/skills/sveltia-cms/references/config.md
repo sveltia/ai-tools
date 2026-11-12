@@ -1044,48 +1044,81 @@ Sveltia CMS allows you to define custom data output formats using the API. You c
 
 ### Data Output Conventions
 
-Here are some key aspects of data output in Sveltia CMS:
+Here are some key aspects of data output in Sveltia CMS.
 
 #### General Conventions
 
-- **Field Ordering**: Fields are always saved in the order they are defined in the configuration, with key-value pairs, making Git commits clean and consistent. Some [exceptions](#understanding-exceptions) apply.
-- **Time Formatting**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility, including Hugo.
-- **File Formatting**: Line breaks are LF (`\n`) across all formats. A newline is added at the end of the file to prevent unnecessary changes.
-- **Text Processing**: Unnecessary whitespace in string values is automatically removed when an entry is saved. No configuration option is required for this behavior.
-  - [Code](https://sveltiacms.app/en/docs/fields/code) field values are saved as they are, because any whitespace, such as the indentation of the first line or a final newline, can be significant in code.
-  - [Text](https://sveltiacms.app/en/docs/fields/text), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [rich text](https://sveltiacms.app/en/docs/fields/richtext) field values keep their leading whitespace, such as the indentation of a code block on the first line. Only trailing whitespace is removed.
-  - Leading and trailing whitespace is removed from any other string value.
-- **Preserving Existing Data**: Values the CMS reads from an existing file are written back unchanged unless they are edited:
-  - Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
-  - Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
-  - Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file, as long as the value isn’t edited.
-  - Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`, as long as the value isn’t edited. This way, tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
-  - Native TOML dates and times, such as `2024-01-01T10:00:00Z` or `12:30:00`, are written back as they appear in the file, as long as the value isn’t edited. This applies to any field, not just DateTime fields, and to data not covered by the configuration.
-- **Complete and Consistent Data Output**: Sveltia CMS saves proper values for all fields, such as an empty string, an empty array or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
-  - `required: false` makes data input optional, but doesn’t make data output optional.
-  - To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
-  - That option never omits a List item. An item whose subfields are all empty is kept as an empty object (`{}`), so the other items keep their positions.
+- **Field Order**: Fields are saved as key-value pairs in the order they are defined in the configuration, which keeps Git diffs clean and consistent. Some [exceptions](#understanding-exceptions) apply.
+- **Line Breaks**: Line breaks are LF (`\n`) across all formats. A newline is added at the end of the file to prevent unnecessary changes.
+- **Time Format**: A standard time is formatted as `HH:mm:ss` instead of `HH:mm` for better framework compatibility, including Hugo.
+
+##### Whitespace
+
+Unnecessary whitespace in string values is automatically removed when an entry is saved. No configuration option is required for this behavior.
+
+- [Code](https://sveltiacms.app/en/docs/fields/code) field values are saved as they are, because any whitespace, such as the indentation of the first line or a final newline, can be significant in code.
+- [Text](https://sveltiacms.app/en/docs/fields/text), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [rich text](https://sveltiacms.app/en/docs/fields/richtext) field values keep their leading whitespace, such as the indentation of a code block on the first line. Only trailing whitespace is removed.
+- Leading and trailing whitespace is removed from any other string value.
+
+##### Empty Values
+
+Sveltia CMS saves proper values for all fields, such as an empty string, an empty array or `null`, instead of omitting them. This differs from Netlify/Decap CMS, which often omits optional and empty fields.
+
+- `required: false` makes data input optional, but doesn’t make data output optional.
+- To omit empty optional fields from data output, use `omit_empty_optional_fields: true` in the [output options](#controlling-data-output). This is useful if you have data type validations that expect `undefined`.
+- That option never omits a List item. An item whose subfields are all empty is kept as an empty object (`{}`), so the other items keep their positions.
+
+##### Existing Data
+
+Values the CMS reads from an existing file are written back unchanged unless they are edited:
+
+- Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
+- Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
+- Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file.
+- Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`. This way, tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
+- Native TOML dates and times, such as `2024-01-01T10:00:00Z` or `12:30:00`, are written back as they appear in the file. This applies to any field, not just DateTime fields, and to data not covered by the configuration.
+
+Formatting details, such as the quote style of a YAML string, aren’t kept. Neither are comments, except those at the top of a YAML or TOML file. See [YAML](#yaml) and [TOML](#toml) for details.
 
 #### Format-Specific Conventions
 
-- **YAML String Folding**: YAML string folding (maximum line width) is disabled for improved framework compatibility.
-- **Indentation**: Indentation is 2 spaces for YAML and JSON by default (configurable).
-- **Quoting in YAML**: Strings in YAML can be unquoted, single-quoted or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted. This way, tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers:
+##### YAML
+
+- **Indentation**: 2 spaces by default. Sequences are indented under their key. Both are configurable in the [output options](#controlling-data-output).
+- **Line Width**: Long strings aren’t wrapped, as string folding (maximum line width) is disabled for better framework compatibility.
+- **Quoting**: Strings can be unquoted, single-quoted or double-quoted (configurable). Even when unquoted, a string that a YAML 1.1 parser would read as a boolean or a number is always quoted. This way, tools still using YAML 1.1, such as Jekyll and older Hugo releases, read it as a string. This covers:
   - values like `yes`, `no`, `on`, `off`, `y` and `n` in any of their usual capitalizations
   - numbers with underscores or commas, like `1_000`
   - sexagesimal numbers like `1:20`, which a YAML 1.1 parser reads as `80`
 
-  Dates are not quoted, so they are still read as dates.
+  Dates aren’t quoted, so they are still read as dates.
 
-- **Multi-Line Strings in YAML**: A string with line breaks is written as a literal block scalar (`|`) by default (configurable). See [below](#multi-line-strings-in-yaml) for details.
-- **Comments in YAML**: To add a comment before a field in a YAML file or YAML front matter, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment). Other comments in an existing file aren’t kept when the entry is saved, because the CMS writes the whole file from the entry data. The same goes for other formatting details, such as the quote style of a string or extra blank lines.
-- **JSON and YAML Formatting Options**: Fully configurable in the [output options](#controlling-data-output).
-- **Empty List Items in TOML**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
-- **TOML DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
+- **Multi-Line Strings**: A string with line breaks is written as a literal block scalar (`|`) by default (configurable). See [Multi-Line Strings in YAML](#multi-line-strings-in-yaml) for details.
+- **Comments**: To add a comment before a field in a YAML file or YAML front matter, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment). Comments at the top of an existing file or front matter block are kept when the entry is saved, as long as a blank line separates them from the first key. A comment directly above the first key is treated as belonging to that key, like one added with the `comment` option, so it isn’t kept. Other comments aren’t kept either, because the CMS writes the whole file from the entry data. The same goes for other formatting details, such as the quote style of a string or extra blank lines.
+
+  ```yaml
+  # This comment is kept.
+  # So is this one.
+
+  # This comment is not kept, because it's directly above the first key.
+  title: Hello
+  ```
+
+##### TOML
+
+- **Comments**: As with YAML, comments at the top of an existing file or front matter block are kept when the entry is saved, as long as a blank line separates them from the first key or table. Other comments aren’t kept, and the `comment` field option isn’t supported.
+- **Empty List Items**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
+- **DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
+
+##### JSON
+
+- **Indentation**: 2 spaces by default. The indent style (spaces or tabs) and size are configurable in the [output options](#controlling-data-output).
 
 #### Markdown Syntax
 
-Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia CMS, the following Markdown conventions are applied to the output of the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext):
+Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia CMS, the following Markdown conventions are applied to the output of the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext).
+
+##### Markdown Style
 
 - **Indentation**: 4 spaces for nested lists and code blocks instead of 2 spaces.
 - **Unordered List Markers**: Hyphens (`-`) are used for unordered list markers instead of asterisks (`*`).
@@ -1099,6 +1132,8 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 - **Escapes**: Backslash escapes that aren’t needed are removed, like the one in `snake\_case`. Escaped square brackets (`\[`, `\]`) and angle brackets (`\<`, `\>`) are written without the backslash.
 - **Character References**: Numeric character references, like `&#169;`, are written as the characters they stand for, like `©`. Named ones, like `&copy;`, are kept.
 
+##### Unsupported Syntax
+
 The rich text editor doesn’t support some Markdown syntax. You can still edit content that uses it, but it’s changed as follows once the content is saved in the rich text mode. To keep such content as is, edit it in the `raw` mode instead:
 
 - **Table Column Alignment**: The alignment in the delimiter row of a table, like `:--` or `:-:`, is dropped, so all columns use the default alignment.
@@ -1107,6 +1142,8 @@ The rich text editor doesn’t support some Markdown syntax. You can still edit 
 - **Adjacent Lists**: Consecutive lists that only differ in their markers, like a `-` list followed by a `*` list, are merged into one list.
 - **Formatting Across Links**: Bold, italic or strikethrough text that spans a link and other text, like `**[text](url) more**`, is split at the link, like `**[text](url)** **more**`. Formatting around a whole link, like `**[text](url)**`, is kept as it is.
 
+##### Syntax Kept as Text
+
 Some other syntax the editor can’t edit as such is shown as text and saved as written, so it isn’t changed:
 
 - **Blocks Within Block Quotes and List Items**: A block quote within another one, like `> > text`, a list, heading or code block within a block quote, and a block quote within a list item.
@@ -1114,7 +1151,7 @@ Some other syntax the editor can’t edit as such is shown as text and saved as 
 
 ### Controlling Data Output
 
-Sveltia CMS supports some data output options, including JSON/YAML formatting preferences, at the root level of the configuration file. The default options are listed below:
+You can control data output, including JSON and YAML formatting, with the `output` option at the root level of the configuration file. Here are the default options:
 
 ```yaml [YAML]
 output:
@@ -1189,7 +1226,7 @@ For JSON, `indent_size` is the number of spaces or tabs per indent level; it def
 The `block_quote` option for YAML controls how a string with line breaks is written. It only applies when `quote` is `none`. With `single` or `double`, multi-line strings are quoted like any other string.
 
 - `true` or `literal` (default): a literal block scalar (`|`), which keeps line breaks as they are.
-- `folded`: a folded block scalar (`>`). A single line break in a folded scalar is read as a space, so each line break in the value is written as a blank line. Long lines still aren’t wrapped, as [string folding](#format-specific-conventions) is disabled.
+- `folded`: a folded block scalar (`>`). A single line break in a folded scalar is read as a space, so each line break in the value is written as a blank line. Long lines still aren’t wrapped, as [string folding](#yaml) is disabled.
 - `false`: a quoted string, with a blank line for each line break. It’s single-quoted, unless the string contains a single quote, in which case it’s double-quoted.
 
 For example, a value with two paragraphs is written as follows:
@@ -1227,11 +1264,12 @@ Content is generally saved as key-value pairs in a file, where the key is the fi
 
 If the format is front matter, the `body` field is saved outside of the front matter block:
 
-```yaml
+```markdown
 ---
 title: My Post
 date: 2025-01-01
 ---
+
 This is the body of my post.
 ```
 
@@ -1247,7 +1285,7 @@ body: This is the body of my post.
 
 If there is only the `body` field, the front matter block is omitted altogether:
 
-```yaml
+```markdown
 This is the body of my post.
 ```
 

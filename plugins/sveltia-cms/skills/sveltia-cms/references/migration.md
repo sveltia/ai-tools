@@ -907,7 +907,7 @@ Static CMS made [some breaking changes](https://staticjscms.netlify.app/docs/dec
 - The `prefix` and `suffix` options for the Boolean, Number and String fields are implemented as `before_input` and `after_input` in Sveltia CMS, respectively. Our `prefix` and `suffix` options for the String field are literally a prefix and suffix to the value.
 - The `multiple` option for the File and Image fields is supported in Sveltia CMS, along with the `min` and `max` options.
 - The [`select_folder`](https://sveltiacms.app/en/docs/fields/file#select-folder) option for the File field is supported in Sveltia CMS. The public path of the selected folder is saved as the value, and several folders can be selected with the `multiple` option.
-- The [breaking change to the List widget](https://staticjscms.netlify.app/docs/decap-migration-guide#list-widget) doesn’t apply to Sveltia CMS. You must use the `field` (singular) option to produce a single subfield with [no `name` output](https://sveltiacms.app/en/docs/data-output#understanding-exceptions).
+- The [breaking change to the List widget](https://staticjscms.netlify.app/docs/decap-migration-guide#list-widget) doesn’t apply to Sveltia CMS. You must use the `field` (singular) option to produce a single subfield with [no `name` output](https://sveltiacms.app/en/docs/data-output#field-vs-fields-option).
 
 #### Customization
 

@@ -412,7 +412,7 @@ Sveltia CMS does not require the `unsafe-eval` and `unsafe-inline` keywords in t
 
 The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Sveltia CMS:
 
-- Download the CMS script bundle, along with the parts of it loaded on demand, such as the code for the GitLab and Gitea/Forgejo backends
+- Download the CMS script bundle, along with the parts of it loaded on demand, such as the code for the GitLab and Gitea/Forgejo backends and the Map field
 - Check for the latest version of the CMS
 - Retrieve locale files for the admin interface other than English (US)
 - Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js), [Leaflet](https://github.com/Leaflet/Leaflet) and [SVGO](https://github.com/SVG/svgo)
