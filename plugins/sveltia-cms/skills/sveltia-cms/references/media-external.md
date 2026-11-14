@@ -955,11 +955,27 @@ Select the desired stock photo provider and provide an API key to enable the ser
 
 By default, curated images from each provider are available for quick access. You can also use the search functionality to find specific images based on keywords. Lorem Picsum doesn’t support searching as mentioned earlier, so it will only show random images.
 
-Once the desired image is found, simply select it, and it will be inserted into the content just like any other media asset. The CMS may show a dialog where you can copy the image credit information to comply with attribution requirements.
+Once the desired image is found, simply select it, and it will be inserted into the content just like any other media asset.
 
 Note that some providers require hotlinking to the image’s original URL, while others disallow hotlinking. Sveltia CMS handles this automatically based on the provider’s policies. If necessary, it downloads the image to the media storage.
 
 When an Unsplash photo is inserted, Sveltia CMS also notifies Unsplash of the download using your API key, as the [Unsplash API guidelines](https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download) require.
+
+#### Photo Credits
+
+Unsplash requires you to credit the photographer when you use its API, and Pexels and Pixabay appreciate it. After you select a photo from one of them, the Photo Credit dialog shows the credit as HTML, e.g. `Photo by <a href="…">Jane Doe</a> on <a href="…">Unsplash</a>`. Lorem Picsum photos need no credit, so the dialog doesn’t appear for them.
+
+The dialog offers these buttons:
+
+- **Insert to [field]**, e.g. Insert to Body: Appends the credit as a new paragraph at the end of a Markdown or RichText field of the entry. The credit is written with Markdown links, or as HTML in a field with the `html` [format](https://sveltiacms.app/en/docs/fields/richtext#format).
+- **Insert**: Appears instead when the image is selected in the built-in [`image` editor component](https://sveltiacms.app/en/docs/fields/richtext#editor-components) of a RichText field. It adds the credit to the image’s [caption](https://sveltiacms.app/en/docs/fields/richtext#image-captions).
+- **Copy**: Copies the credit HTML to the clipboard. Its menu offers Copy as Markdown, which copies the credit with Markdown links instead.
+
+Insert to [field] uses the first top-level Markdown or RichText field that takes multiple lines and can be edited in the current locale. A field within a List or Object field isn’t used. When there’s no such field, or the image is selected in an editor component without a caption, the dialog only offers to copy the credit.
+
+A [custom editor component](https://sveltiacms.app/en/docs/api/editor-components#image-with-caption) can take the credit as well. The Insert button appears for an Image or File field in a component that also has a String or Text field named `caption`.
+
+If the caption already holds a stock photo credit, e.g. because the image was swapped for another stock photo, Insert replaces that credit and keeps the rest of the caption.
 
 **Multi-user setups**
 

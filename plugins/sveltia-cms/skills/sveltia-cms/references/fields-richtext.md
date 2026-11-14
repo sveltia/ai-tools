@@ -195,7 +195,7 @@ Editor components are custom blocks that can be inserted into the content. Svelt
 Sveltia CMS includes the following built-in editor components for the RichText field:
 
 - `code-block`: Allows users to insert and format code blocks with syntax highlighting.
-- `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option.
+- `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option, and it can have a caption. See [Image Captions](#image-captions) below for details.
 - `table`: Allows users to insert and edit tables. See [Tables](#tables) below for details.
 - `hr`: Allows users to insert a horizontal rule (thematic break), saved as `***` in Markdown or `<hr>` in HTML. A horizontal rule can be selected with a click and removed with the Backspace or Delete key.
 
@@ -203,7 +203,7 @@ The `code-block` and `image` components are enabled by default. You can disable 
 
 Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text. This is not available with the `html` [format](#format).
 
-With the `html` format, the built-in `image` component is saved as an `<img>` element, wrapped with an `<a>` element if it’s linked, and custom components need to [support HTML](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) to be available.
+With the `html` format, the built-in `image` component is saved as an `<img>` element. It’s wrapped with an `<a>` element if it’s linked, and placed in a `<figure>` element along with a `<figcaption>` element if it has a caption. Custom components need to [support HTML](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) to be available.
 
 **Multiple Images**
 
@@ -212,6 +212,23 @@ The built-in `image` component is designed for single-file selection. There is n
 **Note for Netlify/Decap CMS users**
 
 Unlike Netlify/Decap CMS, the `code-block` component in Sveltia CMS is implemented as a block type. Users can insert it using the block type selector rather than the insert button. Also, the `image` component is displayed as a separate button in the toolbar for easier access.
+
+###### Image Captions
+
+The built-in `image` component has an optional Caption field, in addition to Source, Alt Text, Title and, unless `linked_images` is `false`, Link. The caption is written as HTML, so it can contain links and text formatting.
+
+Markdown has no syntax for a caption, so an image with a caption is saved as an HTML `<figure>` element on a single line:
+
+<!-- prettier-ignore -->
+```html
+<figure><img src="/uploads/dome.jpg" alt="The dome"><figcaption>Photo by <a href="https://example.com/jane">Jane Doe</a></figcaption></figure>
+```
+
+A linked image is wrapped with an `<a>` element within the `<figure>` element. Without a caption, the image is saved in the usual Markdown syntax, e.g. `![The dome](/uploads/dome.jpg)`.
+
+A `<figure>` element is loaded as the component when it’s on a single line, its attributes use double quotes, and it holds nothing but an image, optionally linked, followed by a `<figcaption>` element. Any other `<figure>` element is kept as HTML.
+
+When a [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos#photo-credits) is selected for the component, its credit can be inserted into the caption with a click.
 
 ###### Tables
 

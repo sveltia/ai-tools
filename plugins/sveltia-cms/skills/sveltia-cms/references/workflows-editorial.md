@@ -212,7 +212,7 @@ Nothing an editor does in the CMS touches the configured branch until the change
 | Editor action | What happens in Git |
 | --- | --- |
 | Save a new entry | A branch named `cms/[COLLECTION_NAME]/[SLUG]` is created off the configured branch, the entry files are committed to it and a pull request is opened |
-| Save an existing draft | Another commit is added to the same branch |
+| Save an existing draft | Another commit is added to the same branch. An upload the draft no longer uses, e.g. an image replaced with another one, is removed from the branch in the same commit. If it had overwritten a published file, that file is restored instead |
 | Change the status | The pull request’s label is updated. Moving the entry to Ready also [approves](#approvals) the pull request, and moving it back withdraws the approval |
 | Delete a published entry | A pull request is opened that removes the entry files |
 | Publish | The pull request is merged and its branch is deleted |
@@ -293,7 +293,7 @@ The board and the editor show an entry, but publishing merges the whole pull req
 - its branch still points at the commit the entry was loaded or saved at, so what is merged is what the user saw. That’s the commit of the version the editor shows, or of the card the publish was confirmed for. This holds even when the board has [picked up](#keeping-up-with-remote-changes) a newer commit since, so a commit pushed by someone else in the meantime isn’t published unseen;
 - every file it changes is one the CMS accounts for:
   - the entry’s own files, and those of its published version that a rename removes
-  - assets added or replaced along with it, which are only removed when the entry is moved or deleted
+  - assets added or replaced along with it that the entry uses, which are only removed when the entry is moved or deleted. An upload the entry no longer uses is dropped from the pull request when the draft is saved, so it doesn’t block publishing
   - the entries whose [Relation](https://sveltiacms.app/en/docs/fields/relation) references a rename or deletion rewrites, including the references to the other entries [deleted along with it](#deleting-several-entries-at-once)
   - the new entries [added from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists, as long as their files are still new to the configured branch
   - the existing entries [edited from a Relation field](#entries-added-or-edited-from-a-relation-field) of the entry, which its card lists as well. That includes the entries whose references a rename rewrites

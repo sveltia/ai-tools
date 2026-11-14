@@ -400,6 +400,8 @@ The `fromBlock` function is omitted again because the `pattern` regular expressi
 
 Note that the `src` attribute will be automatically replaced with a blob URL in the editor preview when an image is selected, while the actual file path will be stored in the Markdown content.
 
+Because the component has a String field named `caption` next to the Image field, the Photo Credit dialog can insert the credit of a [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos#photo-credits) into the caption. However, the credit is HTML with double quotes in its links, which would end the `caption` attribute of this shortcode early. To accept credits, output the caption as the content of an element instead, as the [next example](#multiple-images-with-caption) does.
+
 #### Multiple Images with Caption
 
 This example, a variation of the previous one, demonstrates how to create a custom editor component for inserting multiple images with a single caption:

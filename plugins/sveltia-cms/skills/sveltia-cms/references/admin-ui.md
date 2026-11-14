@@ -8,8 +8,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 This section provides an overview of the application user interface (UI) of Sveltia CMS. It covers the main features and components of the UI, including navigation, content editing, asset management and customization options.
 
-![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-light.webp?20261016)
-![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-dark.webp?20261016)
+![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-light.webp?20261016) ![The Sveltia CMS interface, with the global navigation bar at the top, the collection list on the left and a list of blog posts on the right](/images/landing/entry-list-dark.webp?20261016)
 
 ### Accessing the Admin UI
 
@@ -108,6 +107,7 @@ Currently, the following languages are available:
 - Russian
 - Slovak
 - Spanish (Colombia)
+- Spanish (Spain)
 - Swedish
 - Turkish
 - Ukrainian
@@ -131,7 +131,6 @@ The following languages are available in Decap CMS but not yet available in Svel
 - [Romanian](https://github.com/sveltia/sveltia-cms/issues/711)
 - Serbian (Cyrillic)
 - Slovenian
-- [Spanish (Spain)](https://github.com/sveltia/sveltia-cms/issues/281)
 - Thai
 
 </div>
@@ -481,6 +480,8 @@ More panels may be added in the future.
 #### Auto-Saving Drafts
 
 When creating or editing content, Sveltia CMS automatically saves draft backups in the browser’s local storage. This ensures that work is not lost if the user accidentally navigates away from the page or the browser crashes. Drafts are saved periodically as changes are made, and can be restored when the user returns to the editing interface.
+
+When an entry with a backup is opened, a dialog asks whether to restore the backup or discard it. The dialog doesn’t hide the entry: you can drag it by its title bar to move it out of the way, then scroll through the entry as it is now to compare it with your backup. The entry is read-only until you answer, so a restore can’t overwrite any new edits.
 
 A backup also keeps the folder chosen with the [path editor](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder). A new index file has a backup of its own, apart from that of a new entry.
 
