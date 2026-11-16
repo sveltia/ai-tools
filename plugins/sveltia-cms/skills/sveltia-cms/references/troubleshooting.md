@@ -518,7 +518,7 @@ Sveltia CMS itself is [framework-agnostic](https://sveltiacms.app/en/docs/framew
 
 No. Although we did not receive an endorsement from Netlify nor take over the ownership, Sveltia CMS stands strong as the de facto successor to Netlify CMS. It continues to address issues reported to the predecessor’s repository while maintaining high compatibility.
 
-In contrast, the official successor, Decap CMS, has been incredibly neglected, leaving most issues unresolved. It doesn’t even provide a migration guide for Netlify CMS users.
+In contrast, the official successor, Decap CMS, has been incredibly neglected, leaving most issues unresolved. Not only does it fail to provide a migration guide for Netlify CMS users, it doesn’t even acknowledge Netlify CMS on its [About page](https://decapcms.org/about/).
 
 You wouldn’t call LibreOffice a spiritual [successor to OpenOffice.org](https://www.libreoffice.org/libreoffice-vs-openoffice/); it’s the de facto successor. The official successor, Apache OpenOffice, is effectively defunct. Similarly, Sveltia CMS is the de facto successor to Netlify CMS, not a spiritual one.
 

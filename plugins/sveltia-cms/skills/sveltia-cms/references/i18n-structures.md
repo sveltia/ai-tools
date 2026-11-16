@@ -1084,6 +1084,8 @@ For example, if a blog post is created with the title “My trip to New York” 
   title: Mon voyage à New York
   ```
 
+With the [`clean_accents` option](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) enabled, as in the example above, each localized slug is transliterated with the rules for its own locale, if the [`transliterate` library](https://github.com/sindresorhus/transliterate#supported-locales) has rules for it. For example, `ö` becomes `oe` in a German slug but `o` in a Swedish one. A slug shared by every locale and a slug in a collection without i18n support use the locale set with the [`transliterate_locale` option](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead, or the library’s generic rules if the option isn’t set.
+
 You can customize the property name and value for a different framework or i18n library by adding the `canonical_slug` option to your top-level or collection-level `i18n` configuration. The example below is for [@astrolicious/i18n](https://github.com/astrolicious/i18n), which requires a locale prefix in the value ([discussion](https://github.com/sveltia/sveltia-cms/issues/137)):
 
 ```yaml [YAML]
