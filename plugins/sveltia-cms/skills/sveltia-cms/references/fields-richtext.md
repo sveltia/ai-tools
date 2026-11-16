@@ -28,11 +28,11 @@ Links are edited in a floating link editor:
 
 With the `html` [format](#format), both the floating link editor and the dialog offer an “Open in New Tab” option, which adds `target="_blank"` to the link.
 
-Tables can be inserted and edited with the [`table`](#editor-components) editor component, and text can be aligned with the [`align`](#buttons) button in HTML content. Both are disabled by default.
+Tables can be inserted and edited with the [`table`](#editor-components) editor component, and text can be underlined and aligned with the [`underline` and `align`](#buttons) buttons in HTML content. All three are disabled by default.
 
 Local/remote images can be pasted or dropped into the editor to insert them. Note: pasting multiple images is [not supported in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=864052).
 
-Pasted text keeps the formatting it was copied with. Text copied from a code editor or a terminal becomes a code block, and Markdown copied as plain text, like `- item`, is inserted as literal text.
+Pasted text keeps the formatting it was copied with, except what the field can’t hold: underlines in a Markdown field, as Markdown has no syntax for them, and task lists without the [`task-list`](#buttons) button, which become bulleted lists. Text copied from a code editor or a terminal becomes a code block, and Markdown copied as plain text, like `- item`, is inserted as literal text.
 
 To paste text as Markdown instead, converting it to formatted content such as a list, use the browser’s shortcut to paste plain text: `Ctrl+Shift+V` (Windows/Linux) or `Command+Shift+V` (macOS). In Safari, use `Command+Option+Shift+V`.
 
@@ -62,6 +62,7 @@ When using the HTML format, the value can be rendered on your website as is. Mak
 
 The following features are only available with the HTML format, as Markdown has no syntax for them:
 
+- **Underline**: Text can be underlined with the [`underline`](#buttons) button, which is saved as a `<u>` element.
 - **Text alignment**: Paragraphs, headings, block quotes and list items can be aligned to the left, center or right, or justified, with the [`align`](#buttons) button. The alignment is saved as a `style` attribute, like `<p style="text-align: center;">`, which is the only style kept in the HTML.
 - **Link targets**: A link can be set to open in a new tab, which is saved as `target="_blank"`. A link with another target, like `_top`, keeps it unless the option is changed.
 
@@ -102,7 +103,7 @@ With the `html` format, the editor works as follows:
 
 - The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons and editor components are hidden in this mode, as they insert Markdown.
 - Only the [editor components](#editor-components) that support HTML are available. All the built-in components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
-- The [`align`](#buttons) button and the “Open in New Tab” option of the link editor are available. See [Data Type](#data-type) for details.
+- The [`underline` and `align`](#buttons) buttons and the “Open in New Tab” option of the link editor are available. See [Data Type](#data-type) for details.
 - HTML containing an element the rich text editor cannot handle, such as `<video>` without a component for it, can only be edited in the `raw` mode.
 - An existing value is kept as is until the content is changed in the rich text mode. Then the editor writes HTML in its own style, such as `<strong>` for `<b>`, and attributes it doesn’t use, such as `class`, are dropped.
 
@@ -129,7 +130,7 @@ Whether the content can span multiple paragraphs and lines. Set it to `false` fo
 
 - The Enter key doesn’t start a new paragraph or line, in both the rich text and `raw` modes.
 - Pasted text is joined into a single line, with a space where each paragraph or line break was.
-- Only the inline formatting [buttons](#buttons) (`bold`, `italic`, `strikethrough`, `code` and `link`) and inline [editor components](#editor-components), such as `image`, are available. Any other button or component listed in the `buttons` or `editor_components` option is ignored, with a warning in the browser console.
+- Only the inline formatting [buttons](#buttons) (`bold`, `italic`, `underline`, `strikethrough`, `code` and `link`) and inline [editor components](#editor-components), such as `image`, are available. Any other button or component listed in the `buttons` or `editor_components` option is ignored, with a warning in the browser console.
 - Horizontal rules and tables in Markdown are kept as plain text.
 - With the `html` [format](#format), the `raw` mode is not available, as the HTML source could hold several paragraphs on one line.
 - An existing value with several paragraphs is kept as is until the content is changed. Then the paragraphs are joined into one.
@@ -157,17 +158,34 @@ The `raw` mode comes with syntax highlighting for Markdown, including the code i
 ##### `buttons`
 
 - **Type**: `array`
-- **Default**: all available buttons except `align` (see below)
+- **Default**: all available buttons except `underline`, `align` and `task-list` (see below)
 
 The button names to display in the editor toolbar.
 
 The following `buttons` are available in the rich text editor toolbar:
 
-- Inline formatting: `bold`, `italic`, `strikethrough`, `code`, `link`
-- Block types: `heading-one`, `heading-two`, `heading-three`, `heading-four`, `heading-five`, `heading-six`, `bulleted-list`, `numbered-list`, `quote`
+- Inline formatting: `bold`, `italic`, `underline`, `strikethrough`, `code`, `link`
+- Block types: `heading-one`, `heading-two`, `heading-three`, `heading-four`, `heading-five`, `heading-six`, `bulleted-list`, `numbered-list`, `task-list`, `quote`
 - Text alignment: `align`
 
-By default, all buttons except `align` are enabled. You can customize the toolbar by specifying the desired buttons in the `buttons` option.
+By default, all buttons except `underline`, `align` and `task-list` are enabled. You can customize the toolbar by specifying the desired buttons in the `buttons` option.
+
+The `underline` button underlines the selected text, which is saved as a `<u>` element. It’s only available with the `html` [format](#format), because Markdown has no syntax for underlines. In a Markdown field, it’s not displayed even if it’s listed.
+
+With the `underline` button enabled, the `Ctrl+U`/`Command+U` keyboard shortcut also underlines text. Without it, the shortcut only removes an existing underline, such as one in pasted text.
+
+The `task-list` button turns the selected paragraphs into a [task list](https://github.github.com/gfm/#task-list-items-extension-), a GitHub Flavored Markdown extension. Each item has a checkbox, which can be checked or unchecked with a click. It’s not enabled by default, because not every Markdown renderer supports task lists. Without it, a task list is shown as a bulleted list whose items start with `[ ]` or `[x]`, and saved as written.
+
+A task list is saved as `- [ ] item` and `- [x] item` in Markdown. With the `html` [format](#format), it’s saved the way GitHub renders it, as a list with disabled checkboxes:
+
+<!-- prettier-ignore-start -->
+```html
+<ul class="contains-task-list">
+  <li class="task-list-item"><input type="checkbox" disabled="" checked=""> Done</li>
+  <li class="task-list-item"><input type="checkbox" disabled=""> To do</li>
+</ul>
+```
+<!-- prettier-ignore-end -->
 
 The `align` button shows a menu to align the selected paragraphs, headings, block quotes or list items to the left, center or right, or to justify them. The button shows the current alignment. It’s only available with the `html` [format](#format), because Markdown has no syntax for alignment. In a Markdown field, it’s not displayed even if it’s listed. See the [example](#text-alignment-in-html) below.
 
@@ -300,7 +318,7 @@ Whether to sanitize the preview content to prevent [cross-site scripting](https:
 
 **Security Risk**
 
-Setting the `sanitize_preview` option to `false` can expose your CMS to XSS vulnerabilities if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open). Malicious users could inject harmful scripts into the content, which would then be executed in the browsers of anyone viewing the preview.
+Setting the `sanitize_preview` option to `false` can expose your CMS to XSS vulnerabilities if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open). Malicious users could inject harmful scripts into the content, which would then be executed in the browsers of anyone viewing the preview. With Open Authoring, that includes maintainers [reviewing a contribution](https://sveltiacms.app/en/docs/workflows/open#reviewing-in-sveltia-cms) from their Editorial Workflow board, whose sign-in has write access to the repository.
 
 We recommend keeping this option enabled unless disabling it fixes a broken preview and you fully trust all users of your CMS or you’re the sole user.
 

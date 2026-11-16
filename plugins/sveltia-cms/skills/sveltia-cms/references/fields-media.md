@@ -224,7 +224,7 @@ A large upload button is displayed for the File field. When it’s clicked, a fi
 - [Subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened with a click or the Enter key to browse them, with a breadcrumb leading back. The arrow keys move between the subfolders, like between the files. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
 - An option to upload new files by dragging and dropping them into the dialog or by selecting them from the file system.
 - An option to enter a URL to select a file from an external source (if the `choose_url` option is enabled).
-- Integration with [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) if configured.
+- Integration with [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) if configured. The dialog can [open on one of them](https://sveltiacms.app/en/docs/media#storage-opened-first) instead of a repository folder.
 - Integration with [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) for easy selection of free images (for Image fields only).
 - File type filtering based on the `accept` option.
 - A search bar to quickly find existing assets.

@@ -1,6 +1,6 @@
 # Publishing Workflows
 
-Local development, the simple publishing workflow, CI/CD deployments and how to disable them, and deploy previews. For the editorial workflow, the preview workflow and open authoring, see `workflows-editorial.md`.
+Local development, the simple publishing workflow, CI/CD deployments and how to disable them, and deploy previews. For the editorial and preview workflows, see `workflows-editorial.md`; for open authoring, see `workflows-open.md`.
 
 Generated from the Sveltia CMS documentation. Do not edit by hand.
 

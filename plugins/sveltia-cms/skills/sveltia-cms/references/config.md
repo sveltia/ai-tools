@@ -1121,7 +1121,8 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 ##### Markdown Style
 
 - **Indentation**: 4 spaces for nested lists and code blocks instead of 2 spaces.
-- **Unordered List Markers**: Hyphens (`-`) are used for unordered list markers instead of asterisks (`*`).
+- **Unordered List Markers**: A list keeps the markers it was written or typed with, like asterisks (`*`) or plus signs (`+`). Hyphens (`-`) are used for any other unordered list or task list, like one created from the toolbar or pasted from a web page.
+- **Task List Items**: A checked task list item is written with a lowercase `x`, like `- [x] item`, even if it was written with an uppercase `X`.
 - **Bold Text**: Double asterisks (`**`) are used for bold text instead of double underscores (`__`).
 - **Italic Text**: Underscores (`_`) are used for italics instead of asterisks (`*`), except within a word, like `a*b*c`, where underscores don’t work.
 - **Headings**: Hash signs (`#`) are used for headings. Headings underlined with `===` or `---` are converted to this style.

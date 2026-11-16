@@ -120,6 +120,7 @@ Sveltia CMS employs multiple layers of security measures to protect data and ens
 #### Security Features
 
 - **XSS protection**: HTML sanitization is performed using the [DOMPurify](https://github.com/cure53/DOMPurify) library. The unpatched [XSS vulnerability](https://github.com/advisories/GHSA-xp8g-32qh-mv28) in Decap CMS does not affect Sveltia CMS. The `sanitize_preview` [RichText field](https://sveltiacms.app/en/docs/fields/richtext) option defaults to `true`.
+- **Script-free file previews**: A file that could contain a script is never shown as is. An SVG image is wrapped in another one that displays it in the browser’s secure mode, where scripts never run, and an HTML or XML file is shown as plain text. A script in a file committed by someone else, such as an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, therefore can’t run with your sign-in, even when you open the file in a new tab.
 - **No proxy required**: The [local workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates attack surfaces from compromised dependencies and unauthorized API access.
 - **Secure contexts only**: HTTPS is required for all site content and CMS configuration.
 - **Automatic referrer policy**: The `same-origin` policy is automatically set globally in the app. An exception is the OpenStreetMap integration for the [Map field type](https://sveltiacms.app/en/docs/fields/map), which requires `strict-origin` to [load tiles properly](https://wiki.openstreetmap.org/wiki/Referer).

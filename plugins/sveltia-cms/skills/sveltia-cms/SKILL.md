@@ -146,7 +146,8 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Recipes: entry tags, raw text files, deployment config files, conditional fields, soft line breaks | `references/how-tos.md` |
 | Blank page, auth failures, build errors, CSP, FAQs | `references/troubleshooting.md` |
 | Local development, simple workflow, deploy previews | `references/workflows.md` |
-| Editorial workflow, open authoring | `references/workflows-editorial.md` |
+| Editorial workflow, preview workflow | `references/workflows-editorial.md` |
+| Open authoring for contributors without write access | `references/workflows-open.md` |
 | The admin UI editors work in: content library, editor, asset library | `references/admin-ui.md` |
 | `CMS.init()`, events, custom file formats | `references/api.md` |
 | Custom field types (widgets) | `references/api-field-types.md` |

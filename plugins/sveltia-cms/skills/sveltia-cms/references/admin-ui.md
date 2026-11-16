@@ -279,11 +279,13 @@ Files can be uploaded, downloaded, renamed, replaced and deleted directly on the
 | [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) | Yes | Yes | No | No |
 | [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary) | Cloudinary’s own Media Library widget is opened instead |  |  |  |
 
-The controls for operations a service doesn’t support are hidden.
+The controls for operations a service doesn’t support are hidden. Files can also be [moved](#moving-assets) to another folder on the same service, to another service or to the repository.
 
 Renaming a file on an S3-compatible service or Azure Blob Storage copies it to the new name and then deletes the original. Make sure the bucket’s CORS policy allows the `DELETE` method and all request headers, and that the credential has the delete permission. See the setup instructions of each service for details.
 
-Unlike repository assets, entries referencing a renamed or deleted external file are not updated, because the file URL is stored as is. So the Rename dialog warns the user when entries link to the file, or to files in the folder being renamed. It also says how many of them will be left with a broken link.
+As with repository assets, the entries linking to a renamed file, or to the files in a renamed folder, are updated with the new URLs in one commit, so their links keep working. The Rename dialog says how many entries will be updated. The rename is refused up front if one of those entries is read-only, or if the changes can’t be committed, as is the case for an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor. If the entries can’t be saved, the file is renamed back.
+
+Entries linking to a deleted external file are not updated, though, because the file URL is stored as is.
 
 The file list of a large bucket or container is fetched in pages, up to a limit. If the service holds more files than are listed, a notice says that some of them are left out.
 
@@ -348,7 +350,7 @@ A collection media folder nested inside the global media folder is its own locat
 
 When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), a folder that is left empty by a move or deletion is removed from the disk. This way, the local checkout matches what a Git commit would leave.
 
-[Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, as those changes are committed straight to the branch.
+[Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors can browse folders but can’t create, rename or delete them, or move assets, as those changes are committed straight to the branch.
 
 ##### Read-Only Folders
 
@@ -377,7 +379,7 @@ Deployment configuration files such as `_redirects` aren’t affected, and can s
 
 Object storage has no folders of its own. The CMS reads the folders off the file paths, and keeps an empty folder with a zero-byte placeholder object named after the folder with a trailing slash. That’s what the consoles of these services do too.
 
-The services can’t move a file, so renaming a folder copies each file to its new path and deletes the original, one file at a time. Deleting a folder deletes each file in it. Keep in mind that the entries link to the files on these services by URL. A rename changes those URLs, and the entries using them aren’t updated.
+The services can’t move a file, so renaming a folder copies each file to its new path and deletes the original, one file at a time. Deleting a folder deletes each file in it. The entries link to the files on these services by URL, so once every file has been moved, the entries using them are updated with the new URLs in one commit. If a file can’t be moved or the entries can’t be saved, the files moved so far are moved back.
 
 The search box in the location’s toolbar looks through every folder, listing the matches with their paths.
 
@@ -417,6 +419,7 @@ View comprehensive asset details including:
 Manage assets with a variety of operations:
 
 - **Rename** existing assets. If the asset is used in any entries, the File and Image fields will be automatically updated with the new file path.
+- **Move** one or more selected assets to another folder, in the repository or on a cloud storage service. See [Moving Assets](#moving-assets) below.
 - **Replace** existing assets with new versions.
 - **Edit** plain text assets, including Markdown, JSON, SVG files and other text-based content using the built-in editor.
 - **Copy** the public URL, file path, text data or image data of a selected asset to the clipboard.
@@ -433,6 +436,23 @@ Manage assets with a variety of operations:
   - a required body with nothing but the image
 
   The dialog then lists the entries and fields in the way, so that they can be updated first. To see what an asset is used by before deleting it, check the Info pane’s **Used in** list.
+
+##### Moving Assets
+
+Select one or more assets, then choose **Move** from the Edit Options menu in the toolbar, or from the details view. You can also drag the assets onto a folder or a cloud storage service in the sidebar, or onto a subfolder in the list. Either way, the Move dialog opens, listing the repository folders and the [cloud storage services](#cloud-storage-services) you’ve entered credentials for, each with its subfolders. A folder you dropped the assets on is already selected. The dialog says how many entries use the assets; those entries are updated to point at the new locations, so no link is broken.
+
+Assets can be moved:
+
+- **Between repository folders**, including subfolders. The files and the entries using them are updated in one commit. The move is refused if a file of the same name is already in the destination folder. An asset stored next to an entry, in an [entry-relative folder](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), can be moved out of it, and the entry’s relative path is replaced with the asset’s new path. Entry-relative folders and folders whose path contains a template tag can’t be destinations, as an asset’s path there depends on the entry.
+- **From the repository to a cloud storage service.** The files are uploaded, then deleted from the repository in the same commit that points the entries at their URLs on the service. If the commit fails, the uploaded files are deleted again.
+- **From a cloud storage service to the repository.** The files are downloaded and saved to the folder like uploads, along with the updated entries, then deleted from the service. Downloading requires the service to allow cross-origin requests.
+- **Between cloud storage services**, or to another folder on the same service. A move within a service uses the service’s own copy-and-delete operation; a move to another service downloads and uploads each file.
+
+A file moved to or within a cloud storage service, or from one to the repository, is given a number suffix like `photo-1.jpg` if its name is already taken in the destination folder, as an upload is.
+
+The originals are only deleted once the files are in place and the entries have been saved, so a failure along the way never leaves an entry pointing at a missing file. If only deleting the originals from a service fails, the move still counts as done, and a warning says the originals were left behind.
+
+The move is refused if any entry using the assets is read-only. Assets in a [read-only folder](#read-only-folders) can’t be moved, and Open Authoring contributors can’t move assets at all.
 
 **Future Plans**
 

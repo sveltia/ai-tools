@@ -195,6 +195,65 @@ media_library:
   output_filename_only: true
 ```
 
+### Storage Opened First
+
+The Select File and Select Image dialogs open on the first repository folder, such as Global Assets, even when an external storage provider is configured. If your editors usually upload files to an external provider, set that provider’s `default` option to `true`. The dialogs then open on it, so files don’t end up in your repository by mistake.
+
+```yaml [YAML]{6}
+media_libraries:
+  aws_s3:
+    access_key_id: YOUR_ACCESS_KEY_ID
+    bucket: my-website-assets
+    region: us-east-1
+    default: true
+```
+
+```toml [TOML]
+[media_libraries.aws_s3]
+access_key_id = "YOUR_ACCESS_KEY_ID"
+bucket = "my-website-assets"
+region = "us-east-1"
+default = true
+```
+
+```json [JSON]{7}
+{
+  "media_libraries": {
+    "aws_s3": {
+      "access_key_id": "YOUR_ACCESS_KEY_ID",
+      "bucket": "my-website-assets",
+      "region": "us-east-1",
+      "default": true
+    }
+  }
+}
+```
+
+```js [JavaScript]{7}
+{
+  media_libraries: {
+    aws_s3: {
+      access_key_id: 'YOUR_ACCESS_KEY_ID',
+      bucket: 'my-website-assets',
+      region: 'us-east-1',
+      default: true,
+    },
+  },
+}
+```
+
+The option is available for Amazon S3 and the S3-compatible providers, Azure Blob Storage, Cloudinary, Uploadcare and the internal media storage (`default`). Editors can still pick any other location in the dialog.
+
+The option can also be set in the `media_libraries` option of a File or Image field:
+
+- **Field over site:** A provider marked in the field takes precedence over one marked at the top level.
+- **Clearing the mark:** Set `default: false` on a provider in the field to clear its top-level mark.
+- **Back to the repository:** Set `default: true` on the internal media storage, i.e. `media_libraries.default.default`, to make a field open the repository folder again.
+- **Unavailable providers:** A marked provider that isn’t offered is skipped. For example, it may be disabled for the field, or the field may [select a folder](https://sveltiacms.app/en/docs/fields/file#selecting-a-folder), which can only be picked from the repository. The next marked provider opens instead, or the first repository folder if there’s none.
+- **Several marks:** Mark only one provider. If more are marked, the first one offered is used, in the order they’re listed.
+
+The option only applies to the dialogs. The Asset Library still opens on All Assets, and files dropped directly on a File or Image field aren’t affected. The legacy `media_library` option doesn’t support it.
+
 ### Additional Features
 
 A couple of additional features are available to enhance media management. These features apply to the internal media storage and to files uploaded to external storage providers, except for Cloudinary, which uses its own Media Library widget.
