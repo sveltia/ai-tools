@@ -1176,7 +1176,7 @@ CMS.registerCustomPage(definition);
 - `definition` (object, required): The page definition, with the following properties:
   - `id` (string, required): A unique identifier for the page, consisting of alphanumeric characters, hyphens and underscores. The page is opened at `#/pages/{id}`, so you can link to it directly. Registering a page with the same ID again replaces the previous one in place.
   - `label` (string, required): The label of the page, displayed as the page title and as the tooltip of the page’s button.
-  - `icon` (string, optional): The name of a [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon displayed on the page’s button, e.g. `monitoring`. Defaults to `extension`.
+  - `icon` (string, optional): The name of a [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) icon displayed on the page’s button, e.g. `monitoring`. Defaults to `extension`.
   - `component` (React component): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) rendering the page content. The component receives no props. You can write it with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls.
   - `url` (string): The URL of a web page to show. A relative URL is resolved against the current page URL. Only `http` and `https` URLs are supported.
   - `newTab` (boolean, optional): Whether to open the `url` in a new browser tab instead of embedding it in the CMS. Defaults to `false`. Can only be used with `url`.

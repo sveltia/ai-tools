@@ -1324,7 +1324,7 @@ To define an asset collection, add a new entry to the `asset_collections` array 
 
 - `name`: Unique identifier for the asset collection. Required and must be unique across all collections.
 - `label`: Human-readable name for the asset collection, displayed in the media picker. If omitted, it defaults to the value of `name`.
-- `icon`: Optional icon for the asset collection, which can be a string representing a [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web) icon name.
+- `icon`: Optional icon for the asset collection, which can be a string representing a [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) icon name.
 - `media_folder`: The folder in the repository where media files for this collection will be stored. Required and must be an absolute path relative to the root of the repository. A leading slash can be omitted, but it is recommended to include it for clarity.
 - `public_folder`: The public URL path that corresponds to the `media_folder`. If omitted, it defaults to the value of `media_folder`.
 - `readonly`: Set to `true` to make the asset collection read-only, so assets can’t be uploaded to, changed in or deleted from it. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).

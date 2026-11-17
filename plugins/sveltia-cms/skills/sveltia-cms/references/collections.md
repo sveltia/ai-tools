@@ -158,14 +158,18 @@ You can customize the appearance of your collection list in Sveltia CMS by addin
 
 #### Icons
 
-You can specify an icon for each collection for easy identification in the collection list. You don’t need to install a custom icon set because the Material Symbols font file is already loaded for the application UI. Just pick one of the 2,500+ icons:
+You can specify an icon for each collection for easy identification in the collection list. You don’t need to install a custom icon set because the Material Symbols font file is already loaded for the application UI. Just pick one of the 4,000+ icons:
 
-1. Visit the [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web) page on Google Fonts.
-1. Browse and select an icon, and copy the icon name that appears at the bottom of the right pane.
+1. Visit the [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) page on Fontsource.
+1. Search or browse for an icon, and copy its name.
 1. Add it to one of your collection definitions in `config.yml` as the new `icon` property, like the example below.
 1. Repeat the same steps for all the collections if desired.
 1. Commit and push the changes to your Git repository.
 1. Reload Sveltia CMS once the updated config file is deployed.
+
+**Newly Added Icons**
+
+The font file is served by Fontsource, which may not include the latest icons available on [Google Fonts](https://fonts.google.com/icons?icon.set=Material+Symbols&icon.platform=web). An icon missing from Fontsource doesn’t render correctly. For example, `mail_person` appears as the `mail` and `person` icons joined by an underscore. Choose another icon until Fontsource adds it.
 
 Here’s an example of adding an icon to an entry collection that manages tags:
 

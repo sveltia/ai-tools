@@ -38,7 +38,7 @@ These properties describe a field-based component, which is edited with its fiel
 #### Optional Properties
 
 - `label` (string): The text label displayed on the toolbar button. Defaults to the `id` value.
-- `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name to display on the toolbar button.
+- `icon` (string): A [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) icon name to display on the toolbar button.
 - `trigger` (string): The trigger UI of the component, either `menuitem` (default) or `button`. A menu item is placed under the Insert menu, while a button is placed directly on the toolbar.
 - `toPreview` (function): A function that takes an object mapping field names to their values and returns the preview of the component to be displayed in the editor. It can return a string, a DOM element or a React element. See [Preview Output](#preview-output) below. If omitted, or if it returns another type of value, no preview is shown. As in Netlify/Decap CMS, the function also receives a `getAsset` function and the component’s `fields` as the second and third arguments. See [Displaying Assets](#displaying-assets).
 - `mode` (string): Editing mode for the component:
@@ -201,7 +201,7 @@ The following properties are required:
 The following properties are optional:
 
 - `label` (string): The label of the item in the Insert menu. Defaults to the `id` value.
-- `icon` (string): A [Material Symbols](https://fonts.google.com/icons?icon.set=Material+Symbols) icon name for the menu item.
+- `icon` (string): A [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) icon name for the menu item.
 - `fromInline` (function): A function that takes a regex match array and returns the component data. It can be omitted if the `pattern` has [named capture groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group), which are then used as the data.
 - `toPreview` (function): A function that takes the component data and returns its preview, which is shown both in the editor and in the Preview Pane. It can return a string, a DOM element or a React element, like the [preview output](#preview-output) of a field-based component. Without it, the editor shows the Markdown returned by `toInline` as plain text.
 - `trigger` (string): Literal text every instance starts with, e.g. `[[` or `@`. If given, the editor only matches the `pattern` where this text is found, instead of running the pattern across the paragraph. Unlike the `trigger` option of a field-based component, it doesn’t choose the toolbar UI. A pattern-based inline component always appears under the Insert menu.
