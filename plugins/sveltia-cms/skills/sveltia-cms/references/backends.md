@@ -957,10 +957,11 @@ Service status checking is not available for Gitea/Forgejo repositories. If you 
 
 ### Workflows
 
-The following [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the Gitea/Forgejo backend:
+All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the Gitea/Forgejo backend:
 
 - [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
 - [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
 
@@ -1290,10 +1291,11 @@ Service status checking is available for GitHub repositories, unless you’re us
 
 ### Workflows
 
-The following [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitHub backend:
+All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitHub backend:
 
 - [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
 - [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
 
@@ -1589,10 +1591,11 @@ Service status checking is available for GitLab repositories, unless you’re us
 
 ### Workflows
 
-The following [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitLab backend:
+All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitLab backend:
 
 - [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
 - [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
 - [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
 

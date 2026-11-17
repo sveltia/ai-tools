@@ -213,7 +213,7 @@ Editor components are custom blocks that can be inserted into the content. Svelt
 Sveltia CMS includes the following built-in editor components for the RichText field:
 
 - `code-block`: Allows users to insert and format code blocks with syntax highlighting.
-- `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option, and it can have a caption. See [Image Captions](#image-captions) below for details.
+- `image`: Enables users to add images to their content, with support for uploading and selecting images from the media storage. The image can be linked or unlinked based on the `linked_images` option, and it can have a caption unless `captioned_images` is `false`. See [Image Captions](#image-captions) below for details.
 - `table`: Allows users to insert and edit tables. See [Tables](#tables) below for details.
 - `hr`: Allows users to insert a horizontal rule (thematic break), saved as `***` in Markdown or `<hr>` in HTML. A horizontal rule can be selected with a click and removed with the Backspace or Delete key.
 
@@ -247,6 +247,8 @@ A linked image is wrapped with an `<a>` element within the `<figure>` element. W
 A `<figure>` element is loaded as the component when it’s on a single line, its attributes use double quotes, and it holds nothing but an image, optionally linked, followed by a `<figcaption>` element. Any other `<figure>` element is kept as HTML.
 
 When a [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos#photo-credits) is selected for the component, its credit can be inserted into the caption with a click.
+
+If your framework or theme doesn’t support the `<figure>` element in Markdown, or you don’t want editors to write HTML, set the [`captioned_images`](#captioned-images) option to `false` to remove the Caption field.
 
 ###### Tables
 
@@ -293,6 +295,13 @@ When nesting a component inside itself (enabled with `allow_nested_components: t
 
 Whether to allow linking images in the editor. When set to `true`, users can add links to images. When set to `false`, images will be inserted without links.
 
+##### `captioned_images`
+
+- **Type**: `boolean`
+- **Default**: `true`
+
+Whether the built-in `image` component has a Caption field. When set to `true`, users can add a caption to an image, which is saved as an HTML `<figure>` element. See [Image Captions](#image-captions) for details. When set to `false`, the Caption field is removed, and a `<figure>` element is no longer loaded as an image component. It’s kept as HTML in Markdown, while with the [`html` format](#format), a value containing one can only be edited in the `raw` mode.
+
 ##### `use_emoji_autocomplete`
 
 - **Type**: `boolean`
@@ -337,6 +346,7 @@ The following options can be defined globally:
 - `editor_components`
 - `allow_nested_components`
 - `linked_images`
+- `captioned_images`
 - `use_emoji_autocomplete`
 - `use_markdown_shortcuts`
 - `sanitize_preview`
