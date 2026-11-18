@@ -466,7 +466,7 @@ However, it’s not suitable for large enterprises that require advanced feature
 
 Although it’s still in beta, [many users](https://sveltiacms.app/en/showcase) are already using our product for their projects. We can confidently say that Sveltia CMS is [much more stable and reliable than Netlify/Decap CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms), which has been widely used in production for years despite its numerous bugs and inactive development.
 
-However, breaking changes may occur during the beta phase. We recommend keeping an eye on the [release notes](https://sveltiacms.app/en/docs/releases#release-information) for any updates that may require adjustments to your implementation. We also encourage you to [report any issues](https://sveltiacms.app/en/feedback#bug-reports) you encounter in our GitHub repository.
+We’ll be releasing version 1.0 soon. We don’t expect any more breaking changes to be introduced in minor releases.
 
 #### When will Sveltia CMS reach version 1.0 (GA)?
 

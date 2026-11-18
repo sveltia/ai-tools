@@ -126,10 +126,6 @@ Source: https://sveltiacms.app/en/docs/migration/earlier-versions
 
 Sveltia CMS is designed as a modern [successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) (now Decap CMS). If you are currently using Netlify/Decap CMS, you can migrate to Sveltia CMS to take advantage of its hundreds of improvements across the board, including better performance, a more intuitive user interface, enhanced asset management, improved i18n support and more.
 
-**Stable Version Not Yet Available**
-
-Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
-
 ### Examples
 
 Still not sure if Sveltia CMS is the right choice? Check out the following examples of sites that have been migrated from Netlify CMS and Decap CMS to see how other users have successfully transitioned to Sveltia CMS.
@@ -431,10 +427,6 @@ Source: https://sveltiacms.app/en/docs/migration/netlify-decap-cms
 [Pages CMS](https://pagescms.org/) is a Git-based CMS for static sites that was inspired by Netlify CMS. Its content model is close to that of Sveltia CMS: content is stored as Markdown, YAML, JSON or TOML files in a Git repository, and the content structure is defined in a YAML configuration file. This makes the migration relatively straightforward, as existing content files can be kept as they are in most cases.
 
 This guide explains the differences between the two platforms and how to convert a Pages CMS configuration file to the Sveltia CMS format. It’s based on Pages CMS 2.x.
-
-**Stable Version Not Yet Available**
-
-Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
 
 ### Examples
 

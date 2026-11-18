@@ -10,10 +10,6 @@ This guide will help you get Sveltia CMS up and running in your project. Follow 
 
 Already using **Netlify CMS**, **Decap CMS**, **Static CMS** or **Pages CMS**? Check out the [Migration Guides](https://sveltiacms.app/en/docs/migration) for specific instructions.
 
-**Stable Version Not Yet Available**
-
-Sveltia CMS is still in beta. Although it’s already being used in production by [many users](https://sveltiacms.app/en/showcase), there might still be breaking changes before the stable 1.0 release. We recommend keeping an eye on the [release information](https://sveltiacms.app/en/docs/releases#release-information) for any updates.
-
 ### 1. Install
 
 You can use either a starter template or manually install Sveltia CMS into your existing project.
@@ -451,10 +447,6 @@ We follow [semantic versioning](https://semver.org/) for our releases. We don’
 
 Breaking changes are only introduced in major version updates (e.g. from 1.x.x to 2.0.0). Minor and patch releases (e.g. from 1.0.0 to 1.1.0 or 1.0.1) are backward-compatible, though unintended issues may occasionally arise.
 
-**Stable Version Not Yet Available**
-
-At this point, Sveltia CMS has not reached 1.0.0, so breaking changes may still occur in minor version updates. We’ll announce breaking changes clearly in the release notes.
-
 ### CDN or npm Package
 
 Sveltia CMS is published as the [`@sveltia/cms`](https://www.npmjs.com/package/@sveltia/cms) package, which contains three builds of the app. See the [API documentation](https://sveltiacms.app/en/docs/api#accessing-the-cms-object) for how to load each one.
@@ -540,7 +532,7 @@ With such a version range, the notification appears for a new version within the
 
 **Stable Version Not Yet Available**
 
-At this point, Sveltia CMS has not reached 1.0.0, so breaking changes may still occur in minor version updates. Pinning to a specific major version is more relevant once we start releasing stable versions (1.0.0 and above).
+Sveltia CMS has yet not reached 1.0.0. Pinning to a specific major version is more relevant once we start releasing stable versions (1.0.0 and above).
 
 You can also pin to an exact version, but this is not recommended unless you have a specific reason, like debugging or temporarily avoiding a problematic release:
 
