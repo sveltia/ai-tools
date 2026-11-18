@@ -320,10 +320,9 @@ Each folder in the tree is labeled with the summary of its index file, falling b
 
 ### Choosing a Parent Folder
 
-The `meta.path` option adds a Parent Folder field above the other fields in the Content Editor. It shows the folder the entry is filed in and opens a folder tree for choosing a different one. The option accepts the following properties:
+The `meta.path` option adds a Parent Folder field above the other fields in the Content Editor. It shows the folder the entry is filed in and opens a folder tree for choosing a different one. The option accepts the following property:
 
 - `index_file`: The filename, without an extension, that every entry in the collection is saved as, such as `_index` or `index`. The `subfolders` mode needs it, because a folder’s own entry has to have a fixed name. Without it, each entry is named after its slug and stored as a regular file in the chosen folder. It has no effect with `subfolders: false`, where entries always keep their own names.
-- `widget` and `label`: Accepted for compatibility with Netlify/Decap CMS but ignored. The field is always a folder picker.
 
 **Note for Netlify/Decap CMS users**
 

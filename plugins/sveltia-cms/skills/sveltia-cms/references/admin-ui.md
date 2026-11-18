@@ -549,6 +549,8 @@ The slug is shown as read-only text, with a pencil button to edit it. While it�
 
 Press Enter or click the check mark button to apply the slug, or press Escape to cancel. Whatever is typed is normalized with the site’s [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). If the collection has a [`hint` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable), it’s shown at the top of the panel.
 
+In a new entry, if the slug generated from the template is already used by another entry, a number is added to it, and a note below the slug says so. Users can edit the slug to choose another one, unless the collection’s [`editable` slug option](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable) prevents it.
+
 If entry slugs are [localized](https://sveltiacms.app/en/docs/i18n/slugs), the panel has a section for each locale, like the Validation panel. Otherwise, there’s a single slug shared by every locale.
 
 ##### New Entries

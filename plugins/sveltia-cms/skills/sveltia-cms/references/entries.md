@@ -653,6 +653,8 @@ By default, Sveltia CMS uses the `title` field as the slug (filename) for entrie
 
 If a collection only has the Markdown `body` field, an entry slug will be generated from a header in the `body`, if one exists. This aims to support a typical [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress) or [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus) setup. If no title or header is found, a part of a random UUID will be used to ensure uniqueness.
 
+If the generated slug is already used by another entry in the same collection, a number is added to the end to make it unique, e.g. `hello-world-1`, as in Netlify/Decap CMS. The [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) shows the slug the entry will be saved with, along with a note explaining why the number is added. Users can type another slug instead, unless the [`editable` option](#making-slugs-editable) prevents editing the slug on creation.
+
 #### Specifying an Identifier Field
 
 If you want to use a different field as the entry identifier for generating slugs and filenames, you can specify it using the `identifier_field` option in the collection definition. This is useful when your entries have a unique identifier field other than `title`, such as `name` or `id`. For example, to use a `product_name` field as the identifier:
