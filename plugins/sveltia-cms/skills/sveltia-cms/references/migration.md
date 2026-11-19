@@ -141,7 +141,7 @@ However, we never planned to achieve 100% feature parity, so some features will 
 
 #### Current Limitations
 
-We no longer have any known limitations in Sveltia CMS, except for some [UI languages](https://sveltiacms.app/en/docs/ui#localization) that are not yet available.
+We no longer have any known limitations in Sveltia CMS, except for several [UI languages](https://sveltiacms.app/en/docs/ui#localization) that are not yet available.
 
 #### Features Not To Be Implemented
 
@@ -151,7 +151,7 @@ The following features will not be implemented in Sveltia CMS due to deprecation
 
 Other than the recently deprecated [`logo_url` option](https://sveltiacms.app/en/docs/customization#custom-logo), we will not support any deprecated features in Netlify/Decap CMS:
 
-- **Git Gateway backend**: Git Gateway has been [deprecated](https://docs.netlify.com/manage/security/secure-access-to-sites/git-gateway/) by Netlify. Due to its performance limitations, we don’t plan to support it anyway. However, we plan to develop a GraphQL-based high-performance alternative [in the future](https://sveltiacms.app/en/docs/roadmap) to provide a migration path for existing Git Gateway users.
+- **Git Gateway backend**: Git Gateway has been [deprecated](https://docs.netlify.com/manage/security/secure-access-to-sites/git-gateway/) by Netlify. Due to its performance limitations, we don’t plan to support it anyway. However, we plan to develop a GraphQL-based high-performance alternative [very soon](https://sveltiacms.app/en/docs/additions) to provide a migration path for existing Git Gateway users.
 - The deprecated client-side implicit grant for the GitLab backend: It has already been [removed from GitLab 15.0](https://gitlab.com/gitlab-org/gitlab/-/issues/344609). Use the [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
 - The deprecated Netlify Large Media service: Consider other [media storage providers](https://sveltiacms.app/en/docs/media).
 - Deprecated camel case configuration options: Use snake case instead, according to the current Decap CMS document.
@@ -168,9 +168,9 @@ Other than the recently deprecated [`logo_url` option](https://sveltiacms.app/en
 
 The following features will not be implemented in Sveltia CMS due to various reasons:
 
-- **Netlify Identity Widget**: It’s not useful without Git Gateway. We plan to develop an alternative solution with role support [in the future](https://sveltiacms.app/en/docs/roadmap).
+- **Netlify Identity Widget**: It’s not useful without Git Gateway. We plan to develop an alternative solution with role support [very soon](https://sveltiacms.app/en/docs/additions).
   - [Netlify Identity](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) was [deprecated](https://github.com/sveltia/sveltia-cms/discussions/284) in February 2025, but it has since been revived by Netlify. However, we still don’t plan to support it in Sveltia CMS due to the lack of Git Gateway support.
-- **Azure DevOps and Bitbucket backends**: For performance reasons. We’ll support these platforms if their APIs improve to allow the CMS to fetch multiple entries at once. Consider migrating to GitHub, GitLab, Gitea or Forgejo if you’d like to use Sveltia CMS now.
+- **Azure DevOps and Bitbucket backends**: For performance reasons. We’ll only support these Git providers if their APIs improve to allow the CMS to fetch multiple entries at once. Consider migrating to GitHub, GitLab, Gitea or Forgejo.
 - **Decap Turbo**: It’s a managed hosting service, not a core feature. Some notes:
   - Performance: Sveltia CMS uses the GraphQL API to retrieve multiple files at once, so it’s already fast. Using a proxy is a bad idea!
   - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature.
@@ -267,7 +267,7 @@ Once everyone can sign in with GitHub, you can disable Git Gateway and Netlify I
 
 If your site is deployed to a different hosting service, you need to set up an OAuth client yourself or use another authentication method. See the [GitHub backend](https://sveltiacms.app/en/docs/backends/github#authentication) or [GitLab backend](https://sveltiacms.app/en/docs/backends/gitlab#authentication) documentation for the options.
 
-If you want to stay with Git Gateway and Netlify Identity, unfortunately, you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [in the future](https://sveltiacms.app/en/docs/roadmap).
+If you want to stay with Git Gateway and Netlify Identity, unfortunately, you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [very soon](https://sveltiacms.app/en/docs/additions).
 
 #### Switching to Sveltia CMS
 

@@ -470,7 +470,7 @@ We’ll be releasing version 1.0 soon. We don’t expect any more breaking chang
 
 #### When will Sveltia CMS reach version 1.0 (GA)?
 
-As outlined in the [roadmap](https://sveltiacms.app/en/docs/roadmap), the tentative timeline for the 1.0 release is late 2026. We are committed to delivering a high-quality product, so we won’t rush the release just to meet a deadline. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
+Version 1.0 will be released in late 2026. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
 
 As [mentioned above](#can-i-use-sveltia-cms-even-though-it-s-still-in-beta), being in beta doesn’t mean the product is unreliable. We have already implemented many features and improvements, and we are implementing the rest of the features planned for 1.0 in the current beta releases. We encourage you to try it out and provide feedback to help us improve the product.
 

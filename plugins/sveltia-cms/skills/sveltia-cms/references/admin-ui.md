@@ -101,6 +101,7 @@ Currently, the following languages are available:
 - Italian
 - Japanese
 - Korean
+- Norwegian Bokmål
 - Persian
 - Polish
 - Portuguese (Brazil)
@@ -126,7 +127,6 @@ The following languages are available in Decap CMS but not yet available in Svel
 
 - Lithuanian
 - Macedonian
-- Norwegian Bokmål
 - Norwegian Nynorsk
 - [Romanian](https://github.com/sveltia/sveltia-cms/issues/711)
 - Serbian (Cyrillic)
