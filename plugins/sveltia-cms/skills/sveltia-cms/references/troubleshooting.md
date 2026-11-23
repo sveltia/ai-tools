@@ -184,6 +184,19 @@ Also add your GitHub Enterprise Server origin if applicable.
   https://api.github.com https://www.githubstatus.com
   ```
 
+##### GitHub with Sveltia CMS Additions
+
+Enter your Worker URL, the `base_url` in your CMS configuration. Its origin is allowed with `https:` for requests and `wss:` for the live connection, along with the GitHub origins.
+
+- `img-src`
+  ```
+  https://*.githubusercontent.com
+  ```
+- `connect-src`
+  ```
+  https://api.github.com https://www.githubstatus.com https://sveltia-cms-additions.example.workers.dev wss://sveltia-cms-additions.example.workers.dev
+  ```
+
 ##### GitLab
 
 Also add your self-hosted instance origin if applicable.
@@ -424,6 +437,10 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 
 The npm package doesn’t use UNPKG for any of these. See below.
 
+**CSP for Sveltia CMS Additions**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), also allow the Worker’s origin in `connect-src`, with both `https:` and `wss:`. In the builder above, select **GitHub with Sveltia CMS Additions** and enter your Worker URL. See also [Configuring the CMS](https://sveltiacms.app/en/docs/additions/setup#configuring-the-cms).
+
 **CSP for the npm Package**
 
 The [npm package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) serves all the files above, along with the fonts, from your own site. If you use it, you can remove `https://unpkg.com` and `https://cdn.jsdelivr.net` from the policy, and the HEIC conversion doesn’t need `blob:` in `worker-src`.
@@ -639,9 +656,10 @@ Yes. Sveltia CMS is a local-first CMS that works seamlessly with local Git repos
 
 #### Can I invite multiple users to collaborate on content?
 
-Yes, but with some limitations.
+Yes. There are two ways:
 
-Sveltia CMS does not have built-in user management features at the moment. You need to ask users to create an account with your chosen Git service provider (e.g. GitHub) and invite them to your repository for collaboration. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them. In the near future, we plan to introduce [built-in user management features](https://sveltiacms.app/en/docs/additions) to simplify collaboration.
+- **With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions):** our free server-side component provides [user management with roles](https://sveltiacms.app/en/docs/additions/users). You add people on the Administration page, and they sign in with a username and password, so they don’t need a GitHub account. It also adds [entry locks and comments](https://sveltiacms.app/en/docs/additions/collaboration) for working together. It currently works with the GitHub backend only.
+- **With your Git service provider:** ask users to create an account with your chosen Git service provider (e.g. GitHub) and invite them to your repository. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them.
 
 When several people edit content at the same time, Sveltia CMS checks the repository when an entry is opened, while it’s being edited and before it’s saved. A change someone else has pushed is noticed and never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution) for details.
 

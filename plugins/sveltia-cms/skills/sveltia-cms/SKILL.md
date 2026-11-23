@@ -148,6 +148,7 @@ Read the file that covers the area before writing options. Each is plain Markdow
 | Local development, simple workflow, deploy previews | `references/workflows.md` |
 | Editorial workflow, preview workflow | `references/workflows-editorial.md` |
 | Open authoring for contributors without write access | `references/workflows-open.md` |
+| Sveltia CMS Additions: user management, password sign-in, entry locks, comments, shared API keys | `references/additions.md` |
 | The admin UI editors work in: content library, editor, asset library | `references/admin-ui.md` |
 | `CMS.init()`, events, custom file formats | `references/api.md` |
 | Custom field types (widgets) | `references/api-field-types.md` |

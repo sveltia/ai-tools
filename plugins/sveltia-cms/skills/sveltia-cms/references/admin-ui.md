@@ -38,6 +38,7 @@ The Sveltia CMS UI consists of several main pages:
 - [Content Editor](https://sveltiacms.app/en/docs/ui/content-editor): Create and edit content entries.
 - [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library): Manage and upload media assets.
 - [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page): Manage entries before they are published or deleted. This page only appears when the advanced workflow is enabled.
+- [Administration](https://sveltiacms.app/en/docs/additions/administration): Manage users, roles, sign-in options, domains, GitHub integration and other settings. This page only appears when the Sveltia CMS Additions are installed and the user has the admin role.
 
 #### Account Menu
 
@@ -53,6 +54,8 @@ The account menu is accessible from the user avatar in the navigation bar. It pr
 #### Settings Dialog
 
 Users can personalize the application with various settings, including appearance and language. Developer Mode can also be enabled in the Developer tab, which enables certain features and displays the CMS version number. When [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the Developer tab also lets you turn on [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits).
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), the Account tab lets users change their name and password. See [Your Account](https://sveltiacms.app/en/docs/additions/users#your-account).
 
 The Data Management tab has a Clear Data section:
 
@@ -492,8 +495,10 @@ The Content Editor includes a sidebar that provides additional information and t
 
 - **Slug**: Shows the entry’s slug and lets users edit it. See [Slug Panel](#slug-panel) for details.
 - **Validation**: Shows any [field validation](https://sveltiacms.app/en/docs/fields#field-validation) errors in the content. Clicking an error highlights the corresponding field in the editor. Results appear when an entry is saved. The Validate button in the panel header checks the entry at any time against every rule, including the [required fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields) that an Editorial Workflow draft can be saved without. This way, users can see what’s still missing before the entry can be published.
-- **History**: Shows the commit history of the current content file. Each commit is listed with its author and date, and with the first line of its message when the [`prompt_commit_messages`](https://sveltiacms.app/en/docs/backends#prompting-for-commit-messages) option is enabled. Without it, the messages the CMS writes for an entry are all the same, so they’re not shown. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
+- **History**: Shows the commit history of the current content file. Each commit is listed with its author and date, and with the first line of its message when the [`prompt_commit_messages`](https://sveltiacms.app/en/docs/backends#prompting-for-commit-messages) option is enabled. Without it, the messages the CMS writes for an entry are all the same, so they’re not shown. Clicking a commit shows a diff view of the changes made in that commit on the Git provider. Git providers don’t follow a file across a rename, so the commits made before an entry’s slug changed are only listed if the entry redirects from its earlier URL with a [redirect property](https://sveltiacms.app/en/docs/collections/entries/previews#redirects), e.g. `aliases`, which the CMS adds when the slug changes and the collection has the `preview_path` option. This panel is not available while using the [local development workflow](https://sveltiacms.app/en/docs/workflows/local).
 - **Backlinks**: Shows all the content files that reference the current content file via [Relation fields](https://sveltiacms.app/en/docs/fields/relation). Clicking a backlink opens the referenced content file in the editor. For example, users can see all blog posts that reference a specific author or tag, which can be useful for quickly navigating between related content.
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), a fifth panel, **Conversation**, holds comments about the entry. See [Conversation Panel](https://sveltiacms.app/en/docs/additions/collaboration#conversation-panel) for details.
 
 More panels may be added in the future.
 

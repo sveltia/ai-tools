@@ -151,7 +151,7 @@ The following features will not be implemented in Sveltia CMS due to deprecation
 
 Other than the recently deprecated [`logo_url` option](https://sveltiacms.app/en/docs/customization#custom-logo), we will not support any deprecated features in Netlify/Decap CMS:
 
-- **Git Gateway backend**: Git Gateway has been [deprecated](https://docs.netlify.com/manage/security/secure-access-to-sites/git-gateway/) by Netlify. Due to its performance limitations, we don’t plan to support it anyway. However, we plan to develop a GraphQL-based high-performance alternative [very soon](https://sveltiacms.app/en/docs/additions) to provide a migration path for existing Git Gateway users.
+- **Git Gateway backend**: Git Gateway has been [deprecated](https://docs.netlify.com/manage/security/secure-access-to-sites/git-gateway/) by Netlify. Due to its performance limitations, we don’t plan to support it anyway. Instead, [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) lets people without a GitHub account sign in and save, while the CMS still talks to GitHub directly, so it stays fast.
 - The deprecated client-side implicit grant for the GitLab backend: It has already been [removed from GitLab 15.0](https://gitlab.com/gitlab-org/gitlab/-/issues/344609). Use the [client-side PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) instead.
 - The deprecated Netlify Large Media service: Consider other [media storage providers](https://sveltiacms.app/en/docs/media).
 - Deprecated camel case configuration options: Use snake case instead, according to the current Decap CMS document.
@@ -168,13 +168,13 @@ Other than the recently deprecated [`logo_url` option](https://sveltiacms.app/en
 
 The following features will not be implemented in Sveltia CMS due to various reasons:
 
-- **Netlify Identity Widget**: It’s not useful without Git Gateway. We plan to develop an alternative solution with role support [very soon](https://sveltiacms.app/en/docs/additions).
+- **Netlify Identity Widget**: It’s not useful without Git Gateway. [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions/users) provides user management with roles instead.
   - [Netlify Identity](https://docs.netlify.com/manage/security/secure-access-to-sites/identity/overview/) was [deprecated](https://github.com/sveltia/sveltia-cms/discussions/284) in February 2025, but it has since been revived by Netlify. However, we still don’t plan to support it in Sveltia CMS due to the lack of Git Gateway support.
 - **Azure DevOps and Bitbucket backends**: For performance reasons. We’ll only support these Git providers if their APIs improve to allow the CMS to fetch multiple entries at once. Consider migrating to GitHub, GitLab, Gitea or Forgejo.
 - **Decap Turbo**: It’s a managed hosting service, not a core feature. Some notes:
   - Performance: Sveltia CMS uses the GraphQL API to retrieve multiple files at once, so it’s already fast. Using a proxy is a bad idea!
-  - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature.
-  - User management, roles and credentials: We plan to implement these features with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component.
+  - Media library: Sveltia CMS already implements [S3-compatible storage providers](https://sveltiacms.app/en/docs/media#external-storage) as a standard feature. To share the storage credentials with your team, so team members don’t have to enter them, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions/administration#credentials).
+  - User management, roles and credentials: [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component, provides [users and roles](https://sveltiacms.app/en/docs/additions/users) and [shared credentials](https://sveltiacms.app/en/docs/additions/administration#credentials).
   - Deploy status: Sveltia CMS partially implements it as part of [deploy previews](https://sveltiacms.app/en/docs/deployments/previews).
 - [Gatsby plugin](https://github.com/decaporg/gatsby-plugin-decap-cms): Gatsby is [effectively defunct](https://github.com/gatsbyjs/gatsby/discussions/39062), so we won’t be investing time in developing a plugin for it. Gatsby users can still create `index.html` themselves. Note: We don’t support Netlify Identity Widget; the favicon can be specified with the `logo.src` option.
 - Performance-related options: Sveltia CMS has [drastically improved performance](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-performance) with GraphQL enabled by default, so these are no longer relevant:
@@ -190,7 +190,7 @@ The following features will not be implemented in Sveltia CMS due to various rea
 - Local proxy server: Our [local development workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates the need for a proxy server. For security and performance reasons, we don’t support `netlify-cms-proxy-server` or `decap-server`. The `local_backend` option is ignored.
 - The global [`issue_reports`](https://decapcms.org/docs/configuration-options/#issue-reports) option: Unlike Netlify/CMS, Sveltia CMS rarely crashes and does not display a page that allows users to report it. The Report Issue link in the Help menu always points to the Sveltia CMS issue tracker, and the `url` option is ignored.
 - The global [`locale`](https://decapcms.org/docs/configuration-options/#locale) option and `CMS.registerLocale` method: Sveltia CMS automatically detects the user’s preferred language and changes the [UI locale](https://sveltiacms.app/en/docs/ui#localization).
-- The [`editor.notes`](https://decapcms.org/docs/notes/) option: Decap CMS stores notes as comments on a GitHub or GitLab issue. We plan to implement a Conversation Panel as part of [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions#features) instead, and the option is ignored. Any notes saved with Decap CMS will not be loaded.
+- The [`editor.notes`](https://decapcms.org/docs/notes/) option: Decap CMS stores notes as comments on a GitHub or GitLab issue. [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) provides a [Conversation panel](https://sveltiacms.app/en/docs/additions/collaboration#conversation-panel) instead, and the option is ignored. Any notes saved with Decap CMS will not be loaded.
 - The [`editor.visualEditing`](https://decapcms.org/docs/configuration-options/#editor) option: Sveltia CMS has the same [click-to-highlight feature](https://sveltiacms.app/en/docs/successor-to-netlify-cms#better-content-preview) enabled by default, so there is nothing to opt in to. The option is ignored at both the collection and field levels.
 - The `widget`, `label` and `required` properties of the [`meta.path`](https://decapcms.org/docs/collection-nested/) collection option: Sveltia CMS replaces the text field for the entry path with a [Parent Folder](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) picker, which has a built-in label and can’t be left blank, so these properties are ignored.
 - The [`preview_path_preserve_slashes`](https://decapcms.org/docs/configuration-options/#preview_path_preserve_slashes) collection option: Sveltia CMS inserts field values into the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) as they are, without making them URL-safe, so slashes are always kept, as if the option were set to `true`. Decap CMS replaces slashes by default, except in nested collections. If your preview paths relied on that, use [string transformations](https://sveltiacms.app/en/docs/string-transformations) to shape the value.
@@ -238,7 +238,7 @@ If you’re using any [features that are not going to be implemented](#features-
 
 ##### Migrating from Git Gateway Backend
 
-Sveltia CMS does not support the deprecated Git Gateway backend. If you don’t care about user management with Netlify Identity, you can use the [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend instead.
+Sveltia CMS does not support the deprecated Git Gateway backend. Use the [GitHub](https://sveltiacms.app/en/docs/backends/github) or [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) backend instead. If you need user management, as with Netlify Identity, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) with the GitHub backend.
 
 If your site is still deployed to Netlify, the switch is easier than you might think. Netlify can handle the GitHub or GitLab sign-in for you, so you don’t need to install [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) or any other OAuth client. Here are the steps, using GitHub as an example:
 
@@ -267,7 +267,7 @@ Once everyone can sign in with GitHub, you can disable Git Gateway and Netlify I
 
 If your site is deployed to a different hosting service, you need to set up an OAuth client yourself or use another authentication method. See the [GitHub backend](https://sveltiacms.app/en/docs/backends/github#authentication) or [GitLab backend](https://sveltiacms.app/en/docs/backends/gitlab#authentication) documentation for the options.
 
-If you want to stay with Git Gateway and Netlify Identity, unfortunately, you can’t migrate to Sveltia CMS right now. We plan to develop an alternative solution [very soon](https://sveltiacms.app/en/docs/additions).
+If your editors don’t have GitHub accounts, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) instead of Git Gateway and Netlify Identity. It manages the accounts and roles itself, and runs on the Cloudflare Workers Free plan. See [Setting Up Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions/setup).
 
 #### Switching to Sveltia CMS
 
@@ -451,9 +451,9 @@ As a result, the migration involves the following changes:
 
 #### Collaborators
 
-Pages CMS allows repository owners to invite collaborators by email, so people without a GitHub account can edit content through the GitHub App. Sveltia CMS doesn’t have an equivalent feature yet, as it requires each user to have an account with write access to the repository on the Git hosting service. Invite your collaborators to the repository on GitHub instead. See [Invite Team Members](https://sveltiacms.app/en/docs/start#invite-team-members).
+Pages CMS allows repository owners to invite collaborators by email, so people without a GitHub account can edit content through the GitHub App. Out of the box, Sveltia CMS requires each user to have an account with write access to the repository on the Git hosting service. Invite your collaborators to the repository on GitHub, as described in [Invite Team Members](https://sveltiacms.app/en/docs/start#invite-team-members).
 
-We plan to support user management and roles with [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component.
+For collaborators without a GitHub account, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), our free server-side component. Like Pages CMS, it commits through a GitHub App, and it adds [user management with roles](https://sveltiacms.app/en/docs/additions/users).
 
 #### Features Not Available in Sveltia CMS
 

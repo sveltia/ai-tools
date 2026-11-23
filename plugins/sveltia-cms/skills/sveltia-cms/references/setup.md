@@ -252,6 +252,8 @@ To collaborate with others, you need to invite them to your repository on the ba
 
 Then, share the admin interface URL with them so they can access Sveltia CMS.
 
+If your team members don’t have GitHub accounts, or you want roles, entry locks and comments, set up [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) instead. They then sign in with an account you create for them on the [Administration page](https://sveltiacms.app/en/docs/additions/users#adding-users).
+
 Several people can edit content at the same time. Sveltia CMS notices when someone else has changed an entry that is open and asks before letting the user save over their change. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution).
 
 #### Iterate and Improve
@@ -380,6 +382,10 @@ Sveltia CMS allows developers to [work with local repositories](https://sveltiac
 #### JavaScript API
 
 Advanced users can leverage the [JavaScript API](https://sveltiacms.app/en/docs/api) to customize and extend Sveltia CMS functionality, such as manual initialization, registering custom preview styles and adding editor components.
+
+#### Sveltia CMS Additions
+
+[Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) provides features that require server-side functionality, such as user management, entry locks and shared credentials. This optional service can be hosted for free on Cloudflare Workers and provides a secure backend for these advanced features.
 
 ### Differences from Netlify/Decap CMS
 
@@ -621,19 +627,19 @@ If you build your site with your own tooling, such as a Vite app or a hand-writt
 
 The chart below shows the distribution of frameworks used by sites in our [showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 807 sites in the showcase, sorted by popularity:
+Framework distribution across 816 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 301 | 37.3% |
-| Vanilla JavaScript | 124 | 15.4% |
-| Eleventy | 93 | 11.5% |
-| Hugo | 69 | 8.6% |
-| Custom Tooling | 69 | 8.6% |
-| Jekyll | 40 | 5.0% |
+| Astro | 304 | 37.3% |
+| Vanilla JavaScript | 125 | 15.3% |
+| Eleventy | 94 | 11.5% |
+| Custom Tooling | 71 | 8.7% |
+| Hugo | 69 | 8.5% |
+| Jekyll | 41 | 5.0% |
 | Next.js | 39 | 4.8% |
-| SvelteKit | 19 | 2.4% |
-| React Router | 10 | 1.2% |
+| SvelteKit | 19 | 2.3% |
+| React Router | 11 | 1.3% |
 | React | 10 | 1.2% |
 | Nuxt | 5 | 0.6% |
 | MkDocs | 4 | 0.5% |

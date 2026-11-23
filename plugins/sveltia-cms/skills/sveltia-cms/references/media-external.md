@@ -461,6 +461,10 @@ The `config` object includes the Uploadcare [jQuery File Uploader options](https
 
 Do not write your Uploadcare secret key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the secret key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 There are two Sveltia CMS-specific configuration options you can include under the `settings` object:
 
 - `autoFilename` (boolean): If set to `true`, a filename will be added at the end of the file URL when selecting files, e.g. `https://ucarecdn.com/UUID/filename.jpg`. Default is `false`.
@@ -773,6 +777,10 @@ prefix = "cms-uploads/" # Optional
 
 Do not write your SAS token in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the token when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -979,7 +987,9 @@ If the caption already holds a stock photo credit, e.g. because the image was sw
 
 **Multi-user setups**
 
-If your CMS instance is used by multiple users, the administrator needs to distribute an API key to all users to let them use the stock photo feature.
+If your CMS instance is used by multiple users, each of them needs an API key to use the stock photo feature.
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the API keys once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page, and everyone who signs in uses them. Without it, the administrator needs to distribute the API keys to all users.
 
 Alternatively, each user can provide their own API key. However, this is not recommended for instances with non-technical end users because generating and managing API keys may be challenging for them.
 

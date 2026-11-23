@@ -1208,6 +1208,10 @@ Sveltia CMS offers a comprehensive API that enables developers to extend and cus
 
 For detailed information on how to use the API, please refer to the [JavaScript API guide](https://sveltiacms.app/en/docs/api).
 
+### Sveltia CMS Additions
+
+[Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) provides additional features, primarily for multi-user scenarios, including user management, entry locks and shared credentials. These features are useful for teams working collaboratively on content, as they ensure that users can manage their access and contributions effectively.
+
 ### Modifying Source Code
 
 Sveltia CMS is an open source project licensed under the [MIT License](https://choosealicense.com/licenses/mit/), and its source code is available on [GitHub](https://github.com/sveltia/sveltia-cms). Advanced users and developers can fork the repository and modify the source code to implement custom features or changes that are not available through the standard customization options.

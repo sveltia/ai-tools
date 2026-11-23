@@ -147,6 +147,10 @@ public_url = "https://media.example.com"
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -462,6 +466,10 @@ public_url = "https://cdn.example.com"
 
 Do not write your Application Key (secret) in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -667,6 +675,10 @@ prefix = "cms-uploads/" # Optional
 
 Do not write your storage zone password in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the password when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -861,6 +873,10 @@ jurisdiction = "eu" # Optional; 'default' | 'eu' | 'fedramp'
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
+
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -1061,6 +1077,10 @@ public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -1240,6 +1260,10 @@ prefix = "cms-uploads/" # Optional
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -1413,6 +1437,10 @@ public_url = "https://my-cdn.example.com"
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+
 #### Configuration Properties
 
 | Property | Required | Description |
@@ -1581,6 +1609,10 @@ public_url = "https://my-cdn.example.com"
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
+
+**Sharing the credentials with your team**
+
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 

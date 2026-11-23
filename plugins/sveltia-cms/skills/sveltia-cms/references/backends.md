@@ -1271,6 +1271,12 @@ Netlify identifies the site by its domain. If the CMS is served from a domain ot
 
 We are not affiliated with Netlify and do not endorse or maintain this authentication method. We only provide it to ensure backward compatibility with Netlify CMS.
 
+#### Sveltia CMS Additions
+
+If your editors don’t have GitHub accounts, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), a free service you deploy to Cloudflare Workers. People sign in with a username and password it manages, and get a GitHub token limited to your repository and to their role. It also adds entry locks, comments and shared credentials.
+
+It’s set up with `auth_type: additions` and the service’s URL as `base_url`. See [Setting Up Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions/setup) for details.
+
 ### Features
 
 #### Git LFS

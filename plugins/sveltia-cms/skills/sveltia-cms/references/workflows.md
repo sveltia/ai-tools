@@ -405,7 +405,7 @@ Deploy hook URLs are confidential, so they can’t be stored in the CMS configur
 
 When the user signs out, the deploy hook URL and its authorization header are removed from the browser, along with the API keys for other integrations. They need to be entered again after signing back in.
 
-In the future, we may provide a way to manage credentials for all users via an edge function called [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions).
+With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can instead [share the deploy hook](https://sveltiacms.app/en/docs/additions/administration#credentials) with everyone who signs in, so nobody has to enter it.
 
 Source: https://sveltiacms.app/en/docs/deployments
 
