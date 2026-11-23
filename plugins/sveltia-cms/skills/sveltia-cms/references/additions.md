@@ -85,6 +85,8 @@ Source: https://sveltiacms.app/en/docs/additions
 
 Admins manage [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) from the CMS itself. Select **Administration** in the toolbar, after the other pages, or on the Menu page on a small screen. The page has a section for each topic, listed in its sidebar.
 
+![The User Management page showing a list of users](/images/landing/administration-light.webp?20261122) ![The User Management page showing a list of users](/images/landing/administration-dark.webp?20261122)
+
 Every setting lives in the service’s database, not in the CMS configuration or in Cloudflare. Secret values, such as the GitHub App’s private key, are write-only: the CMS can replace them, but never reads them back.
 
 When a new version of Sveltia CMS Additions is out, the page shows a notice with a link to the release notes. See [Updating](https://sveltiacms.app/en/docs/additions/setup#updating).
@@ -237,7 +239,7 @@ Click the button below:
 
 It copies a small repository into your GitHub account, creates the Durable Object that stores the data, and deploys the Worker with [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/). The repository only holds configuration: the code comes from the `@sveltia/cms-additions` npm package.
 
-The button asks for one value, `ADMIN_SECRET`. Generate a random one with:
+The button asks for one value, `ADMIN_SECRET`. Generate a random one with the terminal:
 
 ```sh
 openssl rand -base64 32
@@ -356,7 +358,7 @@ Sveltia CMS Additions hands out tokens that can write to your repository, so tak
 1. Add a [ruleset](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) to the repository that blocks force pushes and restricts deletions on the default branch and on tags, without the app on its bypass list. The [GitHub section](https://sveltiacms.app/en/docs/additions/administration#github) of the Administration page warns you until there is one.
 1. Move deployment secrets to environment secrets limited to protected branches, so a change pushed through the CMS can’t reach them.
 1. Check the [allowed domains](https://sveltiacms.app/en/docs/additions/administration#domains). List only sites you control, prefer exact host names to wildcards, and never use a wildcard on a domain where anyone can get a subdomain.
-1. Pin the version of Sveltia CMS your site loads, and add a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) to the CMS page.
+1. Add a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) to the CMS page.
 1. Watch the [Sveltia CMS Additions releases](https://github.com/sveltia/sveltia-cms-additions/releases), and [update](#updating) when the Administration page says a new version is out.
 
 ### Updating
