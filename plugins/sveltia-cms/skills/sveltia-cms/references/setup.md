@@ -300,7 +300,9 @@ Headless CMSs vary in framework support. Some integrate with specific frameworks
 
 CMSs are offered as SaaS solutions with provider-managed hosting and subscription pricing, or as self-hosted options for greater control but requiring more expertise.
 
-**Sveltia CMS** is semi-self-hosted: the CMS is served from a CDN (no maintenance needed), but each project has its own instance with content stored in the project’s Git repository for full control.
+**Sveltia CMS** is semi-self-hosted. It’s served from a CDN, so no maintenance is required. However, each project has its own instance, and content is stored in the project’s Git repository, giving you full control.
+
+[Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) is a free service that provides extra features for teams and can be deployed to a serverless platform using your own account. Again, no maintenance is required, and you retain ownership of your data.
 
 #### Web vs. Desktop
 
@@ -627,17 +629,17 @@ If you build your site with your own tooling, such as a Vite app or a hand-writt
 
 The chart below shows the distribution of frameworks used by sites in our [showcase](https://sveltiacms.app/en/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 816 sites in the showcase, sorted by popularity:
+Framework distribution across 824 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 304 | 37.3% |
-| Vanilla JavaScript | 125 | 15.3% |
-| Eleventy | 94 | 11.5% |
-| Custom Tooling | 71 | 8.7% |
-| Hugo | 69 | 8.5% |
+| Astro | 305 | 37.0% |
+| Vanilla JavaScript | 126 | 15.3% |
+| Eleventy | 96 | 11.7% |
+| Custom Tooling | 75 | 9.1% |
+| Hugo | 69 | 8.4% |
 | Jekyll | 41 | 5.0% |
-| Next.js | 39 | 4.8% |
+| Next.js | 39 | 4.7% |
 | SvelteKit | 19 | 2.3% |
 | React Router | 11 | 1.3% |
 | React | 10 | 1.2% |
