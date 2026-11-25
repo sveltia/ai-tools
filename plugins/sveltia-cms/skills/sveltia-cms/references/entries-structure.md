@@ -562,6 +562,14 @@ A `preview_path` that can’t be filled in for an entry, such as one with date t
 
 The path is appended to your site’s own address, or to the address of a build made for the entry when your repository is connected to a CI/CD provider. See [Deploy Previews](https://sveltiacms.app/docs/deployments/previews) for how those are found.
 
+The resulting link appears in the entry editor toolbar as **View on Live Site**, or **View Preview** when it leads to a deploy preview. It’s also offered:
+
+- in each locale pane’s options menu of a multilingual entry, so every translation links to its own page
+- on the cards of the [Editorial Workflow page](https://sveltiacms.app/docs/workflows/editorial#editorial-workflow-page)
+- as an icon button at the end of each row in the entry list, so you can view an entry’s page without opening it in the editor
+
+See [Where Links Appear](https://sveltiacms.app/docs/deployments/previews#where-links-appear) for details. To hide every link, set the top-level [`show_preview_links`](https://sveltiacms.app/docs/deployments/previews#configuration) option to `false`.
+
 The [slug template tags](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags) can be used in the `preview_path` option, with the following exceptions:
 
 - `{{slug}}`: the entire slug of the entry, not just the slugified entry identifier.

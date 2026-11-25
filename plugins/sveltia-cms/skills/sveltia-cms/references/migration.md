@@ -353,7 +353,7 @@ For a better DX, we recommend [setting up the JSON schema](https://sveltiacms.ap
 
 #### AI Tools
 
-This documentation site provides an official Agent Skill and `llms.txt` files that you can use with AI agents like GitHub Copilot, Claude and ChatGPT to help them understand Sveltia CMS better. See [Working with AI](https://sveltiacms.app/docs/working-with-ai) for details.
+This documentation site provides an MCP server, an Agent Skill and `llms.txt` files that you can use with AI agents like GitHub Copilot, Claude and ChatGPT to help them understand Sveltia CMS better. See [Working with AI](https://sveltiacms.app/docs/working-with-ai) for details.
 
 #### Authentication
 

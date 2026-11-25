@@ -180,7 +180,7 @@ If you use VS Code as your code editor, it’s recommended to install the [YAML 
 
 #### Set Up AI Tools (Optional)
 
-If you use an AI coding assistant like Claude, GitHub Copilot, Cursor or ChatGPT, we provide an official Agent Skill and `llms.txt` files to help it understand Sveltia CMS. The skill also includes a script that validates your configuration file. See [Working with AI](https://sveltiacms.app/docs/working-with-ai) for details.
+If you use an AI coding assistant like Claude, GitHub Copilot, Cursor or ChatGPT, we provide an MCP server, an Agent Skill and `llms.txt` files to help it understand Sveltia CMS. The skill also includes a script that validates your configuration file. See [Working with AI](https://sveltiacms.app/docs/working-with-ai) for details.
 
 ### 2. Configure
 

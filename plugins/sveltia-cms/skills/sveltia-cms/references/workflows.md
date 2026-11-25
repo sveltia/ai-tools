@@ -547,12 +547,14 @@ This check only runs when the page is on the same origin as the CMS. That’s th
 
 A browser can’t read a cross-origin response without permission from that server, and no major static host grants it. So for other origins, the request is skipped rather than sent to learn nothing. Deploy previews are almost always on another origin, so their state comes from the provider alone.
 
+The entry list leaves the check out for published entries, so opening a collection doesn’t send a request for every entry in it. The live site holds those pages, so their links are offered either way.
+
 #### Where Links Appear
 
 - In the entry editor toolbar, for the default locale.
 - In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/docs/i18n/slugs#preview-paths).
 - On the cards of the [Editorial Workflow page](https://sveltiacms.app/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
-- In the entry list, as an icon button next to the status of each unpublished entry or file, for the default locale. Published entries aren’t linked from the list; open one to view it on the live site.
+- In the entry list, as an icon button at the end of each row, for the default locale. As in the entry editor, it opens an unpublished entry on its deploy preview, and a published entry or file on the live site. A published one is only linked when its collection or file has the [`preview_path`](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) option.
 
 ### Reporting a Preview from Gitea/Forgejo Actions
 
