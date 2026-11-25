@@ -17,7 +17,7 @@ Run `/plugin marketplace update sveltia` later to pick up documentation updates.
 
 For any other skills-compatible agent, copy [`plugins/sveltia-cms/skills/sveltia-cms`](plugins/sveltia-cms/skills/sveltia-cms) into the directory that agent reads skills from. The skill's frontmatter uses only fields from the [Agent Skills specification](https://agentskills.io/specification), so it also uploads to claude.ai and the Skills API without modification.
 
-See [Working with AI](https://sveltiacms.app/en/docs/working-with-ai) for the full documentation.
+See [Working with AI](https://sveltiacms.app/docs/working-with-ai) for the full documentation.
 
 ## Contents
 

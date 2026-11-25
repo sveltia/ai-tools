@@ -8,7 +8,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 Open Authoring is a workflow that allows contributors to propose changes to a project without requiring direct write access to the repository. This is typically done through fork-and-pull request mechanisms, enabling a wider range of contributors to participate in content creation and editing.
 
-It builds on top of [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). Everything an editor does there — drafts, review stages, the workflow board — works the same way for a contributor, except that their changes live in their own fork of the repository and only a maintainer can publish them.
+It builds on top of [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial). Everything an editor does there — drafts, review stages, the workflow board — works the same way for a contributor, except that their changes live in their own fork of the repository and only a maintainer can publish them.
 
 ### Use Cases
 
@@ -19,8 +19,8 @@ It builds on top of [Editorial Workflow](https://sveltiacms.app/en/docs/workflow
 
 ### Requirements
 
-- The [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend must be used.
-- The [`editorial_workflow`](https://sveltiacms.app/en/docs/workflows/editorial#configuration) or [`preview`](https://sveltiacms.app/en/docs/workflows/preview) publish mode must be enabled. Without it, the CMS reports a configuration error, because there would be nowhere for a contribution to go.
+- The [GitHub](https://sveltiacms.app/docs/backends/github), [GitLab](https://sveltiacms.app/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/docs/backends/gitea-forgejo) backend must be used.
+- The [`editorial_workflow`](https://sveltiacms.app/docs/workflows/editorial#configuration) or [`preview`](https://sveltiacms.app/docs/workflows/preview) publish mode must be enabled. Without it, the CMS reports a configuration error, because there would be nowhere for a contribution to go.
 - The repository must allow forks, and contributors must be able to read it. A public repository needs nothing set up; a private one has requirements that differ between the backends, described below.
 
 #### GitHub
@@ -92,9 +92,9 @@ Gitea and Forgejo don’t say why a fork couldn’t be created, so the CMS can o
 
 Add the `open_authoring` option to your CMS configuration’s `backend` settings, along with the `editorial_workflow` or `preview` publish mode at the top level.
 
-A [collection-level `publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here. It only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
+A [collection-level `publish_mode`](https://sveltiacms.app/docs/workflows/editorial#enabling-the-workflow-per-collection) doesn’t count here. It only affects maintainers who write to the repository directly, while a contributor’s fork always goes through a pull request.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -103,7 +103,7 @@ backend:
 publish_mode: editorial_workflow
 ```
 
-```toml [TOML]
+```toml TOML
 publish_mode = "editorial_workflow"
 
 [backend]
@@ -112,7 +112,7 @@ repo = "user/repo"
 open_authoring = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -123,7 +123,7 @@ open_authoring = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -145,7 +145,7 @@ backend:
 publish_mode: editorial_workflow
 ```
 
-So does the Gitea/Forgejo backend, alongside the [options your instance needs](https://sveltiacms.app/en/docs/backends/gitea-forgejo#configuration):
+So does the Gitea/Forgejo backend, alongside the [options your instance needs](https://sveltiacms.app/docs/backends/gitea-forgejo#configuration):
 
 ```yaml
 backend:
@@ -166,7 +166,7 @@ This section applies to the GitHub backend. The GitLab backend always requests G
 
 By default, Sveltia CMS requests the `repo` OAuth scope, which grants access to **every repository the contributor owns, including their private ones**. That’s a lot to ask of someone who just wants to fix a typo. A public repository doesn’t need it, as the narrower `public_repo` scope is enough. Set the scope explicitly with the `auth_scope` option:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -174,7 +174,7 @@ backend:
   auth_scope: public_repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
@@ -182,7 +182,7 @@ open_authoring = true
 auth_scope = "public_repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -193,7 +193,7 @@ auth_scope = "public_repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -214,7 +214,7 @@ Without GitHub’s `workflow` scope, a contributor’s sign-in can’t bring cha
 
 If your workflows change often, you can add the scope by giving `auth_scope` as a list, which must include `repo` or `public_repo`:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -222,7 +222,7 @@ backend:
   auth_scope: [public_repo, workflow]
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
@@ -230,7 +230,7 @@ open_authoring = true
 auth_scope = ["public_repo", "workflow"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -241,7 +241,7 @@ auth_scope = ["public_repo", "workflow"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -267,11 +267,11 @@ A contributor who signed in before you added the scope keeps their old token unt
 
 The CMS passes `auth_scope` to your OAuth client, and the client decides what it actually asks GitHub for. [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) honors it when used with an OAuth app, falling back to the default if it doesn’t recognize the value. A third-party client written for Netlify/Decap CMS may ignore it altogether, so check yours before relying on the narrower scope.
 
-The option only applies to the [OAuth sign-in flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow); it has no effect on access token sign-in.
+The option only applies to the [OAuth sign-in flow](https://sveltiacms.app/docs/backends/github#authorization-code-flow); it has no effect on access token sign-in.
 
 **Access tokens and private repositories**
 
-A contributor can sign in with a [personal access token](https://sveltiacms.app/en/docs/backends/github#access-token) instead of OAuth, but it has to be a **classic** token with the `repo` scope, because the CMS creates the fork of the repository on their behalf.
+A contributor can sign in with a [personal access token](https://sveltiacms.app/docs/backends/github#access-token) instead of OAuth, but it has to be a **classic** token with the `repo` scope, because the CMS creates the fork of the repository on their behalf.
 
 A fine-grained token won’t work for a private repository owned by someone else. Fine-grained tokens are limited to resources owned by a single account, and GitHub [doesn’t support](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) using them as an outside or repository collaborator. Reading the repository fails with a “not found” error, exactly as though the repository didn’t exist. OAuth is the smoother option for community contributors.
 
@@ -283,7 +283,7 @@ The rest of this page says “pull request”, the name GitHub, Gitea and Forgej
 
 #### Maintainers Are Unaffected
 
-When someone who can push to the configured repository signs in, they work on the repository directly, as they always have, and get the full [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) experience, including the Ready stage and the publishing controls. Their Editorial Workflow board also lists the pull requests contributors have opened, so they can review them there. See [Reviewing in Sveltia CMS](#reviewing-in-sveltia-cms).
+When someone who can push to the configured repository signs in, they work on the repository directly, as they always have, and get the full [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) experience, including the Ready stage and the publishing controls. Their Editorial Workflow board also lists the pull requests contributors have opened, so they can review them there. See [Reviewing in Sveltia CMS](#reviewing-in-sveltia-cms).
 
 Open Authoring only kicks in for users without write access. On GitLab, that means anyone below the **Developer** role, and on Gitea/Forgejo anyone without the **Write** permission.
 
@@ -319,7 +319,7 @@ The content they see is always read from the configured repository, so they’re
 
 | Contributor action | What happens in Git |
 | --- | --- |
-| Save a new entry | A branch named `cms/[FORK_OWNER]/[FORK_NAME]/[COLLECTION_NAME]/[SLUG]` is created in their fork and the entry files are committed to it, with the [`root_dir`](https://sveltiacms.app/en/docs/backends#monorepos) directory after the fork name if it’s set. No pull request is opened yet |
+| Save a new entry | A branch named `cms/[FORK_OWNER]/[FORK_NAME]/[COLLECTION_NAME]/[SLUG]` is created in their fork and the entry files are committed to it, with the [`root_dir`](https://sveltiacms.app/docs/backends#monorepos) directory after the fork name if it’s set. No pull request is opened yet |
 | Save an existing draft | Another commit is added to the same branch |
 | Move an entry to In Review | A pull request is opened from that branch to your configured branch |
 | Move an entry back to Draft | The pull request is marked as a draft, which keeps it — and any discussion on it — out of your review queue. GitHub uses a [draft pull request](https://docs.github.com/en/pull-requests/how-tos/create-pull-requests/changing-the-stage-of-a-pull-request); GitLab and Gitea/Forgejo have no separate state, so the CMS adds the title prefix each recognizes — [`Draft:`](https://docs.gitlab.com/user/project/merge_requests/drafts/) and [`WIP:`](https://docs.gitea.com/usage/pull-request#work-in-progress-pull-requests) respectively |
@@ -353,7 +353,7 @@ There’s no Ready stage, because marking an entry ready to publish is only mean
 
 **Different from Editorial Workflow**
 
-Editorial Workflow records the status in a [pull request label](https://sveltiacms.app/en/docs/workflows/editorial#statuses). Labeling requires write access to the repository, which a contributor doesn’t have, so their status is read from the pull request itself instead. Nothing has to be configured for this — the CMS picks the right approach based on the signed-in user.
+Editorial Workflow records the status in a [pull request label](https://sveltiacms.app/docs/workflows/editorial#statuses). Labeling requires write access to the repository, which a contributor doesn’t have, so their status is read from the pull request itself instead. Nothing has to be configured for this — the CMS picks the right approach based on the signed-in user.
 
 Only a pull request the contributor opened themselves counts. One that someone else opened from the contributor’s branch is ignored, so its title doesn’t end up on their entry.
 
@@ -361,7 +361,7 @@ A contributor’s pull request carries no CMS label, but it still shows up on yo
 
 #### Collections That Skip the Workflow
 
-A collection that opts out of the workflow with its own [`publish_mode: simple`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) still goes through it for a contributor. They can’t write to your configured branch at all, so their changes to such a collection are saved to their fork and sent for review like those to any other entry.
+A collection that opts out of the workflow with its own [`publish_mode: simple`](https://sveltiacms.app/docs/workflows/editorial#enabling-the-workflow-per-collection) still goes through it for a contributor. They can’t write to your configured branch at all, so their changes to such a collection are saved to their fork and sent for review like those to any other entry.
 
 A maintainer writes to the configured repository, so a collection with the simple publish mode works for them as it always has: their changes are committed straight to your configured branch.
 
@@ -369,15 +369,15 @@ A maintainer writes to the configured repository, so a collection with the simpl
 
 An image or file attached to an entry is committed to the same branch as the entry, so it travels with the contribution and can be previewed in the CMS before it’s published.
 
-The [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) itself is read-only for a contributor. Uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled. That includes the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list.
+The [Asset Library](https://sveltiacms.app/docs/ui/asset-library) itself is read-only for a contributor. Uploading, deleting, renaming and replacing files there would commit straight to your configured branch without review, so those controls are disabled. That includes the ones outside the Asset Library, such as the Quick Add menu and the asset panel beside the entry list.
 
-[Reordering entries](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is disabled for the same reason.
+[Reordering entries](https://sveltiacms.app/docs/collections/entries/operations#reordering-entries) is disabled for the same reason.
 
 #### Commit Messages
 
-You can mark commits made by contributors with the `openAuthoring` [commit message template](https://sveltiacms.app/en/docs/backends#commit-messages). It wraps the message that would normally be generated, so you can add attribution without repeating the rest:
+You can mark commits made by contributors with the `openAuthoring` [commit message template](https://sveltiacms.app/docs/backends#commit-messages). It wraps the message that would normally be generated, so you can add attribution without repeating the rest:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -385,7 +385,7 @@ backend:
     openAuthoring: '{{message}} (by {{author-login}})'
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
@@ -393,7 +393,7 @@ repo = "user/repo"
 openAuthoring = "{{message}} (by {{author-login}})"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -405,7 +405,7 @@ openAuthoring = "{{message}} (by {{author-login}})"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -427,7 +427,7 @@ To point a contributor straight at the entry you’d like them to edit, link to 
 https://YOUR_DOMAIN/admin/#/collections/COLLECTION_NAME/entries/ENTRY_ID
 ```
 
-See [Linking to Content Editor](https://sveltiacms.app/en/docs/ui/content-editor#linking-to-content-editor) for the details, including the shorthand Netlify/Decap CMS uses and how to pre-fill fields for a new entry. An “Edit this page” link in your site’s footer is a common way to put this in front of readers.
+See [Linking to Content Editor](https://sveltiacms.app/docs/ui/content-editor#linking-to-content-editor) for the details, including the shorthand Netlify/Decap CMS uses and how to pre-fill fields for a new entry. An “Edit this page” link in your site’s footer is a common way to put this in front of readers.
 
 ### Reviewing Contributions
 
@@ -453,15 +453,15 @@ If you leave the branch, the CMS deletes it from the contributor’s fork the ne
 
 **Pull CMS Changes to Your Local Repository**
 
-Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), where the CMS writes to your local files instead.
+Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/docs/workflows/local), where the CMS writes to your local files instead.
 
 #### Reviewing in Sveltia CMS
 
-You don’t have to leave the CMS to look at a contribution. The pull requests contributors have opened to your configured branch are listed on your own [Editorial Workflow board](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page), each card marked **From a fork**:
+You don’t have to leave the CMS to look at a contribution. The pull requests contributors have opened to your configured branch are listed on your own [Editorial Workflow board](https://sveltiacms.app/docs/workflows/editorial#editorial-workflow-page), each card marked **From a fork**:
 
 - **A draft pull request** is in the Draft column, and **one ready for review** in In Review. A contributor’s draft that hasn’t been sent for review has no pull request yet, so it isn’t listed. Dragging a card between columns labels the pull request as it does for your own, and moves it in or out of the draft state.
 - **Clicking a card** opens the entry in the editor, with a notice at the top saying where your changes go. When the contributor allows edits from maintainers, saving commits your changes to their branch in their fork, so they show up in the pull request. When they don’t, the entry can only be viewed.
-- **Publishing happens on your Git service.** In place of the Publish button, the card and the editor offer **Review on GitHub**, **Review on GitLab**, **Review on Gitea** or **Review on Forgejo**, which opens the pull request. The CMS only shows you the entry, while merging takes everything on the contributor’s branch, so review the whole pull request there before merging it. For the same reason, moving a card to Ready doesn’t [approve](https://sveltiacms.app/en/docs/workflows/editorial#approvals) the pull request.
+- **Publishing happens on your Git service.** In place of the Publish button, the card and the editor offer **Review on GitHub**, **Review on GitLab**, **Review on Gitea** or **Review on Forgejo**, which opens the pull request. The CMS only shows you the entry, while merging takes everything on the contributor’s branch, so review the whole pull request there before merging it. For the same reason, moving a card to Ready doesn’t [approve](https://sveltiacms.app/docs/workflows/editorial#approvals) the pull request.
 - **Discarding** closes the pull request but leaves the branch in the contributor’s fork. The entry goes back to the Draft column of their board, so they can keep working on it or discard it themselves.
 
 A contribution is kept apart from your own work, as anyone can open one:
@@ -476,7 +476,7 @@ Only pull requests from branches named the way the CMS names its workflow branch
 
 A contributor can delete their own unpublished work. The Delete button closes their pull request, if there is one, and deletes the branch from their fork. Nothing was ever merged, so nothing is left behind. If the entry updates one that’s already live, the button is labeled **Discard** instead and the published version is untouched.
 
-Taking a published entry off the site is a maintainer’s job, so contributors aren’t offered it. The Delete control is hidden for them in the entry editor, and in the entry list a selection that includes a published entry can’t be deleted. Deleting a published entry yourself works as it does in [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial#deleting-a-published-entry).
+Taking a published entry off the site is a maintainer’s job, so contributors aren’t offered it. The Delete control is hidden for them in the entry editor, and in the entry list a selection that includes a published entry can’t be deleted. Deleting a published entry yourself works as it does in [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial#deleting-a-published-entry).
 
 ### Security Considerations
 
@@ -489,9 +489,9 @@ In neither case can a contributor change anything on your site without your revi
 
 **Keep previews sanitized**
 
-Keep the [`sanitize_preview` option](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) at its default of `true`. Turning it off lets a contributor inject scripts into the preview pane, which then run in the browser of anyone who opens that entry — including yours while you review it. That happens as soon as you open a contribution from your [Editorial Workflow board](#reviewing-in-sveltia-cms), and the script runs with your sign-in, which has write access to your repository.
+Keep the [`sanitize_preview` option](https://sveltiacms.app/docs/fields/richtext#sanitize-preview) at its default of `true`. Turning it off lets a contributor inject scripts into the preview pane, which then run in the browser of anyone who opens that entry — including yours while you review it. That happens as soon as you open a contribution from your [Editorial Workflow board](#reviewing-in-sveltia-cms), and the script runs with your sign-in, which has write access to your repository.
 
-See the [security guide](https://sveltiacms.app/en/docs/security) for more on hardening a Sveltia CMS deployment.
+See the [security guide](https://sveltiacms.app/docs/security) for more on hardening a Sveltia CMS deployment.
 
 ### Trying It Out
 
@@ -510,6 +510,6 @@ How you arrange that depends on the backend and on who owns the repository:
 - Netlify/Decap CMS closes a contributor’s pull request when they move an entry back to Draft. Sveltia CMS marks it as a draft instead, which preserves the review discussion.
 - Netlify/Decap CMS supports Open Authoring on GitHub only. Sveltia CMS supports it on GitLab and Gitea/Forgejo as well.
 - Netlify/Decap CMS doesn’t show contributors’ pull requests to maintainers, who review them on the Git service only. Sveltia CMS lists them on the maintainers’ Editorial Workflow board, where the entry can be viewed and edited before the pull request is merged on the Git service. See [Reviewing in Sveltia CMS](#reviewing-in-sveltia-cms).
-- Git Gateway is [not supported](https://sveltiacms.app/en/docs/migration/netlify-decap-cms#features-not-to-be-implemented) in Sveltia CMS, so the Git Gateway alternative for external contributors described in the Decap CMS documentation doesn’t apply.
+- Git Gateway is [not supported](https://sveltiacms.app/docs/migration/netlify-decap-cms#features-not-to-be-implemented) in Sveltia CMS, so the Git Gateway alternative for external contributors described in the Decap CMS documentation doesn’t apply.
 
-Source: https://sveltiacms.app/en/docs/workflows/open
+Source: https://sveltiacms.app/docs/workflows/open

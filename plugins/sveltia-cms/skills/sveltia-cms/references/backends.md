@@ -12,11 +12,11 @@ A backend defines where content is stored and how Sveltia CMS interacts with it.
 
 Sveltia CMS supports the following Git-based backends:
 
-- [GitHub](https://sveltiacms.app/en/docs/backends/github)
-- [GitLab](https://sveltiacms.app/en/docs/backends/gitlab)
-- [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo)
+- [GitHub](https://sveltiacms.app/docs/backends/github)
+- [GitLab](https://sveltiacms.app/docs/backends/gitlab)
+- [Gitea/Forgejo](https://sveltiacms.app/docs/backends/gitea-forgejo)
 
-For testing purposes, you can also use the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
+For testing purposes, you can also use the [Test Backend](https://sveltiacms.app/docs/backends/test).
 
 Some features only work with specific backends.
 
@@ -30,19 +30,19 @@ Also, Sveltia CMS does not support the undocumented custom backend API. The `CMS
 
 All the configuration options for backends can be set in the `backend` option of the CMS configuration file. Here is a basic example of configuring the GitHub backend:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -51,7 +51,7 @@ repo = "user/repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -68,21 +68,21 @@ The following sections describe some common configuration options available for 
 
 By default, Sveltia CMS interacts with the repository’s default branch (usually `main` or `master`). You can specify a different branch using the `branch` option in the backend configuration:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   branch: develop
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 branch = "develop"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -92,7 +92,7 @@ branch = "develop"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -108,11 +108,11 @@ If your repository holds more than one site, or the site lives in a subdirectory
 
 Sveltia CMS then treats that directory as the root of the repository. Every path in the configuration, such as a collection’s `folder` or the `media_folder`, is relative to it, and nothing outside it shows up in the CMS.
 
-The option is available for all the Git-based backends and the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
+The option is available for all the Git-based backends and the [Test Backend](https://sveltiacms.app/docs/backends/test).
 
 For example, with a site in `apps/blog`, a collection whose files live in `apps/blog/content/posts` is configured with `folder: content/posts`:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -122,7 +122,7 @@ collections:
     folder: content/posts
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
@@ -133,7 +133,7 @@ name = "posts"
 folder = "content/posts"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -144,7 +144,7 @@ folder = "content/posts"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -157,7 +157,7 @@ folder = "content/posts"
 
 The path is relative to the repository root, and it can’t climb out of the repository with `..`. Likewise, the other paths in the configuration can’t lead outside the directory with `..`, because the CMS doesn’t list the files there. If the directory doesn’t exist on the branch, the CMS says so after you sign in.
 
-With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the path also becomes part of branch names. Git doesn’t allow certain characters in a branch name, so no part of the path can:
+With [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), the path also becomes part of branch names. Git doesn’t allow certain characters in a branch name, so no part of the path can:
 
 - start with a dot
 - end with `.lock`
@@ -168,17 +168,17 @@ With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), t
 Each site in the monorepo can have its own CMS with its own `root_dir`, and they don’t get in each other’s way:
 
 - Only the files in the directory are listed when the CMS loads, which saves listing the whole of a big monorepo.
-- A commit made to another part of the repository doesn’t make the CMS reload its content, because only the directory is checked for changes. The [deployment status](https://sveltiacms.app/en/docs/deployments) also stays on the last commit that changed the directory, as a build for such a commit is usually skipped.
-- With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the directory is part of the branch name, e.g. `cms/apps/blog/posts/hello-world`. Two sites with a collection of the same name therefore don’t share branches or list each other’s unpublished entries.
+- A commit made to another part of the repository doesn’t make the CMS reload its content, because only the directory is checked for changes. The [deployment status](https://sveltiacms.app/docs/deployments) also stays on the last commit that changed the directory, as a build for such a commit is usually skipped.
+- With [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), the directory is part of the branch name, e.g. `cms/apps/blog/posts/hello-world`. Two sites with a collection of the same name therefore don’t share branches or list each other’s unpublished entries.
   - An entry saved before you set the option keeps its branch and stays on the board, as long as all its files are in the directory.
   - An entry whose pull request also changes a file outside the directory can’t be published from the CMS, because the change can’t be shown.
 - Each site gets a local cache of its own in the browser.
 
 Commits are still made to the repository as a whole. The `{{path}}` [template tag](#available-template-tags) in commit messages is the path from the repository root, e.g. `apps/blog/content/posts/hello-world.md`. To tell the sites apart in the Git history, you can also put the site name in the [commit messages](#commit-messages).
 
-With the [local workflow](https://sveltiacms.app/en/docs/workflows/local), select the root directory of the repository, not the directory of the site, when the CMS asks for it. The CMS finds the site’s directory within it.
+With the [local workflow](https://sveltiacms.app/docs/workflows/local), select the root directory of the repository, not the directory of the site, when the CMS asks for it. The CMS finds the site’s directory within it.
 
-If the sites are deployed separately, for example as several Netlify sites built from the same repository, set the [`preview_context`](https://sveltiacms.app/en/docs/deployments/previews#specifying-a-status-context) option so the CMS links to the right [deploy preview](https://sveltiacms.app/en/docs/deployments/previews). A build that was canceled or skipped because the commit didn’t touch the site is ignored either way.
+If the sites are deployed separately, for example as several Netlify sites built from the same repository, set the [`preview_context`](https://sveltiacms.app/docs/deployments/previews#specifying-a-status-context) option so the CMS links to the right [deploy preview](https://sveltiacms.app/docs/deployments/previews). A build that was canceled or skipped because the commit didn’t touch the site is ignored either way.
 
 **Warning**
 
@@ -195,21 +195,21 @@ By default, Sveltia CMS allows users to sign in using either OAuth or an access 
 
 For example, to allow only OAuth sign-in and disable access token authentication:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   auth_methods: [oauth]
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 auth_methods = ["oauth"]
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -219,7 +219,7 @@ auth_methods = ["oauth"]
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -231,21 +231,21 @@ auth_methods = ["oauth"]
 
 To allow only access token sign-in and disable OAuth:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   auth_methods: [token]
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 auth_methods = ["token"]
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -255,7 +255,7 @@ auth_methods = ["token"]
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -277,13 +277,13 @@ When a user signs in with OAuth, Sveltia CMS opens an authorization URL made of 
 | GitLab        | `https://api.netlify.com` | `auth`                  |
 | Gitea/Forgejo | `https://gitea.com`       | `login/oauth/authorize` |
 
-With [PKCE authorization](https://sveltiacms.app/en/docs/backends/gitlab#pkce-authorization) (`auth_type: pkce`), the GitLab defaults are `https://gitlab.com` and `oauth/authorize` instead, because the CMS talks to GitLab directly.
+With [PKCE authorization](https://sveltiacms.app/docs/backends/gitlab#pkce-authorization) (`auth_type: pkce`), the GitLab defaults are `https://gitlab.com` and `oauth/authorize` instead, because the CMS talks to GitLab directly.
 
-With the [`forgejo` backend name](https://sveltiacms.app/en/docs/backends/gitea-forgejo#forgejo-backend-name), the default `base_url` is derived from `api_root` instead, e.g. `https://codeberg.org` from `https://codeberg.org/api/v1`.
+With the [`forgejo` backend name](https://sveltiacms.app/docs/backends/gitea-forgejo#forgejo-backend-name), the default `base_url` is derived from `api_root` instead, e.g. `https://codeberg.org` from `https://codeberg.org/api/v1`.
 
 You usually only need to change `base_url`. Set `auth_endpoint` if your OAuth client or Git service serves the authorization page at a different path:
 
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: gitlab
   repo: owner/repo
@@ -291,7 +291,7 @@ backend:
   auth_endpoint: gitlab/oauth/authorize
 ```
 
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "gitlab"
 repo = "owner/repo"
@@ -299,7 +299,7 @@ base_url = "https://auth.example.com"
 auth_endpoint = "gitlab/oauth/authorize"
 ```
 
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "gitlab",
@@ -310,7 +310,7 @@ auth_endpoint = "gitlab/oauth/authorize"
 }
 ```
 
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "gitlab",
@@ -327,25 +327,25 @@ The `auth_endpoint` option must be a path relative to `base_url`, not a full URL
 
 #### Site Domain
 
-With the [authorization code flow](https://sveltiacms.app/en/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds the OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
+With the [authorization code flow](https://sveltiacms.app/docs/backends/github#authorization-code-flow) on GitHub and GitLab, Sveltia CMS sends the site’s domain to the OAuth client as the `site_id` query parameter. Netlify uses it to find the site that holds the OAuth app credentials, and [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) can check it against its list of allowed domains. PKCE authorization and access token sign-in don’t use it.
 
 By default, the domain is the current hostname, or `cms.netlify.com` if the CMS is running on `localhost`. To send a different domain, set the `site_domain` option. You might need this when the CMS is served from a preview URL that isn’t registered with the OAuth client:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   site_domain: www.example.com
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 site_domain = "www.example.com"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -355,7 +355,7 @@ site_domain = "www.example.com"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -375,7 +375,7 @@ There are a couple of options to customize the Git commit messages generated by 
 
 The `commit_messages` option allows you to define templates for various actions. Here’s the default configuration:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   commit_messages:
     create: 'Create {{collection}} "{{slug}}"'
@@ -386,7 +386,7 @@ backend:
     openAuthoring: '{{message}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [backend.commit_messages]
 create = "Create {{collection}} \"{{slug}}\""
 update = "Update {{collection}} \"{{slug}}\""
@@ -396,7 +396,7 @@ deleteMedia = "Delete \"{{path}}\""
 openAuthoring = "{{message}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "commit_messages": {
@@ -411,7 +411,7 @@ openAuthoring = "{{message}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     commit_messages: {
@@ -430,7 +430,7 @@ openAuthoring = "{{message}}"
 
 - `create`, `update`, `delete`: Used when creating, updating or deleting entries in collections.
 - `uploadMedia`, `deleteMedia`: Used when uploading or deleting media assets.
-- `openAuthoring`: Wraps the message generated by one of the types above when the commit is made by an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, so you can record who wrote it. `{{message}}` is that generated message. The default template is `{{message}}` on its own, which changes nothing.
+- `openAuthoring`: Wraps the message generated by one of the types above when the commit is made by an [Open Authoring](https://sveltiacms.app/docs/workflows/open) contributor, so you can record who wrote it. `{{message}}` is that generated message. The default template is `{{message}}` on its own, which changes nothing.
 
 **Tip**
 
@@ -460,7 +460,7 @@ The following table summarizes which tags are supported for each commit type:
 
 You can localize the commit messages into your language by changing the templates. For example, to use French messages:
 
-```yaml [YAML]
+```yaml YAML
 backend:
   commit_messages:
     create: 'Créer {{collection}} « {{slug}} »'
@@ -471,7 +471,7 @@ backend:
     openAuthoring: '{{message}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [backend.commit_messages]
 create = "Créer {{collection}} « {{slug}} »"
 update = "Mettre à jour {{collection}} « {{slug}} »"
@@ -481,7 +481,7 @@ deleteMedia = "Supprimer « {{path}} »"
 openAuthoring = "{{message}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "commit_messages": {
@@ -496,7 +496,7 @@ openAuthoring = "{{message}}"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     commit_messages: {
@@ -519,21 +519,21 @@ The messages generated from the templates are often the same for every change to
 - `prefix`: Users can enter a note, such as an issue number, that is added before the generated message, with a space in between. A preview shows the message as it will be recorded.
 - `suffix`: Same as `prefix`, but the note is added after the generated message.
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   prompt_commit_messages: prefix
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 prompt_commit_messages = "prefix"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -543,7 +543,7 @@ prompt_commit_messages = "prefix"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -561,32 +561,32 @@ How the prompt works:
 - The text box can be left empty, in which case the generated message is used as is.
 - With `prefix` and `suffix`, the note entered last is filled in again for the next commit, because several changes in a row often belong to the same issue. It’s kept until the page is reloaded.
 - Canceling the dialog cancels the save, deletion or upload, and nothing is committed. In the Content Editor, the changes are kept so you can save them again.
-- With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the message is also used as the title of the pull request when it’s opened, and the merge commit takes that title when the entry is published. Deleting several entries at once asks only once.
+- With the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), the message is also used as the title of the pull request when it’s opened, and the merge commit takes that title when the entry is published. Deleting several entries at once asks only once.
 - The [`openAuthoring`](#commit-messages) template and the [`[skip ci]` prefix](#skipping-ci-cd) are applied to the message the user enters as well.
-- The [History panel](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) of the Content Editor shows the first line of each commit’s message, so the history of an entry can be followed at a glance.
-- With the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), users are only asked when [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits) are turned on.
+- The [History panel](https://sveltiacms.app/docs/ui/content-editor#sidebar) of the Content Editor shows the first line of each commit’s message, so the history of an entry can be followed at a glance.
+- With the [local development workflow](https://sveltiacms.app/docs/workflows/local), users are only asked when [Git commits](https://sveltiacms.app/docs/workflows/local#git-commits) are turned on.
 
-The default is `false`, which commits the generated messages without asking. The option is not available with the [Test Backend](https://sveltiacms.app/en/docs/backends/test).
+The default is `false`, which commits the generated messages without asking. The option is not available with the [Test Backend](https://sveltiacms.app/docs/backends/test).
 
 ##### Signing Off Commits
 
 Some projects require every commit to be signed off under the [Developer Certificate of Origin](https://developercertificate.org/) (DCO). Set the `signoff_commits` option to `true` to add a `Signed-off-by` trailer with the name and email of the signed-in user to each commit made with Sveltia CMS:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   signoff_commits: true
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 signoff_commits = true
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -596,7 +596,7 @@ signoff_commits = true
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -619,33 +619,33 @@ How it works:
 - The trailer is added after a blank line, or to the trailers the message already ends with. If the message already has a sign-off with the user’s email, for example from a [commit message template](#commit-message-templates), no second one is added.
 - The name is the user’s display name on the Git hosting service, or their username if no display name is set.
 - The email comes from the user’s profile on the Git hosting service. If it’s not available, for example on GitHub when the user hasn’t made their email public, the commit is made without the trailer and a warning is shown in the browser console.
-- With the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the merge commit made when an entry is published doesn’t get the trailer.
+- With the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), the merge commit made when an entry is published doesn’t get the trailer.
 
-The default is `false`. The option is available with the GitHub, GitLab and Gitea/Forgejo backends. It doesn’t apply to [Git commits](https://sveltiacms.app/en/docs/workflows/local#git-commits) made with the local development workflow.
+The default is `false`. The option is available with the GitHub, GitLab and Gitea/Forgejo backends. It doesn’t apply to [Git commits](https://sveltiacms.app/docs/workflows/local#git-commits) made with the local development workflow.
 
 ##### Skipping CI/CD
 
-It’s also possible to add the `[skip ci]` prefix to commit messages to prevent triggering CI/CD pipelines. See the [deployments guide](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) for more details.
+It’s also possible to add the `[skip ci]` prefix to commit messages to prevent triggering CI/CD pipelines. See the [deployments guide](https://sveltiacms.app/docs/deployments#disabling-automatic-deployments) for more details.
 
 #### Including Credentials in API Requests
 
 By default, Sveltia CMS does not include cookies in API requests to the Git hosting service. If your self-hosted Git service instance requires authentication via cookies, you can set the `include_credentials` option to `true`:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: gitea
   repo: user/repo
   include_credentials: true
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "gitea"
 repo = "user/repo"
 include_credentials = true
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "gitea",
@@ -655,7 +655,7 @@ include_credentials = true
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "gitea",
@@ -667,7 +667,7 @@ include_credentials = true
 
 Your server must also set the [`Access-Control-Allow-Credentials`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Credentials) header in API responses for this to work.
 
-Source: https://sveltiacms.app/en/docs/backends
+Source: https://sveltiacms.app/docs/backends
 
 ---
 
@@ -680,13 +680,13 @@ Gitea and its fork Forgejo are lightweight, self-hosted Git services that are ea
 - Gitea 1.24 or later, or Forgejo 12.0 or later.
 - A Gitea or Forgejo account.
 - A Gitea or Forgejo repository to store the content.
-- Write access to the repository. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them contribute from a fork.
+- Write access to the repository. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/docs/workflows/open) is enabled, which lets them contribute from a fork.
 - Sveltia CMS installed in your project.
 
 If the configured branch is [protected](https://docs.gitea.com/usage/access-control/protected-branches) and doesn’t allow a user to push:
 
-- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
-- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who are allowed to merge into the branch.
+- Collections using the [Simple Workflow](https://sveltiacms.app/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who are allowed to merge into the branch.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -694,7 +694,7 @@ Sveltia CMS requires newer versions of Gitea/Forgejo than Netlify/Decap CMS did 
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to Gitea or Forgejo. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to Gitea or Forgejo. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 #### CORS
 
@@ -704,19 +704,19 @@ In your Gitea or Forgejo instance, you may need to enable Cross-Origin Resource 
 
 The base configuration for the Gitea/Forgejo backend is straightforward. You need to specify the `name` of the backend as `gitea` (or [`forgejo`](#forgejo-backend-name)) and provide the `repo` option with the format `owner/repo`, where `owner` is your Gitea/Forgejo username or organization name, and `repo` is the repository name.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: gitea
   repo: user/repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "gitea"
 repo = "user/repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "gitea",
@@ -725,7 +725,7 @@ repo = "user/repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: "gitea",
@@ -738,7 +738,7 @@ repo = "user/repo"
 
 By default, Sveltia CMS uses the public Gitea instance at `https://gitea.com`. If you use a self-hosted Gitea or Forgejo instance or a hosting service like [Codeberg](https://codeberg.org/), you need to set the `base_url` and `api_root` options in your backend configuration to point to your server URL.
 
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: gitea
   repo: owner/repo
@@ -746,7 +746,7 @@ backend:
   api_root: https://gitea.example.com/api/v1
 ```
 
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "gitea"
 repo = "owner/repo"
@@ -754,7 +754,7 @@ base_url = "https://gitea.example.com"
 api_root = "https://gitea.example.com/api/v1"
 ```
 
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "gitea",
@@ -765,7 +765,7 @@ api_root = "https://gitea.example.com/api/v1"
 }
 ```
 
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "gitea",
@@ -778,7 +778,7 @@ api_root = "https://gitea.example.com/api/v1"
 
 For Codeberg, use the following settings:
 
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: gitea
   repo: owner/repo
@@ -786,7 +786,7 @@ backend:
   api_root: https://codeberg.org/api/v1
 ```
 
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "gitea"
 repo = "owner/repo"
@@ -794,7 +794,7 @@ base_url = "https://codeberg.org"
 api_root = "https://codeberg.org/api/v1"
 ```
 
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "gitea",
@@ -805,7 +805,7 @@ api_root = "https://codeberg.org/api/v1"
 }
 ```
 
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "gitea",
@@ -820,7 +820,7 @@ The API version for Gitea/Forgejo is `v1`, so make sure to include `/api/v1` in 
 
 The `base_url` option is the URL of your Gitea/Forgejo instance, including the subpath if it’s served under one. This is because OAuth sign-in on the Gitea/Forgejo backend always uses [PKCE authorization](#pkce-authorization) without an OAuth client. With the `gitea` backend name, the `base_url` is not inferred from `api_root`, so you have to set both options. The [`forgejo` backend name](#forgejo-backend-name) infers it instead.
 
-The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+The OAuth authorization URL is made of `base_url` and the `auth_endpoint` option, which defaults to `login/oauth/authorize`. You don’t need to set `auth_endpoint` unless your instance uses a different path. Note that it must be a path, not a full URL like the one shown in the Decap CMS documentation. See [OAuth Endpoint](https://sveltiacms.app/docs/backends#oauth-endpoint) for details.
 
 **Breaking change from Netlify/Decap CMS**
 
@@ -833,21 +833,21 @@ Decap CMS 3.15 added a separate `forgejo` backend. Sveltia CMS accepts that name
 - `api_root` is required, because there’s no default instance.
 - `base_url` is optional. It defaults to `api_root` without the `/api/v1` path, e.g. `https://codeberg.org`, so you only need one URL.
 
-```yaml [YAML]{2,4}
+```yaml YAML
 backend:
   name: forgejo
   repo: owner/repo
   api_root: https://codeberg.org/api/v1
 ```
 
-```toml [TOML]{2,4}
+```toml TOML
 [backend]
 name = "forgejo"
 repo = "owner/repo"
 api_root = "https://codeberg.org/api/v1"
 ```
 
-```json [JSON]{3,5}
+```json JSON
 {
   "backend": {
     "name": "forgejo",
@@ -857,7 +857,7 @@ api_root = "https://codeberg.org/api/v1"
 }
 ```
 
-```js [JavaScript]{3,5}
+```js JavaScript
 {
   backend: {
     name: "forgejo",
@@ -873,9 +873,9 @@ Unlike Decap CMS, which defaults the `branch` option to `main` with this backend
 
 **Tip**
 
-If you plan to only [work with your local repository](https://sveltiacms.app/en/docs/workflows/local), you don’t need to set up authentication.
+If you plan to only [work with your local repository](https://sveltiacms.app/docs/workflows/local), you don’t need to set up authentication.
 
-#### Access Token (Quick Start) {#access-token}
+#### Access Token (Quick Start)
 
 If you or a small team of developers are the only users of your CMS instance, you can use an access token for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
@@ -884,13 +884,13 @@ Click the “Sign In with Token” button on the login screen. The prompt dialog
 The scopes depend on your configuration:
 
 - `read:repository`, `write:repository` and `read:user` are always requested.
-- `read:issue` and `write:issue` are added when the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled. The workflow labels its pull requests, and labels live under the issue scope.
+- `read:issue` and `write:issue` are added when the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) is enabled. The workflow labels its pull requests, and labels live under the issue scope.
 
 If you turn the workflow on after generating a token, generate a new one. Otherwise, saving an entry fails with a permission error.
 
-You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
+You can [disable token authentication](https://sveltiacms.app/docs/backends#authentication-methods) if needed.
 
-#### PKCE Authorization (Recommended) {#pkce-authorization}
+#### PKCE Authorization (Recommended)
 
 To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app on Gitea/Forgejo and update your Sveltia CMS configuration file accordingly. Here’s how:
 
@@ -901,21 +901,21 @@ To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app
 
 Then, update your Sveltia CMS configuration file to include the `app_id` option with your Client ID:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: gitea
   repo: owner/repo
   app_id: YOUR_CLIENT_ID
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "gitea"
 repo = "owner/repo"
 app_id = "YOUR_CLIENT_ID"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "gitea",
@@ -925,7 +925,7 @@ app_id = "YOUR_CLIENT_ID"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "gitea",
@@ -957,13 +957,13 @@ Service status checking is not available for Gitea/Forgejo repositories. If you 
 
 ### Workflows
 
-All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the Gitea/Forgejo backend:
+All [content management workflows](https://sveltiacms.app/docs/workflows) are supported with the Gitea/Forgejo backend:
 
-- [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
-- [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
-- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
-- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
-- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
+- [Local Development Workflow](https://sveltiacms.app/docs/workflows/local)
+- [Simple Workflow](https://sveltiacms.app/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/docs/workflows/preview)
+- [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial)
+- [Open Authoring](https://sveltiacms.app/docs/workflows/open)
 
 ### Deployment
 
@@ -972,9 +972,9 @@ Both Gitea and Forgejo support CI/CD pipelines that can be used to automate the 
 - [Gitea Actions](https://docs.gitea.com/usage/actions/overview)
 - [Forgejo Actions](https://forgejo.org/docs/latest/user/actions/reference/)
 
-Entries can link to the [deploy preview](https://sveltiacms.app/en/docs/deployments/previews) built for their pull request, and report whether the build has finished, when the workflow posts the preview address as a commit status. See [Reporting a Preview from Gitea/Forgejo Actions](https://sveltiacms.app/en/docs/deployments/previews#gitea-forgejo-actions).
+Entries can link to the [deploy preview](https://sveltiacms.app/docs/deployments/previews) built for their pull request, and report whether the build has finished, when the workflow posts the preview address as a commit status. See [Reporting a Preview from Gitea/Forgejo Actions](https://sveltiacms.app/docs/deployments/previews#gitea-forgejo-actions).
 
-Source: https://sveltiacms.app/en/docs/backends/gitea-forgejo
+Source: https://sveltiacms.app/docs/backends/gitea-forgejo
 
 ---
 
@@ -986,35 +986,35 @@ GitHub is one of the most popular Git hosting services, and Sveltia CMS provides
 
 - A GitHub account.
 - A GitHub repository to store the content.
-- Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) is enabled, which lets them work on a fork instead.
+- Write access to the repository: the Write, Maintain or Admin role, whether granted directly or through an organization team. Users with read-only access can’t sign in, unless [Open Authoring](https://sveltiacms.app/docs/workflows/open) is enabled, which lets them work on a fork instead.
 - Sveltia CMS installed in your project.
 
 If the configured branch is [protected](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) and doesn’t allow a user to push, e.g. because it requires a pull request:
 
-- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
-- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. GitHub doesn’t tell whether a user can merge a pull request, so the Publish button is still shown. GitHub refuses the merge if the user isn’t allowed to make it.
+- Collections using the [Simple Workflow](https://sveltiacms.app/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) still work, because they commit to branches of their own. GitHub doesn’t tell whether a user can merge a pull request, so the Publish button is still shown. GitHub refuses the merge if the user isn’t allowed to make it.
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitHub. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitHub. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
 The base configuration for the GitHub backend is straightforward. You need to specify the `name` of the backend as `github` and provide the `repo` option with the format `owner/repo`, where `owner` is your GitHub username or organization name, and `repo` is the repository name.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -1023,7 +1023,7 @@ repo = "user/repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -1036,21 +1036,21 @@ repo = "user/repo"
 
 By default, Sveltia CMS uses the public GitHub instance at `https://github.com`. If you use a self-hosted GitHub Enterprise Server instance, you need to set the `api_root` option in your backend configuration to point to your server’s API endpoint.
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: owner/repo
   api_root: https://github.example.com/api/v3
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "owner/repo"
 api_root = "https://github.example.com/api/v3"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -1060,7 +1060,7 @@ api_root = "https://github.example.com/api/v3"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -1078,15 +1078,13 @@ Don’t set the `base_url` option to your GitHub Enterprise Server URL. The `bas
 
 ### Authentication
 
-<!-- There are multiple ways to authenticate with GitHub when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started, but PKCE authorization is recommended if your CMS instance is used by multiple users or non-technical users because it’s more user-friendly and secure. -->
-
 There are multiple ways to authenticate with GitHub when using Sveltia CMS. You can choose the method that best fits your needs. Using an access token is the simplest way to get started. If your CMS instance is used by multiple users or non-technical users, the authorization code flow is recommended, because it’s more user-friendly and secure.
 
 **Tip**
 
-If you plan to only [work with your local repository](https://sveltiacms.app/en/docs/workflows/local), you don’t need to set up authentication.
+If you plan to only [work with your local repository](https://sveltiacms.app/docs/workflows/local), you don’t need to set up authentication.
 
-#### Access Token (Quick Start) {#access-token}
+#### Access Token (Quick Start)
 
 If you or a small team of developers are the only users of your CMS instance, you can use a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (PAT) for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
@@ -1097,7 +1095,7 @@ If you create a [fine-grained token](https://docs.github.com/en/authentication/k
 | Permission | Access | Needed for |
 | --- | --- | --- |
 | Contents | Read and write | Everything: reading and committing entries and assets |
-| Pull requests | Read and write | The [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), which opens, labels, merges and closes a pull request for each entry |
+| Pull requests | Read and write | The [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), which opens, labels, merges and closes a pull request for each entry |
 
 Metadata (read) is added automatically. A classic token needs the `repo` scope, which covers all of the above.
 
@@ -1107,9 +1105,7 @@ With the Editorial Workflow, a token needs pull request access as well as conten
 
 To fix this, edit the token to add the Pull requests permission. The branches already created will be reused the next time each entry is saved.
 
-You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
-
-<!-- ### PKCE Authorization (Recommended) {#pkce-authorization} -->
+You can [disable token authentication](https://sveltiacms.app/docs/backends#authentication-methods) if needed.
 
 #### PKCE Authorization
 
@@ -1117,45 +1113,21 @@ You can [disable token authentication](https://sveltiacms.app/en/docs/backends#a
 
 We’re waiting for GitHub to support client-side PKCE authentication for single-page apps. It was [planned for Q4 2025](https://github.com/github/roadmap/issues/1153), but GitHub has [put the project on hold](https://github.com/orgs/community/discussions/15752). We can’t release this feature until GitHub provides this support. In the meantime, please use the other authentication methods described in this document.
 
-<!--
-
-GitHub added [client-side PKCE support](https://github.com/github/roadmap/issues/1153) in January 2026, so you no longer have to rely on the [authorization code flow](#authorization-code-flow) explained below, which requires a backend server to keep the client secret safe.
-
-To use PKCE authorization with Sveltia CMS, you need to register a new app on GitHub and update your Sveltia CMS configuration file accordingly. Here’s how:
-
-1. Open the [Register new GitHub App page](https://github.com/settings/apps/new?name=Sveltia+CMS+Authenticator+for+YOUR_SITE&url=https://github.com/sveltia/sveltia-cms&webhook_active=false&contents=write) on GitHub. This link pre-fills some fields for you.
-1. Change the **App name** to include your site name or any name you like.
-1. Fill in the **Callback URL** with your actual admin page URL: `https://YOUR_DOMAIN/admin/`
-1. Under **Where can this GitHub App be installed?**, select **Any account** if you want to allow both personal and organization accounts to install the app.
-1. Click **Create GitHub App**.
-1. Copy the **Client ID**. We will need it later.
-
-Move on to the next step to install the app:
-
-1. Click **Install App** on the left sidebar.
-1. Choose a user or organization to install the app.
-1. Choose the repositories you want to manage with Sveltia CMS. You can select all repositories or just a specific one.
-1. Click **Install**.
-
-Next, update your Sveltia CMS configuration file to add the `auth_type` and `app_id` options under the backend configuration. If you have previously added `base_url`, you can remove it as it’s no longer needed.
-
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: github
   repo: owner/repo
   auth_type: pkce # Required for PKCE auth
   app_id: YOUR_CLIENT_ID # Client ID you copied earlier
 ```
-
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "github"
 repo = "owner/repo"
 auth_type = "pkce"
 app_id = "YOUR_CLIENT_ID"
 ```
-
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -1165,8 +1137,7 @@ app_id = "YOUR_CLIENT_ID"
   }
 }
 ```
-
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -1177,20 +1148,6 @@ app_id = "YOUR_CLIENT_ID"
 }
 ```
 
-Save the configuration file, deploy it to your site and reload the CMS. You should now be able to sign in with GitHub using the PKCE authorization flow!
-
-Users’ OAuth tokens will be automatically renewed as needed, so there’s no need to worry about token expiration.
-
-**Tip**
-
-If you have installed Sveltia CMS Authenticator or any other third-party client, you can remove it as it’s no longer needed for GitHub authentication. Sveltia CMS will handle the PKCE flow directly in the browser.
-
-#### Authorization Code Flow (Legacy) {#authorization-code-flow}
-
-PKCE authorization is the recommended way to authenticate with GitHub. However, if you need to use the authorization code flow for some reason, you can follow the instructions below. This method requires a backend server to keep the client secret safe.
-
--->
-
 #### Authorization Code Flow
 
 The authorization code flow requires you to register a GitHub App or an OAuth app on GitHub and deploy an OAuth client server to handle the authentication process.
@@ -1199,25 +1156,25 @@ There are multiple options for the OAuth client, including our own Sveltia CMS A
 
 ##### Using Sveltia CMS Authenticator
 
-We provide our own OAuth client called [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) that you can deploy on Cloudflare Workers. It works with a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps), which only gets access to the repositories it’s installed on, with the permissions it needs. Users therefore don’t have to grant access to all of their repositories, including private ones, as they do with an OAuth app. Expired access tokens are renewed automatically. Note that [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) isn’t supported with a GitHub App.
+We provide our own OAuth client called [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) that you can deploy on Cloudflare Workers. It works with a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps), which only gets access to the repositories it’s installed on, with the permissions it needs. Users therefore don’t have to grant access to all of their repositories, including private ones, as they do with an OAuth app. Expired access tokens are renewed automatically. Note that [Open Authoring](https://sveltiacms.app/docs/workflows/open) isn’t supported with a GitHub App.
 
 Follow the instructions in the repository to register a GitHub App, deploy the authenticator and update your CMS configuration file to include the `base_url` option pointing to your authenticator URL:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: github
   repo: owner/repo
   base_url: YOUR_CLIENT_URL # URL of your OAuth client
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "github"
 repo = "owner/repo"
 base_url = "YOUR_CLIENT_URL"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -1227,7 +1184,7 @@ base_url = "YOUR_CLIENT_URL"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -1243,7 +1200,7 @@ You can also use [third-party OAuth clients](https://decapcms.org/docs/external-
 
 The setup process is similar to using Sveltia CMS Authenticator. You need to register a new OAuth app on GitHub and configure the third-party client with the app credentials. Then, update your CMS configuration to include the `base_url` option pointing to your OAuth client URL, like in the example above.
 
-If the client serves the authorization page at a path other than `/auth`, also set the [`auth_endpoint`](https://sveltiacms.app/en/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option as well.
+If the client serves the authorization page at a path other than `/auth`, also set the [`auth_endpoint`](https://sveltiacms.app/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/docs/backends#site-domain) option as well.
 
 **Disclaimer**
 
@@ -1265,7 +1222,7 @@ If your site is hosted on Netlify, you don’t need to install Sveltia CMS Authe
 
 No configuration changes are needed in Sveltia CMS. Just make sure `base_url` is not set in your configuration file, so the CMS uses Netlify as the OAuth client. See Netlify’s [official guide](https://docs.netlify.com/manage/security/secure-access-to-sites/oauth-provider-tokens/) for more details.
 
-Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
+Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/docs/backends#site-domain) option.
 
 **Disclaimer**
 
@@ -1273,9 +1230,9 @@ We are not affiliated with Netlify and do not endorse or maintain this authentic
 
 #### Sveltia CMS Additions
 
-If your editors don’t have GitHub accounts, use [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), a free service you deploy to Cloudflare Workers. People sign in with a username and password it manages, and get a GitHub token limited to your repository and to their role. It also adds entry locks, comments and shared credentials.
+If your editors don’t have GitHub accounts, use [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), a free service you deploy to Cloudflare Workers. People sign in with a username and password it manages, and get a GitHub token limited to your repository and to their role. It also adds entry locks, comments and shared credentials.
 
-It’s set up with `auth_type: additions` and the service’s URL as `base_url`. See [Setting Up Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions/setup) for details.
+It’s set up with `auth_type: additions` and the service’s URL as `base_url`. See [Setting Up Sveltia CMS Additions](https://sveltiacms.app/docs/additions/setup) for details.
 
 ### Features
 
@@ -1297,13 +1254,13 @@ Service status checking is available for GitHub repositories, unless you’re us
 
 ### Workflows
 
-All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitHub backend:
+All [content management workflows](https://sveltiacms.app/docs/workflows) are supported with the GitHub backend:
 
-- [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
-- [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
-- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
-- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
-- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
+- [Local Development Workflow](https://sveltiacms.app/docs/workflows/local)
+- [Simple Workflow](https://sveltiacms.app/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/docs/workflows/preview)
+- [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial)
+- [Open Authoring](https://sveltiacms.app/docs/workflows/open)
 
 ### Deployment
 
@@ -1313,7 +1270,7 @@ There are also other deployment options, including [Cloudflare Pages](https://de
 
 Choose the deployment platform that best fits your needs and follow their documentation to set up continuous deployment for your Sveltia CMS site.
 
-Source: https://sveltiacms.app/en/docs/backends/github
+Source: https://sveltiacms.app/docs/backends/github
 
 ---
 
@@ -1331,30 +1288,30 @@ GitLab is a popular Git hosting service that offers a wide range of features for
 
 If the configured branch is [protected](https://docs.gitlab.com/user/project/repository/branches/protected/) and doesn’t allow a user to push, e.g. when only Maintainers can push to it:
 
-- Collections using the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
-- Collections using the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who can merge the entry’s merge request.
+- Collections using the [Simple Workflow](https://sveltiacms.app/docs/workflows/simple) and the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) are read-only for that user, because they commit to the branch directly.
+- Collections using the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) still work, because they commit to branches of their own. However, the Publish button is only shown to users who can merge the entry’s merge request.
 
 #### CSP
 
-If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitLab. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to allow requests to GitLab. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Configuration
 
 The base configuration for the GitLab backend is straightforward. You need to specify the `name` of the backend as `gitlab` and provide the `repo` option with the format `owner/repo`, where `owner` is your GitLab username or organization name, and `repo` is the repository name.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: gitlab
   repo: user/repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "gitlab"
 repo = "user/repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "gitlab",
@@ -1363,7 +1320,7 @@ repo = "user/repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: "gitlab",
@@ -1378,7 +1335,7 @@ If you use subgroups, include them in the `owner` part, e.g. `group/subgroup/rep
 
 By default, Sveltia CMS uses the public GitLab instance at `https://gitlab.com`. If you use a self-hosted GitLab instance, you need to set the `base_url` and `api_root` options in your backend configuration to point to your GitLab server URL.
 
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: gitlab
   repo: owner/repo
@@ -1386,7 +1343,7 @@ backend:
   api_root: https://gitlab.example.com/api/v4
 ```
 
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "gitlab"
 repo = "owner/repo"
@@ -1394,7 +1351,7 @@ base_url = "https://gitlab.example.com"
 api_root = "https://gitlab.example.com/api/v4"
 ```
 
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "gitlab",
@@ -1405,7 +1362,7 @@ api_root = "https://gitlab.example.com/api/v4"
 }
 ```
 
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "gitlab",
@@ -1425,7 +1382,7 @@ The `base_url` option points to your GitLab server only when you use [PKCE autho
 - The `base_url` is not inferred from `api_root`, so you must set it for a self-hosted instance. Otherwise, it defaults to `https://gitlab.com`.
 - If your instance is served under a subpath, include the subpath in `base_url` rather than `auth_endpoint`.
 
-With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead. The client must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/en/docs/backends#oauth-endpoint) for details.
+With the [authorization code flow](#authorization-code-flow), `base_url` is the URL of your OAuth client instead. The client must be configured to use your GitLab server. See [OAuth Endpoint](https://sveltiacms.app/docs/backends#oauth-endpoint) for details.
 
 ### Authentication
 
@@ -1433,13 +1390,13 @@ There are multiple ways to authenticate with GitLab when using Sveltia CMS. You 
 
 **Tip**
 
-If you plan to only [work with your local repository](https://sveltiacms.app/en/docs/workflows/local), you don’t need to set up authentication.
+If you plan to only [work with your local repository](https://sveltiacms.app/docs/workflows/local), you don’t need to set up authentication.
 
 **Breaking change from Netlify/Decap CMS**
 
 The deprecated client-side implicit grant flow for the GitLab backend is not supported in Sveltia CMS. It was [removed from GitLab 15.0](https://gitlab.com/gitlab-org/gitlab/-/issues/344609) in May 2022. Use PKCE authorization instead.
 
-#### Access Token (Quick Start) {#access-token}
+#### Access Token (Quick Start)
 
 If you or a small team of developers are the only users of your CMS instance, you can use a [personal access token](https://docs.gitlab.com/user/profile/personal_access_tokens/) (PAT) for authentication. This method is straightforward and doesn’t require setting up an OAuth app or updating the CMS configuration.
 
@@ -1449,9 +1406,9 @@ Click the “Sign In with Token” button on the login screen. The prompt dialog
 
 GitLab’s [fine-grained personal access tokens](https://docs.gitlab.com/auth/tokens/fine_grained_access_tokens/) don’t work with Sveltia CMS yet. They can’t read the project permissions the CMS checks when you sign in, because GitLab hasn’t finished adding fine-grained token support to its GraphQL API. Use a legacy token instead. See [this discussion](https://github.com/sveltia/sveltia-cms/discussions/1121) for details.
 
-You can [disable token authentication](https://sveltiacms.app/en/docs/backends#authentication-methods) if needed.
+You can [disable token authentication](https://sveltiacms.app/docs/backends#authentication-methods) if needed.
 
-#### PKCE Authorization (Recommended) {#pkce-authorization}
+#### PKCE Authorization (Recommended)
 
 To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app on GitLab and update your Sveltia CMS configuration file accordingly. Here’s how:
 
@@ -1463,7 +1420,7 @@ To use PKCE authorization with Sveltia CMS, you need to register a new OAuth app
 
 Then, update your Sveltia CMS configuration file to include the `auth_type` and `app_id` options:
 
-```yaml [YAML]{4-5}
+```yaml YAML
 backend:
   name: gitlab
   repo: owner/repo
@@ -1471,7 +1428,7 @@ backend:
   app_id: YOUR_CLIENT_ID
 ```
 
-```toml [TOML]{4-5}
+```toml TOML
 [backend]
 name = "gitlab"
 repo = "owner/repo"
@@ -1479,7 +1436,7 @@ auth_type = "pkce"
 app_id = "YOUR_CLIENT_ID"
 ```
 
-```json [JSON]{5-6}
+```json JSON
 {
   "backend": {
     "name": "gitlab",
@@ -1490,7 +1447,7 @@ app_id = "YOUR_CLIENT_ID"
 }
 ```
 
-```js [JavaScript]{5-6}
+```js JavaScript
 {
   backend: {
     name: "gitlab",
@@ -1503,7 +1460,7 @@ app_id = "YOUR_CLIENT_ID"
 
 Users’ OAuth tokens will be automatically renewed as needed, so there’s no need to worry about token expiration.
 
-#### Authorization Code Flow (Legacy) {#authorization-code-flow}
+#### Authorization Code Flow (Legacy)
 
 PKCE authorization is the recommended way to authenticate with GitLab. However, if you need to use the authorization code flow for some reason, you can follow the instructions below. This method requires a backend server to keep the client secret safe.
 
@@ -1515,21 +1472,21 @@ You can use [third-party OAuth clients](https://decapcms.org/docs/external-oauth
 
 Register a new OAuth app on GitLab and configure the client with the app credentials. Then, update your CMS configuration file to include the `base_url` option pointing to your OAuth client URL:
 
-```yaml [YAML]{4}
+```yaml YAML
 backend:
   name: gitlab
   repo: owner/repo
   base_url: YOUR_CLIENT_URL
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [backend]
 name = "gitlab"
 repo = "owner/repo"
 base_url = "YOUR_CLIENT_URL"
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "backend": {
     "name": "gitlab",
@@ -1539,7 +1496,7 @@ base_url = "YOUR_CLIENT_URL"
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   backend: {
     name: "gitlab",
@@ -1549,7 +1506,7 @@ base_url = "YOUR_CLIENT_URL"
 }
 ```
 
-The authorization URL is `base_url` followed by `/auth` by default, which is what clients made for Netlify/Decap CMS expect. If the client uses a different path, set the [`auth_endpoint`](https://sveltiacms.app/en/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option as well.
+The authorization URL is `base_url` followed by `/auth` by default, which is what clients made for Netlify/Decap CMS expect. If the client uses a different path, set the [`auth_endpoint`](https://sveltiacms.app/docs/backends#oauth-endpoint) option. If the client checks the site domain, you may need to set the [`site_domain`](https://sveltiacms.app/docs/backends#site-domain) option as well.
 
 **Disclaimer**
 
@@ -1569,7 +1526,7 @@ If your site is hosted on Netlify, you don’t need to install an OAuth client. 
 
 No changes are needed in Sveltia CMS, as long as `auth_type` and `base_url` are not set in your configuration file.
 
-Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/en/docs/backends#site-domain) option.
+Netlify identifies the site by its domain. If the CMS is served from a domain other than the one of your Netlify site, set the [`site_domain`](https://sveltiacms.app/docs/backends#site-domain) option.
 
 **Disclaimer**
 
@@ -1597,13 +1554,13 @@ Service status checking is available for GitLab repositories, unless you’re us
 
 ### Workflows
 
-All [content management workflows](https://sveltiacms.app/en/docs/workflows) are supported with the GitLab backend:
+All [content management workflows](https://sveltiacms.app/docs/workflows) are supported with the GitLab backend:
 
-- [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local)
-- [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple)
-- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview)
-- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial)
-- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open)
+- [Local Development Workflow](https://sveltiacms.app/docs/workflows/local)
+- [Simple Workflow](https://sveltiacms.app/docs/workflows/simple)
+- [Preview Workflow](https://sveltiacms.app/docs/workflows/preview)
+- [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial)
+- [Open Authoring](https://sveltiacms.app/docs/workflows/open)
 
 ### Deployment
 
@@ -1613,7 +1570,7 @@ There are also other deployment options, including [Cloudflare Pages](https://de
 
 Choose the deployment platform that best fits your needs and follow their documentation to set up continuous deployment for your Sveltia CMS site.
 
-Source: https://sveltiacms.app/en/docs/backends/gitlab
+Source: https://sveltiacms.app/docs/backends/gitlab
 
 ---
 
@@ -1627,17 +1584,17 @@ The Test backend also powers our [demo site](https://demo.sveltiacms.app/), wher
 
 The configuration for the Test backend is straightforward. You only need to specify the backend name in your Sveltia CMS configuration file. No repository name or authentication details are required.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: test-repo
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "test-repo"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "test-repo"
@@ -1645,7 +1602,7 @@ name = "test-repo"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: "test-repo",
@@ -1693,10 +1650,10 @@ This is how our [demo site](https://demo.sveltiacms.app/) gets its sample posts,
 
 The `window.repoFiles` object used to populate the Test backend in Netlify/Decap CMS is not supported. Use the seed manifest instead.
 
-If you want to test the CMS with a local Git repository, you can use the [Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local) instead. It lets you make changes to local files with Sveltia CMS while it’s running on a local development server.
+If you want to test the CMS with a local Git repository, you can use the [Local Development Workflow](https://sveltiacms.app/docs/workflows/local) instead. It lets you make changes to local files with Sveltia CMS while it’s running on a local development server.
 
 ### Workflows
 
-Only the [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple) is supported with the Test backend.
+Only the [Simple Workflow](https://sveltiacms.app/docs/workflows/simple) is supported with the Test backend.
 
-Source: https://sveltiacms.app/en/docs/backends/test
+Source: https://sveltiacms.app/docs/backends/test

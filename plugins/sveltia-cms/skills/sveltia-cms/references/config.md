@@ -16,11 +16,11 @@ We plan to introduce a graphical configuration editor in a future release, allow
 
 #### Netlify CMS and Decap CMS
 
-Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration files. In most cases, your existing `config.yml` file from Netlify/Decap CMS works with Sveltia CMS as is. However, some options may have been deprecated or replaced in Sveltia CMS, so review the configuration file and make any necessary adjustments. See the [migration guide](https://sveltiacms.app/en/docs/migration/netlify-decap-cms) for details.
+Sveltia CMS is designed to be compatible with Netlify/Decap CMS configuration files. In most cases, your existing `config.yml` file from Netlify/Decap CMS works with Sveltia CMS as is. However, some options may have been deprecated or replaced in Sveltia CMS, so review the configuration file and make any necessary adjustments. See the [migration guide](https://sveltiacms.app/docs/migration/netlify-decap-cms) for details.
 
 #### Pages CMS
 
-Pages CMS was inspired by Netlify CMS and shares a similar configuration structure. The `.pages.yml` file can’t be used as is, but most of its options have a direct equivalent in Sveltia CMS. See the [migration guide](https://sveltiacms.app/en/docs/migration/pages-cms) for how to convert it. There are also [AI tools](https://sveltiacms.app/en/docs/working-with-ai) available to assist with this process.
+Pages CMS was inspired by Netlify CMS and shares a similar configuration structure. The `.pages.yml` file can’t be used as is, but most of its options have a direct equivalent in Sveltia CMS. See the [migration guide](https://sveltiacms.app/docs/migration/pages-cms) for how to convert it. There are also [AI tools](https://sveltiacms.app/docs/working-with-ai) available to assist with this process.
 
 ### Supported Formats
 
@@ -124,9 +124,9 @@ We don’t support JSONC, JSON5 or other JSON variants — only standard JSON th
 
 #### JavaScript/TypeScript
 
-Instead of using a static configuration file, you can also provide the CMS configuration as a JavaScript object when [manually initializing](https://sveltiacms.app/en/docs/api/initialization) the CMS. It gives you the most flexibility and control over the configuration, allowing you to dynamically generate or modify the configuration based on your application logic.
+Instead of using a static configuration file, you can also provide the CMS configuration as a JavaScript object when [manually initializing](https://sveltiacms.app/docs/api/initialization) the CMS. It gives you the most flexibility and control over the configuration, allowing you to dynamically generate or modify the configuration based on your application logic.
 
-The field configuration for [custom editor components](https://sveltiacms.app/en/docs/api/editor-components) also uses JavaScript objects.
+The field configuration for [custom editor components](https://sveltiacms.app/docs/api/editor-components) also uses JavaScript objects.
 
 ### Config URL
 
@@ -246,7 +246,7 @@ https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
 
 #### TypeScript Support
 
-When using the `@sveltia/cms` package in a TypeScript-enabled project, you can get type checking and autocomplete for the [API](https://sveltiacms.app/en/docs/api), including the configuration object when [manually initializing](https://sveltiacms.app/en/docs/api/initialization) the CMS.
+When using the `@sveltia/cms` package in a TypeScript-enabled project, you can get type checking and autocomplete for the [API](https://sveltiacms.app/docs/api), including the configuration object when [manually initializing](https://sveltiacms.app/docs/api/initialization) the CMS.
 
 The type definitions are generated from the JSDoc comments in the source code, ensuring they are accurate and up to date with the latest CMS version.
 
@@ -260,7 +260,7 @@ Each message names the collection, file and field it applies to, so you can go s
 
 Two sets of checks run. The first validates the whole configuration against the same [JSON schema](#json-schema) your editor uses, published alongside the CMS version you’re running. It catches wrong value types, values outside an allowed set and missing required options.
 
-A [custom field type](https://sveltiacms.app/en/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
+A [custom field type](https://sveltiacms.app/docs/api/field-types#field-schema) registered with its own schema joins these checks, so the options it accepts are validated alongside the built-in ones.
 
 The second set covers the rules a schema can’t express. Most of these mistakes wouldn’t fail at all otherwise. Instead, they would quietly give you an empty collection, a random slug or a validation rule that never runs:
 
@@ -344,7 +344,7 @@ filter: { field: category, value: [News, Tutorial] }
 
 [JSON schema validation in your editor](#json-schema) reports an unknown option as you type, before the CMS ever loads the file.
 
-Source: https://sveltiacms.app/en/docs/config-basics
+Source: https://sveltiacms.app/docs/config-basics
 
 ---
 
@@ -360,12 +360,12 @@ In Netlify/Decap CMS, this feature is known as **summary string transformations*
 
 String transformations can be applied in the following contexts:
 
-- [Entry Collection](https://sveltiacms.app/en/docs/collections/entries): the `summary`, `slug`, `path` and `preview_path` options
-- [Compute Field](https://sveltiacms.app/en/docs/fields/compute): the `value` option
-- [Hidden Field](https://sveltiacms.app/en/docs/fields/hidden): the `default` option
-- [List Field](https://sveltiacms.app/en/docs/fields/list): the `summary` option
-- [Object Field](https://sveltiacms.app/en/docs/fields/object): the `summary` option
-- [Editor Components](https://sveltiacms.app/en/docs/api/editor-components): the `summary` option
+- [Entry Collection](https://sveltiacms.app/docs/collections/entries): the `summary`, `slug`, `path` and `preview_path` options
+- [Compute Field](https://sveltiacms.app/docs/fields/compute): the `value` option
+- [Hidden Field](https://sveltiacms.app/docs/fields/hidden): the `default` option
+- [List Field](https://sveltiacms.app/docs/fields/list): the `summary` option
+- [Object Field](https://sveltiacms.app/docs/fields/object): the `summary` option
+- [Editor Components](https://sveltiacms.app/docs/api/editor-components): the `summary` option
 
 **Future Plans**
 
@@ -427,21 +427,21 @@ Transform the string to uppercase.
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 summary: '{{title | upper}}'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title | upper}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title | upper}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title | upper}}",
 }
@@ -457,21 +457,21 @@ Transform the string to lowercase.
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 summary: '{{title | lower}}'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title | lower}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title | lower}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title | lower}}",
 }
@@ -485,25 +485,25 @@ Convert the string to a URL-friendly slug.
 {{value | slugify}}
 ```
 
-The transformation converts the string based on the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options).
+The transformation converts the string based on the [global slug options](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options).
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 summary: '{{title | slugify}}'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title | slugify}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title | slugify}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title | slugify}}",
 }
@@ -523,25 +523,25 @@ Convert a Markdown or HTML string to plain text by removing the Markdown syntax 
 {{value | plainify}}
 ```
 
-This is useful for generating a description or an excerpt from a [RichText field](https://sveltiacms.app/en/docs/fields/richtext) with a [Compute field](https://sveltiacms.app/en/docs/fields/compute).
+This is useful for generating a description or an excerpt from a [RichText field](https://sveltiacms.app/docs/fields/richtext) with a [Compute field](https://sveltiacms.app/docs/fields/compute).
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 value: "{{fields.body | plainify | truncate(160, '...')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 value = "{{fields.body | plainify | truncate(160, '...')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "value": "{{fields.body | plainify | truncate(160, '...')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   value: "{{fields.body | plainify | truncate(160, '...')}}",
 }
@@ -561,7 +561,7 @@ Put `plainify` before `truncate` so the limit applies to the visible text and th
 - Images are removed along with their alternative text. Syntax that isn’t Markdown or HTML, like Hugo shortcodes, is left as is.
 - Unlike Hugo’s `plainify` function, which only removes HTML tags, this transformation also removes the Markdown syntax.
 - The result is plain text, not sanitized HTML. It can contain markup after decoding, e.g. `&lt;img&gt;` becomes `<img>`, so escape it in your site templates.
-- A [List](https://sveltiacms.app/en/docs/fields/list) or [Object](https://sveltiacms.app/en/docs/fields/object) field’s `summary` already shows a RichText field as plain text, so `plainify` isn’t needed there.
+- A [List](https://sveltiacms.app/docs/fields/list) or [Object](https://sveltiacms.app/docs/fields/object) field’s `summary` already shows a RichText field as plain text, so `plainify` isn’t needed there.
 
 #### `truncate`
 
@@ -581,41 +581,41 @@ The optional `suffix` argument defaults to an ellipsis (`…`). Specify another 
 
 Configuration examples:
 
-```yaml [YAML]
+```yaml YAML
 summary: '{{content | truncate(100)}}'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{content | truncate(100)}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{content | truncate(100)}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{content | truncate(100)}}",
 }
 ```
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{content | truncate(100, '...')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{content | truncate(100, '...')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{content | truncate(100, '...')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{content | truncate(100, '...')}}",
 }
@@ -633,21 +633,21 @@ The `default_value` is returned if the original value is null or an empty string
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{description | default('No description available.')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{description | default('No description available.')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{description | default('No description available.')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{description | default('No description available.')}}",
 }
@@ -655,21 +655,21 @@ summary = "{{description | default('No description available.')}}"
 
 It’s possible to fall back to another field’s value using a nested template:
 
-```yaml [YAML]
+```yaml YAML
 preview_path: "/{{fields.slug | default('{{fields.title}}')}}/"
 ```
 
-```toml [TOML]
+```toml TOML
 preview_path = "/{{fields.slug | default('{{fields.title}}')}}/"
 ```
 
-```json [JSON]
+```json JSON
 {
   "preview_path": "/{{fields.slug | default('{{fields.title}}')}}/"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   preview_path: "/{{fields.slug | default('{{fields.title}}')}}/",
 }
@@ -677,21 +677,21 @@ preview_path = "/{{fields.slug | default('{{fields.title}}')}}/"
 
 A nested template can also combine several field values with other text:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{fields.subtitle | default('{{fields.title}} by {{fields.author}}')}}",
 }
@@ -709,61 +709,61 @@ The `true_value` is returned if the original value is truthy; otherwise, the `fa
 
 Configuration examples:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{is_private | ternary('Private', 'Public')}}: {{title}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{is_private | ternary('Private', 'Public')}}: {{title}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{is_private | ternary('Private', 'Public')}}: {{title}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{is_private | ternary('Private', 'Public')}}: {{title}}",
 }
 ```
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{title}} – {{featured | ternary('Featured', 'Regular')}} Event"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title}} – {{featured | ternary('Featured', 'Regular')}} Event"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title}} – {{featured | ternary('Featured', 'Regular')}} Event"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title}} – {{featured | ternary('Featured', 'Regular')}} Event",
 }
 ```
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{title}} {{published | ternary('', '(DRAFT)')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title}} {{published | ternary('', '(DRAFT)')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title}} {{published | ternary('', '(DRAFT)')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title}} {{published | ternary('', '(DRAFT)')}}",
 }
@@ -771,21 +771,21 @@ summary = "{{title}} {{published | ternary('', '(DRAFT)')}}"
 
 As with the `default` transformation, the `true_value` and `false_value` can contain nested templates to use other field values. For example, show the subtitle after the title only when it’s available:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{fields.subtitle | ternary('{{fields.title}}: {{fields.subtitle}}', '{{fields.title}}')}}",
 }
@@ -807,45 +807,45 @@ The `format` argument specifies the desired date format using [Day.js formatting
 
 The optional `timezone` argument allows you to specify the timezone for formatting. It only supports `utc` for Coordinated Universal Time. If no timezone is provided, the local timezone will be used.
 
-If the value comes from a [DateTime](https://sveltiacms.app/en/docs/fields/datetime) field with a custom `format` option, such as `DD/MM/YYYY` or `X` (Unix timestamp), it’s parsed in that format. If an invalid date is provided, an empty string will be returned.
+If the value comes from a [DateTime](https://sveltiacms.app/docs/fields/datetime) field with a custom `format` option, such as `DD/MM/YYYY` or `X` (Unix timestamp), it’s parsed in that format. If an invalid date is provided, an empty string will be returned.
 
 Configuration examples:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{publish_date | date('YYYY-MM-DD')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{publish_date | date('YYYY-MM-DD')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{publish_date | date('YYYY-MM-DD')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{publish_date | date('YYYY-MM-DD')}}",
 }
 ```
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{publish_date | date('YYYY-MM-DD', 'utc')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{publish_date | date('YYYY-MM-DD', 'utc')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{publish_date | date('YYYY-MM-DD', 'utc')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{publish_date | date('YYYY-MM-DD', 'utc')}}",
 }
@@ -857,7 +857,7 @@ Sveltia CMS (and Decap CMS 3.1.1) replaced the Moment.js library with Day.js for
 
 ### Custom Transformations
 
-In addition to the built-in transformations, you can register your own with the `CMS.registerStringTransformation()` method, and use them like `{{title | reverse}}` or `{{title | wrap('[', ']')}}`. See [Custom String Transformations](https://sveltiacms.app/en/docs/api/string-transformations) for details.
+In addition to the built-in transformations, you can register your own with the `CMS.registerStringTransformation()` method, and use them like `{{title | reverse}}` or `{{title | wrap('[', ']')}}`. See [Custom String Transformations](https://sveltiacms.app/docs/api/string-transformations) for details.
 
 ### Examples
 
@@ -865,7 +865,7 @@ In addition to the built-in transformations, you can register your own with the 
 
 The below example demonstrates how to use multiple string transformations in the `summary` option of a collection:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: blog
     label: Blog
@@ -882,7 +882,7 @@ collections:
         widget: richtext
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "blog"
 label = "Blog"
@@ -904,7 +904,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -933,7 +933,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -964,19 +964,19 @@ widget = "richtext"
 
 It will transform the `title` to uppercase, format the `publish_date` to `YYYY-MM-DD` and truncate the `body` to 20 characters with an ellipsis. For example, if an entry has the following values:
 
-```yaml [YAML]
+```yaml YAML
 title: My First Blog Post
 publish_date: 2024-06-15T10:30:00Z
 body: This is the content of my first blog post. It has a lot of interesting information
 ```
 
-```toml [TOML]
+```toml TOML
 title = "My First Blog Post"
 publish_date = 2024-06-15T10:30:00Z
 body = "This is the content of my first blog post. It has a lot of interesting information"
 ```
 
-```json [JSON]
+```json JSON
 {
   "title": "My First Blog Post",
   "publish_date": "2024-06-15T10:30:00Z",
@@ -994,27 +994,27 @@ MY FIRST BLOG POST — 2024-06-15 — This is the content...
 
 You can chain multiple transformations together by separating them with a pipe (`|`). For example, to convert a title to uppercase and then truncate it to 10 characters, you can use:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{title | upper | truncate(10, '...')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title | upper | truncate(10, '...')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title | upper | truncate(10, '...')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title | upper | truncate(10, '...')}}",
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/string-transformations
+Source: https://sveltiacms.app/docs/string-transformations
 
 ---
 
@@ -1036,11 +1036,11 @@ Sveltia CMS supports the following data output formats for content files out of 
 - JSON
 - Raw text files, such as plain text, JSON, XML or CSV files
 
-To customize the format for each collection, see the [Entry Collection File Formats](https://sveltiacms.app/en/docs/collections/entries/formats) and [File Collection](https://sveltiacms.app/en/docs/collections/files#file-format-and-extension) documentation.
+To customize the format for each collection, see the [Entry Collection File Formats](https://sveltiacms.app/docs/collections/entries/formats) and [File Collection](https://sveltiacms.app/docs/collections/files#file-format-and-extension) documentation.
 
 #### Custom Formats
 
-Sveltia CMS allows you to define custom data output formats using the API. You can create your own format handlers to meet specific requirements for your project. For more information on how to create custom formats, please refer to the [Custom File Formats API reference](https://sveltiacms.app/en/docs/api/file-formats).
+Sveltia CMS allows you to define custom data output formats using the API. You can create your own format handlers to meet specific requirements for your project. For more information on how to create custom formats, please refer to the [Custom File Formats API reference](https://sveltiacms.app/docs/api/file-formats).
 
 ### Data Output Conventions
 
@@ -1056,8 +1056,8 @@ Here are some key aspects of data output in Sveltia CMS.
 
 Unnecessary whitespace in string values is automatically removed when an entry is saved. No configuration option is required for this behavior.
 
-- [Code](https://sveltiacms.app/en/docs/fields/code) field values are saved as they are, because any whitespace, such as the indentation of the first line or a final newline, can be significant in code.
-- [Text](https://sveltiacms.app/en/docs/fields/text), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [rich text](https://sveltiacms.app/en/docs/fields/richtext) field values keep their leading whitespace, such as the indentation of a code block on the first line. Only trailing whitespace is removed.
+- [Code](https://sveltiacms.app/docs/fields/code) field values are saved as they are, because any whitespace, such as the indentation of the first line or a final newline, can be significant in code.
+- [Text](https://sveltiacms.app/docs/fields/text), [Markdown](https://sveltiacms.app/docs/fields/markdown) and [rich text](https://sveltiacms.app/docs/fields/richtext) field values keep their leading whitespace, such as the indentation of a code block on the first line. Only trailing whitespace is removed.
 - Leading and trailing whitespace is removed from any other string value.
 
 ##### Empty Values
@@ -1072,7 +1072,7 @@ Sveltia CMS saves proper values for all fields, such as an empty string, an empt
 
 Values the CMS reads from an existing file are written back unchanged unless they are edited:
 
-- Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
+- Object keys containing a dot, such as `example.com` in a [KeyValue](https://sveltiacms.app/docs/fields/keyvalue) field or in data not covered by the configuration, are kept as they are rather than being split into nested objects.
 - Object keys that look like numbers, such as `2024`, stay object keys rather than turning the object into a list.
 - Integers too large for JavaScript to represent exactly (beyond 2<sup>53</sup>, such as a 19-digit ID) are written back exactly as they appear in the file.
 - Floats that are whole numbers, such as `10.0` or `1e3`, stay floats rather than becoming integers like `10`. This way, tools that tell the two apart, such as Hugo’s `eq`, see the same type. This applies to YAML, JSON and TOML.
@@ -1094,7 +1094,7 @@ Formatting details, such as the quote style of a YAML string, aren’t kept. Nei
   Dates aren’t quoted, so they are still read as dates.
 
 - **Multi-Line Strings**: A string with line breaks is written as a literal block scalar (`|`) by default (configurable). See [Multi-Line Strings in YAML](#multi-line-strings-in-yaml) for details.
-- **Comments**: When an entry is saved, comments at the top of an existing file or front matter block are kept, as long as a blank line separates them from the first key. Other comments aren’t kept, because the CMS writes the whole file from the entry data. To add a comment before a field, use the [`comment` field option](https://sveltiacms.app/en/docs/fields#comment).
+- **Comments**: When an entry is saved, comments at the top of an existing file or front matter block are kept, as long as a blank line separates them from the first key. Other comments aren’t kept, because the CMS writes the whole file from the entry data. To add a comment before a field, use the [`comment` field option](https://sveltiacms.app/docs/fields#comment).
 
   ```yaml
   # Kept
@@ -1107,7 +1107,7 @@ Formatting details, such as the quote style of a YAML string, aren’t kept. Nei
 ##### TOML
 
 - **Comments**: As with YAML, when an entry is saved, comments at the top of an existing file or front matter block are kept, as long as a blank line separates them from the first key or table. Other comments aren’t kept, and the `comment` field option isn’t supported.
-- **Empty List Items**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/en/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
+- **Empty List Items**: TOML has no `null` value, so an empty item in a list, such as a cleared optional [Number field](https://sveltiacms.app/docs/fields/number) in a simple list, is left out of a TOML file or TOML front matter. YAML and JSON keep it as `null`.
 - **DateTime Values**: DateTime field values in ISO 8601 format are stored in native date/time format instead of quoted strings. This applies to TOML files and TOML front matter, including entries with TOML front matter in a collection using the `frontmatter` format. It doesn’t apply if the field has a custom `format` option. A value that isn’t a valid date or time, such as `TBD`, is kept as a string.
 
 ##### JSON
@@ -1116,7 +1116,7 @@ Formatting details, such as the quote style of a YAML string, aren’t kept. Nei
 
 #### Markdown Syntax
 
-Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia CMS, the following Markdown conventions are applied to the output of the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext).
+Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia CMS, the following Markdown conventions are applied to the output of the [rich text editor](https://sveltiacms.app/docs/fields/richtext).
 
 ##### Markdown Style
 
@@ -1128,7 +1128,7 @@ Due to the underlying [Lexical framework](https://lexical.dev/) used in Sveltia 
 - **Headings**: Hash signs (`#`) are used for headings. Headings underlined with `===` or `---` are converted to this style.
 - **Code Blocks**: Backticks (`` ` ``) are used to fence code blocks. Code blocks fenced with tildes (`~~~`) are converted to this style, and a code block without a language is given the `plain` language.
 - **Horizontal Rules**: Three asterisks (`***`) are used for horizontal rules instead of three hyphens (`---`).
-- **Line Breaks**: Soft line breaks (single line breaks) are used instead of hard line breaks (two or more spaces, escaped line breaks `\` or HTML `<br>` tags). In your framework, you may need to [enable the appropriate option](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) to render soft line breaks as hard line breaks.
+- **Line Breaks**: Soft line breaks (single line breaks) are used instead of hard line breaks (two or more spaces, escaped line breaks `\` or HTML `<br>` tags). In your framework, you may need to [enable the appropriate option](https://sveltiacms.app/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) to render soft line breaks as hard line breaks.
 - **Tight Lists**: Blank lines between list items are removed, so a loose list becomes a tight one.
 - **Escapes**: Backslash escapes that aren’t needed are removed, like the one in `snake\_case`. Escaped square brackets (`\[`, `\]`) and angle brackets (`\<`, `\>`) are written without the backslash.
 - **Character References**: Numeric character references, like `&#169;`, are written as the characters they stand for, like `©`. Named ones, like `&copy;`, are kept.
@@ -1154,7 +1154,7 @@ Some other syntax the editor can’t edit as such is shown as text and saved as 
 
 You can control data output, including JSON and YAML formatting, with the `output` option at the root level of the configuration file. Here are the default options:
 
-```yaml [YAML]
+```yaml YAML
 output:
   omit_empty_optional_fields: false
   encode_file_path: false # true to URL-encode file paths for File/Image fields
@@ -1168,7 +1168,7 @@ output:
     block_quote: true # or literal, folded or false
 ```
 
-```toml [TOML]
+```toml TOML
 [output]
 omit_empty_optional_fields = false
 encode_file_path = false # true to URL-encode file paths for File/Image fields
@@ -1182,7 +1182,7 @@ indent_sequences = true # false for compact style
 block_quote = true # or "literal", "folded" or false
 ```
 
-```json [JSON]
+```json JSON
 {
   "output": {
     "omit_empty_optional_fields": false,
@@ -1201,7 +1201,7 @@ block_quote = true # or "literal", "folded" or false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   output: {
     omit_empty_optional_fields: false,
@@ -1232,15 +1232,14 @@ The `block_quote` option for YAML controls how a string with line breaks is writ
 
 For example, a value with two paragraphs is written as follows:
 
-```yaml [true]
+```yaml true
 about: |-
   First paragraph.
 
   Second paragraph.
 ```
 
-<!-- prettier-ignore -->
-```yaml [folded]
+```yaml folded
 about: >-
   First paragraph.
 
@@ -1248,7 +1247,7 @@ about: >-
   Second paragraph.
 ```
 
-```yaml [false]
+```yaml false
 about: 'First paragraph.
 
 
@@ -1290,7 +1289,7 @@ If there is only the `body` field, the front matter block is omitted altogether:
 This is the body of my post.
 ```
 
-This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
+This behavior can be configured using the [`body_field` option](https://sveltiacms.app/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 When i18n is enabled with the `single_file` structure, this behavior doesn’t apply at all. In this case, the `body` field is saved as part of key-value pairs under each locale in the front matter block:
 
@@ -1315,7 +1314,7 @@ There are two exceptional cases for the List field:
 
 When the `fields` (plural) option is used, each item is saved as an object with key-value pairs. For example, the following configuration:
 
-```yaml [YAML]
+```yaml YAML
 - name: images
   label: Images
   widget: list
@@ -1323,7 +1322,7 @@ When the `fields` (plural) option is used, each item is saved as an object with 
     - { name: image, label: Image, widget: image }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "images"
 label = "Images"
@@ -1334,7 +1333,7 @@ label = "Image"
 widget = "image"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1349,7 +1348,7 @@ widget = "image"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -1366,20 +1365,20 @@ widget = "image"
 
 will produce the output:
 
-```yaml [YAML]
+```yaml YAML
 images:
   - image: https://example.com/image1.jpg
   - image: https://example.com/image2.jpg
 ```
 
-```toml [TOML]
+```toml TOML
 [[images]]
 image = "https://example.com/image1.jpg"
 [[images]]
 image = "https://example.com/image2.jpg"
 ```
 
-```json [JSON]
+```json JSON
 {
   "images": [
     { "image": "https://example.com/image1.jpg" },
@@ -1390,14 +1389,14 @@ image = "https://example.com/image2.jpg"
 
 On the other hand, when the `field` (singular) option is used, the `name` property is omitted from the output.
 
-```yaml [YAML]
+```yaml YAML
 - name: images
   label: Images
   widget: list
   field: { name: image, label: Image, widget: image }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "images"
 label = "Images"
@@ -1408,7 +1407,7 @@ label = "Image"
 widget = "image"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1421,7 +1420,7 @@ widget = "image"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -1436,17 +1435,17 @@ widget = "image"
 
 The output will be:
 
-```yaml [YAML]
+```yaml YAML
 images:
   - https://example.com/image1.jpg
   - https://example.com/image2.jpg
 ```
 
-```toml [TOML]
+```toml TOML
 images = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "images": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
 }
@@ -1454,16 +1453,16 @@ images = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
 
 ##### `root` Option
 
-When the [`root` option](https://sveltiacms.app/en/docs/fields/list#top-level-list) is set to `true`, the List field is saved as a top-level list without a field name:
+When the [`root` option](https://sveltiacms.app/docs/fields/list#top-level-list) is set to `true`, the List field is saved as a top-level list without a field name:
 
-```yaml [YAML]
+```yaml YAML
 - name: John Doe
   id: 12345
 - name: Jane Smith
   id: 67890
 ```
 
-```json [JSON]
+```json JSON
 [
   { "name": "John Doe", "id": 12345 },
   { "name": "Jane Smith", "id": 67890 }
@@ -1472,7 +1471,7 @@ When the [`root` option](https://sveltiacms.app/en/docs/fields/list#top-level-li
 
 instead of
 
-```yaml [YAML]
+```yaml YAML
 members:
   - name: John Doe
     id: 12345
@@ -1480,7 +1479,7 @@ members:
     id: 67890
 ```
 
-```json [JSON]
+```json JSON
 {
   "members": [
     { "name": "John Doe", "id": 12345 },
@@ -1491,4 +1490,4 @@ members:
 
 This `root` option doesn’t work with the TOML format, as TOML doesn’t support top-level arrays.
 
-Source: https://sveltiacms.app/en/docs/data-output
+Source: https://sveltiacms.app/docs/data-output

@@ -6,7 +6,7 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## I18n Content Structures
 
-The `structure` i18n option defines how localized content is stored on disk. It is set in the [top-level or collection-level configuration](https://sveltiacms.app/en/docs/i18n/options). Sveltia CMS supports five different structures:
+The `structure` i18n option defines how localized content is stored on disk. It is set in the [top-level or collection-level configuration](https://sveltiacms.app/docs/i18n/options). Sveltia CMS supports five different structures:
 
 - `single_file`: All locales are stored in a single file. This is the default structure.
 - `single_file_default_root`: Like `single_file`, but the default locale’s fields are stored at the root level of the file (without a locale key), while non-default locales are nested under their locale key. This is designed to support [Lume’s Multilanguage plugin](https://lume.land/plugins/multilanguage/#multilanguage-data).
@@ -30,19 +30,19 @@ The `structure` i18n option defines how localized content is stored for entry co
 
 #### Single File
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: single_file
   locales: [en, de, fr]
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "single_file"
 locales = ["en", "de", "fr"]
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "single_file",
@@ -51,7 +51,7 @@ locales = ["en", "de", "fr"]
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "single_file",
@@ -91,19 +91,19 @@ fr:
 
 #### Single File (Default Root)
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: single_file_default_root
   locales: [en, de, fr]
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "single_file_default_root"
 locales = ["en", "de", "fr"]
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "single_file_default_root",
@@ -112,7 +112,7 @@ locales = ["en", "de", "fr"]
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "single_file_default_root",
@@ -143,19 +143,19 @@ Unlike the examples in Lume’s documentation, all non-default locales will have
 
 #### Multiple Files
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: multiple_files
   locales: [en, de, fr]
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "multiple_files"
 locales = ["en", "de", "fr"]
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "multiple_files",
@@ -164,7 +164,7 @@ locales = ["en", "de", "fr"]
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "multiple_files",
@@ -212,19 +212,19 @@ For example, with `en` as the default locale, the English file would be named `a
 
 #### Multiple Folders
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: multiple_folders
   locales: [en, de, fr]
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "multiple_folders"
 locales = ["en", "de", "fr"]
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "multiple_folders",
@@ -233,7 +233,7 @@ locales = ["en", "de", "fr"]
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "multiple_folders",
@@ -286,19 +286,19 @@ For example, with `en` as the default locale, the English file would be located 
 
 #### Multiple Root Folders
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: multiple_root_folders
   locales: [en, de, fr]
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "multiple_root_folders"
 locales = ["en", "de", "fr"]
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "multiple_root_folders",
@@ -307,7 +307,7 @@ locales = ["en", "de", "fr"]
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "multiple_root_folders",
@@ -366,7 +366,7 @@ The `multiple_folders` structure puts the locale folder right below the collecti
 
 To support such a layout, put the `{{locale}}` placeholder in the collection’s `folder` option where the locale folder goes:
 
-```yaml [YAML]{2,8}
+```yaml YAML
 i18n:
   structure: multiple_folders
   locales: [en, de, fr]
@@ -380,7 +380,7 @@ collections:
       - { name: title, label: Title, i18n: true }
 ```
 
-```toml [TOML]{2,8}
+```toml TOML
 [i18n]
 structure = "multiple_folders"
 locales = ["en", "de", "fr"]
@@ -393,7 +393,7 @@ i18n = true
 fields = [{ name = "title", label = "Title", i18n = true }]
 ```
 
-```json [JSON]{3,10}
+```json JSON
 {
   "i18n": {
     "structure": "multiple_folders",
@@ -411,7 +411,7 @@ fields = [{ name = "title", label = "Title", i18n = true }]
 }
 ```
 
-```js [JavaScript]{3,10}
+```js JavaScript
 {
   i18n: {
     structure: "multiple_folders",
@@ -453,7 +453,7 @@ The file paths for each locale would look like this:
 
 The placeholder takes precedence over the `structure` option for that collection. The collection gets a folder per locale wherever the placeholder is, whatever the site-level structure says. This way, the other collections can keep a different structure.
 
-Everything that works with the `multiple_folders` structure works here too, including [localized slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs), [nested entries](#nested-entries) and [page bundles](#page-bundles). The collection’s [special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) lands in each locale’s collection folder, e.g. `content/en/posts/_index.md`. That’s where Hugo expects a section’s list page to be.
+Everything that works with the `multiple_folders` structure works here too, including [localized slugs](https://sveltiacms.app/docs/i18n/slugs#localizing-entry-slugs), [nested entries](#nested-entries) and [page bundles](#page-bundles). The collection’s [special index file](https://sveltiacms.app/docs/collections/entries/listings#managing-hugo-s-special-index-file) lands in each locale’s collection folder, e.g. `content/en/posts/_index.md`. That’s where Hugo expects a section’s list page to be.
 
 Note that the `multiple_folders` and `multiple_root_folders` structures are the same as `folder: content/posts/{{locale}}` and `folder: {{locale}}/content/posts`, respectively.
 
@@ -489,7 +489,7 @@ For example, with `en` as the default locale, the English file would be located 
 
 #### Nested Entries
 
-A collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested) organizes entries into a folder tree. This tree is separate from the folders and filenames i18n adds, and the two combine. The locale is taken off the file path before the tree is worked out, so the same tree appears whichever structure is chosen. The localized files of one entry are linked as usual.
+A collection with [nested entries](https://sveltiacms.app/docs/collections/entries/nested) organizes entries into a folder tree. This tree is separate from the folders and filenames i18n adds, and the two combine. The locale is taken off the file path before the tree is worked out, so the same tree appears whichever structure is chosen. The localized files of one entry are linked as usual.
 
 The examples below use a `pages` collection with a `products/hardware` entry. In the default `subfolders` mode, where each entry is an index file in a folder of its own:
 
@@ -542,23 +542,23 @@ In every case the entry sits at `products/hardware` in the tree, and the sidebar
 A few things worth knowing:
 
 - The `depth` option counts the path segments below the collection folder, and the locale is not one of them. A locale folder or filename suffix therefore never uses up part of the depth budget.
-- Moving an entry with the [path editor](https://sveltiacms.app/en/docs/collections/entries/nested#moving-entries) moves every locale’s file in the same commit. In the `subfolders` mode it takes the entry’s child entries along, in every locale.
-- [Entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders) is stored once, not once per locale. Some setups give each locale a folder of its own: the `multiple_folders` and `multiple_root_folders` structures, and a `folder` with the `{{locale}}` placeholder. With these, the file is saved in the default locale’s folder and every locale’s entry refers to it by the same relative path. The other structures keep each locale’s file in the folder holding the entry, so the media already sits beside all of them.
+- Moving an entry with the [path editor](https://sveltiacms.app/docs/collections/entries/nested#moving-entries) moves every locale’s file in the same commit. In the `subfolders` mode it takes the entry’s child entries along, in every locale.
+- [Entry-relative media](https://sveltiacms.app/docs/media/internal#using-entry-relative-folders) is stored once, not once per locale. Some setups give each locale a folder of its own: the `multiple_folders` and `multiple_root_folders` structures, and a `folder` with the `{{locale}}` placeholder. With these, the file is saved in the default locale’s folder and every locale’s entry refers to it by the same relative path. The other structures keep each locale’s file in the folder holding the entry, so the media already sits beside all of them.
 
 ##### Localized Folder Names
 
-The folder names can be localized as well, giving nested content fully localized permalinks. In the `subfolders` mode, a folder is named after the slug of the entry stored in it. [Localizing the entry slugs](https://sveltiacms.app/en/docs/i18n/slugs#localizing-entry-slugs) with the `localize` filter therefore localizes the whole folder chain above an entry along with the entry itself. With the `multiple_folders` structure, a `products/hardware` entry in English could then be stored as follows:
+The folder names can be localized as well, giving nested content fully localized permalinks. In the `subfolders` mode, a folder is named after the slug of the entry stored in it. [Localizing the entry slugs](https://sveltiacms.app/docs/i18n/slugs#localizing-entry-slugs) with the `localize` filter therefore localizes the whole folder chain above an entry along with the entry itself. With the `multiple_folders` structure, a `products/hardware` entry in English could then be stored as follows:
 
 ```
 content/pages/en/products/hardware/_index.md
 content/pages/de/produkte/hardware/_index.md
 ```
 
-The tree in the sidebar and the [path editor](https://sveltiacms.app/en/docs/collections/entries/nested#choosing-a-parent-folder) still go by the default locale’s names, because that’s how the entries are identified. However, the other locales’ path editor panes show the folder as it’s named in their own locale.
+The tree in the sidebar and the [path editor](https://sveltiacms.app/docs/collections/entries/nested#choosing-a-parent-folder) still go by the default locale’s names, because that’s how the entries are identified. However, the other locales’ path editor panes show the folder as it’s named in their own locale.
 
 The localized folder names are taken from the entries stored in the folders, including unpublished ones with the Editorial Workflow. This means a section and its sub-pages can be created in one sitting. A folder whose entry lacks a locale keeps its default name in that locale.
 
-When an entry is moved to a different folder, each locale’s file goes below the localized folder chain, and its child entries are moved along in every locale. Renaming the folder is done in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel), which offers a folder name per locale when the slugs are localized.
+When an entry is moved to a different folder, each locale’s file goes below the localized folder chain, and its child entries are moved along in every locale. Renaming the folder is done in the [Slug panel](https://sveltiacms.app/docs/ui/content-editor#slug-panel), which offers a folder name per locale when the slugs are localized.
 
 Like localized slugs in general, this requires the `multiple_files` or `multiple_folders` structure, or a `folder` with the [`{{locale}}` placeholder](#custom-locale-folder-placement).
 
@@ -575,10 +575,10 @@ A nested entry is identified by its path within the collection folder rather tha
 
 A [page bundle](https://gohugo.io/content-management/page-bundles/) keeps an entry’s content file and its media together in one folder. There are two ways to store entries as bundles:
 
-- To store each entry as a leaf bundle, give a collection a [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option ending in a fixed filename.
-- To store each one as a branch bundle, use the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles).
+- To store each entry as a leaf bundle, give a collection a [`path`](https://sveltiacms.app/docs/collections/entries/slugs#using-subfolders) option ending in a fixed filename.
+- To store each one as a branch bundle, use the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/docs/collections/entries/nested#nesting-page-bundles).
 
-Combined with [entry-relative media](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders), uploads land in the bundle instead of a shared media folder.
+Combined with [entry-relative media](https://sveltiacms.app/docs/media/internal#using-entry-relative-folders), uploads land in the bundle instead of a shared media folder.
 
 The examples below use a `posts` collection with `path: '{{slug}}/index'`, `media_folder: ''` and `public_folder: ''`, holding a `my-first-post` entry with a `cover` image.
 
@@ -624,7 +624,7 @@ You can use the `{{locale}}` placeholder in the `file` path option to create sep
 
 The following example demonstrates how to set up a file collection with different i18n structures using the `{{locale}}` placeholder:
 
-```yaml [YAML]{4,8-9,12-13,16-17,20-21}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -648,7 +648,7 @@ collections:
         file: '{{locale}}/settings.yaml' # multiple_root_folders
 ```
 
-```toml [TOML]{4,9-10,15-16,21-22,27-28}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -679,7 +679,7 @@ i18n = true
 file = "{{locale}}/settings.yaml"
 ```
 
-```json [JSON]{6,11-12,17-18,23-24,29-30}
+```json JSON
 {
   "collections": [
     {
@@ -717,7 +717,7 @@ file = "{{locale}}/settings.yaml"
 }
 ```
 
-```js [JavaScript]{6,11-12,17-18,23-24,29-30}
+```js JavaScript
 {
   collections: [
     {
@@ -811,9 +811,9 @@ The `{{locale}}` placeholder can only be removed where the rest of the path stil
 | Between the filename and the extension | `about.{{locale}}.md` | `about.md` |
 | In front of the filename, separated by a dot | `{{locale}}.about.md` | `about.md` |
 
-In any other position, removing the placeholder would turn the path into something else. For example, `i18n/{{locale}}.yaml` would become `i18n/yaml`, and `settings_{{locale}}.json` would become `settings_json`. Instead, the default locale is kept in such a path, and a configuration warning is shown. If the filename is fixed by your framework, like Hugo’s `i18n/en.yaml`, set the option to `false` in that [file’s `i18n` option](https://sveltiacms.app/en/docs/i18n/options#file-level-configuration) to keep the locale and silence the warning:
+In any other position, removing the placeholder would turn the path into something else. For example, `i18n/{{locale}}.yaml` would become `i18n/yaml`, and `settings_{{locale}}.json` would become `settings_json`. Instead, the default locale is kept in such a path, and a configuration warning is shown. If the filename is fixed by your framework, like Hugo’s `i18n/en.yaml`, set the option to `false` in that [file’s `i18n` option](https://sveltiacms.app/docs/i18n/options#file-level-configuration) to keep the locale and silence the warning:
 
-```yaml [YAML]{6-7}
+```yaml YAML
 collections:
   - name: data
     files:
@@ -823,7 +823,7 @@ collections:
           omit_default_locale_from_file_path: false
 ```
 
-```toml [TOML]{7-8}
+```toml TOML
 [[collections]]
 name = "data"
 
@@ -834,7 +834,7 @@ file = "i18n/{{locale}}.yaml"
 omit_default_locale_from_file_path = false
 ```
 
-```json [JSON]{9-11}
+```json JSON
 {
   "collections": [
     {
@@ -853,7 +853,7 @@ omit_default_locale_from_file_path = false
 }
 ```
 
-```js [JavaScript]{9-11}
+```js JavaScript
 {
   collections: [
     {
@@ -878,7 +878,7 @@ If the placeholder appears more than once in a path, only the first occurrence i
 
 The [`single_file_default_root` structure](#single-file-default-root) can also be used for file collections. The example below shows how to configure a file collection with this structure:
 
-```yaml [YAML]{2}
+```yaml YAML
 i18n:
   structure: single_file_default_root
   locales: [en, de, fr]
@@ -892,7 +892,7 @@ collections:
         file: content/about.md
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [i18n]
 structure = "single_file_default_root"
 locales = ["en", "de", "fr"]
@@ -907,7 +907,7 @@ label = "About Page"
 file = "content/about.md"
 ```
 
-```json [JSON]{3}
+```json JSON
 {
   "i18n": {
     "structure": "single_file_default_root",
@@ -929,7 +929,7 @@ file = "content/about.md"
 }
 ```
 
-```js [JavaScript]{3}
+```js JavaScript
 {
   i18n: {
     structure: "single_file_default_root",
@@ -951,19 +951,19 @@ file = "content/about.md"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/i18n/structures
+Source: https://sveltiacms.app/docs/i18n/structures
 
 ---
 
 ## Localized Slugs and Preview Paths
 
-When i18n is enabled for an entry collection, [managing entry slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) (filenames) across different locales can be challenging. Sveltia CMS offers two solutions: localized entry slugs and UUID-based slugs.
+When i18n is enabled for an entry collection, [managing entry slugs](https://sveltiacms.app/docs/collections/entries/slugs#entry-slugs) (filenames) across different locales can be challenging. Sveltia CMS offers two solutions: localized entry slugs and UUID-based slugs.
 
 ### Localizing Entry Slugs
 
 In Sveltia CMS, it’s possible to localize entry slugs (filenames) if the i18n structure is `multiple_files`, `multiple_folders` or `multiple_root_folders`, or the `folder` option contains the `{{locale}}` placeholder. All you need is the `localize` filter for `slug` template tags:
 
-```yaml [YAML]
+```yaml YAML
 i18n:
   structure: multiple_folders
   locales: [en, fr]
@@ -986,7 +986,7 @@ collections:
         i18n: true
 ```
 
-```toml [TOML]
+```toml TOML
 [i18n]
 structure = "multiple_folders"
 locales = ["en", "fr"]
@@ -1007,7 +1007,7 @@ widget = "string"
 i18n = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "i18n": {
     "structure": "multiple_folders",
@@ -1038,7 +1038,7 @@ i18n = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   i18n: {
     structure: "multiple_folders",
@@ -1084,23 +1084,23 @@ For example, if a blog post is created with the title “My trip to New York” 
   title: Mon voyage à New York
   ```
 
-With the [`clean_accents` option](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) enabled, as in the example above, each localized slug is transliterated with the rules for its own locale, if the [`transliterate` library](https://github.com/sindresorhus/transliterate#supported-locales) has rules for it. For example, `ö` becomes `oe` in a German slug but `o` in a Swedish one. A slug shared by every locale and a slug in a collection without i18n support use the locale set with the [`transliterate_locale` option](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) instead, or the library’s generic rules if the option isn’t set.
+With the [`clean_accents` option](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options) enabled, as in the example above, each localized slug is transliterated with the rules for its own locale, if the [`transliterate` library](https://github.com/sindresorhus/transliterate#supported-locales) has rules for it. For example, `ö` becomes `oe` in a German slug but `o` in a Swedish one. A slug shared by every locale and a slug in a collection without i18n support use the locale set with the [`transliterate_locale` option](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options) instead, or the library’s generic rules if the option isn’t set.
 
 You can customize the property name and value for a different framework or i18n library by adding the `canonical_slug` option to your top-level or collection-level `i18n` configuration. The example below is for [@astrolicious/i18n](https://github.com/astrolicious/i18n), which requires a locale prefix in the value ([discussion](https://github.com/sveltia/sveltia-cms/issues/137)):
 
-```yaml [YAML]
+```yaml YAML
 i18n:
   canonical_slug:
     key: defaultLocaleVersion # default: translationKey
     value: 'en/{{slug}}' # default: {{slug}}
 ```
 
-```toml [TOML]
+```toml TOML
 [i18n]
 canonical_slug = { key = "defaultLocaleVersion", value = "en/{{slug}}" }
 ```
 
-```json [JSON]
+```json JSON
 {
   "i18n": {
     "canonical_slug": {
@@ -1111,7 +1111,7 @@ canonical_slug = { key = "defaultLocaleVersion", value = "en/{{slug}}" }
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   i18n: {
     canonical_slug: {
@@ -1124,18 +1124,18 @@ canonical_slug = { key = "defaultLocaleVersion", value = "en/{{slug}}" }
 
 For [Jekyll](https://migueldavid.eu/how-to-make-jekyll-multilingual-c13e74c18f1c), you may want to use the `ref` property:
 
-```yaml [YAML]
+```yaml YAML
 i18n:
   canonical_slug:
     key: ref
 ```
 
-```toml [TOML]
+```toml TOML
 [i18n]
 canonical_slug = { key = "ref" }
 ```
 
-```json [JSON]
+```json JSON
 {
   "i18n": {
     "canonical_slug": {
@@ -1145,7 +1145,7 @@ canonical_slug = { key = "ref" }
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   i18n: {
     canonical_slug: {
@@ -1155,22 +1155,22 @@ canonical_slug = { key = "ref" }
 }
 ```
 
-In a collection with [nested entries](https://sveltiacms.app/en/docs/i18n/structures#nested-entries), the slug names the entry’s folder, so localizing the slugs also gives every locale its own [folder names](https://sveltiacms.app/en/docs/i18n/structures#localized-folder-names).
+In a collection with [nested entries](https://sveltiacms.app/docs/i18n/structures#nested-entries), the slug names the entry’s folder, so localizing the slugs also gives every locale its own [folder names](https://sveltiacms.app/docs/i18n/structures#localized-folder-names).
 
 ### Making Slugs Editable
 
-Localized slugs can be edited for each locale in the [Slug panel](https://sveltiacms.app/en/docs/ui/content-editor#slug-panel) of the Content Editor, which has a section for each locale. When the slugs aren’t localized, a single slug is shared by every locale.
+Localized slugs can be edited for each locale in the [Slug panel](https://sveltiacms.app/docs/ui/content-editor#slug-panel) of the Content Editor, which has a section for each locale. When the slugs aren’t localized, a single slug is shared by every locale.
 
-Instead of adding the `localize` filter to the template tags, you can localize the slugs with the `i18n` option of the [slug options object](https://sveltiacms.app/en/docs/collections/entries/slugs#making-slugs-editable). It accepts the following values:
+Instead of adding the `localize` filter to the template tags, you can localize the slugs with the `i18n` option of the [slug options object](https://sveltiacms.app/docs/collections/entries/slugs#making-slugs-editable). It accepts the following values:
 
 - `true`: Each locale has a slug of its own. Every field tag in the template is filled with the locale’s own value, so `slug: { template: '{{title}}', i18n: true }` is equivalent to `slug: '{{title | localize}}'`.
 - `duplicate` (default) or `false`: The default locale’s slug is shared by every locale.
 
-Like the `localize` filter, the `i18n` option only has an effect with the `multiple_files`, `multiple_folders` or `multiple_root_folders` structure, or a `folder` with the [`{{locale}}` placeholder](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement), where each locale has a file of its own.
+Like the `localize` filter, the `i18n` option only has an effect with the `multiple_files`, `multiple_folders` or `multiple_root_folders` structure, or a `folder` with the [`{{locale}}` placeholder](https://sveltiacms.app/docs/i18n/structures#custom-locale-folder-placement), where each locale has a file of its own.
 
-To have users [type a slug](https://sveltiacms.app/en/docs/collections/entries/slugs#having-users-type-the-slug) for each locale, combine it with the `editable` option, without a `template`:
+To have users [type a slug](https://sveltiacms.app/docs/collections/entries/slugs#having-users-type-the-slug) for each locale, combine it with the `editable` option, without a `template`:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -1180,7 +1180,7 @@ collections:
       i18n: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -1191,7 +1191,7 @@ editable = true
 i18n = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1207,7 +1207,7 @@ i18n = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -1231,9 +1231,9 @@ The special `{{fields._slug | localize}}` slug template tag has been deprecated 
 
 Entry titles and other fields containing non-Latin characters, such as Japanese or Chinese, may not be suitable for generating slugs. To address this issue, Sveltia CMS lets you use random UUIDs as slugs for entries in i18n collections.
 
-This can be achieved by setting the `slug` option with the `{{uuid}}`, `{{uuid_short}}` or `{{uuid_shorter}}` [template tag](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) in your collection configuration:
+This can be achieved by setting the `slug` option with the `{{uuid}}`, `{{uuid_short}}` or `{{uuid_shorter}}` [template tag](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags) in your collection configuration:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -1241,7 +1241,7 @@ collections:
     slug: "{{uuid_short}}"
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -1249,7 +1249,7 @@ folder = "/content/posts"
 slug = "{{uuid_short}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1262,7 +1262,7 @@ slug = "{{uuid_short}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -1277,10 +1277,10 @@ slug = "{{uuid_short}}"
 
 ### Preview Paths
 
-When i18n is enabled for an entry collection, you can manage preview paths for each locale using the [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths). This option supports the `{{locale}}` template tag, which will be replaced with the current locale in the preview URL. For example, if you set the `preview_path` to `/{{locale}}/{{slug}}`, the preview URL for an entry with the slug `my-post` in the `fr` locale would be `/fr/my-post`.
+When i18n is enabled for an entry collection, you can manage preview paths for each locale using the [`preview_path` option](https://sveltiacms.app/docs/collections/entries/previews#preview-paths). This option supports the `{{locale}}` template tag, which will be replaced with the current locale in the preview URL. For example, if you set the `preview_path` to `/{{locale}}/{{slug}}`, the preview URL for an entry with the slug `my-post` in the `fr` locale would be `/fr/my-post`.
 
 The `omit_default_locale_from_preview_path` option can be used to omit the locale code from the preview path for the default locale. For example, if `en` is the default locale and `omit_default_locale_from_preview_path` is set to `true`, the preview URL for the English version of the entry would be `/my-post`, while the preview URL for the French version would still be `/fr/my-post`.
 
-Both options apply to [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) as well, so each translation of an unpublished entry links to its own page on the preview build. The per-locale links are offered from the locale pane’s options menu in the Content Editor.
+Both options apply to [Deploy Previews](https://sveltiacms.app/docs/deployments/previews) as well, so each translation of an unpublished entry links to its own page on the preview build. The per-locale links are offered from the locale pane’s options menu in the Content Editor.
 
-Source: https://sveltiacms.app/en/docs/i18n/slugs
+Source: https://sveltiacms.app/docs/i18n/slugs

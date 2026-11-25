@@ -36,7 +36,7 @@ Create an IAM user with programmatic access and attach a policy granting the min
 }
 ```
 
-The `s3:DeleteObject` action is only needed to delete and rename files and folders from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). Leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original. An empty folder is kept with a zero-byte placeholder object.
+The `s3:DeleteObject` action is only needed to delete and rename files and folders from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). Leave it out if you don’t want editors to remove files. Renaming copies the object to the new key and then deletes the original. An empty folder is kept with a zero-byte placeholder object.
 
 The resulting **Access Key ID** goes in `access_key_id` in your config. The **Secret Access Key** is entered by users in the CMS UI when they access the media library for the first time — it is never stored in config.
 
@@ -78,7 +78,7 @@ Configure cross-origin resource sharing in the S3 console under **Bucket > Permi
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 #### Bucket Naming
 
@@ -88,9 +88,7 @@ For virtual-hosted-style URLs (the default), the bucket name must be DNS-compati
 
 Here’s an example configuration for Amazon S3:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   aws_s3:
     access_key_id: AKIAIOSFODNN7EXAMPLE
@@ -101,7 +99,7 @@ media_libraries:
     public_url: https://media.example.com # Optional, see Custom Domain below
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.aws_s3]
 access_key_id = "AKIAIOSFODNN7EXAMPLE"
 bucket = "my-website-assets"
@@ -111,7 +109,7 @@ force_path_style = false
 public_url = "https://media.example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "aws_s3": {
@@ -126,7 +124,7 @@ public_url = "https://media.example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     aws_s3: {
@@ -141,15 +139,13 @@ public_url = "https://media.example.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -158,11 +154,11 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `access_key_id` | Yes | AWS Access Key ID (safe to store in config). |
 | `bucket` | Yes | The S3 bucket name. |
 | `region` | Yes | AWS region, e.g. `us-east-1`, `eu-west-1`. With a custom `endpoint`, the region of your server; see [Self-Hosted Storage](#self-hosted-storage) below. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `force_path_style` | No | Use path-style URLs (`s3.region.amazonaws.com/bucket`) instead of virtual-hosted-style (`bucket.s3.region.amazonaws.com`). Defaults to `false`. Has no effect with `endpoint`, which always uses path-style URLs. |
 | `endpoint` | No | Custom endpoint URL for another S3-compatible service, such as [Garage](https://garagehq.deuxfleurs.fr/) or [MinIO](https://www.min.io/), e.g. `https://s3.example.com`. It must use HTTPS unless it’s on the local computer. Objects are addressed as `{endpoint}/{bucket}/{key}`. See [Self-Hosted Storage](#self-hosted-storage) below. |
 | `public_url` | No | Custom domain for asset URLs (e.g. a CloudFront distribution). See [Custom Domain](#custom-domain) below. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### Custom Domain
 
@@ -178,9 +174,7 @@ The S3 API endpoint is still used for listing and uploading — only the asset U
 
 The Amazon S3 integration also works with a self-hosted, S3-compatible object storage server, such as [Garage](https://garagehq.deuxfleurs.fr/) or [MinIO](https://www.min.io/), for organizations that must keep their assets on their own infrastructure. Set `endpoint` to the URL of the server’s S3 API:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   aws_s3:
     endpoint: https://s3.example.com
@@ -190,7 +184,7 @@ media_libraries:
     public_url: https://my-website-assets.web.example.com # Optional, see below
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.aws_s3]
 endpoint = "https://s3.example.com"
 region = "garage"
@@ -199,7 +193,7 @@ bucket = "my-website-assets"
 public_url = "https://my-website-assets.web.example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "aws_s3": {
@@ -213,7 +207,7 @@ public_url = "https://my-website-assets.web.example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     aws_s3: {
@@ -227,11 +221,9 @@ public_url = "https://my-website-assets.web.example.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 Keep the following in mind:
 
-- **Name in the CMS:** The storage is called Amazon S3 in the CMS by default. Set the [`label` option](https://sveltiacms.app/en/docs/media#custom-storage-name) to show the name of your server instead, e.g. `label: Garage`.
+- **Name in the CMS:** The storage is called Amazon S3 in the CMS by default. Set the [`label` option](https://sveltiacms.app/docs/media#custom-storage-name) to show the name of your server instead, e.g. `label: Garage`.
 - **Path-style URLs:** With a custom `endpoint`, objects are always addressed as `{endpoint}/{bucket}/{key}`, so the server doesn’t need a wildcard DNS record or a TLS certificate for bucket subdomains. `force_path_style` has no effect.
 - **Region:** The region isn’t part of the URL, but it’s used to sign every request. It must therefore match the region the server is configured with. For Garage, that’s the `s3_region` option (`garage` in the sample configuration). For MinIO, it’s `us-east-1` unless you’ve changed it. A mismatch makes every request fail with a signature error.
 - **CORS:** The server must allow cross-origin requests from the CMS origin, as described in [CORS](#cors) above. With Garage, apply the same policy to the bucket through its S3 API, e.g. with `aws s3api put-bucket-cors --endpoint-url https://s3.example.com`. MinIO allows any origin by default. If you’ve restricted it, add the CMS origin to its `cors_allow_origin` setting.
@@ -268,9 +260,9 @@ img-src     https://*.s3.us-east-1.amazonaws.com
             https://media.example.com;
 ```
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Accessing the Storage
 
@@ -278,21 +270,21 @@ There are two ways to use Amazon S3 in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Amazon S3 directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to S3 or select existing media from the bucket.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Amazon S3 directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to S3 or select existing media from the bucket.
 
 When uploading media, files will be stored in the S3 bucket, and the CMS can take advantage of S3’s capabilities directly from the CMS. You can also select existing media from your S3 storage.
 
 #### Asset Library
 
-Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Amazon S3 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/amazon-s3
+Source: https://sveltiacms.app/docs/media/amazon-s3
 
 ---
 
@@ -397,13 +389,13 @@ b2 bucket get my-bucket
 The S3 operations Sveltia CMS requires are:
 
 - `s3_get` — for `ListObjectsV2` (listing) and `GetObject` (preview/download)
-- `s3_head` — optional, for the unsigned `HEAD` requests the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) sends to check whether files linked from entries still exist
+- `s3_head` — optional, for the unsigned `HEAD` requests the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) sends to check whether files linked from entries still exist
 - `s3_put` — for `PutObject` (uploads and replacements) and `CopyObject` (renames)
 - `s3_delete` — for `DeleteObject` (deletions and renames)
 
 Sveltia CMS uploads each file with a single `PUT` request, so `s3_post` (used for multipart uploads) isn’t needed.
 
-Deleting and renaming files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`. If your existing rule lacks them, update it. Otherwise, the browser will block those requests during the preflight check.
+Deleting and renaming files from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) require `s3_delete` and the wildcard `allowedHeaders`. If your existing rule lacks them, update it. Otherwise, the browser will block those requests during the preflight check.
 
 B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, `PUT`, `DELETE`).
 
@@ -411,9 +403,7 @@ B2 maps these native operations to the standard S3 HTTP methods (`GET`, `HEAD`, 
 
 Here’s an example configuration for Backblaze B2:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   backblaze_b2:
     access_key_id: 0123456789abcdef0123456789ab
@@ -423,7 +413,7 @@ media_libraries:
     public_url: https://cdn.example.com # Optional, only for private buckets
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.backblaze_b2]
 access_key_id = "0123456789abcdef0123456789ab"
 bucket = "my-bucket"
@@ -432,7 +422,7 @@ prefix = "cms-uploads/"
 public_url = "https://cdn.example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "backblaze_b2": {
@@ -446,7 +436,7 @@ public_url = "https://cdn.example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     backblaze_b2: {
@@ -460,15 +450,13 @@ public_url = "https://cdn.example.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 **Warning**
 
 Do not write your Application Key (secret) in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -477,9 +465,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `access_key_id` | Yes | B2 Application Key ID (keyID). Safe to store in config. |
 | `bucket` | Yes | The B2 bucket name. |
 | `region` | Yes | B2 region, e.g. `us-west-001`, `us-east-005`, `eu-central-003`. See [B2 regions list](https://www.backblaze.com/docs/cloud-storage-regions-and-endpoints). |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. Only required for **private buckets**. Public buckets serve objects directly via the S3 endpoint. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### Public Buckets vs. Private Buckets
 
@@ -525,9 +513,9 @@ img-src     https://cdn.example.com;
 
 Replace `us-east-005` and `my-bucket` with your actual region and bucket name.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### B2-Specific Notes
 
@@ -545,21 +533,21 @@ There are two ways to use Backblaze B2 in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Backblaze B2 directly within the entry editor. After entering the Application Key (secret) in the CMS UI when prompted, users can upload new media directly to B2 or select existing media from the bucket.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Backblaze B2 directly within the entry editor. After entering the Application Key (secret) in the CMS UI when prompted, users can upload new media directly to B2 or select existing media from the bucket.
 
 When uploading media, files will be stored in the B2 bucket with zero egress fees for downloads. You can also select existing media from your B2 storage.
 
 #### Asset Library
 
-Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Backblaze B2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/backblaze-b2
+Source: https://sveltiacms.app/docs/media/backblaze-b2
 
 ---
 
@@ -628,7 +616,7 @@ No CORS configuration is needed. The Bunny Storage S3 endpoint always responds w
 
 Here’s an example configuration for Bunny Storage:
 
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   bunny_storage:
     bucket: my-zone
@@ -637,7 +625,7 @@ media_libraries:
     prefix: cms-uploads/ # Optional
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.bunny_storage]
 bucket = "my-zone"
 region = "de"
@@ -645,7 +633,7 @@ public_url = "https://my-zone.b-cdn.net"
 prefix = "cms-uploads/" # Optional
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "bunny_storage": {
@@ -658,7 +646,7 @@ prefix = "cms-uploads/" # Optional
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     bunny_storage: {
@@ -677,7 +665,7 @@ Do not write your storage zone password in the configuration file, as it should 
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -687,8 +675,8 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `region` | Yes | Two-letter [region code](#regions) of the storage zone’s main region, e.g. `de`. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Pull zone hostname for asset previews and downloads, e.g. `https://my-zone.b-cdn.net`. Required because the storage endpoint always requires authentication. |
 | `access_key_id` | No | Defaults to `bucket`, as the storage zone name serves as the access key ID. There is normally no reason to set it. |
-| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `prefix` | No | Path prefix within the storage zone, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### Content Security Policy
 
@@ -702,9 +690,9 @@ img-src     https://my-zone.b-cdn.net;
 
 Replace `de` and `my-zone.b-cdn.net` with your actual region code and pull zone hostname.
 
-The pull zone hostname must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, the pull zone must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The pull zone hostname must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from it. For the same reason, the pull zone must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Bunny Storage-Specific Notes
 
@@ -726,21 +714,21 @@ There are two ways to use Bunny Storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Bunny Storage directly within the entry editor. After entering the storage zone password in the CMS UI when prompted, users can upload new media directly to your storage zone or select existing media.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Bunny Storage directly within the entry editor. After entering the storage zone password in the CMS UI when prompted, users can upload new media directly to your storage zone or select existing media.
 
 When uploading media, files will be stored in the storage zone and delivered through the Bunny CDN. You can also select existing media from your storage zone.
 
 #### Asset Library
 
-Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS.
+Bunny Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your storage zone, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/bunny-storage
+Source: https://sveltiacms.app/docs/media/bunny-storage
 
 ---
 
@@ -813,13 +801,13 @@ Configure via **R2 Dashboard > Bucket > Settings > CORS Policy**. CORS is requir
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 ### Configuration
 
 Here’s an example configuration for Cloudflare R2:
 
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   cloudflare_r2:
     access_key_id: abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890
@@ -830,7 +818,7 @@ media_libraries:
     jurisdiction: eu # Optional; 'default' | 'eu' | 'fedramp'
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.cloudflare_r2]
 access_key_id = "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
 bucket = "my-r2-bucket"
@@ -840,7 +828,7 @@ prefix = "cms-uploads/" # Optional
 jurisdiction = "eu" # Optional; 'default' | 'eu' | 'fedramp'
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "cloudflare_r2": {
@@ -855,7 +843,7 @@ jurisdiction = "eu" # Optional; 'default' | 'eu' | 'fedramp'
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     cloudflare_r2: {
@@ -876,7 +864,7 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -886,9 +874,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `bucket` | Yes | The R2 bucket name. |
 | `account_id` | Yes | Your Cloudflare account ID. Used to construct the S3 API endpoint. |
 | `public_url` | Yes | Public URL for asset previews and downloads. Required because the R2 S3 API always requires authentication. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `jurisdiction` | No | Cloudflare R2 [jurisdictional restriction](#jurisdictional-restrictions) for the bucket. One of `'default'`, `'eu'`, `'fedramp'`. Defaults to `'default'`. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 #### Jurisdictional Restrictions
 
@@ -941,9 +929,9 @@ connect-src https://abcdef1234567890abcdef1234567890.eu.r2.cloudflarestorage.com
 img-src     https://pub-abcdef1234567890abcdef1234567890.r2.dev;
 ```
 
-The public URL host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from it. For the same reason, it must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The public URL host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from it. For the same reason, it must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Accessing the Storage
 
@@ -951,21 +939,21 @@ There are two ways to use Cloudflare R2 in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Cloudflare R2 directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to R2 or select existing media from the bucket.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Cloudflare R2 directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to R2 or select existing media from the bucket.
 
 When uploading media, files will be stored in the R2 bucket, and the CMS can take advantage of R2’s capabilities directly from the CMS. You can also select existing media from your R2 storage.
 
 #### Asset Library
 
-Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Cloudflare R2 also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/cloudflare-r2
+Source: https://sveltiacms.app/docs/media/cloudflare-r2
 
 ---
 
@@ -1016,15 +1004,13 @@ Configure via **DigitalOcean Control Panel > Spaces > Select bucket > Settings >
 ]
 ```
 
-The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
+The `DELETE` method and the wildcard `AllowedHeaders` are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing policy. Otherwise, the browser will block those requests during the preflight check.
 
 ### Configuration
 
 Here’s an example configuration for DigitalOcean Spaces:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   digitalocean_spaces:
     access_key_id: ABCD1234EFGH5678IJKL
@@ -1034,7 +1020,7 @@ media_libraries:
     public_url: https://my-space.nyc3.cdn.digitaloceanspaces.com # Optional, see CDN Endpoint below
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.digitalocean_spaces]
 access_key_id = "ABCD1234EFGH5678IJKL"
 bucket = "my-space"
@@ -1043,7 +1029,7 @@ prefix = "cms-uploads/"
 public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "digitalocean_spaces": {
@@ -1057,7 +1043,7 @@ public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     digitalocean_spaces: {
@@ -1071,15 +1057,13 @@ public_url = "https://my-space.nyc3.cdn.digitaloceanspaces.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -1088,9 +1072,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `access_key_id` | Yes | Spaces Access Key. Safe to store in config. |
 | `bucket` | Yes | The Space name. |
 | `region` | Yes | Spaces region, e.g. `nyc3`, `sfo2`, `ams3`, `sgp1`, `fra1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom subdomain URL for asset previews. See [CDN Endpoint](#cdn-endpoint) below. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### CDN Endpoint
 
@@ -1128,9 +1112,9 @@ img-src     https://my-space.nyc3.cdn.digitaloceanspaces.com;
 
 Replace `nyc3` and `my-space` with your actual region and bucket name. If you use a custom subdomain, such as `https://images.example.com`, allow it in place of the CDN endpoint.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom subdomain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom subdomain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Accessing the Storage
 
@@ -1138,21 +1122,21 @@ There are two ways to use DigitalOcean Spaces in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on DigitalOcean Spaces directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to Spaces or select existing media from the bucket.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on DigitalOcean Spaces directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to Spaces or select existing media from the bucket.
 
 When uploading media, files will be stored in the Spaces bucket, and the CMS can take advantage of Spaces’ capabilities directly from the CMS. You can also select existing media from your Spaces storage.
 
 #### Asset Library
 
-DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+DigitalOcean Spaces also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/digitalocean-spaces
+Source: https://sveltiacms.app/docs/media/digitalocean-spaces
 
 ---
 
@@ -1213,7 +1197,7 @@ No CORS configuration is needed. Neon Object Storage allows cross-origin request
 
 Here’s an example configuration for Neon Object Storage:
 
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   neon_object_storage:
     access_key_id: nak_live_0123456789abcdef0123456789abcdef
@@ -1222,7 +1206,7 @@ media_libraries:
     prefix: cms-uploads/ # Optional
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.neon_object_storage]
 access_key_id = "nak_live_0123456789abcdef0123456789abcdef"
 bucket = "media"
@@ -1230,7 +1214,7 @@ endpoint = "https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tec
 prefix = "cms-uploads/" # Optional
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "neon_object_storage": {
@@ -1243,7 +1227,7 @@ prefix = "cms-uploads/" # Optional
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     neon_object_storage: {
@@ -1262,7 +1246,7 @@ Do not write your Secret Access Key in the configuration file, as it should be k
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -1272,9 +1256,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `bucket` | Yes | The bucket name. |
 | `endpoint` | Yes | The branch’s storage endpoint (`AWS_ENDPOINT_URL_S3`), e.g. `https://br-cool-darkness-a1b2c3d4.storage.c-1.us-east-2.aws.neon.tech`. See [Endpoint](#endpoint) above. |
 | `region` | No | The region used to sign requests. Defaults to the region in the endpoint’s hostname, e.g. `us-east-2`. There is normally no reason to set it. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. Required for a `private` bucket. See [CDN / Custom Domain](#cdn-custom-domain) below. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### CDN / Custom Domain
 
@@ -1305,9 +1289,9 @@ img-src     https://cdn.example.com;
 
 Replace the endpoint and domain with your own.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Neon Object Storage-Specific Notes
 
@@ -1327,19 +1311,19 @@ There are two ways to use Neon Object Storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Neon Object Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media to your bucket or select existing media.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Neon Object Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media to your bucket or select existing media.
 
 #### Asset Library
 
-Neon Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Neon Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/neon-object-storage
+Source: https://sveltiacms.app/docs/media/neon-object-storage
 
 ---
 
@@ -1376,15 +1360,13 @@ Objects uploaded by other means, such as the console, stay private unless you ma
 
 Configure CORS via AWS CLI. See the [documentation](https://www.scaleway.com/en/docs/object-storage/api-cli/setting-cors-rules/) for details. CORS is required because Sveltia CMS sends custom AWS Signature v4 headers that trigger a preflight request.
 
-Make sure to allow the necessary HTTP methods (`GET`, `PUT` and `DELETE`) and all headers (`*`), because Sveltia CMS sends the `Authorization`, `x-amz-*` and `Content-Type` headers. The `DELETE` method and the `x-amz-copy-source` header are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule.
+Make sure to allow the necessary HTTP methods (`GET`, `PUT` and `DELETE`) and all headers (`*`), because Sveltia CMS sends the `Authorization`, `x-amz-*` and `Content-Type` headers. The `DELETE` method and the `x-amz-copy-source` header are needed to delete and rename files from the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). If you configured CORS before these operations became available, add them to your existing rule.
 
 ### Configuration
 
 Here’s an example configuration for Scaleway Object Storage:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   scaleway_object_storage:
     access_key_id: SCWXXXXXXXXXXXXXXXXXX
@@ -1394,7 +1376,7 @@ media_libraries:
     public_url: https://my-cdn.example.com # Optional, see CDN / Custom Domain below
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.scaleway_object_storage]
 access_key_id = "SCWXXXXXXXXXXXXXXXXXX"
 bucket = "my-bucket"
@@ -1403,7 +1385,7 @@ prefix = "cms-uploads/"
 public_url = "https://my-cdn.example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "scaleway_object_storage": {
@@ -1417,7 +1399,7 @@ public_url = "https://my-cdn.example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     scaleway_object_storage: {
@@ -1431,15 +1413,13 @@ public_url = "https://my-cdn.example.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -1448,9 +1428,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `access_key_id` | Yes | Scaleway IAM Access Key ID. Safe to store in config. |
 | `bucket` | Yes | The bucket name. |
 | `region` | Yes | Scaleway region: `fr-par`, `nl-ams`, `pl-waw` or `it-mil`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `public_url` | No | CDN or custom domain URL for asset previews. See [CDN / Custom Domain](#cdn-custom-domain) below. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### CDN / Custom Domain
 
@@ -1484,9 +1464,9 @@ img-src     https://my-cdn.example.com;
 
 Replace `fr-par` and `my-bucket` with your actual region and bucket name.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a CDN or custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Accessing the Storage
 
@@ -1494,19 +1474,19 @@ There are two ways to use Scaleway Object Storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Scaleway Object Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to your bucket or select existing media.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Scaleway Object Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to your bucket or select existing media.
 
 #### Asset Library
 
-Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Scaleway Object Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/scaleway-object-storage
+Source: https://sveltiacms.app/docs/media/scaleway-object-storage
 
 ---
 
@@ -1551,9 +1531,7 @@ Supabase Storage’s S3 endpoint allows cross-origin requests by default for aut
 
 Here’s an example configuration for Supabase Storage:
 
-<!-- cSpell:disable -->
-
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   supabase_storage:
     access_key_id: your_access_key_id
@@ -1564,7 +1542,7 @@ media_libraries:
     public_url: https://my-cdn.example.com # Optional, see Custom Domain below
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.supabase_storage]
 access_key_id = "your_access_key_id"
 project_id = "abcdefghijklmnopqrst"
@@ -1574,7 +1552,7 @@ prefix = "cms-uploads/"
 public_url = "https://my-cdn.example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "supabase_storage": {
@@ -1589,7 +1567,7 @@ public_url = "https://my-cdn.example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     supabase_storage: {
@@ -1604,15 +1582,13 @@ public_url = "https://my-cdn.example.com"
 }
 ```
 
-<!-- cSpell:enable -->
-
 **Warning**
 
 Do not write your Secret Access Key in the configuration file, as it should be kept confidential and not exposed in client-side code. Users will be prompted to enter the key when they use the storage for the first time. It’s then stored securely in the browser’s local storage.
 
 **Sharing the credentials with your team**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/en/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can enter the secret once in the [Credentials](https://sveltiacms.app/docs/additions/administration#credentials) section of the Administration page instead. Everyone who signs in then uses it without being prompted, unless they enter their own.
 
 #### Configuration Properties
 
@@ -1622,9 +1598,9 @@ With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin
 | `project_id` | Yes | Supabase Project ID. Used to construct the S3 API endpoint and public URL. |
 | `bucket` | Yes | The storage bucket name. |
 | `region` | No | The project region shown on the Storage S3 configuration page, e.g. `eu-central-1`. Defaults to `us-east-1`. |
-| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/en/docs/media#entry-based-folders). |
+| `prefix` | No | Path prefix within the bucket, e.g. `uploads/`. A trailing slash is added if missing. In a File or Image field, it can contain [template tags](https://sveltiacms.app/docs/media#entry-based-folders). |
 | `public_url` | No | Custom domain URL for asset previews. See [Custom Domain](#custom-domain) below. |
-| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/en/docs/media#custom-storage-name). |
+| `label` | No | Name shown for this storage in the CMS. Top-level only. See [Custom Storage Name](https://sveltiacms.app/docs/media#custom-storage-name). |
 
 ### Custom Domain
 
@@ -1654,9 +1630,9 @@ img-src     https://media.example.com;
 
 Replace `abcdefghijklmnopqrst` with your actual Project ID.
 
-The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
+The asset host must be in `connect-src` because the Download and Copy buttons and the text preview in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) fetch the file from its public URL. For the same reason, a custom domain must also send CORS headers that allow the CMS origin. Otherwise, downloads fail.
 
-See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Accessing the Storage
 
@@ -1664,16 +1640,16 @@ There are two ways to use Supabase Storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media on Supabase Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to your bucket or select existing media.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media on Supabase Storage directly within the entry editor. After entering the Secret Access Key in the CMS UI when prompted, users can upload new media directly to your bucket or select existing media.
 
 #### Asset Library
 
-Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
+Supabase Storage also appears under **External Locations** in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library). There, users can browse, search, sort and filter the files in your bucket, and upload, rename, replace, download or delete them without leaving the CMS.
 
-The files and folders are browsed [folder by folder](https://sveltiacms.app/en/docs/ui/asset-library#folders-on-external-locations):
+The files and folders are browsed [folder by folder](https://sveltiacms.app/docs/ui/asset-library#folders-on-external-locations):
 
 - Subfolders are listed ahead of the files.
 - Uploads go to the folder being viewed.
 - Folders can be created, renamed and deleted.
 
-Source: https://sveltiacms.app/en/docs/media/supabase-storage
+Source: https://sveltiacms.app/docs/media/supabase-storage

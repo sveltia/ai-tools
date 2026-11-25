@@ -12,7 +12,7 @@ Sveltia CMS provides options to control entry creation, deletion and duplication
 
 You can disable entry creation and deletion by setting the `create` option to `false` and the `delete` option to `false` in the collection definition. This is useful for collections where entries are managed programmatically or through other means, and you don’t want editors to create or delete entries.
 
-```yaml [YAML]{5-6}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -24,7 +24,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -42,7 +42,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7-8}
+```json JSON
 {
   "collections": [
     {
@@ -60,7 +60,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7-8}
+```js JavaScript
 {
   collections: [
     {
@@ -88,7 +88,7 @@ You can disable entry duplication by setting the `duplicate` option to `false` i
 
 When the `duplicate` option is set to `false`, the “Duplicate” button will be disabled in the Sveltia CMS interface, preventing users from creating duplicate entries.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: products
     label: Products
@@ -96,7 +96,7 @@ collections:
     duplicate: false
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "products"
 label = "Products"
@@ -104,7 +104,7 @@ folder = "/content/products"
 duplicate = false
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -117,7 +117,7 @@ duplicate = false
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -134,7 +134,7 @@ duplicate = false
 
 You can limit the number of entries in an entry collection using the `limit` option. This is useful for collections where you want to restrict the number of items, such as featured articles or top products.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: featured_articles
     label: Featured Articles
@@ -145,7 +145,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "featured_articles"
 label = "Featured Articles"
@@ -162,7 +162,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -179,7 +179,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -198,17 +198,17 @@ widget = "richtext"
 
 With the above configuration, editors can only create up to 5 entries in the `featured_articles` collection. Once the limit is reached, the “Create new” button will be disabled in the Sveltia CMS interface.
 
-The collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) doesn’t take up a slot. It stands for the collection’s own page rather than for one of the entries in it, so a collection with `limit: 5` and an `index_file` holds its index file plus 5 entries.
+The collection’s [index file](https://sveltiacms.app/docs/collections/entries/listings#managing-hugo-s-special-index-file) doesn’t take up a slot. It stands for the collection’s own page rather than for one of the entries in it, so a collection with `limit: 5` and an `index_file` holds its index file plus 5 entries.
 
 ### Making Content Read-Only
 
 You can make content read-only with the `readonly` option. Editors can still browse, search and view read-only content, including its preview, but they can’t change it. The option can be set at three levels:
 
 - **Globally**: At the top level of the configuration, `readonly: true` puts the whole CMS in read-only mode. This is handy while your site is under maintenance or being migrated, when editors shouldn’t write to the repository.
-- **Collection**: On an entry collection, a file collection or an [asset collection](https://sveltiacms.app/en/docs/media/internal#asset-collections), `readonly: true` locks that collection only.
-- **File**: On a file in a file collection, or on a [singleton](https://sveltiacms.app/en/docs/collections/singletons), `readonly: true` locks that file only, while the other files stay editable.
+- **Collection**: On an entry collection, a file collection or an [asset collection](https://sveltiacms.app/docs/media/internal#asset-collections), `readonly: true` locks that collection only.
+- **File**: On a file in a file collection, or on a [singleton](https://sveltiacms.app/docs/collections/singletons), `readonly: true` locks that file only, while the other files stay editable.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: archive
     label: Archive
@@ -219,7 +219,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "archive"
 label = "Archive"
@@ -236,7 +236,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -253,7 +253,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -272,21 +272,21 @@ widget = "richtext"
 
 To put the whole CMS in read-only mode, add the option to the top level instead:
 
-```yaml [YAML]
+```yaml YAML
 readonly: true
 ```
 
-```toml [TOML]
+```toml TOML
 readonly = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "readonly": true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   readonly: true,
 }
@@ -297,7 +297,7 @@ A read-only level locks everything below it, and a lower level can’t opt out w
 For read-only content, Sveltia CMS:
 
 - Shows a message at the top of the entry list, the Content Editor and the Asset Library, saying that the content can be viewed but not changed. When the whole CMS is read-only, the message says so instead.
-- Disables creating, duplicating, deleting and reordering entries, including from the global Create menu and the **Add** button of a Relation field that [creates related entries](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries). The Create menu button itself is disabled when nothing can be created, as in read-only mode.
+- Disables creating, duplicating, deleting and reordering entries, including from the global Create menu and the **Add** button of a Relation field that [creates related entries](https://sveltiacms.app/docs/fields/relation#creating-related-entries). The Create menu button itself is disabled when nothing can be created, as in read-only mode.
 - Opens entries and files with every field locked. The Save button, the slug and parent folder editors, the translation and copy options, and the reset options are not available.
 - Hides the Editorial Workflow controls for the entry, so it can’t be moved through the review stages, published or discarded.
 - Disables uploading, replacing, editing, renaming and deleting assets in the media folders of the read-only collection or file, as well as creating, renaming and deleting subfolders there. The global media folder is only read-only along with the whole CMS.
@@ -312,7 +312,7 @@ The `readonly` option only affects the Sveltia CMS interface. It doesn’t stop 
 
 You can hide an entry collection from the Sveltia CMS interface using the `hide` option. This is useful for collections that are managed programmatically or through other means, and you don’t want editors to see or modify them.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -323,7 +323,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -340,7 +340,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -357,7 +357,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -374,7 +374,7 @@ widget = "richtext"
 }
 ```
 
-When the `hide` option is set to `true`, the collection will not appear in the Sveltia CMS interface, and editors will not be able to access or modify its entries. Its entries are also left out of the global search results and of the list of entries using an asset in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library).
+When the `hide` option is set to `true`, the collection will not appear in the Sveltia CMS interface, and editors will not be able to access or modify its entries. Its entries are also left out of the global search results and of the list of entries using an asset in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library).
 
 ### Reordering Entries
 
@@ -382,9 +382,9 @@ When the `reorder` option is set to `true`, Sveltia CMS enables manual reorderin
 
 With this option enabled, users can reorder entries by dragging and dropping them or using the arrow buttons.
 
-In a [single-file collection](https://sveltiacms.app/en/docs/collections/entries/single-file), the entries can always be reordered without this option, which can’t be used there. The order of the objects in the array is the order of the entries, so no `order` field is written.
+In a [single-file collection](https://sveltiacms.app/docs/collections/entries/single-file), the entries can always be reordered without this option, which can’t be used there. The order of the objects in the array is the order of the entries, so no `order` field is written.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -395,7 +395,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -412,7 +412,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -429,7 +429,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -448,7 +448,7 @@ widget = "richtext"
 
 By default, orders are saved in an additional property named `order` in each entry’s data, starting from `1`. However, you can customize this setting by providing an object with a `key` property that specifies a different field name for storing the order value. For example, to use the `weight` field for [Hugo](https://gohugo.io/methods/page/weight/) or [Zola](https://www.getzola.org/documentation/content/section/#weight), configure it like this:
 
-```yaml [YAML]{5-6}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -460,7 +460,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -477,7 +477,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -494,7 +494,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -513,9 +513,9 @@ widget = "richtext"
 
 #### Reordering Within Groups
 
-Entering reorder mode normally clears any active grouping, so the entry list becomes a single flat sequence. If the order value is only meaningful within a group — for example, articles ordered per category — you can keep the list grouped while reordering instead. To do so, add a `group` property to the `reorder` option. Its value is the `name` of one of the collection’s [view groups](https://sveltiacms.app/en/docs/collections/entries/views#grouping):
+Entering reorder mode normally clears any active grouping, so the entry list becomes a single flat sequence. If the order value is only meaningful within a group — for example, articles ordered per category — you can keep the list grouped while reordering instead. To do so, add a `group` property to the `reorder` option. Its value is the `name` of one of the collection’s [view groups](https://sveltiacms.app/docs/collections/entries/views#grouping):
 
-```yaml [YAML]{5-11}
+```yaml YAML
 collections:
   - name: articles
     label: Articles
@@ -533,7 +533,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5,7-10}
+```toml TOML
 [[collections]]
 name = "articles"
 label = "Articles"
@@ -559,7 +559,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7-10}
+```json JSON
 {
   "collections": [
     {
@@ -580,7 +580,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7-10}
+```js JavaScript
 {
   collections: [
     {
@@ -614,7 +614,7 @@ A few things to keep in mind:
 
 When the `bulk_edit` option is set to `true`, users can change the simple fields of many entries at once in a spreadsheet-like table, instead of opening and saving each entry one by one. This is useful for chores like turning a `draft` flag on or off, moving posts to another category or fixing titles across a collection.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -627,7 +627,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -655,7 +655,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -674,7 +674,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -699,13 +699,13 @@ In the example above, the table has Title, Draft and Category columns. The Body 
 
 The toolbar shows how many values have been changed, and the changed cells are highlighted. Click **Save** to write all the changes in a single commit, or **Cancel** to discard them. You’re asked to confirm if there are unsaved changes.
 
-The table lists the entries shown before clicking **Edit**, in the same order and groups. To edit only some of the entries, such as the posts in one category, [filter](https://sveltiacms.app/en/docs/collections/entries/views#filtering) the list first. The sorting, filtering and grouping menus are hidden while editing, so the rows stay where they are.
+The table lists the entries shown before clicking **Edit**, in the same order and groups. To edit only some of the entries, such as the posts in one category, [filter](https://sveltiacms.app/docs/collections/entries/views#filtering) the list first. The sorting, filtering and grouping menus are hidden while editing, so the rows stay where they are.
 
 #### Choosing the Fields
 
 By default, every field that can be edited in bulk becomes a column, in the configured order. To show only some of them, or in a different order, provide an object with a `fields` property listing the field names instead:
 
-```yaml [YAML]{5-6}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -719,7 +719,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -747,7 +747,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -766,7 +766,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -789,15 +789,15 @@ If a listed field doesn’t exist at the top level of the collection, or can’t
 
 #### Supported Fields
 
-Only a top-level field holding a single simple value can be edited in bulk — the same field types as an [editor component in the inline mode](https://sveltiacms.app/en/docs/api/editor-components#status-select-inline-mode):
+Only a top-level field holding a single simple value can be edited in bulk — the same field types as an [editor component in the inline mode](https://sveltiacms.app/docs/api/editor-components#status-select-inline-mode):
 
-- [Boolean](https://sveltiacms.app/en/docs/fields/boolean)
-- [Color](https://sveltiacms.app/en/docs/fields/color)
-- [DateTime](https://sveltiacms.app/en/docs/fields/datetime)
-- [Number](https://sveltiacms.app/en/docs/fields/number)
-- [Relation](https://sveltiacms.app/en/docs/fields/relation)
-- [Select](https://sveltiacms.app/en/docs/fields/select)
-- [String](https://sveltiacms.app/en/docs/fields/string)
+- [Boolean](https://sveltiacms.app/docs/fields/boolean)
+- [Color](https://sveltiacms.app/docs/fields/color)
+- [DateTime](https://sveltiacms.app/docs/fields/datetime)
+- [Number](https://sveltiacms.app/docs/fields/number)
+- [Relation](https://sveltiacms.app/docs/fields/relation)
+- [Select](https://sveltiacms.app/docs/fields/select)
+- [String](https://sveltiacms.app/docs/fields/string)
 
 A field of these types is still left out if:
 
@@ -810,15 +810,15 @@ Other fields, such as Text, Rich Text, List and Object fields, can only be edite
 
 - The values are checked against the field options, such as `required`, `pattern`, `min` and `max`, before anything is saved, as they are in the content editor. An invalid value is highlighted with an error message, and nothing is saved until it’s fixed. A `unique` field is checked against all the pending changes together, so two entries can swap their values.
 - Only the entries with changed values are saved. A DateTime field with the `auto_now` option is updated in each of them, as it would be in the content editor.
-- With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the table shows the values in the default locale. A field with `i18n: duplicate` gets the new value in every locale. A translatable field only changes in the default locale; the other locales can be updated in the content editor.
+- With [i18n](https://sveltiacms.app/docs/i18n) enabled, the table shows the values in the default locale. A field with `i18n: duplicate` gets the new value in every locale. A translatable field only changes in the default locale; the other locales can be updated in the content editor.
 - The changes are applied to the entries as they are in the repository when you click **Save**, so a change someone else has made to another field of the same entry in the meantime is kept.
-- The collection’s [index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file) and [read-only](#making-content-read-only) entries are not listed.
+- The collection’s [index file](https://sveltiacms.app/docs/collections/entries/listings#managing-hugo-s-special-index-file) and [read-only](#making-content-read-only) entries are not listed.
 
-Like [reordering](#reordering-entries), bulk editing writes the changes to the configured branch directly, even if [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is enabled. This is because it doesn’t go through the review of each entry. An entry with unpublished changes is edited in its published version, so publishing those changes later may revert the bulk edit.
+Like [reordering](#reordering-entries), bulk editing writes the changes to the configured branch directly, even if [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) is enabled. This is because it doesn’t go through the review of each entry. An entry with unpublished changes is edited in its published version, so publishing those changes later may revert the bulk edit.
 
 The **Edit** button is not available:
 
-- to [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributors, or to users who can’t push to the branch, for the same reason
+- to [Open Authoring](https://sveltiacms.app/docs/workflows/open) contributors, or to users who can’t push to the branch, for the same reason
 - on small screens, where a table doesn’t fit
 
-Source: https://sveltiacms.app/en/docs/collections/entries/operations
+Source: https://sveltiacms.app/docs/collections/entries/operations

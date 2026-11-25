@@ -10,28 +10,28 @@ Sveltia CMS supports multiple media storage providers for managing media assets 
 
 **Note for Netlify/Decap CMS users**
 
-In Sveltia CMS, the term “media storage provider” is used instead of “media library” to avoid confusion with Sveltia CMS’s [Asset Library feature](https://sveltiacms.app/en/docs/ui/asset-library) that lets users manage media assets from multiple sources in one place. There is no change in functionality or configuration; it’s simply a terminology update.
+In Sveltia CMS, the term “media storage provider” is used instead of “media library” to avoid confusion with Sveltia CMS’s [Asset Library feature](https://sveltiacms.app/docs/ui/asset-library) that lets users manage media assets from multiple sources in one place. There is no change in functionality or configuration; it’s simply a terminology update.
 
 ### Internal Storage
 
-The [internal media storage](https://sveltiacms.app/en/docs/media/internal) allows you to store media files directly in your Git repository along with your content files. It supports various configuration options for organizing and managing media files effectively.
+The [internal media storage](https://sveltiacms.app/docs/media/internal) allows you to store media files directly in your Git repository along with your content files. It supports various configuration options for organizing and managing media files effectively.
 
 ### External Storage
 
 Sveltia CMS supports integrations with popular cloud-based media storage providers for enhanced capabilities such as automatic image transformations, CDN delivery and more. Sveltia CMS currently supports the following external media storage providers:
 
-- [Amazon S3](https://sveltiacms.app/en/docs/media/amazon-s3) and S3-compatible providers:
-  - [Backblaze B2](https://sveltiacms.app/en/docs/media/backblaze-b2)
-  - [Bunny Storage](https://sveltiacms.app/en/docs/media/bunny-storage)
-  - [Cloudflare R2](https://sveltiacms.app/en/docs/media/cloudflare-r2)
-  - [DigitalOcean Spaces](https://sveltiacms.app/en/docs/media/digitalocean-spaces)
-  - [Neon Object Storage](https://sveltiacms.app/en/docs/media/neon-object-storage)
-  - [Scaleway Object Storage](https://sveltiacms.app/en/docs/media/scaleway-object-storage)
-  - [Supabase Storage](https://sveltiacms.app/en/docs/media/supabase-storage)
-  - Any other S3-compatible service, including self-hosted servers such as [Garage](https://garagehq.deuxfleurs.fr/) and [MinIO](https://www.min.io/), through the Amazon S3 integration’s `endpoint` option. See [Self-Hosted Storage](https://sveltiacms.app/en/docs/media/amazon-s3#self-hosted-storage) for details.
-- [Azure Blob Storage](https://sveltiacms.app/en/docs/media/azure-blob-storage)
-- [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary)
-- [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare)
+- [Amazon S3](https://sveltiacms.app/docs/media/amazon-s3) and S3-compatible providers:
+  - [Backblaze B2](https://sveltiacms.app/docs/media/backblaze-b2)
+  - [Bunny Storage](https://sveltiacms.app/docs/media/bunny-storage)
+  - [Cloudflare R2](https://sveltiacms.app/docs/media/cloudflare-r2)
+  - [DigitalOcean Spaces](https://sveltiacms.app/docs/media/digitalocean-spaces)
+  - [Neon Object Storage](https://sveltiacms.app/docs/media/neon-object-storage)
+  - [Scaleway Object Storage](https://sveltiacms.app/docs/media/scaleway-object-storage)
+  - [Supabase Storage](https://sveltiacms.app/docs/media/supabase-storage)
+  - Any other S3-compatible service, including self-hosted servers such as [Garage](https://garagehq.deuxfleurs.fr/) and [MinIO](https://www.min.io/), through the Amazon S3 integration’s `endpoint` option. See [Self-Hosted Storage](https://sveltiacms.app/docs/media/amazon-s3#self-hosted-storage) for details.
+- [Azure Blob Storage](https://sveltiacms.app/docs/media/azure-blob-storage)
+- [Cloudinary](https://sveltiacms.app/docs/media/cloudinary)
+- [Uploadcare](https://sveltiacms.app/docs/media/uploadcare)
 
 Unlike backends, you can use multiple storage providers simultaneously in Sveltia CMS. Each media storage provider integration includes its own configuration instructions.
 
@@ -51,7 +51,7 @@ Relevant configuration options can be set in the `media_folder`, `public_folder`
 
 The following example demonstrates how to configure multiple providers in Sveltia CMS:
 
-```yaml [YAML]
+```yaml YAML
 # Default media storage paths
 media_folder: /public/media
 public_folder: /media
@@ -76,7 +76,7 @@ media_libraries:
       defaultOperations: '/resize/800x600/'
 ```
 
-```toml [TOML]
+```toml TOML
 # Default media storage paths
 media_folder = "/public/media"
 public_folder = "/media"
@@ -104,7 +104,7 @@ autoFilename = true
 defaultOperations = "/resize/800x600/"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_folder": "/public/media",
   "public_folder": "/media",
@@ -135,7 +135,7 @@ defaultOperations = "/resize/800x600/"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_folder: "/public/media",
   public_folder: "/media",
@@ -168,7 +168,7 @@ defaultOperations = "/resize/800x600/"
 
 See the individual media storage provider documentation for specific configuration options and details.
 
-The `media_libraries` option can also be defined for a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field. The options of each provider are merged over the same provider’s top-level options. This includes the internal media storage (`default`), the stock photo providers (`stock_assets`) and the shared `all` options. A field therefore only needs to set the options it changes, or `false` to make the provider unavailable for the field. Providers not defined at the field level fall back to the top-level configuration.
+The `media_libraries` option can also be defined for a [File](https://sveltiacms.app/docs/fields/file) or [Image](https://sveltiacms.app/docs/fields/image) field. The options of each provider are merged over the same provider’s top-level options. This includes the internal media storage (`default`), the stock photo providers (`stock_assets`) and the shared `all` options. A field therefore only needs to set the options it changes, or `false` to make the provider unavailable for the field. Providers not defined at the field level fall back to the top-level configuration.
 
 The options are merged as follows:
 
@@ -199,7 +199,7 @@ media_library:
 
 The Select File and Select Image dialogs open on the first repository folder, such as Global Assets, even when an external storage provider is configured. If your editors usually upload files to an external provider, set that provider’s `default` option to `true`. The dialogs then open on it, so files don’t end up in your repository by mistake.
 
-```yaml [YAML]{6}
+```yaml YAML
 media_libraries:
   aws_s3:
     access_key_id: YOUR_ACCESS_KEY_ID
@@ -208,7 +208,7 @@ media_libraries:
     default: true
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.aws_s3]
 access_key_id = "YOUR_ACCESS_KEY_ID"
 bucket = "my-website-assets"
@@ -216,7 +216,7 @@ region = "us-east-1"
 default = true
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "media_libraries": {
     "aws_s3": {
@@ -229,7 +229,7 @@ default = true
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   media_libraries: {
     aws_s3: {
@@ -249,7 +249,7 @@ The option can also be set in the `media_libraries` option of a File or Image fi
 - **Field over site:** A provider marked in the field takes precedence over one marked at the top level.
 - **Clearing the mark:** Set `default: false` on a provider in the field to clear its top-level mark.
 - **Back to the repository:** Set `default: true` on the internal media storage, i.e. `media_libraries.default.default`, to make a field open the repository folder again.
-- **Unavailable providers:** A marked provider that isn’t offered is skipped. For example, it may be disabled for the field, or the field may [select a folder](https://sveltiacms.app/en/docs/fields/file#selecting-a-folder), which can only be picked from the repository. The next marked provider opens instead, or the first repository folder if there’s none.
+- **Unavailable providers:** A marked provider that isn’t offered is skipped. For example, it may be disabled for the field, or the field may [select a folder](https://sveltiacms.app/docs/fields/file#selecting-a-folder), which can only be picked from the repository. The next marked provider opens instead, or the first repository folder if there’s none.
 - **Several marks:** Mark only one provider. If more are marked, the first one offered is used, in the order they’re listed.
 
 The option only applies to the dialogs. The Asset Library still opens on All Assets, and files dropped directly on a File or Image field aren’t affected. The legacy `media_library` option doesn’t support it.
@@ -275,7 +275,7 @@ You can enable automatic image optimization by configuring the `transformations`
 
 For example, you can convert raster images to WebP format, resize them to a maximum dimension and optimize SVG files.
 
-```yaml [YAML]{3-10}
+```yaml YAML
 media_libraries:
   all:
     transformations:
@@ -288,7 +288,7 @@ media_libraries:
         optimize: true # default: false
 ```
 
-```toml [TOML]{2-9}
+```toml TOML
 [media_libraries.all]
 [media_libraries.all.transformations]
 [media_libraries.all.transformations.raster_image]
@@ -300,7 +300,7 @@ height = 2048
 optimize = true
 ```
 
-```json [JSON]{4-14}
+```json JSON
 {
   "media_libraries": {
     "all": {
@@ -320,7 +320,7 @@ optimize = true
 }
 ```
 
-```js [JavaScript]{4-14}
+```js JavaScript
 {
   media_libraries: {
     all: {
@@ -361,7 +361,7 @@ Photos taken on an iPhone or a recent Android phone are often saved in HEIC (HEI
 - A HEIC photo saved with a `.jpg` extension is detected by its content and converted as well. This happens when a photo is renamed rather than converted. Without HEIC conversion, such a file is rejected as unusable, because browsers other than Safari can’t display it.
 - A HEIC photo that can’t be decoded is rejected rather than uploaded as is.
 - Use the `heic` key to give HEIC photos their own options, such as a smaller maximum dimension, since they’re typically full-resolution camera shots.
-- If your site adopts a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy), add `blob:` to the `worker-src` directive so that the decoder can run in a Web Worker. The decoder falls back to the main thread otherwise, which freezes the interface during decoding.
+- If your site adopts a [Content Security Policy](https://sveltiacms.app/docs/security#setting-up-content-security-policy), add `blob:` to the `worker-src` directive so that the decoder can run in a Web Worker. The decoder falls back to the main thread otherwise, which freezes the interface during decoding.
 
 Without HEIC conversion, Image fields don’t offer HEIC photos in the file picker, while `.heic` files uploaded to the Asset Library are stored as they are.
 
@@ -377,18 +377,18 @@ To restrict the maximum file size for uploads, set the `max_file_size` option (i
 
 For example, to set a maximum file size of 1 MB for all uploads, add the following to your `config.yml`:
 
-```yaml [YAML]{3}
+```yaml YAML
 media_libraries:
   all:
     max_file_size: 1024000
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [media_libraries.all]
 max_file_size = 1024000
 ```
 
-```json [JSON]{4}
+```json JSON
 {
   "media_libraries": {
     "all": {
@@ -398,7 +398,7 @@ max_file_size = 1024000
 }
 ```
 
-```js [JavaScript]{4}
+```js JavaScript
 {
   media_libraries: {
     all: {
@@ -412,18 +412,18 @@ max_file_size = 1024000
 
 Some frameworks and static site generators have restrictions on filenames, such as not allowing spaces or special characters. To ensure compatibility, you can enable filename slugification by setting the `slugify_filename` option to `true` in the `media_libraries` configuration.
 
-```yaml [YAML]{3}
+```yaml YAML
 media_libraries:
   all:
     slugify_filename: true
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [media_libraries.all]
 slugify_filename = true
 ```
 
-```json [JSON]{4}
+```json JSON
 {
   "media_libraries": {
     "all": {
@@ -433,7 +433,7 @@ slugify_filename = true
 }
 ```
 
-```js [JavaScript]{4}
+```js JavaScript
 {
   media_libraries: {
     all: {
@@ -443,24 +443,24 @@ slugify_filename = true
 }
 ```
 
-Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options). The same applies to a file renamed in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library), or in a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field before the entry is saved. The resulting filename is shown below the input. For example, `Blog Photo 1.jpg` is saved as `blog-photo-1.jpg`.
+Once enabled, any uploaded file will have its filename converted to a URL-friendly format, according to the [global slug options](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options). The same applies to a file renamed in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library), or in a [File](https://sveltiacms.app/docs/fields/file) or [Image](https://sveltiacms.app/docs/fields/image) field before the entry is saved. The resulting filename is shown below the input. For example, `Blog Photo 1.jpg` is saved as `blog-photo-1.jpg`.
 
 #### Renaming Uploaded Files
 
 Files are uploaded with their original names by default, which are often meaningless, like `IMG_1234.jpg`, or may reveal private information. To give uploaded files consistent names, set the `filename_template` option to a template for the new filename.
 
-```yaml [YAML]{3}
+```yaml YAML
 media_libraries:
   all:
     filename_template: '{{year}}{{month}}{{day}}-{{uuid_short}}'
 ```
 
-```toml [TOML]{2}
+```toml TOML
 [media_libraries.all]
 filename_template = "{{year}}{{month}}{{day}}-{{uuid_short}}"
 ```
 
-```json [JSON]{4}
+```json JSON
 {
   "media_libraries": {
     "all": {
@@ -470,7 +470,7 @@ filename_template = "{{year}}{{month}}{{day}}-{{uuid_short}}"
 }
 ```
 
-```js [JavaScript]{4}
+```js JavaScript
 {
   media_libraries: {
     all: {
@@ -482,7 +482,7 @@ filename_template = "{{year}}{{month}}{{day}}-{{uuid_short}}"
 
 With this configuration, a photo named `IMG_1234.jpg` uploaded on September 29, 2026, would be saved as something like `20260929-392bdcf3b642.jpg`.
 
-The template supports the same [template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) and [string transformations](https://sveltiacms.app/en/docs/string-transformations) as the entry `slug` option, plus the following tags for the original file:
+The template supports the same [template tags](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags) and [string transformations](https://sveltiacms.app/docs/string-transformations) as the entry `slug` option, plus the following tags for the original file:
 
 - `{{filename}}`: The original filename without the extension, e.g. `IMG_1234`.
 - `{{extension}}`: The original file extension, e.g. `jpg`.
@@ -490,11 +490,11 @@ The template supports the same [template tags](https://sveltiacms.app/en/docs/co
 Keep these points in mind:
 
 - The file extension is always appended to the new filename, so don’t include it in the template. If the file is converted to another format by [image optimization](#image-optimization), the new extension is used.
-- The value of each tag is slugified according to the [global slug options](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options), while the rest of the template is used as is, except for characters that are not allowed in filenames. Enable the [`slugify_filename`](#slugification-of-filenames) option as well to slugify the whole filename.
+- The value of each tag is slugified according to the [global slug options](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options), while the rest of the template is used as is, except for characters that are not allowed in filenames. Enable the [`slugify_filename`](#slugification-of-filenames) option as well to slugify the whole filename.
 - If a file with the same name already exists in the folder, a number is appended to the new filename, like `20260929-392bdcf3b642-1.jpg`.
 - A file that replaces an existing asset keeps the name of that asset.
 
-When a file is added to a [File](https://sveltiacms.app/en/docs/fields/file) or [Image](https://sveltiacms.app/en/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So you can also use the tags that refer to the entry, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value.
+When a file is added to a [File](https://sveltiacms.app/docs/fields/file) or [Image](https://sveltiacms.app/docs/fields/image) field in the internal media storage, it’s renamed when the entry is saved. So you can also use the tags that refer to the entry, like `{{slug}}` for the entry slug and `{{fields.title}}` for a field value.
 
 Before the entry is saved, the field shows the file with its new filename, and the name follows any changes to the entry. For example, with the `{{slug}}-{{filename}}` template, a photo named `IMG_1234.jpg` added to an entry with the `summer-trip` slug would be saved as `summer-trip-img-1234.jpg`.
 
@@ -502,7 +502,7 @@ In a multilingual entry, the tags are filled with the content of the default loc
 
 A file uploaded from an entry to an external storage provider is renamed right away with the entry’s values at that time, and its name doesn’t follow later changes. Fill in the fields the template depends on first: a tag with no value yet is replaced with a random value.
 
-A file uploaded in the [Asset Library](https://sveltiacms.app/en/docs/ui/asset-library) has no entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
+A file uploaded in the [Asset Library](https://sveltiacms.app/docs/ui/asset-library) has no entry, so only the date/time tags, the unique identifier tags, `{{filename}}` and `{{extension}}` make sense there. Any other tag is replaced with a random value.
 
 The option can also be set for a specific File or Image field, under the field’s `media_libraries` option. For example, to name the cover images of blog posts after the entry:
 
@@ -525,9 +525,9 @@ The following options apply to Amazon S3, S3-compatible providers and Azure Blob
 
 #### Custom Storage Name
 
-Each cloud storage provider appears in the CMS under its own name. To show another name, set the `label` option. This is useful when the [Amazon S3 integration](https://sveltiacms.app/en/docs/media/amazon-s3#self-hosted-storage) connects to a self-hosted server, where “Amazon S3” would mislead your editors.
+Each cloud storage provider appears in the CMS under its own name. To show another name, set the `label` option. This is useful when the [Amazon S3 integration](https://sveltiacms.app/docs/media/amazon-s3#self-hosted-storage) connects to a self-hosted server, where “Amazon S3” would mislead your editors.
 
-```yaml [YAML]
+```yaml YAML
 media_libraries:
   aws_s3:
     label: Garage
@@ -537,7 +537,7 @@ media_libraries:
     bucket: my-website-assets
 ```
 
-```toml [TOML]
+```toml TOML
 [media_libraries.aws_s3]
 label = "Garage"
 endpoint = "https://s3.example.com"
@@ -546,7 +546,7 @@ access_key_id = "YOUR_ACCESS_KEY_ID"
 bucket = "my-website-assets"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_libraries": {
     "aws_s3": {
@@ -560,7 +560,7 @@ bucket = "my-website-assets"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_libraries: {
     aws_s3: {
@@ -580,7 +580,7 @@ The name appears in the Asset Library, the Select File and Select Image dialogs,
 
 A File or Image field can use template tags in the `prefix` option to keep the files of each entry in a folder of their own. Editors then don’t have to create the folder themselves. For example, the following field stores its files in a folder named after the entry’s `release` field, such as `12/`:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: release
     label: Episode Number
@@ -594,7 +594,7 @@ fields:
         prefix: '{{fields.release}}/'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "release"
 label = "Episode Number"
@@ -610,7 +610,7 @@ widget = "file"
 prefix = "{{fields.release}}/"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -633,7 +633,7 @@ prefix = "{{fields.release}}/"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -660,7 +660,7 @@ The other options of the provider, including the required ones such as `bucket`,
 
 Keep the following in mind:
 
-- **Tags:** Use `{{fields.name}}` for a field value. The `{{slug}}` tag and date/time tags such as `{{year}}` work too, as do [string transformations](https://sveltiacms.app/en/docs/string-transformations). A tag can’t refer to the list item a file belongs to, so a field in a list item needs its full path, e.g. `{{fields.episodes.0.release}}`.
+- **Tags:** Use `{{fields.name}}` for a field value. The `{{slug}}` tag and date/time tags such as `{{year}}` work too, as do [string transformations](https://sveltiacms.app/docs/string-transformations). A tag can’t refer to the list item a file belongs to, so a field in a list item needs its full path, e.g. `{{fields.episodes.0.release}}`.
 - **Field level only:** The top-level `prefix` option can’t contain template tags, because there’s no entry to read the values from. The CMS shows a warning if they’re used there.
 - **Values:** Each value is slugified, so it always stands for a single folder. For example, `Season 1/Pilot` becomes `season-1-pilot`.
 - **Empty fields:** Until the fields used in the prefix have values, the dialog asks the editor to fill them in, and files can’t be listed or uploaded. This keeps files from ending up in the wrong folder.
@@ -668,7 +668,7 @@ Keep the following in mind:
 - **Later changes:** Changing a field value doesn’t move files that have already been uploaded. Their URLs stay valid, and new uploads go to the new folder.
 - **Not access control:** The prefix organizes files, but it doesn’t restrict them. An editor’s credentials still have the access you gave them.
 
-Source: https://sveltiacms.app/en/docs/media
+Source: https://sveltiacms.app/docs/media
 
 ---
 
@@ -678,7 +678,7 @@ The internal media storage in Sveltia CMS uses the repository’s file system to
 
 **Considerations**
 
-The internal storage (Git repository) may not be suitable for a large number of media files or very large files, because they can cause performance issues with Git operations. This is particularly true for the [GitHub backend](https://sveltiacms.app/en/docs/backends/github), which does not support Git LFS (Large File Storage) at this time. In such cases, consider using [external storage](https://sveltiacms.app/en/docs/media#external-storage).
+The internal storage (Git repository) may not be suitable for a large number of media files or very large files, because they can cause performance issues with Git operations. This is particularly true for the [GitHub backend](https://sveltiacms.app/docs/backends/github), which does not support Git LFS (Large File Storage) at this time. In such cases, consider using [external storage](https://sveltiacms.app/docs/media#external-storage).
 
 ### Requirements
 
@@ -692,24 +692,24 @@ You can configure the folder paths for storing and accessing media files in the 
 
 Define the internal media storage settings in your `config.yml` file using the `media_folder` and `public_folder` options at the root level.
 
-```yaml [YAML]
+```yaml YAML
 media_folder: /public/uploads
 public_folder: /uploads
 ```
 
-```toml [TOML]
+```toml TOML
 media_folder = "/public/uploads"
 public_folder = "/uploads"
 ```
 
-```json [JSON]
+```json JSON
 {
   "media_folder": "/public/uploads",
   "public_folder": "/uploads"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   media_folder: "/public/uploads",
   public_folder: "/uploads",
@@ -769,9 +769,9 @@ Sveltia CMS does not support absolute URLs in the `public_folder` option. Use re
 
 ##### Disabling Internal Media Storage
 
-If you only want to use an [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage) and do not need the internal media storage, you can omit the `media_folder` option to disable it. Otherwise, this option is required.
+If you only want to use an [external media storage provider](https://sveltiacms.app/docs/media#external-storage) and do not need the internal media storage, you can omit the `media_folder` option to disable it. Otherwise, this option is required.
 
-Note that some of the [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) may still require a `media_folder` to function properly. They don’t allow direct linking to their CDN URLs, so the images have to be copied to the local repository instead.
+Note that some of the [stock photo providers](https://sveltiacms.app/docs/integrations/stock-photos) may still require a `media_folder` to function properly. They don’t allow direct linking to their CDN URLs, so the images have to be copied to the local repository instead.
 
 You can also [disable the internal media storage for specific fields](#disabling-internal-media-storage-for-a-field).
 
@@ -779,7 +779,7 @@ You can also [disable the internal media storage for specific fields](#disabling
 
 You can override the internal media storage settings for each collection by specifying the `media_folder` and `public_folder` options in the collection configuration.
 
-```yaml [YAML]{5-6}
+```yaml YAML
 collections:
   - name: products
     label: Products
@@ -788,7 +788,7 @@ collections:
     public_folder: /uploads/products
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [[collections]]
 name = "products"
 label = "Products"
@@ -797,7 +797,7 @@ media_folder = "/public/uploads/products"
 public_folder = "/uploads/products"
 ```
 
-```json [JSON]{7-8}
+```json JSON
 {
   "collections": [
     {
@@ -811,7 +811,7 @@ public_folder = "/uploads/products"
 }
 ```
 
-```js [JavaScript]{7-8}
+```js JavaScript
 {
   collections: [
     {
@@ -833,7 +833,7 @@ The collection-level and field-level `media_folder` option must start with a sla
 
 If you use a relative path, Sveltia CMS treats it as relative to the collection `folder` (and `path`, if defined).
 
-A [file collection](https://sveltiacms.app/en/docs/collections/files) has no folder of its own. There, the path is relative to the folder of each file that doesn’t have a `media_folder` option of its own. For example, with `media_folder: images`, the media for `content/pages/about.md` goes to `content/pages/images`. See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
+A [file collection](https://sveltiacms.app/docs/collections/files) has no folder of its own. There, the path is relative to the folder of each file that doesn’t have a `media_folder` option of its own. For example, with `media_folder: images`, the media for `content/pages/about.md` goes to `content/pages/images`. See the [Using entry-relative folders](#using-entry-relative-folders) section below for details.
 
 A collection’s `folder` can be the root of the repository, as with `folder: .`. In that case, only the files in the relative media folder, such as `images` and the folders below it, are listed as the collection’s assets. This way, the rest of the repository isn’t mistaken for media.
 
@@ -847,9 +847,9 @@ The absolute path setup is not documented in the official Netlify/Decap CMS docu
 
 ##### Using Placeholders
 
-The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags):
+The following placeholder variables can be used in the `media_folder` and `public_folder` options, in addition to [slug template tags](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags):
 
-- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
+- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
 - `{{filename}}`: The entry filename without the extension. (Not the media filename.)
 - `{{extension}}`: The entry file extension. (Not the media file extension.)
 - `{{media_folder}}`: Refers to the top-level `media_folder` setting.
@@ -857,7 +857,7 @@ The following placeholder variables can be used in the `media_folder` and `publi
 
 The following example is the same as the previous one, but using placeholders:
 
-```yaml [YAML]{5-6}
+```yaml YAML
 collections:
   - name: products
     label: Products
@@ -866,7 +866,7 @@ collections:
     public_folder: '{{public_folder}}/products'
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [[collections]]
 name = "products"
 label = "Products"
@@ -875,7 +875,7 @@ media_folder = "{{media_folder}}/products"
 public_folder = "{{public_folder}}/products"
 ```
 
-```json [JSON]{7-8}
+```json JSON
 {
   "collections": [
     {
@@ -889,7 +889,7 @@ public_folder = "{{public_folder}}/products"
 }
 ```
 
-```js [JavaScript]{7-8}
+```js JavaScript
 {
   collections: [
     {
@@ -907,20 +907,20 @@ public_folder = "{{public_folder}}/products"
 
 Some frameworks and static site generators support organizing content and media files together in the same folder. One example is [Hugo’s page bundles](https://gohugo.io/content-management/page-bundles/), where each content entry can have its own folder containing the content file and associated media files.
 
-Assets stored in entry-relative folders are only accessible by the associated entry and not available for other entries. Therefore, Sveltia CMS automatically deletes these assets when the associated entry is deleted. When you’re [working with a local repository](https://sveltiacms.app/en/docs/workflows/local), the empty enclosing folder is also deleted.
+Assets stored in entry-relative folders are only accessible by the associated entry and not available for other entries. Therefore, Sveltia CMS automatically deletes these assets when the associated entry is deleted. When you’re [working with a local repository](https://sveltiacms.app/docs/workflows/local), the empty enclosing folder is also deleted.
 
 This only applies when the entry has a folder of its own, for example with a `path` option like `{{slug}}/index` or `{{year}}/{{month}}/{{slug}}`. When entries are files sharing one folder, the media files in that folder can belong to any of them, so they are left alone when an entry is deleted.
 
-In a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
+In a collection with [nested entries](https://sveltiacms.app/docs/collections/entries/nested#nesting-page-bundles), the folders below an entry hold entries of their own, so the media in them is left alone: deleting a page never touches the media of the pages beneath it.
 
-Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
+Because these assets belong to the entry, they follow it: renaming an entry, or filing it under a different parent in a collection with [nested entries](https://sveltiacms.app/docs/collections/entries/nested#nesting-page-bundles), moves the whole folder in the same commit.
 
 To configure Sveltia CMS to use entry-relative paths for media files, set the `media_folder` and `public_folder` options to empty strings (`''`) in your collection configuration. This tells Sveltia CMS to store media files in each entry’s own folder.
 
 This only makes each entry’s media its own if the entry has a folder of its own to keep it in. Two options give it one:
 
-- the [`path`](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders) option, as in the example below
-- the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/en/docs/collections/entries/nested#nesting-page-bundles)
+- the [`path`](https://sveltiacms.app/docs/collections/entries/slugs#using-subfolders) option, as in the example below
+- the `subfolders` mode of a collection with [nested entries](https://sveltiacms.app/docs/collections/entries/nested#nesting-page-bundles)
 
 Without either, entries are files sharing one folder. A relative `media_folder` then resolves to the collection folder, and the media is shared as well.
 
@@ -933,7 +933,7 @@ Where the entry’s folder is depends on how the `path` option ends:
 
 When a collection has the `path` option but no `media_folder` option of its own, its `media_folder` defaults to an empty string, and `public_folder` follows it. The entry-relative setup below is therefore implied. This applies when the [global `media_folder`](#media-folder) option is defined. Set the collection-level `media_folder` explicitly to store the media elsewhere.
 
-```yaml [YAML]{5-7}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -947,7 +947,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5-7}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -971,7 +971,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7-9}
+```json JSON
 {
   "collections": [
     {
@@ -991,7 +991,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7-9}
+```js JavaScript
 {
   collections: [
     {
@@ -1034,7 +1034,7 @@ Content goes here...
 
 ###### Multilingual Entries
 
-With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, an entry-relative file that every locale uses is stored once, not once per locale.
+With [i18n](https://sveltiacms.app/docs/i18n) enabled, an entry-relative file that every locale uses is stored once, not once per locale.
 
 The `multiple_files` and `single_file` structures keep every locale’s content in the folder holding the entry, so the media already sits beside all of them. This is how [Hugo’s page bundles](https://gohugo.io/content-management/page-bundles/) are usually organized:
 
@@ -1044,7 +1044,7 @@ content/posts/my-first-post/index.de.md   # cover: image1.jpg
 content/posts/my-first-post/image1.jpg
 ```
 
-The `multiple_folders` and `multiple_root_folders` structures give each locale a folder of its own. Where a file is saved then depends on the field’s [`i18n` option](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration):
+The `multiple_folders` and `multiple_root_folders` structures give each locale a folder of its own. Where a file is saved then depends on the field’s [`i18n` option](https://sveltiacms.app/docs/i18n/options#field-level-configuration):
 
 - A file in a field with `i18n: duplicate` or `i18n: sync`, which holds the same value in every locale, is saved once, in the default locale’s folder. Every locale’s entry refers to it by the same relative path, so the media is never duplicated.
 - A file uploaded to a translatable field, with `i18n: true`, is saved in the folder of the locale it’s uploaded in, as each locale can have a file of its own.
@@ -1065,7 +1065,7 @@ Your framework may not do the same. Taken literally from the German entry’s ow
 
 If you want to organize media files in a subfolder within each entry folder, you can specify the subfolder name in the `media_folder` and `public_folder` options.
 
-```yaml [YAML]{5-7}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -1075,7 +1075,7 @@ collections:
     public_folder: 'images'
 ```
 
-```toml [TOML]{5-7}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -1085,7 +1085,7 @@ media_folder = "images"
 public_folder = "images"
 ```
 
-```json [JSON]{7-9}
+```json JSON
 {
   "collections": [
     {
@@ -1100,7 +1100,7 @@ public_folder = "images"
 }
 ```
 
-```js [JavaScript]{7-9}
+```js JavaScript
 {
   collections: [
     {
@@ -1139,9 +1139,9 @@ Content goes here...
 
 #### File-Level Configuration
 
-Each file in a [file collection](https://sveltiacms.app/en/docs/collections/files) can also have its own media folder settings by specifying the `media_folder` and `public_folder` options in the file configuration, which override both the top-level and collection-level settings.
+Each file in a [file collection](https://sveltiacms.app/docs/collections/files) can also have its own media folder settings by specifying the `media_folder` and `public_folder` options in the file configuration, which override both the top-level and collection-level settings.
 
-```yaml [YAML]{8-9}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -1153,7 +1153,7 @@ collections:
         public_folder: /uploads/about
 ```
 
-```toml [TOML]{9-10}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -1166,7 +1166,7 @@ media_folder = "/public/uploads/about"
 public_folder = "/uploads/about"
 ```
 
-```json [JSON]{11-12}
+```json JSON
 {
   "collections": [
     {
@@ -1186,7 +1186,7 @@ public_folder = "/uploads/about"
 }
 ```
 
-```js [JavaScript]{11-12}
+```js JavaScript
 {
   collections: [
     {
@@ -1214,7 +1214,7 @@ A file without a `media_folder` option of its own inherits the collection’s. A
 
 You can also configure media storage settings for individual File or Image fields within a collection. This allows you to specify different media folders for different fields, overriding both the top-level and collection-level settings.
 
-```yaml [YAML]{5-6}
+```yaml YAML
 fields:
   - name: thumbnail
     label: Thumbnail Image
@@ -1223,7 +1223,7 @@ fields:
     public_folder: /uploads/thumbnails
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [[fields]]
 name = "thumbnail"
 label = "Thumbnail Image"
@@ -1232,7 +1232,7 @@ media_folder = "/public/uploads/thumbnails"
 public_folder = "/uploads/thumbnails"
 ```
 
-```json [JSON]{7-8}
+```json JSON
 {
   "fields": [
     {
@@ -1246,7 +1246,7 @@ public_folder = "/uploads/thumbnails"
 }
 ```
 
-```js [JavaScript]{7-8}
+```js JavaScript
 {
   fields: [
     {
@@ -1266,9 +1266,9 @@ Field-level `media_folder` and `public_folder` options can also be set to empty 
 
 ##### Disabling Internal Media Storage for a Field
 
-If you have enabled an [external media storage provider](https://sveltiacms.app/en/docs/media#external-storage), you can disable the internal media storage for a specific field. Add the `media_libraries` option to the field configuration, with the `default` library set to `false`. This will prevent the media picker from showing the internal media library and only allow selecting from the external provider.
+If you have enabled an [external media storage provider](https://sveltiacms.app/docs/media#external-storage), you can disable the internal media storage for a specific field. Add the `media_libraries` option to the field configuration, with the `default` library set to `false`. This will prevent the media picker from showing the internal media library and only allow selecting from the external provider.
 
-```yaml [YAML]{5-6}
+```yaml YAML
 fields:
   - name: cover
     label: Cover Image
@@ -1277,7 +1277,7 @@ fields:
       default: false
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [[fields]]
 name = "cover"
 label = "Cover Image"
@@ -1286,7 +1286,7 @@ widget = "image"
 default = false
 ```
 
-```json [JSON]{7-9}
+```json JSON
 {
   "fields": [
     {
@@ -1301,7 +1301,7 @@ default = false
 }
 ```
 
-```js [JavaScript]{7-9}
+```js JavaScript
 {
   fields: [
     {
@@ -1318,7 +1318,7 @@ default = false
 
 ### Asset Collections
 
-In addition to the [global media folder](#top-level-configuration) and [collection-specific media folders](#collection-level-configuration), Sveltia CMS supports defining separate asset collections that can be used across multiple [content collections](https://sveltiacms.app/en/docs/collections). This allows you to organize your media assets in a more structured way and reuse them in different contexts.
+In addition to the [global media folder](#top-level-configuration) and [collection-specific media folders](#collection-level-configuration), Sveltia CMS supports defining separate asset collections that can be used across multiple [content collections](https://sveltiacms.app/docs/collections). This allows you to organize your media assets in a more structured way and reuse them in different contexts.
 
 To define an asset collection, add a new entry to the `asset_collections` array in your `config.yml` file. Each asset collection has the following properties:
 
@@ -1327,11 +1327,11 @@ To define an asset collection, add a new entry to the `asset_collections` array 
 - `icon`: Optional icon for the asset collection, which can be a string representing a [Material Symbols](https://fontsource.org/fonts/material-symbols-outlined/glyphs) icon name.
 - `media_folder`: The folder in the repository where media files for this collection will be stored. Required and must be an absolute path relative to the root of the repository. A leading slash can be omitted, but it is recommended to include it for clarity.
 - `public_folder`: The public URL path that corresponds to the `media_folder`. If omitted, it defaults to the value of `media_folder`.
-- `readonly`: Set to `true` to make the asset collection read-only, so assets can’t be uploaded to, changed in or deleted from it. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
+- `readonly`: Set to `true` to make the asset collection read-only, so assets can’t be uploaded to, changed in or deleted from it. Optional. See [Making Content Read-Only](https://sveltiacms.app/docs/collections/entries/operations#making-content-read-only).
 
 Configure your asset collections like this:
 
-```yaml [YAML]
+```yaml YAML
 asset_collections:
   - name: images
     label: Images
@@ -1350,7 +1350,7 @@ asset_collections:
     public_folder: /uploads/documents
 ```
 
-```toml [TOML]
+```toml TOML
 [[asset_collections]]
 name = "images"
 label = "Images"
@@ -1373,7 +1373,7 @@ media_folder = "/public/uploads/documents"
 public_folder = "/uploads/documents"
 ```
 
-```json [JSON]
+```json JSON
 {
   "asset_collections": [
     {
@@ -1401,7 +1401,7 @@ public_folder = "/uploads/documents"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   asset_collections: [
     {
@@ -1431,9 +1431,9 @@ public_folder = "/uploads/documents"
 
 ### Additional Features
 
-For backward compatibility, the [additional media storage features](https://sveltiacms.app/en/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key. This key applies only to the internal media storage provider, unlike the `all` key, which also applies to files uploaded to external storage providers. Options set here override the same options under the `all` key at the same level.
+For backward compatibility, the [additional media storage features](https://sveltiacms.app/docs/media#additional-features) can be configured specifically for the internal media storage. This configuration goes in the `media_libraries` option, under the `default` → `config` key. This key applies only to the internal media storage provider, unlike the `all` key, which also applies to files uploaded to external storage providers. Options set here override the same options under the `all` key at the same level.
 
-```yaml [YAML]{4-11}
+```yaml YAML
 media_libraries:
   default:
     config:
@@ -1447,7 +1447,7 @@ media_libraries:
           optimize: true
 ```
 
-```toml [TOML]{3-11}
+```toml TOML
 [media_libraries.default]
 [media_libraries.default.config]
 [media_libraries.default.config.transformations]
@@ -1461,7 +1461,7 @@ height = 2048
 optimize = true
 ```
 
-```json [JSON]{5-15}
+```json JSON
 {
   "media_libraries": {
     "default": {
@@ -1483,7 +1483,7 @@ optimize = true
 }
 ```
 
-```js [JavaScript]{5-15}
+```js JavaScript
 {
   media_libraries: {
     default: {
@@ -1505,20 +1505,20 @@ optimize = true
 }
 ```
 
-```yaml [YAML]{4}
+```yaml YAML
 media_libraries:
   default:
     config:
       max_file_size: 1024000
 ```
 
-```toml [TOML]{3}
+```toml TOML
 [media_libraries.default]
 [media_libraries.default.config]
 max_file_size = 1024000
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "media_libraries": {
     "default": {
@@ -1530,7 +1530,7 @@ max_file_size = 1024000
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   media_libraries: {
     default: {
@@ -1542,20 +1542,20 @@ max_file_size = 1024000
 }
 ```
 
-```yaml [YAML]{4}
+```yaml YAML
 media_libraries:
   default:
     config:
       slugify_filename: true
 ```
 
-```toml [TOML]{3}
+```toml TOML
 [media_libraries.default]
 [media_libraries.default.config]
 slugify_filename = true
 ```
 
-```json [JSON]{5}
+```json JSON
 {
   "media_libraries": {
     "default": {
@@ -1567,7 +1567,7 @@ slugify_filename = true
 }
 ```
 
-```js [JavaScript]{5}
+```js JavaScript
 {
   media_libraries: {
     default: {
@@ -1585,10 +1585,10 @@ There are two main ways to use the internal media storage in Sveltia CMS:
 
 #### File and Image Fields
 
-When editing content entries, users can use [File](https://sveltiacms.app/en/docs/fields/file) and [Image](https://sveltiacms.app/en/docs/fields/image) fields to upload and select media assets directly within the entry editor. Clicking the Browse button opens the media picker. There, users can select existing assets or upload new ones. They can also browse the [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of the media folder and create new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
+When editing content entries, users can use [File](https://sveltiacms.app/docs/fields/file) and [Image](https://sveltiacms.app/docs/fields/image) fields to upload and select media assets directly within the entry editor. Clicking the Browse button opens the media picker. There, users can select existing assets or upload new ones. They can also browse the [subfolders](https://sveltiacms.app/docs/ui/asset-library#subfolders) of the media folder and create new ones as needed. These fields also support drag-and-drop functionality for easy uploads.
 
 #### Standalone Asset Library
 
-The Asset Library is accessible from the main navigation menu in the CMS interface. Here, users can view, upload and manage all media assets in one place. Assets can be viewed in a grid or list format. Users can browse and organize them in [subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders), search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
+The Asset Library is accessible from the main navigation menu in the CMS interface. Here, users can view, upload and manage all media assets in one place. Assets can be viewed in a grid or list format. Users can browse and organize them in [subfolders](https://sveltiacms.app/docs/ui/asset-library#subfolders), search for specific files, and view asset details such as file size, dimensions and a list of entries using the asset.
 
-Source: https://sveltiacms.app/en/docs/media/internal
+Source: https://sveltiacms.app/docs/media/internal

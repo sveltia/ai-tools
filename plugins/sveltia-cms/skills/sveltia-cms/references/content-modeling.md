@@ -14,12 +14,12 @@ Content modeling is primarily a non-technical task that requires an understandin
 
 ### Understanding Content Models
 
-A content model defines the structure and organization of your content within Sveltia CMS. It consists of [collections](https://sveltiacms.app/en/docs/collections), which are groups of related content items, and [fields](https://sveltiacms.app/en/docs/fields), which define the properties of each content item.
+A content model defines the structure and organization of your content within Sveltia CMS. It consists of [collections](https://sveltiacms.app/docs/collections), which are groups of related content items, and [fields](https://sveltiacms.app/docs/fields), which define the properties of each content item.
 
 When designing your content model, consider the following:
 
 - **Content types**: Identify the different types of content you need to manage (e.g. blog posts, products, pages).
-- **Collections**: Decide whether to use [entry collections](https://sveltiacms.app/en/docs/collections/entries) (for multiple similar items) or [file collections](https://sveltiacms.app/en/docs/collections/files) (for individual files) based on your content types.
+- **Collections**: Decide whether to use [entry collections](https://sveltiacms.app/docs/collections/entries) (for multiple similar items) or [file collections](https://sveltiacms.app/docs/collections/files) (for individual files) based on your content types.
 - **Fields**: Define the fields required for each content type, including their data types and validation rules.
 - **Relationships**: Determine if there are any relationships between different content types that need to be represented (e.g. authors for blog posts, categories for products).
 
@@ -30,13 +30,13 @@ Some best practices for designing effective content models in Sveltia CMS includ
 - **Plan ahead**: Take the time to think through your content structure before creating collections and fields. This will help avoid unnecessary changes later.
 - **Keep it simple**: Start with a basic structure and expand as needed. Avoid overcomplicating your content model.
 - **Use meaningful names**: Choose clear and descriptive names for collections and fields to make them easier to understand.
-- **Leverage field types**: Utilize the [various field types](https://sveltiacms.app/en/docs/fields#field-types) available in Sveltia CMS to capture different kinds of data effectively.
+- **Leverage field types**: Utilize the [various field types](https://sveltiacms.app/docs/fields#field-types) available in Sveltia CMS to capture different kinds of data effectively.
 - **Plan for scalability**: Consider how your content model may need to evolve over time and design it to accommodate future changes.
 - **Test and iterate**: Regularly review and refine your content model based on feedback from content editors and users.
 
 ### Using Relations Between Collections
 
-Sveltia CMS supports [Relation fields](https://sveltiacms.app/en/docs/fields/relation) that allow you to create relationships between different collections. This is useful for linking related content items, such as associating blog posts with authors or products with categories.
+Sveltia CMS supports [Relation fields](https://sveltiacms.app/docs/fields/relation) that allow you to create relationships between different collections. This is useful for linking related content items, such as associating blog posts with authors or products with categories.
 
 When using relations, consider the following:
 
@@ -50,12 +50,12 @@ Here are some common content models for different types of websites and applicat
 
 #### Blog or News Site
 
-- **Posts**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for blog posts or news articles, organized by date and linked to tags and authors via Relation fields. A status field keeps unfinished posts off the site. For a review process with pull requests, consider the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) instead.
-- **Tags**: entry collection for managing available tags, linked to posts via a Relation field. For more details, see our [how-to](https://sveltiacms.app/en/docs/how-tos#using-entry-tags-for-categorization) on this topic.
+- **Posts**: [entry collection](https://sveltiacms.app/docs/collections/entries) for blog posts or news articles, organized by date and linked to tags and authors via Relation fields. A status field keeps unfinished posts off the site. For a review process with pull requests, consider the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) instead.
+- **Tags**: entry collection for managing available tags, linked to posts via a Relation field. For more details, see our [how-to](https://sveltiacms.app/docs/how-tos#using-entry-tags-for-categorization) on this topic.
 - **Authors**: entry collection for managing the list of authors, linked to posts via a Relation field.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About or Contact.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like About or Contact.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -130,13 +130,13 @@ collections:
 
 #### Documentation Site
 
-- **Documents**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for documentation pages, linked to versions and categories via Relation fields.
+- **Documents**: [entry collection](https://sveltiacms.app/docs/collections/entries) for documentation pages, linked to versions and categories via Relation fields.
 - **Versions**: entry collection for managing available versions (e.g. v1.0, v2.0), linked to documentation pages via a Relation field.
 - **Categories**: entry collection for organizing documentation by category, linked to documents via a Relation field.
 - **Tutorials**: entry collection for step-by-step tutorials and guides.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Getting Started or FAQ.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like Getting Started or FAQ.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -212,13 +212,13 @@ collections:
 
 #### Portfolio Site
 
-- **Portfolio items**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for portfolio items, linked to categories and skills via Relation fields.
+- **Portfolio items**: [entry collection](https://sveltiacms.app/docs/collections/entries) for portfolio items, linked to categories and skills via Relation fields.
 - **Categories**: entry collection for managing available categories (e.g. Web Design, Branding, Photography), linked to portfolio items via a Relation field.
 - **Skills**: entry collection for managing the list of skills or technologies used (e.g. React, Figma, CSS), linked to portfolio items via a Relation field.
 - **Testimonials**: entry collection for client testimonials, linked to portfolio items via a Relation field.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About Me or Services.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like About Me or Services.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -299,8 +299,8 @@ collections:
 
 #### Corporate Website
 
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Home, About Us, Services and Contact.
-- **Services**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for services offered.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like Home, About Us, Services and Contact.
+- **Services**: [entry collection](https://sveltiacms.app/docs/collections/entries) for services offered.
 - **Products**: entry collection for products or offerings.
 - **Brands**: entry collection for brand information, linked to products via a Relation field.
 - **Clients**: entry collection for client logos or profiles, linked to testimonials and case studies via Relation fields.
@@ -311,7 +311,7 @@ collections:
 - **Careers**: entry collection for job openings.
 - **News**: entry collection for news or press releases.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -488,11 +488,11 @@ collections:
 
 #### Personal Website
 
-- **Posts**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for blog posts. Unlike the blog example above, tags are entered freely in a simple [List](https://sveltiacms.app/en/docs/fields/list) field instead of being managed in a separate collection, which is enough for a small site with a single author.
+- **Posts**: [entry collection](https://sveltiacms.app/docs/collections/entries) for blog posts. Unlike the blog example above, tags are entered freely in a simple [List](https://sveltiacms.app/docs/fields/list) field instead of being managed in a separate collection, which is enough for a small site with a single author.
 - **Projects**: entry collection for personal projects or side projects.
-- **About**, **Contact** and **Site Settings**: [singletons](https://sveltiacms.app/en/docs/collections/singletons) for one-off pages and site-wide settings like the site title, description and social links. Singletons appear directly in the sidebar, so they are easier to reach than files in a file collection when there are only a few of them.
+- **About**, **Contact** and **Site Settings**: [singletons](https://sveltiacms.app/docs/collections/singletons) for one-off pages and site-wide settings like the site title, description and social links. Singletons appear directly in the sidebar, so they are easier to reach than files in a file collection when there are only a few of them.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -558,16 +558,16 @@ singletons:
 
 #### Event Management Site
 
-- **Events**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for events, linked to categories, locations and organizers via Relation fields. Whether an event is upcoming or past is determined by its date, so only cancellation needs to be set manually.
+- **Events**: [entry collection](https://sveltiacms.app/docs/collections/entries) for events, linked to categories, locations and organizers via Relation fields. Whether an event is upcoming or past is determined by its date, so only cancellation needs to be set manually.
 - **Categories**: entry collection for event categories (e.g. Conference, Webinar, Workshop), linked to events via a Relation field.
 - **Locations**: entry collection for available venues, linked to events via a Relation field.
 - **Organizers**: entry collection for event organizers, linked to events via a Relation field.
 - **Speakers**: entry collection for event speakers.
 - **Sessions**: entry collection for event sessions, linked to events and speakers via Relation fields. Each session points to its event, rather than each event listing its sessions, so that adding a session doesn’t require editing the event.
 - **Sponsors**: entry collection for event sponsors, linked to events via a Relation field.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Event Guidelines or FAQ.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like Event Guidelines or FAQ.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -704,15 +704,15 @@ collections:
 
 #### Music Band Website
 
-- **Albums**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for albums, linked to tracks via a Relation field.
+- **Albums**: [entry collection](https://sveltiacms.app/docs/collections/entries) for albums, linked to tracks via a Relation field.
 - **Tracks**: entry collection for tracks within each album, linked to albums via a Relation field.
 - **Members**: entry collection for band members.
 - **Tour dates**: entry collection for tour dates, linked to locations via a Relation field.
 - **Locations**: entry collection for available venues, linked to tour dates via a Relation field.
 - **Media**: entry collection for band media including photos and concert videos, linked to tour dates via a Relation field, organized by date with featured media highlighted on the gallery page.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About the Band or Contact.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like About the Band or Contact.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -843,14 +843,14 @@ collections:
 
 #### Recipe Website
 
-- **Recipes**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for recipes, linked to categories, ingredients and chefs via Relation fields. Each ingredient is listed with its quantity and unit, which are stored in the recipe rather than in the ingredient, because they vary from recipe to recipe.
+- **Recipes**: [entry collection](https://sveltiacms.app/docs/collections/entries) for recipes, linked to categories, ingredients and chefs via Relation fields. Each ingredient is listed with its quantity and unit, which are stored in the recipe rather than in the ingredient, because they vary from recipe to recipe.
 - **Categories**: entry collection for recipe categories (e.g. Appetizers, Desserts, Main Courses), linked to recipes via a Relation field.
 - **Ingredients**: entry collection for available ingredients, linked to recipes via a Relation field.
 - **Chefs**: entry collection for chefs, linked to recipes via a Relation field.
 - **Cooking tips**: entry collection for cooking tips.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About or Contact.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like About or Contact.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -954,7 +954,7 @@ collections:
 
 #### Educational Platform
 
-- **Courses**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for courses, linked to instructors, categories, lessons and locations via Relation fields.
+- **Courses**: [entry collection](https://sveltiacms.app/docs/collections/entries) for courses, linked to instructors, categories, lessons and locations via Relation fields.
 - **Instructors**: entry collection for instructors, linked to courses and blog posts via Relation fields.
 - **Lessons**: entry collection for lessons within each course, linked to courses via a Relation field.
 - **Categories**: entry collection for course categories (e.g. Web Development, Design, Business), linked to courses via a Relation field.
@@ -963,9 +963,9 @@ collections:
 - **Events**: entry collection for upcoming educational events (workshops, webinars).
 - **Blog posts**: entry collection for educational articles and updates, linked to instructors (as authors) and tags via Relation fields.
 - **Tags**: entry collection for managing blog post tags, linked to blog posts via a Relation field.
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like About Us or Contact.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like About Us or Contact.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -1115,8 +1115,8 @@ collections:
 
 #### Nonprofit Organization Site
 
-- **Pages**: [file collection](https://sveltiacms.app/en/docs/collections/files) for static pages like Mission, Programs, Leadership, Donate and Contact.
-- **News**: [entry collection](https://sveltiacms.app/en/docs/collections/entries) for news related to the organization.
+- **Pages**: [file collection](https://sveltiacms.app/docs/collections/files) for static pages like Mission, Programs, Leadership, Donate and Contact.
+- **News**: [entry collection](https://sveltiacms.app/docs/collections/entries) for news related to the organization.
 - **Events**: entry collection for upcoming events.
 - **Locations**: entry collection for available venues, linked to events via a Relation field.
 - **Board Members**: entry collection for board members, linked to the Leadership page via a Relation field.
@@ -1127,7 +1127,7 @@ collections:
 - **Sponsors**: entry collection for sponsors.
 - **Campaigns**: entry collection for fundraising campaigns.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
@@ -1317,6 +1317,6 @@ collections:
 
 ### Real-World Examples
 
-To see how others have structured their content models using Sveltia CMS, check out our [showcase](https://sveltiacms.app/en/showcase). It features a variety of websites using Sveltia CMS. Most of them include a link to their source code, which can provide valuable insights into different content modeling approaches.
+To see how others have structured their content models using Sveltia CMS, check out our [showcase](https://sveltiacms.app/showcase). It features a variety of websites using Sveltia CMS. Most of them include a link to their source code, which can provide valuable insights into different content modeling approaches.
 
-Source: https://sveltiacms.app/en/docs/content-modeling
+Source: https://sveltiacms.app/docs/content-modeling

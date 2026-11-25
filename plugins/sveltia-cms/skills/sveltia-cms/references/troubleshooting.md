@@ -38,7 +38,7 @@ See [issue #469](https://github.com/sveltia/sveltia-cms/issues/469) for details.
 
 In the CMS configuration, you must define the `name` option for collections, collection files, fields and variable types. These names have to be unique within their scope and cannot contain certain special characters.
 
-Invalid characters include spaces, colons (`:`) and angle brackets (`<`, `>`) as well as dots (`.`) and asterisks (`*`), which are used to denote nested structures and wildcards, respectively, especially for the [Relation](https://sveltiacms.app/en/docs/fields/relation) field type’s field references. If you use invalid names, the CMS will show config validation errors on the login screen.
+Invalid characters include spaces, colons (`:`) and angle brackets (`<`, `>`) as well as dots (`.`) and asterisks (`*`), which are used to denote nested structures and wildcards, respectively, especially for the [Relation](https://sveltiacms.app/docs/fields/relation) field type’s field references. If you use invalid names, the CMS will show config validation errors on the login screen.
 
 For example, the following configuration is invalid because the field name `foo.bar` contains a dot:
 
@@ -69,7 +69,7 @@ See [discussion #542](https://github.com/sveltia/sveltia-cms/discussions/542) fo
 
 ### Resolving Broken UI Caused by CSS Conflicts
 
-The Sveltia CMS script is designed to be included in a static, standalone HTML page, as shown in the [start guide](https://sveltiacms.app/en/docs/start#manual-installation). In this case, there are no CSS conflicts, and the CMS UI functions properly.
+The Sveltia CMS script is designed to be included in a static, standalone HTML page, as shown in the [start guide](https://sveltiacms.app/docs/start#manual-installation). In this case, there are no CSS conflicts, and the CMS UI functions properly.
 
 However, if you include the script in a page managed by a front-end framework, such as `admin.astro`, `admin.njk` or `+page.svelte`, you must apply a blank layout to that page. Otherwise, the default layout may contain conflicting styles with the CMS layout, resulting in a broken UI. Tailwind CSS is known to cause such conflicts, but other CSS frameworks or custom styles can cause issues as well.
 
@@ -85,27 +85,27 @@ There are several types of build errors that can occur when using Sveltia CMS. T
 
 Some frameworks, like [Astro](https://docs.astro.build/en/guides/content-collections/#defining-the-collection-schema), rely on strict schema validation for content files, which can lead to build errors if the content does not conform to the expected structure.
 
-By default, Sveltia CMS does not omit empty [optional fields](https://sveltiacms.app/en/docs/fields#required) from the content data, which can cause validation errors in frameworks that expect only defined fields. To resolve this issue, set the `omit_empty_optional_fields` global output option to `true` to automatically remove undefined fields from the serialized content data. See the [Data Output](https://sveltiacms.app/en/docs/data-output) documentation for details.
+By default, Sveltia CMS does not omit empty [optional fields](https://sveltiacms.app/docs/fields#required) from the content data, which can cause validation errors in frameworks that expect only defined fields. To resolve this issue, set the `omit_empty_optional_fields` global output option to `true` to automatically remove undefined fields from the serialized content data. See the [Data Output](https://sveltiacms.app/docs/data-output) documentation for details.
 
 See [issue #241](https://github.com/sveltia/sveltia-cms/issues/241) for details.
 
 #### Special Characters in Image Paths
 
-By default, Sveltia CMS does not encode special characters in image paths, which can lead to build errors in some frameworks that expect URL-encoded paths. To resolve this issue, set the `encode_file_path` global output option to `true` to automatically encode special characters in image paths. See the [Data Output](https://sveltiacms.app/en/docs/data-output) documentation for details.
+By default, Sveltia CMS does not encode special characters in image paths, which can lead to build errors in some frameworks that expect URL-encoded paths. To resolve this issue, set the `encode_file_path` global output option to `true` to automatically encode special characters in image paths. See the [Data Output](https://sveltiacms.app/docs/data-output) documentation for details.
 
 See [issue #404](https://github.com/sveltia/sveltia-cms/issues/404) for details.
 
 #### Non-ASCII Characters in Slugs
 
-By default, Sveltia CMS allows Unicode characters in slugs, which can lead to build errors in some frameworks, like Jekyll, that do not support them. To resolve this issue, set the `encoding` global slug option to `ascii` to automatically transliterate Unicode characters to their ASCII equivalents. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
+By default, Sveltia CMS allows Unicode characters in slugs, which can lead to build errors in some frameworks, like Jekyll, that do not support them. To resolve this issue, set the `encoding` global slug option to `ascii` to automatically transliterate Unicode characters to their ASCII equivalents. See the [Entry Slugs](https://sveltiacms.app/docs/collections/entries/slugs#entry-slugs) documentation for details.
 
 See [discussion #544](https://github.com/sveltia/sveltia-cms/discussions/544) for details.
 
 #### Excessively Long Slugs
 
-By default, Sveltia CMS limits generated slugs to 200 bytes, which keeps filenames and branch names valid but can still lead to build errors in some CI services that have a lower maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Entry Slugs](https://sveltiacms.app/en/docs/collections/entries/slugs#entry-slugs) documentation for details.
+By default, Sveltia CMS limits generated slugs to 200 bytes, which keeps filenames and branch names valid but can still lead to build errors in some CI services that have a lower maximum slug length. To resolve this issue, set the `maxlength` global slug option to a value that is within the limits of your Git service, or adjust your collection’s `slug` template. See the [Entry Slugs](https://sveltiacms.app/docs/collections/entries/slugs#entry-slugs) documentation for details.
 
-Source: https://sveltiacms.app/en/docs/troubleshooting
+Source: https://sveltiacms.app/docs/troubleshooting
 
 ---
 
@@ -119,16 +119,16 @@ Sveltia CMS employs multiple layers of security measures to protect data and ens
 
 #### Security Features
 
-- **XSS protection**: HTML sanitization is performed using the [DOMPurify](https://github.com/cure53/DOMPurify) library. The unpatched [XSS vulnerability](https://github.com/advisories/GHSA-xp8g-32qh-mv28) in Decap CMS does not affect Sveltia CMS. The `sanitize_preview` [RichText field](https://sveltiacms.app/en/docs/fields/richtext) option defaults to `true`.
-- **Script-free file previews**: A file that could contain a script is never shown as is. An SVG image is wrapped in another one that displays it in the browser’s secure mode, where scripts never run, and an HTML or XML file is shown as plain text. A script in a file committed by someone else, such as an [Open Authoring](https://sveltiacms.app/en/docs/workflows/open) contributor, therefore can’t run with your sign-in, even when you open the file in a new tab.
-- **No proxy required**: The [local workflow](https://sveltiacms.app/en/docs/workflows/local) eliminates attack surfaces from compromised dependencies and unauthorized API access.
+- **XSS protection**: HTML sanitization is performed using the [DOMPurify](https://github.com/cure53/DOMPurify) library. The unpatched [XSS vulnerability](https://github.com/advisories/GHSA-xp8g-32qh-mv28) in Decap CMS does not affect Sveltia CMS. The `sanitize_preview` [RichText field](https://sveltiacms.app/docs/fields/richtext) option defaults to `true`.
+- **Script-free file previews**: A file that could contain a script is never shown as is. An SVG image is wrapped in another one that displays it in the browser’s secure mode, where scripts never run, and an HTML or XML file is shown as plain text. A script in a file committed by someone else, such as an [Open Authoring](https://sveltiacms.app/docs/workflows/open) contributor, therefore can’t run with your sign-in, even when you open the file in a new tab.
+- **No proxy required**: The [local workflow](https://sveltiacms.app/docs/workflows/local) eliminates attack surfaces from compromised dependencies and unauthorized API access.
 - **Secure contexts only**: HTTPS is required for all site content and CMS configuration.
-- **Automatic referrer policy**: The `same-origin` policy is automatically set globally in the app. An exception is the OpenStreetMap integration for the [Map field type](https://sveltiacms.app/en/docs/fields/map), which requires `strict-origin` to [load tiles properly](https://wiki.openstreetmap.org/wiki/Referer).
+- **Automatic referrer policy**: The `same-origin` policy is automatically set globally in the app. An exception is the OpenStreetMap integration for the [Map field type](https://sveltiacms.app/docs/fields/map), which requires `strict-origin` to [load tiles properly](https://wiki.openstreetmap.org/wiki/Referer).
 - **Link rel attributes**: All external links in the admin interface have `rel="noopener noreferrer"` to prevent tabnabbing and protect user privacy.
 - **Sandboxed iframes**: All iframes in the admin interface are sandboxed with appropriate restrictions to prevent malicious content from executing harmful actions.
 - **Simplified CSP**: No `unsafe-eval` or `unsafe-inline` needed in `script-src`. We provide a [CSP builder](#setting-up-content-security-policy) tool to help users generate a secure policy based on their specific configuration and deployment setup.
 - **Signed commits**: GitHub commits are automatically GPG-signed and [verified](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification).
-- **Signed uploads**: [Media uploads to Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare) are signed using secure API keys.
+- **Signed uploads**: [Media uploads to Uploadcare](https://sveltiacms.app/docs/media/uploadcare) are signed using secure API keys.
 
 #### Security Practices
 
@@ -146,17 +146,19 @@ Sveltia CMS employs multiple layers of security measures to protect data and ens
 
 To protect your Sveltia CMS installation and data, follow these best practices:
 
-- Keep your Sveltia CMS installation [up to date](https://sveltiacms.app/en/docs/releases). If you use the CDN version, you’ll always get the latest version unless you specify an exact version number in the URL. If you self-host, regularly check for updates and apply them promptly.
+- Keep your Sveltia CMS installation [up to date](https://sveltiacms.app/docs/releases). If you use the CDN version, you’ll always get the latest version unless you specify an exact version number in the URL. If you self-host, regularly check for updates and apply them promptly.
 - Set up PKCE authentication for your Git backend if possible. Sveltia CMS supports quick PAT authentication, but it’s mainly for individual developers and not recommended for multi-user teams, especially when non-technical members are involved.
 - Set up two-factor authentication (2FA) for your Git instance.
 - Keep your Git instance up to date if you’re self-hosting it.
 - Use HTTPS for your site to ensure secure communication between the client and server. All major hosting providers use HTTPS by default. If you self-host, consider using [Let’s Encrypt](https://letsencrypt.org/) to obtain free TLS certificates. Sveltia CMS doesn’t work on HTTP sites.
 - Set up Content Security Policy (CSP) for your site. See the section below for recommended policies.
-- Do not disable the `sanitize_preview` option for [RichText](https://sveltiacms.app/en/docs/fields/richtext) and [Markdown](https://sveltiacms.app/en/docs/fields/markdown) fields unless you fully understand the implications. Disabling this option may expose your site to XSS attacks if untrusted users can edit content.
+- Do not disable the `sanitize_preview` option for [RichText](https://sveltiacms.app/docs/fields/richtext) and [Markdown](https://sveltiacms.app/docs/fields/markdown) fields unless you fully understand the implications. Disabling this option may expose your site to XSS attacks if untrusted users can edit content.
 
 ### Setting up Content Security Policy
 
-If your site adopts Content Security Policy (CSP), we recommend starting with the base policy below and adding origins for any additional features you use.
+If your site adopts Content Security Policy (CSP), use the tool below to generate a CSP header based on your specific configuration and deployment setup. You can copy the generated header and add it to your server configuration or use it in a `<meta>` tag in your HTML.
+
+Start with the base policy below and add the origins for any features you use.
 
 ```
 style-src 'self' 'unsafe-inline';
@@ -255,7 +257,7 @@ Replace the img-src origin with your custom domain if configured.
 
 ##### HEIC Conversion
 
-Required if [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) are converted on upload: the decoder runs in a Web Worker created from a `blob:` URL. Not required for the npm package, which serves the worker from your site.
+Required if [HEIC photos](https://sveltiacms.app/docs/media#heic-photos) are converted on upload: the decoder runs in a Web Worker created from a `blob:` URL. Not required for the npm package, which serves the worker from your site.
 
 - `worker-src`
   ```
@@ -376,7 +378,7 @@ Required if [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) are 
 
 #### CI/CD Providers
 
-If you choose to [disable automatic deployments](https://sveltiacms.app/en/docs/deployments#disabling-automatic-deployments) and have configured a webhook URL, you may need to add the origin to the `connect-src` directive. Here are some examples:
+If you choose to [disable automatic deployments](https://sveltiacms.app/docs/deployments#disabling-automatic-deployments) and have configured a webhook URL, you may need to add the origin to the `connect-src` directive. Here are some examples:
 
 ##### Cloudflare Pages
 
@@ -430,22 +432,22 @@ The [UNPKG](https://unpkg.com/) CDN is used for the following purposes in Svelti
 - Check for the latest version of the CMS
 - Retrieve locale files for the admin interface other than English (US)
 - Retrieve additional dependencies such as [PDF.js](https://github.com/mozilla/pdf.js), [Leaflet](https://github.com/Leaflet/Leaflet) and [SVGO](https://github.com/SVG/svgo)
-- Retrieve the WebAssembly decoder for [HEIC photos](https://sveltiacms.app/en/docs/media#heic-photos) when image optimization is enabled
+- Retrieve the WebAssembly decoder for [HEIC photos](https://sveltiacms.app/docs/media#heic-photos) when image optimization is enabled
 - Retrieve [Shiki](https://shiki.style/) language definitions and themes for syntax highlighting in code editors
-- Retrieve [Day.js](https://day.js.org/) locale data for DateTime fields with the [`localize_format`](https://sveltiacms.app/en/docs/fields/datetime#localize-format) option
-- Retrieve the [transliterate](https://github.com/sindresorhus/transliterate) library for the [`clean_accents`](https://sveltiacms.app/en/docs/collections/entries/slugs#global-slug-options) slug option
+- Retrieve [Day.js](https://day.js.org/) locale data for DateTime fields with the [`localize_format`](https://sveltiacms.app/docs/fields/datetime#localize-format) option
+- Retrieve the [transliterate](https://github.com/sindresorhus/transliterate) library for the [`clean_accents`](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options) slug option
 
 The npm package doesn’t use UNPKG for any of these. See below.
 
 **CSP for Sveltia CMS Additions**
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), also allow the Worker’s origin in `connect-src`, with both `https:` and `wss:`. In the builder above, select **GitHub with Sveltia CMS Additions** and enter your Worker URL. See also [Configuring the CMS](https://sveltiacms.app/en/docs/additions/setup#configuring-the-cms).
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), also allow the Worker’s origin in `connect-src`, with both `https:` and `wss:`. In the builder above, select **GitHub with Sveltia CMS Additions** and enter your Worker URL. See also [Configuring the CMS](https://sveltiacms.app/docs/additions/setup#configuring-the-cms).
 
 **CSP for the npm Package**
 
-The [npm package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package) serves all the files above, along with the fonts, from your own site. If you use it, you can remove `https://unpkg.com` and `https://cdn.jsdelivr.net` from the policy, and the HEIC conversion doesn’t need `blob:` in `worker-src`.
+The [npm package](https://sveltiacms.app/docs/releases#cdn-or-npm-package) serves all the files above, along with the fonts, from your own site. If you use it, you can remove `https://unpkg.com` and `https://cdn.jsdelivr.net` from the policy, and the HEIC conversion doesn’t need `blob:` in `worker-src`.
 
-Source: https://sveltiacms.app/en/docs/security
+Source: https://sveltiacms.app/docs/security
 
 ---
 
@@ -481,13 +483,13 @@ However, it’s not suitable for large enterprises that require advanced feature
 
 #### Can I use Sveltia CMS even though it’s still in beta?
 
-Although it’s still in beta, [many users](https://sveltiacms.app/en/showcase) are already using our product for their projects. We can confidently say that Sveltia CMS is [much more stable and reliable than Netlify/Decap CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms), which has been widely used in production for years despite its numerous bugs and inactive development.
+Although it’s still in beta, [many users](https://sveltiacms.app/showcase) are already using our product for their projects. We can confidently say that Sveltia CMS is [much more stable and reliable than Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms), which has been widely used in production for years despite its numerous bugs and inactive development.
 
 We’ll be releasing version 1.0 soon. We don’t expect any more breaking changes to be introduced in minor releases.
 
 #### When will Sveltia CMS reach version 1.0 (GA)?
 
-Version 1.0 will be released in late 2026. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/en/docs/releases#release-information) and other channels.
+Version 1.0 will be released in late 2026. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/docs/releases#release-information) and other channels.
 
 As [mentioned above](#can-i-use-sveltia-cms-even-though-it-s-still-in-beta), being in beta doesn’t mean the product is unreliable. We have already implemented many features and improvements, and we are implementing the rest of the features planned for 1.0 in the current beta releases. We encourage you to try it out and provide feedback to help us improve the product.
 
@@ -501,7 +503,7 @@ Sveltia CMS has quickly gained traction due to its focus on solving the pain poi
 
 Another contributing factor is the limited number of free, Git-based headless CMS options available. Most of the open source projects in this space are either inactive or tied to specific frameworks, making Sveltia CMS an appealing choice for developers seeking a versatile and reliable solution for small to medium-sized projects.
 
-The popularity of Sveltia CMS coincides with the [rise of Astro](https://blog.cloudflare.com/astro-joins-cloudflare/), a popular choice for building static sites. Its [compatibility with Astro](https://sveltiacms.app/en/docs/frameworks/astro) makes Sveltia CMS an attractive option for developers looking for a CMS that works well with their chosen framework.
+The popularity of Sveltia CMS coincides with the [rise of Astro](https://blog.cloudflare.com/astro-joins-cloudflare/), a popular choice for building static sites. Its [compatibility with Astro](https://sveltiacms.app/docs/frameworks/astro) makes Sveltia CMS an attractive option for developers looking for a CMS that works well with their chosen framework.
 
 Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify/Decap CMS, which has further boosted its visibility and adoption.
 
@@ -509,7 +511,7 @@ Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify
 
 #### Is Sveltia CMS a personal project?
 
-Yes, for now. Sveltia CMS is currently maintained by a single developer, who is also the creator of the project. The [maintainer](https://sveltiacms.app/en/docs/intro#about-the-author) has over 20 years of experience with a generalist skill set that covers web development, UX/UI design, localization, documentation and marketing.
+Yes, for now. Sveltia CMS is currently maintained by a single developer, who is also the creator of the project. The [maintainer](https://sveltiacms.app/docs/intro#about-the-author) has over 20 years of experience with a generalist skill set that covers web development, UX/UI design, localization, documentation and marketing.
 
 At this point, pull requests from the community are not being accepted yet for [various reasons](https://github.com/sveltia/sveltia-cms/issues/966#issuecomment-5645271030). However, we welcome feedback, suggestions and bug reports in our GitHub repository.
 
@@ -521,13 +523,13 @@ No. The maintainer is a seasoned professional with over 20 years of experience i
 
 #### Why did you create Sveltia CMS?
 
-Sveltia CMS was originally created for the maintainer’s freelance clients who wanted to replace their existing Netlify CMS installations, which were becoming increasingly difficult to maintain due to unresolved issues and lack of active development. [I18n support](https://sveltiacms.app/en/docs/i18n) was a key requirement for these clients, as they needed to manage content in multiple languages.
+Sveltia CMS was originally created for the maintainer’s freelance clients who wanted to replace their existing Netlify CMS installations, which were becoming increasingly difficult to maintain due to unresolved issues and lack of active development. [I18n support](https://sveltiacms.app/docs/i18n) was a key requirement for these clients, as they needed to manage content in multiple languages.
 
 #### Why is it called Sveltia CMS?
 
 Sveltia is the name of [our parent project](https://github.com/sveltia) that develops tools for the [Svelte](https://svelte.dev/) ecosystem. The name “Sveltia” is derived from the word “Svelte,” which reflects the project’s focus on simplicity, performance and elegance in web development. It’s also the name of [sea snails](https://en.wikipedia.org/wiki/Sveltia).
 
-Sveltia CMS itself is [framework-agnostic](https://sveltiacms.app/en/docs/frameworks) and can be used with any front-end framework or library, including Astro, Eleventy and Hugo.
+Sveltia CMS itself is [framework-agnostic](https://sveltiacms.app/docs/frameworks) and can be used with any front-end framework or library, including Astro, Eleventy and Hugo.
 
 ### Project Succession
 
@@ -539,7 +541,7 @@ In contrast, the official successor, Decap CMS, has been incredibly neglected, l
 
 You wouldn’t call LibreOffice a spiritual [successor to OpenOffice.org](https://www.libreoffice.org/libreoffice-vs-openoffice/); it’s the de facto successor. The official successor, Apache OpenOffice, is effectively defunct. Similarly, Sveltia CMS is the de facto successor to Netlify CMS, not a spiritual one.
 
-The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained and reliable, is highly compatible with its predecessor, and deals with issues continuously, whereas Decap CMS has been stagnant for years. See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed explanation.
+The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained and reliable, is highly compatible with its predecessor, and deals with issues continuously, whereas Decap CMS has been stagnant for years. See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed explanation.
 
 Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be considered a spiritual successor. Inspired by Netlify CMS, it has a similar YAML configuration format but a different architecture. We could have taken the same approach, but we deliberately chose a more difficult path by voluntarily carrying over hundreds of issues from Netlify CMS.
 
@@ -547,9 +549,9 @@ Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be consi
 
 Sveltia CMS was created before Decap CMS and was never intended to replace or compete with it. However, as Decap CMS has been neglected and many issues remain unresolved, Sveltia CMS can be considered the de facto successor to Decap CMS as well. It’s a more reliable and actively maintained alternative for users looking to migrate from Decap CMS.
 
-In fact, as our [showcase](https://sveltiacms.app/en/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
+In fact, as our [showcase](https://sveltiacms.app/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
 
-See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
+See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
 
 #### Is Sveltia CMS a Svelte port of React-based Netlify CMS?
 
@@ -559,7 +561,7 @@ We don’t use the predecessor’s codebase at all. We rarely reference it. This
 
 #### What are the main differences between Sveltia CMS and Netlify/Decap CMS?
 
-Sveltia CMS is a complete rewrite of Netlify CMS with a focus on addressing its shortcomings and providing a better user experience. It’s not a fork of Netlify/Decap CMS, but a new project built from the ground up using [Svelte](https://svelte.dev/) instead of React. Literally everything has been improved, from the architecture and design to the feature set and performance. See the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page for a detailed comparison.
+Sveltia CMS is a complete rewrite of Netlify CMS with a focus on addressing its shortcomings and providing a better user experience. It’s not a fork of Netlify/Decap CMS, but a new project built from the ground up using [Svelte](https://svelte.dev/) instead of React. Literally everything has been improved, from the architecture and design to the feature set and performance. See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison.
 
 #### Are you going to solve all the remaining Netlify/Decap CMS issues?
 
@@ -567,13 +569,13 @@ Not literally all of them. Some issues are irrelevant to Sveltia CMS due to unsu
 
 However, we do plan to address the remaining relevant and worthwhile issues. In the long term, we expect the total number of solved issues to exceed 1,000, including duplicates. We even tackle issues that have been [closed as stale](https://github.com/decaporg/decap-cms/issues?q=is%3Aissue+%22Closing+as+stale%22) by the Decap CMS maintainers, as well as many others that are unlikely to ever be solved by them.
 
-That’s what we signed up for as the [true successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms). A mere spiritual successor wouldn’t bother with that.
+That’s what we signed up for as the [true successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms). A mere spiritual successor wouldn’t bother with that.
 
 ### Community & Support
 
 #### Who’s using Sveltia CMS?
 
-Sveltia CMS is already being used by thousands of individuals and organizations for their websites and projects, and the number is growing rapidly. See the [showcase](https://sveltiacms.app/en/showcase) for various real-world examples of Sveltia CMS in action.
+Sveltia CMS is already being used by thousands of individuals and organizations for their websites and projects, and the number is growing rapidly. See the [showcase](https://sveltiacms.app/showcase) for various real-world examples of Sveltia CMS in action.
 
 Please note that the showcase only features a small fraction of our users because many prefer to keep their projects private. Additionally, political and religious projects are excluded because we aim to maintain a neutral stance and avoid controversy.
 
@@ -600,7 +602,7 @@ When deciding which projects to feature on the showcase, we generally consider t
   - We may still feature moderate grassroots campaigns and charities that primarily focus on issues such as civil rights and humanitarianism.
 - Personal blogs and websites will only be featured if they have a significant online presence and credibility, such as having hundreds of followers.
 
-Templates will not be featured on the showcase, but we can list them in our [Start Guide](https://sveltiacms.app/en/docs/start) and [Framework Guides](https://sveltiacms.app/en/docs/frameworks) if they are publicly available. Ping the maintainer on Discord, Bluesky or GitHub Discussions if you want your template to be listed.
+Templates will not be featured on the showcase, but we can list them in our [Start Guide](https://sveltiacms.app/docs/start) and [Framework Guides](https://sveltiacms.app/docs/frameworks) if they are publicly available. Ping the maintainer on Discord, Bluesky or GitHub Discussions if you want your template to be listed.
 
 #### Are there any plans for a hosted version of Sveltia CMS?
 
@@ -618,11 +620,11 @@ The maintainer wants to make Sveltia CMS a long-term project that serves the nee
 
 #### What is the roadmap for Sveltia CMS?
 
-We have a public [roadmap](https://sveltiacms.app/en/docs/roadmap) that outlines our plans for future development. It’s regularly updated based on user feedback and priorities. Check it out to see what’s coming next!
+We have a public [roadmap](https://sveltiacms.app/docs/roadmap) that outlines our plans for future development. It’s regularly updated based on user feedback and priorities. Check it out to see what’s coming next!
 
 #### How often are new releases made?
 
-Usually several times a week, depending on the number of changes and fixes. We follow a continuous release model, so new features, improvements and bug fixes are released as soon as they are ready. See the [Releases](https://sveltiacms.app/en/docs/releases) page for details.
+Usually several times a week, depending on the number of changes and fixes. We follow a continuous release model, so new features, improvements and bug fixes are released as soon as they are ready. See the [Releases](https://sveltiacms.app/docs/releases) page for details.
 
 #### How can I contribute to Sveltia CMS?
 
@@ -634,54 +636,54 @@ See the [Contributing page](https://github.com/sveltia/sveltia-cms/blob/main/CON
 
 We don’t directly compare our product with other CMS solutions because they each try to solve different problems for different target audiences. Furthermore, it would be unfair to compare community-driven projects like Sveltia CMS with company-owned offerings, which typically have greater resources available for development, support, and marketing.
 
-The only comparable product is our predecessor, Netlify/Decap CMS, which is the very particular reason why Sveltia CMS exists in the first place. We have a detailed comparison of the two products on the [Successor to Netlify CMS](https://sveltiacms.app/en/docs/successor-to-netlify-cms) page.
+The only comparable product is our predecessor, Netlify/Decap CMS, which is the very particular reason why Sveltia CMS exists in the first place. We have a detailed comparison of the two products on the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page.
 
 To decide which CMS solution is right for your project, we recommend evaluating your specific needs and requirements, and comparing the features, pricing and support options of different solutions to find the best fit for you.
 
-Visit our [Introduction](https://sveltiacms.app/en/docs/intro), [Features](https://sveltiacms.app/en/features) and [Architecture](https://sveltiacms.app/en/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [showcase](https://sveltiacms.app/en/showcase).
+Visit our [Introduction](https://sveltiacms.app/docs/intro), [Features](https://sveltiacms.app/features) and [Architecture](https://sveltiacms.app/docs/architecture) pages to learn more about the benefits of Sveltia CMS, or explore our [showcase](https://sveltiacms.app/showcase).
 
 #### Is Sveltia CMS framework-agnostic?
 
-Yes. Sveltia CMS is designed to be framework-agnostic. While it’s built with [Svelte](https://svelte.dev/), we only distribute the CMS as a precompiled vanilla JavaScript bundle. There is no Svelte-specific code in the bundle, and it doesn’t require Svelte to run. You can integrate it with [any front-end framework](https://sveltiacms.app/en/docs/frameworks) or library of your choice, or even use it with plain HTML/JavaScript.
+Yes. Sveltia CMS is designed to be framework-agnostic. While it’s built with [Svelte](https://svelte.dev/), we only distribute the CMS as a precompiled vanilla JavaScript bundle. There is no Svelte-specific code in the bundle, and it doesn’t require Svelte to run. You can integrate it with [any front-end framework](https://sveltiacms.app/docs/frameworks) or library of your choice, or even use it with plain HTML/JavaScript.
 
-However, some [JavaScript API](https://sveltiacms.app/en/docs/api) features require you to use React components for customization. This is because the API derives from React-based Netlify/Decap CMS, and backward compatibility has to be maintained. We’re planning to support other libraries in the future.
+However, some [JavaScript API](https://sveltiacms.app/docs/api) features require you to use React components for customization. This is because the API derives from React-based Netlify/Decap CMS, and backward compatibility has to be maintained. We’re planning to support other libraries in the future.
 
 #### Does Sveltia CMS support multilingual content?
 
-Yes. Sveltia CMS comes with first-class internationalization (i18n) support, which is even superior to some commercial CMS solutions. You can easily create and manage content in multiple languages. Check out our [i18n documentation](https://sveltiacms.app/en/docs/i18n) for more details on how to set it up.
+Yes. Sveltia CMS comes with first-class internationalization (i18n) support, which is even superior to some commercial CMS solutions. You can easily create and manage content in multiple languages. Check out our [i18n documentation](https://sveltiacms.app/docs/i18n) for more details on how to set it up.
 
 #### Can I use Sveltia CMS with local repositories?
 
-Yes. Sveltia CMS is a local-first CMS that works seamlessly with local Git repositories. Its [local development workflow](https://sveltiacms.app/en/docs/workflows/local) utilizes the [File System Access API](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access), allowing you to manage content directly on your local machine without connecting to a remote Git service. This is particularly useful for developers who prefer to make bulk changes locally before pushing them to a remote repository. The CMS can also [commit your changes](https://sveltiacms.app/en/docs/workflows/local#git-commits) to the local repository every time you save.
+Yes. Sveltia CMS is a local-first CMS that works seamlessly with local Git repositories. Its [local development workflow](https://sveltiacms.app/docs/workflows/local) utilizes the [File System Access API](https://developer.chrome.com/docs/capabilities/web-apis/file-system-access), allowing you to manage content directly on your local machine without connecting to a remote Git service. This is particularly useful for developers who prefer to make bulk changes locally before pushing them to a remote repository. The CMS can also [commit your changes](https://sveltiacms.app/docs/workflows/local#git-commits) to the local repository every time you save.
 
 #### Can I invite multiple users to collaborate on content?
 
 Yes. There are two ways:
 
-- **With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions):** our free server-side component provides [user management with roles](https://sveltiacms.app/en/docs/additions/users). You add people on the Administration page, and they sign in with a username and password, so they don’t need a GitHub account. It also adds [entry locks and comments](https://sveltiacms.app/en/docs/additions/collaboration) for working together. It currently works with the GitHub backend only.
+- **With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions):** our free server-side component provides [user management with roles](https://sveltiacms.app/docs/additions/users). You add people on the Administration page, and they sign in with a username and password, so they don’t need a GitHub account. It also adds [entry locks and comments](https://sveltiacms.app/docs/additions/collaboration) for working together. It currently works with the GitHub backend only.
 - **With your Git service provider:** ask users to create an account with your chosen Git service provider (e.g. GitHub) and invite them to your repository. They don’t need to know anything about the service or Git workflow, as Sveltia CMS handles that for them.
 
-When several people edit content at the same time, Sveltia CMS checks the repository when an entry is opened, while it’s being edited and before it’s saved. A change someone else has pushed is noticed and never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution) for details.
+When several people edit content at the same time, Sveltia CMS checks the repository when an entry is opened, while it’s being edited and before it’s saved. A change someone else has pushed is noticed and never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/docs/ui/content-editor#conflict-resolution) for details.
 
 ### Security and Privacy
 
 #### Does Sveltia CMS have a privacy policy regarding user data?
 
-No. Sveltia CMS does not collect or store any user data, so we don’t have a privacy policy. All content and user information are stored in your Git repository, which you control. See the [Privacy](https://sveltiacms.app/en/docs/privacy) page for more details.
+No. Sveltia CMS does not collect or store any user data, so we don’t have a privacy policy. All content and user information are stored in your Git repository, which you control. See the [Privacy](https://sveltiacms.app/docs/privacy) page for more details.
 
 ### Support and Troubleshooting
 
 #### Where can I get support for Sveltia CMS?
 
-See the [Support](https://sveltiacms.app/en/support) page for information on how to get help with Sveltia CMS. We offer support through our GitHub repository, where you can report issues, ask questions and share feedback. The maintainer also provides professional support services for users who need more personalized assistance.
+See the [Support](https://sveltiacms.app/support) page for information on how to get help with Sveltia CMS. We offer support through our GitHub repository, where you can report issues, ask questions and share feedback. The maintainer also provides professional support services for users who need more personalized assistance.
 
 #### Where can I report bugs for Sveltia CMS?
 
-See the [Feedback](https://sveltiacms.app/en/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 8 hours, depending on the complexity of the issue.
+See the [Feedback](https://sveltiacms.app/feedback) page for information on how to report bugs or request features for Sveltia CMS. We encourage users to report any issues they encounter in our GitHub repository, where we can track and address them effectively. In most cases, we can provide a fix within 8 hours, depending on the complexity of the issue.
 
 #### Do you offer paid support for Sveltia CMS?
 
-Yes. The maintainer offers professional support services for users who need more personalized assistance with Sveltia CMS. This includes help with installation, configuration, customization and troubleshooting. If you’re interested in paid support, please contact us through the [Support](https://sveltiacms.app/en/support) page for more details.
+Yes. The maintainer offers professional support services for users who need more personalized assistance with Sveltia CMS. This includes help with installation, configuration, customization and troubleshooting. If you’re interested in paid support, please contact us through the [Support](https://sveltiacms.app/support) page for more details.
 
 ### Technical Questions
 
@@ -689,7 +691,7 @@ Yes. The maintainer offers professional support services for users who need more
 
 [Svelte](https://svelte.dev/) offers several advantages that make it an excellent choice for building Sveltia CMS, including its performance, simplicity and ease of use. Svelte compiles components into highly efficient vanilla JavaScript code, resulting in faster load times and better overall performance compared to traditional frameworks that rely on runtime libraries.
 
-At this point, Sveltia CMS is probably one of the world’s most widely used standalone Svelte applications, demonstrating the capabilities of the modern UI framework. It’s not a SvelteKit application, as we need to maintain its [architecture](https://sveltiacms.app/en/docs/architecture) as a single-file JavaScript bundle to ensure compatibility with Netlify/Decap CMS.
+At this point, Sveltia CMS is probably one of the world’s most widely used standalone Svelte applications, demonstrating the capabilities of the modern UI framework. It’s not a SvelteKit application, as we need to maintain its [architecture](https://sveltiacms.app/docs/architecture) as a single-file JavaScript bundle to ensure compatibility with Netlify/Decap CMS.
 
 We plan to explore other frameworks in the future, but Svelte is our primary choice for now due to its benefits.
 
@@ -711,4 +713,4 @@ However, due to limited resources and an increasingly complex product, we have a
 
 If you find our product useful and would like to support us, please consider [sponsoring the maintainer](https://github.com/sponsors/kyoshino), which would help to cover the monthly cost of the Claude subscription (US$100). Your support would be greatly appreciated!
 
-Source: https://sveltiacms.app/en/docs/faq
+Source: https://sveltiacms.app/docs/faq

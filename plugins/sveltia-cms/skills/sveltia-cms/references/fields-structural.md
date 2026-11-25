@@ -35,7 +35,7 @@ If the `required` option is set to `false` and subfields are not added, the valu
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Object field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Object field supports the following options:
 
 #### Required Options
 
@@ -48,7 +48,7 @@ Must be set to `object` to use the Object field type.
 
 ##### `fields`
 
-- **Type**: `array` of [field definitions](https://sveltiacms.app/en/docs/fields)
+- **Type**: `array` of [field definitions](https://sveltiacms.app/docs/fields)
 
 Either `fields` or `types` must be provided. You cannot use both options simultaneously.
 
@@ -64,7 +64,7 @@ Each type definition is an object with the following properties:
 - `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
 - `description` (string, optional): A short description of the type, displayed below its label in the Add button’s dropdown menu. Markdown is not supported.
-- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/en/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
+- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
 - `summary` (string, optional): A template for the summary shown when the object of this type is collapsed. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
@@ -93,7 +93,7 @@ Whether the object field is initially collapsed in the UI. If set to `auto`, the
 - **Type**: `string`
 - **Default**: `""`
 
-A string template used to generate a summary of the object’s content when it is collapsed in the UI. The template can include placeholders for subfield values using the syntax `{{fieldName}}`. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option.
+A string template used to generate a summary of the object’s content when it is collapsed in the UI. The template can include placeholders for subfield values using the syntax `{{fieldName}}`. [String transformations](https://sveltiacms.app/docs/string-transformations) can be applied in this option.
 
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
@@ -102,7 +102,7 @@ See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example belo
 - **Type**: `string`
 - **Default**: `""`
 
-The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail of the object when it is collapsed in the UI. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
+The name of an [Image](https://sveltiacms.app/docs/fields/image) or [File](https://sveltiacms.app/docs/fields/file) subfield to be used as the thumbnail of the object when it is collapsed in the UI. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
 
 A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`. A name that doesn’t point to an Image or File subfield is reported as a config validation error on the login screen. With `types`, a name shared by the subfields of several types is accepted as long as one of them is an Image or File field.
 
@@ -127,7 +127,7 @@ Unlike most other config options, `typeKey` is camelCased.
 
 The following example defines an Object field named `author` with two subfields: `name` (a string) and `bio` (a text area).
 
-```yaml [YAML]
+```yaml YAML
 - name: author
   label: Author
   widget: object
@@ -140,7 +140,7 @@ The following example defines an Object field named `author` with two subfields:
       widget: text
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "author"
 label = "Author"
@@ -157,7 +157,7 @@ label = "Biography"
 widget = "text"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "author",
   "label": "Author",
@@ -177,7 +177,7 @@ widget = "text"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "author",
   label: "Author",
@@ -199,19 +199,19 @@ widget = "text"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 author:
   name: Jane Doe
   bio: Jane Doe is a writer and editor with over 10 years of experience.
 ```
 
-```toml [TOML]
+```toml TOML
 [author]
 name = "Jane Doe"
 bio = "Jane Doe is a writer and editor with over 10 years of experience."
 ```
 
-```json [JSON]
+```json JSON
 {
   "author": {
     "name": "Jane Doe",
@@ -224,7 +224,7 @@ bio = "Jane Doe is a writer and editor with over 10 years of experience."
 
 An object can contain another object as a subfield. The following example defines an Object field named `book` with a nested Object field named `publisher`.
 
-```yaml [YAML]
+```yaml YAML
 - name: book
   label: Book
   widget: object
@@ -244,7 +244,7 @@ An object can contain another object as a subfield. The following example define
           widget: text
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "book"
 label = "Book"
@@ -267,7 +267,7 @@ label = "Address"
 widget = "text"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "book",
   "label": "Book",
@@ -299,7 +299,7 @@ widget = "text"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "book",
   label: "Book",
@@ -333,7 +333,7 @@ widget = "text"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 book:
   title: The Great Gatsby
   publisher:
@@ -341,7 +341,7 @@ book:
     address: '123 Publisher St, New York, NY'
 ```
 
-```toml [TOML]
+```toml TOML
 [book]
 title = "The Great Gatsby"
 [book.publisher]
@@ -349,7 +349,7 @@ name = "Scribner"
 address = "123 Publisher St, New York, NY"
 ```
 
-```json [JSON]
+```json JSON
 {
   "book": {
     "title": "The Great Gatsby",
@@ -365,7 +365,7 @@ address = "123 Publisher St, New York, NY"
 
 The following example defines an Object field named `hero` that, when collapsed, shows the `heading` subfield value as the summary along with the image held by the `image` subfield.
 
-```yaml [YAML]
+```yaml YAML
 - name: hero
   label: Hero
   widget: object
@@ -380,7 +380,7 @@ The following example defines an Object field named `hero` that, when collapsed,
       widget: image
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "hero"
 label = "Hero"
@@ -397,7 +397,7 @@ label = "Image"
 widget = "image"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "hero",
   "label": "Hero",
@@ -419,7 +419,7 @@ widget = "image"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "hero",
   label: "Hero",
@@ -445,7 +445,7 @@ widget = "image"
 
 The following example defines a variable type Object field named `contentBlock` with three types: `textBlock`, `imageBlock` and `placeholderBlock`. Note that the `placeholderBlock` type does not have any subfields but is still a valid type.
 
-```yaml [YAML]
+```yaml YAML
 - name: contentBlock
   label: Content Block
   widget: object
@@ -466,7 +466,7 @@ The following example defines a variable type Object field named `contentBlock` 
       label: Placeholder Block
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "contentBlock"
 label = "Content Block"
@@ -495,7 +495,7 @@ name = "placeholderBlock"
 label = "Placeholder Block"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "contentBlock",
   "label": "Content Block",
@@ -531,7 +531,7 @@ label = "Placeholder Block"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "contentBlock",
   label: "Content Block",
@@ -571,19 +571,19 @@ The output will vary based on the selected type, which is indicated by the `type
 
 Output example for a `textBlock` type:
 
-```yaml [YAML]
+```yaml YAML
 contentBlock:
   type: textBlock
   text: 'This is a sample text block.'
 ```
 
-```toml [TOML]
+```toml TOML
 [contentBlock]
 type = "textBlock"
 text = "This is a sample text block."
 ```
 
-```json [JSON]
+```json JSON
 {
   "contentBlock": {
     "type": "textBlock",
@@ -594,19 +594,19 @@ text = "This is a sample text block."
 
 Output example for an `imageBlock` type:
 
-```yaml [YAML]
+```yaml YAML
 contentBlock:
   type: imageBlock
   image: /images/sample.jpg
 ```
 
-```toml [TOML]
+```toml TOML
 [contentBlock]
 type = "imageBlock"
 image = "/images/sample.jpg"
 ```
 
-```json [JSON]
+```json JSON
 {
   "contentBlock": {
     "type": "imageBlock",
@@ -617,17 +617,17 @@ image = "/images/sample.jpg"
 
 Output example for a `placeholderBlock` type:
 
-```yaml [YAML]
+```yaml YAML
 contentBlock:
   type: placeholderBlock
 ```
 
-```toml [TOML]
+```toml TOML
 [contentBlock]
 type = "placeholderBlock"
 ```
 
-```json [JSON]
+```json JSON
 {
   "contentBlock": {
     "type": "placeholderBlock"
@@ -635,7 +635,7 @@ type = "placeholderBlock"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/object
+Source: https://sveltiacms.app/docs/fields/object
 
 ---
 
@@ -650,8 +650,8 @@ The KeyValue field type allows users to create and manage a dynamic list of key-
 A dynamic list of key-value pairs, where users can add, edit, reorder and remove entries. Each entry consists of a text input for the key and a text input for the value.
 
 - Pressing Enter moves focus or adds a new row while editing.
-- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/en/docs/fields/list#complex-list-field). When there are 3 or more pairs, a menu next to the handle offers Move to Top, Move to Bottom and Move to…. The last one asks for the position to move the pair to. The pairs are saved in the order they are shown.
-- A field without pairs shows a blank row, like a [simple List field](https://sveltiacms.app/en/docs/fields/list#simple-list-field), so there’s always somewhere to type. The blank row isn’t saved until its key is filled in, and removing the last pair leaves one in its place.
+- Each pair can be reordered using the drag handle at the start of its row, with the same pointer, keyboard and touch screen behavior as the [List field](https://sveltiacms.app/docs/fields/list#complex-list-field). When there are 3 or more pairs, a menu next to the handle offers Move to Top, Move to Bottom and Move to…. The last one asks for the position to move the pair to. The pairs are saved in the order they are shown.
+- A field without pairs shows a blank row, like a [simple List field](https://sveltiacms.app/docs/fields/list#simple-list-field), so there’s always somewhere to type. The blank row isn’t saved until its key is filled in, and removing the last pair leaves one in its place.
 
 #### Preview
 
@@ -671,7 +671,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the KeyValue field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the KeyValue field supports the following options:
 
 #### Required Options
 
@@ -710,7 +710,7 @@ The label for the value input field.
 - **Type**: `string`
 - **Default**: The value of the `label` option
 
-A label used for a single key-value pair, e.g. “Setting” for a field labeled “Settings”. It will be displayed on the Add button, just like the [`label_singular` option for the List field](https://sveltiacms.app/en/docs/fields/list#label-singular).
+A label used for a single key-value pair, e.g. “Setting” for a field labeled “Settings”. It will be displayed on the Add button, just like the [`label_singular` option for the List field](https://sveltiacms.app/docs/fields/list#label-singular).
 
 ##### `min`
 
@@ -731,7 +731,7 @@ The maximum number of key-value pairs allowed. This enables validation to preven
 - **Type**: `boolean`
 - **Default**: `false`
 
-If set to `true`, the key-value pairs will be stored at the root level of the entry data instead of nested under the field name. This is similar to how the [`root` option for the List field](https://sveltiacms.app/en/docs/fields/list#root) works. The option is ignored unless the field is the only field in the collection or file.
+If set to `true`, the key-value pairs will be stored at the root level of the entry data instead of nested under the field name. This is similar to how the [`root` option for the List field](https://sveltiacms.app/docs/fields/list#root) works. The option is ignored unless the field is the only field in the collection or file.
 
 See the [Top-Level key-value pairs](#top-level-key-value-pairs) example below for details.
 
@@ -740,7 +740,7 @@ See the [Top-Level key-value pairs](#top-level-key-value-pairs) example below fo
 - **Type**: `boolean`, `duplicate` or `duplicate_keys`
 - **Default**: `false`
 
-In addition to the [common `i18n` option values](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration), the KeyValue field accepts the `duplicate_keys` value, which is useful for dictionaries whose keys are shared across locales while their values are translated:
+In addition to the [common `i18n` option values](https://sveltiacms.app/docs/i18n/options#field-level-configuration), the KeyValue field accepts the `duplicate_keys` value, which is useful for dictionaries whose keys are shared across locales while their values are translated:
 
 - The keys are copied from the default locale to the other locales, where they are read-only. Keys can only be added, renamed or removed in the default locale, and any such change is immediately reflected in the other locales.
 - The values can be edited separately for each locale. When a key is renamed in the default locale, the other locales keep the value they had under the old name; a newly added key starts with an empty value in the other locales.
@@ -754,20 +754,20 @@ See the [Translated Values with Shared Keys](#translated-values-with-shared-keys
 
 This example demonstrates a simple KeyValue field configuration:
 
-```yaml [YAML]
+```yaml YAML
 - name: settings
   label: Settings
   widget: keyvalue
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "settings"
 label = "Settings"
 widget = "keyvalue"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "settings",
   "label": "Settings",
@@ -775,7 +775,7 @@ widget = "keyvalue"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'settings',
   label: 'Settings',
@@ -785,19 +785,19 @@ widget = "keyvalue"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 settings:
   theme: dark
   notifications: enabled
 ```
 
-```toml [TOML]
+```toml TOML
 [settings]
 theme = "dark"
 notifications = "enabled"
 ```
 
-```json [JSON]
+```json JSON
 {
   "settings": {
     "theme": "dark",
@@ -808,16 +808,16 @@ notifications = "enabled"
 
 #### Translated Values with Shared Keys
 
-This example demonstrates how to use the `duplicate_keys` i18n strategy so that the same keys are used in all locales while the values are translated. This requires i18n to be [enabled](https://sveltiacms.app/en/docs/i18n) for the collection:
+This example demonstrates how to use the `duplicate_keys` i18n strategy so that the same keys are used in all locales while the values are translated. This requires i18n to be [enabled](https://sveltiacms.app/docs/i18n) for the collection:
 
-```yaml [YAML]
+```yaml YAML
 - name: labels
   label: Labels
   widget: keyvalue
   i18n: duplicate_keys
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "labels"
 label = "Labels"
@@ -825,7 +825,7 @@ widget = "keyvalue"
 i18n = "duplicate_keys"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "labels",
   "label": "Labels",
@@ -834,7 +834,7 @@ i18n = "duplicate_keys"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'labels',
   label: 'Labels',
@@ -845,7 +845,7 @@ i18n = "duplicate_keys"
 
 Output example, with English as the default locale and the `single_file` i18n structure:
 
-```yaml [YAML]
+```yaml YAML
 en:
   labels:
     submit: Submit
@@ -856,7 +856,7 @@ ja:
     cancel: キャンセル
 ```
 
-```toml [TOML]
+```toml TOML
 [en.labels]
 submit = "Submit"
 cancel = "Cancel"
@@ -866,7 +866,7 @@ submit = "送信"
 cancel = "キャンセル"
 ```
 
-```json [JSON]
+```json JSON
 {
   "en": {
     "labels": {
@@ -887,14 +887,14 @@ cancel = "キャンセル"
 
 This example demonstrates how to use the `root` option to store key-value pairs at the root level of the entry data:
 
-```yaml [YAML]
+```yaml YAML
 - name: settings
   label: Settings
   widget: keyvalue
   root: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "settings"
 label = "Settings"
@@ -902,7 +902,7 @@ widget = "keyvalue"
 root = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "settings",
   "label": "Settings",
@@ -911,7 +911,7 @@ root = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'settings',
   label: 'Settings',
@@ -922,21 +922,21 @@ root = true
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 theme: dark
 notifications: enabled
 ```
 
-```toml [TOML]
+```toml TOML
 theme = "dark"
 notifications = "enabled"
 ```
 
-```json [JSON]
+```json JSON
 {
   "theme": "dark",
   "notifications": "enabled"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/keyvalue
+Source: https://sveltiacms.app/docs/fields/keyvalue

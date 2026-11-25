@@ -14,7 +14,7 @@ Because there is little [Netlify/Decap CMS documentation](https://decapcms.org/d
 
 ### Overview
 
-To register a custom preview template, use the `registerPreviewTemplate` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+To register a custom preview template, use the `registerPreviewTemplate` method on the [`CMS` object](https://sveltiacms.app/docs/api#accessing-the-cms-object):
 
 ```js
 CMS.registerPreviewTemplate(name, component);
@@ -22,8 +22,8 @@ CMS.registerPreviewTemplate(name, component);
 
 #### Parameters
 
-- `name` (string, required): The name of the [entry collection](https://sveltiacms.app/en/docs/collections/entries), or the name of the file in a [file collection](https://sveltiacms.app/en/docs/collections/files) or [singleton collection](https://sveltiacms.app/en/docs/collections/singletons), for which the preview template is being registered. Registering a template with the same name again replaces the previous one.
-- `component` (React component, required): A [React component](https://sveltiacms.app/en/docs/api#writing-react-components) that defines the preview template. This component receives the entry data as props and should render the preview accordingly. You can write the component with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
+- `name` (string, required): The name of the [entry collection](https://sveltiacms.app/docs/collections/entries), or the name of the file in a [file collection](https://sveltiacms.app/docs/collections/files) or [singleton collection](https://sveltiacms.app/docs/collections/singletons), for which the preview template is being registered. Registering a template with the same name again replaces the previous one.
+- `component` (React component, required): A [React component](https://sveltiacms.app/docs/api#writing-react-components) that defines the preview template. This component receives the entry data as props and should render the preview accordingly. You can write the component with [HTM](https://sveltiacms.app/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/docs/api#writing-react-components) section for more details.
 
 ### Component Props
 
@@ -62,7 +62,7 @@ The component you register receives the following props during render:
   - `toString()` (function): Returns `url`, so Netlify/Decap CMS code like `getAsset(path).toString()` keeps working. Use optional chaining (`getAsset(path)?.toString()`) to handle a missing asset.
   - `toBase64()` (function): Async function that resolves to the file content as a Base64-encoded string, without the `data:` URL prefix. It rejects with an error if the file can’t be retrieved.
 - `getCollection` (function): Async function that returns entries from a specified collection. Each entry is an Immutable Map with the same structure as `entry`, where `data` holds the default locale’s content. Takes parameters:
-  - `collectionName` (string): Name of the collection to query. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). The Promise is rejected if the collection is not found.
+  - `collectionName` (string): Name of the collection to query. Use `_singletons` for [singletons](https://sveltiacms.app/docs/collections/singletons#referencing-singleton-files). The Promise is rejected if the collection is not found.
   - `slug` (string, optional): Entry slug to fetch a specific entry, or the filename in a file collection or the singleton collection. If omitted, returns all entries. If no entry matches, an entry with empty `data` and `slug` is returned.
 - `fieldsMetaData` (Immutable Map): Metadata for each field keyed by the field’s name, as in Netlify/Decap CMS. Useful for accessing related entry data from relation fields: `fieldsMetaData.getIn([fieldName, collectionName, value])` returns the referenced entry’s content. For a field inside an Object or List field, start the path with the names of the parent fields. List item indexes are not part of the path, so the metadata of all the items is merged. Examples of paths for a relation field referencing the `authors` collection:
   - `['author', 'authors', value]` for a top-level field, with or without the `multiple` option
@@ -88,7 +88,7 @@ For more information on working with Immutable data structures, see the [Immutab
 
 The preview pane is a sandboxed `<iframe>` with its own document, so it doesn’t inherit any stylesheets from the admin page. That includes CSS that your bundler emits for the template or for a component library it uses.
 
-Register the styles the template depends on with [`CMS.registerPreviewStyle()`](https://sveltiacms.app/en/docs/api/preview-styles), either as a file path or as a raw CSS string:
+Register the styles the template depends on with [`CMS.registerPreviewStyle()`](https://sveltiacms.app/docs/api/preview-styles), either as a file path or as a raw CSS string:
 
 ```js
 import css from './preview.css?inline'; // Vite
@@ -107,7 +107,7 @@ If you render a [Svelte](https://svelte.dev/) component inside the template, you
 
 ### Linking to the Edit Pane
 
-The default preview supports [Scroll Synchronization and Click-to-Highlight](https://sveltiacms.app/en/docs/ui/content-editor). Scrolling one pane scrolls the other to the same field, and clicking a field in the preview highlights it in the Edit Pane.
+The default preview supports [Scroll Synchronization and Click-to-Highlight](https://sveltiacms.app/docs/ui/content-editor). Scrolling one pane scrolls the other to the same field, and clicking a field in the preview highlights it in the Edit Pane.
 
 A custom preview template gets both features by marking its elements with the `data-key-path` attribute. Its value is the key path of the field the element displays:
 
@@ -121,7 +121,7 @@ To let keyboard users do the same, make the element focusable with `tabindex="0"
 
 An event handler in the template can call `event.preventDefault()` to stop a click or Enter key press from highlighting a field, e.g. for a button that does something else.
 
-```js [HTM]
+```js HTM
 html`
   <article>
     <h1 data-key-path="title" tabindex="0">${entry.getIn(['data', 'title'])}</h1>
@@ -138,7 +138,7 @@ html`
 `;
 ```
 
-```jsx [JSX]
+```jsx JSX
 <article>
   <h1 data-key-path="title" tabIndex={0}>
     {entry.getIn(['data', 'title'])}
@@ -153,7 +153,7 @@ html`
 </article>
 ```
 
-```js [h()]
+```js h()
 h(
   'article',
   {},
@@ -182,17 +182,17 @@ The field previews that `widgetFor` and `widgetsFor` return are already marked.
 
 Each example below comes in three versions:
 
-- [HTM](https://sveltiacms.app/en/docs/api#using-htm), which runs in the browser as is and is the recommended way
-- [JSX](https://sveltiacms.app/en/docs/api#using-jsx), which requires a build step to transpile it to JavaScript
-- [`h()`](https://sveltiacms.app/en/docs/api#using-h), which is compatible with Netlify/Decap CMS
+- [HTM](https://sveltiacms.app/docs/api#using-htm), which runs in the browser as is and is the recommended way
+- [JSX](https://sveltiacms.app/docs/api#using-jsx), which requires a build step to transpile it to JavaScript
+- [`h()`](https://sveltiacms.app/docs/api#using-h), which is compatible with Netlify/Decap CMS
 
-The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) for more details.
+The HTM versions use function components, while the others use class components. See [Writing React Components](https://sveltiacms.app/docs/api#writing-react-components) for more details.
 
 #### Basic Entry Preview
 
 Display a simple blog post preview with a title and featured image:
 
-```js [HTM]
+```js HTM
 const PostPreview = ({ entry, widgetFor, getAsset }) => {
   const image = entry.getIn(['data', 'image']);
   const imageAsset = image ? getAsset(image) : null;
@@ -212,7 +212,7 @@ const PostPreview = ({ entry, widgetFor, getAsset }) => {
 CMS.registerPreviewTemplate('posts', PostPreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class PostPreview extends React.Component {
   render() {
     const { entry, widgetFor, getAsset } = this.props;
@@ -234,7 +234,7 @@ export default class PostPreview extends React.Component {
 CMS.registerPreviewTemplate('posts', PostPreview);
 ```
 
-```js [h()]
+```js h()
 const PostPreview = createClass({
   render: function () {
     const { entry, widgetFor, getAsset } = this.props;
@@ -263,7 +263,7 @@ CMS.registerPreviewTemplate('posts', PostPreview);
 
 Preview a collection entry with a list of authors:
 
-```js [HTM]
+```js HTM
 const AuthorsPreview = ({ widgetsFor }) => {
   const authors = widgetsFor('authors');
 
@@ -289,7 +289,7 @@ const AuthorsPreview = ({ widgetsFor }) => {
 CMS.registerPreviewTemplate('team', AuthorsPreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class AuthorsPreview extends React.Component {
   render() {
     const { widgetsFor } = this.props;
@@ -314,7 +314,7 @@ export default class AuthorsPreview extends React.Component {
 CMS.registerPreviewTemplate('team', AuthorsPreview);
 ```
 
-```js [h()]
+```js h()
 const AuthorsPreview = createClass({
   render: function () {
     const { widgetsFor } = this.props;
@@ -345,7 +345,7 @@ CMS.registerPreviewTemplate('team', AuthorsPreview);
 
 Preview settings stored as an object structure:
 
-```js [HTM]
+```js HTM
 const SiteSettingsPreview = ({ entry, widgetsFor }) => {
   const settings = widgetsFor('site_config');
 
@@ -369,7 +369,7 @@ const SiteSettingsPreview = ({ entry, widgetsFor }) => {
 CMS.registerPreviewTemplate('settings', SiteSettingsPreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class SiteSettingsPreview extends React.Component {
   render() {
     const { entry, widgetsFor } = this.props;
@@ -396,7 +396,7 @@ export default class SiteSettingsPreview extends React.Component {
 CMS.registerPreviewTemplate('settings', SiteSettingsPreview);
 ```
 
-```js [h()]
+```js h()
 const SiteSettingsPreview = createClass({
   render: function () {
     const { entry, widgetsFor } = this.props;
@@ -429,7 +429,7 @@ CMS.registerPreviewTemplate('settings', SiteSettingsPreview);
 
 Display entry data with related entries fetched via `fieldsMetaData`:
 
-```js [HTM]
+```js HTM
 const ArticlePreview = ({ entry, fieldsMetaData, widgetFor }) => {
   const authorSlug = entry.getIn(['data', 'author']);
   const authorData = fieldsMetaData.getIn(['author', 'authors', authorSlug])?.toJS();
@@ -459,7 +459,7 @@ const ArticlePreview = ({ entry, fieldsMetaData, widgetFor }) => {
 CMS.registerPreviewTemplate('posts', ArticlePreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class ArticlePreview extends React.Component {
   render() {
     const { entry, fieldsMetaData, widgetFor } = this.props;
@@ -489,7 +489,7 @@ export default class ArticlePreview extends React.Component {
 CMS.registerPreviewTemplate('posts', ArticlePreview);
 ```
 
-```js [h()]
+```js h()
 const ArticlePreview = createClass({
   render: function () {
     const { entry, fieldsMetaData, widgetFor } = this.props;
@@ -527,7 +527,7 @@ CMS.registerPreviewTemplate('posts', ArticlePreview);
 
 Display multiple images from a gallery field with proper asset resolution:
 
-```js [HTM]
+```js HTM
 const GalleryPreview = ({ entry, getAsset }) => {
   const images = entry.getIn(['data', 'gallery']) ?? [];
 
@@ -557,7 +557,7 @@ const GalleryPreview = ({ entry, getAsset }) => {
 CMS.registerPreviewTemplate('portfolio', GalleryPreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class GalleryPreview extends React.Component {
   render() {
     const { entry, getAsset } = this.props;
@@ -587,7 +587,7 @@ export default class GalleryPreview extends React.Component {
 CMS.registerPreviewTemplate('portfolio', GalleryPreview);
 ```
 
-```js [h()]
+```js h()
 const GalleryPreview = createClass({
   render: function () {
     const { entry, getAsset } = this.props;
@@ -623,7 +623,7 @@ CMS.registerPreviewTemplate('portfolio', GalleryPreview);
 
 Display related entries from another collection:
 
-```js [HTM]
+```js HTM
 const { useEffect, useState } = CMS.React;
 
 const ProductPreview = ({ entry, getCollection }) => {
@@ -667,7 +667,7 @@ const ProductPreview = ({ entry, getCollection }) => {
 CMS.registerPreviewTemplate('products', ProductPreview);
 ```
 
-```jsx [JSX]
+```jsx JSX
 export default class ProductPreview extends React.Component {
   constructor(props) {
     super(props);
@@ -715,7 +715,7 @@ export default class ProductPreview extends React.Component {
 CMS.registerPreviewTemplate('products', ProductPreview);
 ```
 
-```js [h()]
+```js h()
 const ProductPreview = createClass({
   getInitialState: function () {
     return { relatedProducts: [] };
@@ -773,7 +773,7 @@ The registered component must be a React component, but it can mount a component
 
 See [Styling the Preview](#styling-the-preview) for how to get the component’s CSS into the preview.
 
-```js [Svelte]
+```js Svelte
 import { mount, unmount } from 'svelte';
 import NewsletterPreview from './newsletter-preview.svelte';
 
@@ -811,7 +811,7 @@ const NewsletterPreviewWrapper = createClass({
 CMS.registerPreviewTemplate('newsletters', NewsletterPreviewWrapper);
 ```
 
-```js [Vue]
+```js Vue
 import { createApp, h, reactive } from 'vue';
 import NewsletterPreview from './NewsletterPreview.vue';
 
@@ -846,9 +846,9 @@ CMS.registerPreviewTemplate('newsletters', NewsletterPreviewWrapper);
 
 ### Showcase
 
-Real-world examples of custom preview templates can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-templates).
+Real-world examples of custom preview templates can be found in our [showcase](https://sveltiacms.app/showcase?feature=preview-templates).
 
-Source: https://sveltiacms.app/en/docs/api/preview-templates
+Source: https://sveltiacms.app/docs/api/preview-templates
 
 ---
 
@@ -858,7 +858,7 @@ Sveltia CMS comes with built-in styles for the entry preview pane. However, you 
 
 ### Overview
 
-To register a custom preview style, use the `registerPreviewStyle` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+To register a custom preview style, use the `registerPreviewStyle` method on the [`CMS` object](https://sveltiacms.app/docs/api#accessing-the-cms-object):
 
 ```js
 CMS.registerPreviewStyle(filePath);
@@ -876,7 +876,7 @@ There are two ways to register custom preview styles in Sveltia CMS: by providin
 - `cssString` (string): A string containing the raw CSS styles to be applied to the preview pane.
 - `options` (object, optional): An options object that can contain the following properties:
   - `raw` (boolean): Set this to `true` if you are providing a raw CSS string. Defaults to `false`.
-  - `collection` (string): The name of the collection whose entries the style applies to. Use `_singletons` for [singletons](https://sveltiacms.app/en/docs/collections/singletons#referencing-singleton-files). If omitted, the style applies to all collections.
+  - `collection` (string): The name of the collection whose entries the style applies to. Use `_singletons` for [singletons](https://sveltiacms.app/docs/collections/singletons#referencing-singleton-files). If omitted, the style applies to all collections.
   - `file` (string): The name of the file the style applies to, in the file collection or singleton collection given with the `collection` option. If omitted, the style applies to all the files in the collection. This option requires `collection`.
 
 The function throws a `TypeError` if a parameter is invalid, e.g. if `filePath` is not a valid URL or file path, or if `file` is given without `collection`.
@@ -895,7 +895,7 @@ CMS.registerPreviewStyle('/path/to/your/custom-style.css');
 
 You can also register a preview style by providing a raw CSS string. Make sure to set the `raw` option to `true` in the options object.
 
-```js [JavaScript]
+```js JavaScript
 const customCSS = `
   body {
     background-color: lightgoldenrodyellow;
@@ -918,7 +918,7 @@ This allows you to layer styles and create complex customizations for the entry 
 
 #### Applying Preview Styles to Specific Collections or Files
 
-By default, a preview style applies to the entries of all collections. To apply it to the entries of a specific collection only, use the `collection` option. To apply it to a specific file in a [file collection](https://sveltiacms.app/en/docs/collections/files) or a [singleton](https://sveltiacms.app/en/docs/collections/singletons), use the `file` option along with `collection`.
+By default, a preview style applies to the entries of all collections. To apply it to the entries of a specific collection only, use the `collection` option. To apply it to a specific file in a [file collection](https://sveltiacms.app/docs/collections/files) or a [singleton](https://sveltiacms.app/docs/collections/singletons), use the `file` option along with `collection`.
 
 ```js
 // All entries
@@ -937,9 +937,9 @@ The styles that apply to an entry are combined in the order they were registered
 
 The default preview marks each field with three attributes that identify it, which your preview styles can use to target specific fields:
 
-- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown` or the name of a [custom field type](https://sveltiacms.app/en/docs/api/field-types).
+- `data-field-type`: The field’s type, i.e. its `widget` option, e.g. `string`, `markdown` or the name of a [custom field type](https://sveltiacms.app/docs/api/field-types).
 - `data-key-path`: The field’s key path. For example, `title` for a top-level field, `details.author` for a field in an Object field or `sections.0.heading` for a subfield of the first item in a List field.
-- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, e.g. `sections.*.heading`. One selector then matches the subfield in all the items. For a List or Object field with [variable types](https://sveltiacms.app/en/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
+- `data-typed-key-path`: The same path with every List item index replaced with an asterisk, e.g. `sections.*.heading`. One selector then matches the subfield in all the items. For a List or Object field with [variable types](https://sveltiacms.app/docs/fields/list#variable-type), the type name follows in angle brackets, e.g. `blocks.*<image>.src`.
 
 ```css
 [data-key-path='title'] p {
@@ -955,7 +955,7 @@ The default preview marks each field with three attributes that identify it, whi
 }
 ```
 
-A [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#linking-to-the-edit-pane) has these attributes only where it adds them itself, apart from the field previews that `widgetFor` and `widgetsFor` return.
+A [custom preview template](https://sveltiacms.app/docs/api/preview-templates#linking-to-the-edit-pane) has these attributes only where it adds them itself, apart from the field previews that `widgetFor` and `widgetsFor` return.
 
 The fields in the Edit Pane have the same attributes, so you can also style them with CSS on your admin page. Once a preview style applies to the entry, the preview is rendered in an iframe. Your admin page styles then don’t affect the preview, and your preview styles don’t affect the Edit Pane.
 
@@ -963,13 +963,13 @@ The attributes are primarily for internal use. The rest of the markup, such as c
 
 **Why “key path”?**
 
-The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object keyed by these paths, so the term is used throughout the app and its API, e.g. in the `widgetFor` prop of a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates#component-props).
+The term comes from the [IndexedDB API](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Basic_Terminology#key_path), where a key path is a dot-separated path to a value in an object. Sveltia CMS handles entry data as a flattened object keyed by these paths, so the term is used throughout the app and its API, e.g. in the `widgetFor` prop of a [custom preview template](https://sveltiacms.app/docs/api/preview-templates#component-props).
 
 ### Showcase
 
-Real-world examples of custom preview styles can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=preview-styles).
+Real-world examples of custom preview styles can be found in our [showcase](https://sveltiacms.app/showcase?feature=preview-styles).
 
-Source: https://sveltiacms.app/en/docs/api/preview-styles
+Source: https://sveltiacms.app/docs/api/preview-styles
 
 ---
 
@@ -982,28 +982,28 @@ Sveltia CMS offers various customization options to tailor the admin interface a
 The `site_url` configuration option allows you to specify the URL of the published site. It’s used for:
 
 - the link to the live site in the admin interface
-- entry preview links generated with the [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews) option
+- entry preview links generated with the [`preview_path`](https://sveltiacms.app/docs/collections/entries/previews) option
 - public asset URLs
 
 If omitted, it defaults to the origin of the CMS page (`location.origin`). It must be an absolute URL.
 
 To link the admin interface to a different URL than the one used for previews and assets, use the [`display_url`](#display-url) option.
 
-```yaml [YAML]
+```yaml YAML
 site_url: https://example.com
 ```
 
-```toml [TOML]
+```toml TOML
 site_url = "https://example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "site_url": "https://example.com"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   site_url: 'https://example.com',
 }
@@ -1015,24 +1015,24 @@ The `display_url` configuration option allows you to specify the URL opened by t
 
 The value can be an absolute URL or a path relative to the CMS origin.
 
-```yaml [YAML]
+```yaml YAML
 site_url: https://example.com
 display_url: https://www.example.com/blog/
 ```
 
-```toml [TOML]
+```toml TOML
 site_url = "https://example.com"
 display_url = "https://www.example.com/blog/"
 ```
 
-```json [JSON]
+```json JSON
 {
   "site_url": "https://example.com",
   "display_url": "https://www.example.com/blog/"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   site_url: 'https://example.com',
   display_url: 'https://www.example.com/blog/',
@@ -1043,21 +1043,21 @@ display_url = "https://www.example.com/blog/"
 
 The `logout_redirect_url` configuration option allows you to specify a custom URL to which users will be redirected after they log out of the Sveltia CMS admin interface. This can be useful for directing users back to the main website or a specific landing page. If omitted, users stay on the CMS sign-in page after logging out.
 
-```yaml [YAML]
+```yaml YAML
 logout_redirect_url: https://example.com/logged-out
 ```
 
-```toml [TOML]
+```toml TOML
 logout_redirect_url = "https://example.com/logged-out"
 ```
 
-```json [JSON]
+```json JSON
 {
   "logout_redirect_url": "https://example.com/logged-out"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   logout_redirect_url: 'https://example.com/logged-out',
 }
@@ -1074,19 +1074,19 @@ The `logo` configuration option, defined at the root level of the configuration 
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 logo:
   src: /path/to/your/logo.png
   show_in_header: true
 ```
 
-```toml [TOML]
+```toml TOML
 [logo]
 src = "/path/to/your/logo.png"
 show_in_header = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "logo": {
     "src": "/path/to/your/logo.png",
@@ -1095,7 +1095,7 @@ show_in_header = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   logo: {
     src: '/path/to/your/logo.png',
@@ -1110,21 +1110,21 @@ In Sveltia CMS, the `show_in_header` option defaults to `true`, so your logo app
 
 For backward compatibility, the `logo_url` configuration option is still supported but deprecated. It is recommended to use the `logo` object for better flexibility and future-proofing.
 
-```yaml [YAML]
+```yaml YAML
 logo_url: /path/to/your/logo.png
 ```
 
-```toml [TOML]
+```toml TOML
 logo_url = "/path/to/your/logo.png"
 ```
 
-```json [JSON]
+```json JSON
 {
   "logo_url": "/path/to/your/logo.png"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   logo_url: '/path/to/your/logo.png',
 }
@@ -1135,7 +1135,7 @@ logo_url = "/path/to/your/logo.png"
 - Login page
 - Header of the admin interface (when `show_in_header` is set to `true`)
 - Browser tab (favicon)
-- Application icon when [installed as an app](https://sveltiacms.app/en/docs/ui#installing-as-an-app) on desktop and mobile devices
+- Application icon when [installed as an app](https://sveltiacms.app/docs/ui#installing-as-an-app) on desktop and mobile devices
 
 #### Logo Image Requirements
 
@@ -1148,21 +1148,21 @@ logo_url = "/path/to/your/logo.png"
 
 With the `app_title` configuration option, you can set a custom title for the Sveltia CMS admin interface. This title will be displayed on the login page and in the browser tab. You may want to replace the default “Sveltia CMS” title with your company name or a specific title that reflects the purpose of the admin interface.
 
-```yaml [YAML]
+```yaml YAML
 app_title: Acme Inc. Site Admin
 ```
 
-```toml [TOML]
+```toml TOML
 app_title = "Acme Inc. Site Admin"
 ```
 
-```json [JSON]
+```json JSON
 {
   "app_title": "Acme Inc. Site Admin"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   app_title: 'Acme Inc. Site Admin',
 }
@@ -1200,17 +1200,17 @@ Every field in the Edit Pane has the `data-field-type`, `data-key-path` and `dat
 </style>
 ```
 
-The default Preview Pane marks each field with the same attributes. See [Styling Specific Fields](https://sveltiacms.app/en/docs/api/preview-styles#styling-specific-fields) for what the attributes contain and how to style the preview.
+The default Preview Pane marks each field with the same attributes. See [Styling Specific Fields](https://sveltiacms.app/docs/api/preview-styles#styling-specific-fields) for what the attributes contain and how to style the preview.
 
 ### JavaScript API
 
 Sveltia CMS offers a comprehensive API that enables developers to extend and customize its features. You can register custom field types, preview templates, editor components and more to enhance the content management experience.
 
-For detailed information on how to use the API, please refer to the [JavaScript API guide](https://sveltiacms.app/en/docs/api).
+For detailed information on how to use the API, please refer to the [JavaScript API guide](https://sveltiacms.app/docs/api).
 
 ### Sveltia CMS Additions
 
-[Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) provides additional features, primarily for multi-user scenarios, including user management, entry locks and shared credentials. These features are useful for teams working collaboratively on content, as they ensure that users can manage their access and contributions effectively.
+[Sveltia CMS Additions](https://sveltiacms.app/docs/additions) provides additional features, primarily for multi-user scenarios, including user management, entry locks and shared credentials. These features are useful for teams working collaboratively on content, as they ensure that users can manage their access and contributions effectively.
 
 ### Modifying Source Code
 
@@ -1218,4 +1218,4 @@ Sveltia CMS is an open source project licensed under the [MIT License](https://c
 
 However, please note that our source code is under active development with significant refactoring and improvements happening regularly. We also plan to reevaluate the UI framework, currently [Svelte](https://svelte.dev/), at some point. Direct modifications to the source code may lead to compatibility issues with future updates.
 
-Source: https://sveltiacms.app/en/docs/customization
+Source: https://sveltiacms.app/docs/customization

@@ -10,14 +10,14 @@ Sveltia CMS Additions is a free, open-source service that adds the features a te
 
 It provides:
 
-- [user management](https://sveltiacms.app/en/docs/additions/users) with admin, editor and viewer roles, and sign-in with a username and password, so people don’t need a GitHub account
-- [entry locks](https://sveltiacms.app/en/docs/additions/collaboration#entry-locks), so two people don’t edit the same entry at once by accident, and a list of [who else has an entry open](https://sveltiacms.app/en/docs/additions/collaboration#who-else-has-an-entry-open), both updated in real time
-- a [Conversation panel](https://sveltiacms.app/en/docs/additions/collaboration#conversation-panel) for comments on each entry, which appear in everyone’s open tabs as they’re posted
-- [shared credentials](https://sveltiacms.app/en/docs/additions/administration#credentials): API keys and a deploy hook that an admin enters once for everyone
-- an [Administration page](https://sveltiacms.app/en/docs/additions/administration) in the CMS to manage all of it
-- [multi-tenancy](https://sveltiacms.app/en/docs/additions/setup#several-sites-on-one-worker): several sites on one deployment, each with its own users and data — useful for agencies
+- [user management](https://sveltiacms.app/docs/additions/users) with admin, editor and viewer roles, and sign-in with a username and password, so people don’t need a GitHub account
+- [entry locks](https://sveltiacms.app/docs/additions/collaboration#entry-locks), so two people don’t edit the same entry at once by accident, and a list of [who else has an entry open](https://sveltiacms.app/docs/additions/collaboration#who-else-has-an-entry-open), both updated in real time
+- a [Conversation panel](https://sveltiacms.app/docs/additions/collaboration#conversation-panel) for comments on each entry, which appear in everyone’s open tabs as they’re posted
+- [shared credentials](https://sveltiacms.app/docs/additions/administration#credentials): API keys and a deploy hook that an admin enters once for everyone
+- an [Administration page](https://sveltiacms.app/docs/additions/administration) in the CMS to manage all of it
+- [multi-tenancy](https://sveltiacms.app/docs/additions/setup#several-sites-on-one-worker): several sites on one deployment, each with its own users and data — useful for agencies
 
-To get started, follow the [setup guide](https://sveltiacms.app/en/docs/additions/setup).
+To get started, follow the [setup guide](https://sveltiacms.app/docs/additions/setup).
 
 ### How It Works
 
@@ -41,12 +41,12 @@ Sveltia CMS Additions is designed to run on the [Workers Free plan](https://deve
 - **Revocation:** demoting, disabling or signing out a user revokes their GitHub tokens on GitHub’s side right away, rather than waiting for them to expire.
 - **Allowed domains:** only the sites you list can use the service. An empty list allows none.
 
-The [setup guide](https://sveltiacms.app/en/docs/additions/setup#security-checklist) ends with a checklist for securing your accounts and repository.
+The [setup guide](https://sveltiacms.app/docs/additions/setup#security-checklist) ends with a checklist for securing your accounts and repository.
 
 ### Requirements
 
 - Sveltia CMS v0.271.0 or later.
-- The [GitHub backend](https://sveltiacms.app/en/docs/backends/github). GitHub Enterprise isn’t supported yet.
+- The [GitHub backend](https://sveltiacms.app/docs/backends/github). GitHub Enterprise isn’t supported yet.
 - A Cloudflare account. The Free plan is enough.
 - A GitHub account that can create a GitHub App and install it on the site’s repository.
 
@@ -77,32 +77,32 @@ The [setup guide](https://sveltiacms.app/en/docs/additions/setup#security-checkl
 
 [^4]: Netlify/Decap CMS [#7303](https://github.com/decaporg/decap-cms/issues/7303)
 
-Source: https://sveltiacms.app/en/docs/additions
+Source: https://sveltiacms.app/docs/additions
 
 ---
 
 ## Administration Page
 
-Admins manage [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) from the CMS itself. Select **Administration** in the toolbar, after the other pages, or on the Menu page on a small screen. The page has a section for each topic, listed in its sidebar.
+Admins manage [Sveltia CMS Additions](https://sveltiacms.app/docs/additions) from the CMS itself. Select **Administration** in the toolbar, after the other pages, or on the Menu page on a small screen. The page has a section for each topic, listed in its sidebar.
 
-![The User Management page showing a list of users](/images/landing/administration-light.webp?20261122) ![The User Management page showing a list of users](/images/landing/administration-dark.webp?20261122)
+![The User Management page showing a list of users](https://sveltiacms.app/images/landing/administration-light.webp?20261122)
 
 Every setting lives in the service’s database, not in the CMS configuration or in Cloudflare. Secret values, such as the GitHub App’s private key, are write-only: the CMS can replace them, but never reads them back.
 
-When a new version of Sveltia CMS Additions is out, the page shows a notice with a link to the release notes. See [Updating](https://sveltiacms.app/en/docs/additions/setup#updating).
+When a new version of Sveltia CMS Additions is out, the page shows a notice with a link to the release notes. See [Updating](https://sveltiacms.app/docs/additions/setup#updating).
 
 **CMS Configuration**
 
-With [developer mode](https://sveltiacms.app/en/docs/ui#developer-mode) turned on, the Administration page also has a **CMS Configuration** section, which shows the configuration the CMS has loaded. It’s there for everyone in developer mode, with or without Sveltia CMS Additions.
+With [developer mode](https://sveltiacms.app/docs/ui#developer-mode) turned on, the Administration page also has a **CMS Configuration** section, which shows the configuration the CMS has loaded. It’s there for everyone in developer mode, with or without Sveltia CMS Additions.
 
 ### Users
 
-Lists the people who can sign in, and lets you add them, change their roles, reset their passwords, sign them out, and disable or delete their accounts. See [Users and Roles](https://sveltiacms.app/en/docs/additions/users) for details.
+Lists the people who can sign in, and lets you add them, change their roles, reset their passwords, sign them out, and disable or delete their accounts. See [Users and Roles](https://sveltiacms.app/docs/additions/users) for details.
 
 ### Sign-In
 
-- **Allow signing in with GitHub:** shows a **Sign In with GitHub** button on the sign-in page. See [Signing In with GitHub](https://sveltiacms.app/en/docs/additions/users#signing-in-with-github).
-- **Sign-Up Rules:** lets the members of a GitHub organization sign in without being added first. See [Sign-Up Rules](https://sveltiacms.app/en/docs/additions/users#sign-up-rules).
+- **Allow signing in with GitHub:** shows a **Sign In with GitHub** button on the sign-in page. See [Signing In with GitHub](https://sveltiacms.app/docs/additions/users#signing-in-with-github).
+- **Sign-Up Rules:** lets the members of a GitHub organization sign in without being added first. See [Sign-Up Rules](https://sveltiacms.app/docs/additions/users#sign-up-rules).
 
 Signing in with a username and password is always available.
 
@@ -136,14 +136,14 @@ The service signs its requests to GitHub with the app’s private key. When the 
 
 #### Commit Author
 
-Chooses who appears as the author of changes saved by people who don’t [sign in with GitHub](https://sveltiacms.app/en/docs/additions/users#signing-in-with-github):
+Chooses who appears as the author of changes saved by people who don’t [sign in with GitHub](https://sveltiacms.app/docs/additions/users#signing-in-with-github):
 
 - **The person who made the change** (default): commits carry the person’s name and email. GitHub links them to the person’s profile when the email belongs to a GitHub account. Without an email, the address is made from the username, such as `jane@users.noreply.example.com`, so it can’t match anyone’s GitHub account.
 - **The GitHub App, with the person as co-author**: commits are made by the app, with a `Co-authored-by` trailer naming the person.
 
 GitHub only signs commits that the app authors. If a ruleset requires [signed commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification), choose the app; otherwise GitHub refuses the commits.
 
-Either way, pushes, pull requests and merges made through the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) show the app on GitHub, because GitHub records who made the request.
+Either way, pushes, pull requests and merges made through the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) show the app on GitHub, because GitHub records who made the request.
 
 People who sign in with GitHub always commit as themselves, with their own account.
 
@@ -151,11 +151,11 @@ People who sign in with GitHub always commit as themselves, with their own accou
 
 Holds API keys and the deploy hook for everyone who signs in, so nobody has to enter them separately. Keys can be shared for every service that takes one:
 
-- [translation services](https://sveltiacms.app/en/docs/integrations/translations) and other upcoming AI integrations
-- [cloud storage](https://sveltiacms.app/en/docs/media#external-storage) providers
-- [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos) providers
+- [translation services](https://sveltiacms.app/docs/integrations/translations) and other upcoming AI integrations
+- [cloud storage](https://sveltiacms.app/docs/media#external-storage) providers
+- [stock photo](https://sveltiacms.app/docs/integrations/stock-photos) providers
 
-The groups appear when the CMS configuration turns the services on. The deploy hook works like one entered in the [settings](https://sveltiacms.app/en/docs/deployments#other-ci-cd-providers).
+The groups appear when the CMS configuration turns the services on. The deploy hook works like one entered in the [settings](https://sveltiacms.app/docs/deployments#other-ci-cd-providers).
 
 A key someone enters in their own settings takes precedence over the shared one. Their settings show a shared key as “Provided by your administrator”, without revealing it, and the shared keys are forgotten when they sign out.
 
@@ -163,13 +163,13 @@ A key someone enters in their own settings takes precedence over the shared one.
 
 The CMS calls these services from the browser, so anyone who can sign in can read the shared keys, viewers included. Only share keys you’re happy for the whole team to have, and prefer keys limited to the services and quotas the CMS needs.
 
-Source: https://sveltiacms.app/en/docs/additions/administration
+Source: https://sveltiacms.app/docs/additions/administration
 
 ---
 
 ## Collaboration
 
-[Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) helps a team work on the same site without getting in each other’s way.
+[Sveltia CMS Additions](https://sveltiacms.app/docs/additions) helps a team work on the same site without getting in each other’s way.
 
 Everything on this page happens in real time. Each CMS tab keeps a connection to the service, which pushes every change to all the open tabs as it happens, whether a lock is taken or released, someone opens or closes an entry, or a comment is posted, edited or deleted. Nobody needs to reload the page.
 
@@ -182,7 +182,7 @@ When an editor or an admin opens an entry, the CMS takes a lock on it. Anyone el
 - **Releasing:** the lock is released when the editor is closed. If the tab is closed or loses its connection, the lock is kept for 30 seconds, so reloading the page doesn’t lose it.
 - **Entry list:** an editing icon marks entries someone else is editing, with their name on hover.
 
-A lock covers one entry on one branch. All the files of an [i18n entry](https://sveltiacms.app/en/docs/i18n) share one lock. Under the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), the same entry can be edited on its workflow branch and on the configured branch at the same time.
+A lock covers one entry on one branch. All the files of an [i18n entry](https://sveltiacms.app/docs/i18n) share one lock. Under the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), the same entry can be edited on its workflow branch and on the configured branch at the same time.
 
 Viewers never take locks, because they can’t edit. Each user can hold up to 50 locks at a time.
 
@@ -190,7 +190,7 @@ If the CMS can’t reach the service, the editor shows a notice that locks are u
 
 **Locks don’t replace conflict detection**
 
-Locks keep people from editing the same entry by accident, but they’re handled by the CMS, not by GitHub. Sveltia CMS still checks the repository before saving, so a change made outside the CMS, or by someone who took over a lock, is never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/en/docs/ui/content-editor#conflict-resolution) for details.
+Locks keep people from editing the same entry by accident, but they’re handled by the CMS, not by GitHub. Sveltia CMS still checks the repository before saving, so a change made outside the CMS, or by someone who took over a lock, is never overwritten without asking. See [Conflict Resolution](https://sveltiacms.app/docs/ui/content-editor#conflict-resolution) for details.
 
 ### Who Else Has an Entry Open
 
@@ -203,7 +203,7 @@ You never see yourself. Closing the editor or the tab takes you off the list at 
 
 ### Conversation Panel
 
-The Conversation panel in the [Content Editor sidebar](https://sveltiacms.app/en/docs/ui/content-editor#sidebar) holds comments about the entry, e.g. a note for the next person or feedback before publishing. Its tab shows how many comments the entry has.
+The Conversation panel in the [Content Editor sidebar](https://sveltiacms.app/docs/ui/content-editor#sidebar) holds comments about the entry, e.g. a note for the next person or feedback before publishing. Its tab shows how many comments the entry has.
 
 - **Who can comment:** everyone who can sign in, viewers included.
 - **Formatting:** comments are written in Markdown, up to 10,000 characters each. Links open in a new tab. Images from other sites are shown as links instead, so they don’t load for everyone who reads the comment.
@@ -212,17 +212,17 @@ The Conversation panel in the [Content Editor sidebar](https://sveltiacms.app/en
 
 Comments belong to the entry, whichever branch it’s edited on. They follow the entry when its slug or path changes in the CMS, and are deleted along with it. A new entry can have comments once it has been saved for the first time.
 
-An entry renamed outside the CMS, e.g. with `git mv` or on GitHub, leaves its comments under its earlier path. The Conversation panel still shows them if the entry redirects from its earlier URL with a [redirect property](https://sveltiacms.app/en/docs/collections/entries/previews#redirects), e.g. `aliases`, which the CMS fills in when it renames an entry. This works when the collection has the `preview_path` option with `{{slug}}` in it, and the comments are shown along with the entry’s own until an entry is created at the earlier path again. The History panel follows the redirects the same way.
+An entry renamed outside the CMS, e.g. with `git mv` or on GitHub, leaves its comments under its earlier path. The Conversation panel still shows them if the entry redirects from its earlier URL with a [redirect property](https://sveltiacms.app/docs/collections/entries/previews#redirects), e.g. `aliases`, which the CMS fills in when it renames an entry. This works when the collection has the `preview_path` option with `{{slug}}` in it, and the comments are shown along with the entry’s own until an entry is created at the earlier path again. The History panel follows the redirects the same way.
 
 New comments appear in every open tab, and the panel has a refresh button too. An entry can have up to 1,000 comments. The panel shows the latest 500, with a button to show older ones.
 
-Source: https://sveltiacms.app/en/docs/additions/collaboration
+Source: https://sveltiacms.app/docs/additions/collaboration
 
 ---
 
 ## Setting Up Sveltia CMS Additions
 
-Setting up [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions) takes four steps:
+Setting up [Sveltia CMS Additions](https://sveltiacms.app/docs/additions) takes four steps:
 
 1. [Deploy the Worker](#deploying-the-worker) to Cloudflare and [turn on its URL](#turning-on-the-worker-s-url).
 1. [Point the CMS at it](#configuring-the-cms) in your CMS configuration.
@@ -265,9 +265,9 @@ Note the Worker’s URL, e.g. `https://sveltia-cms-additions.example.workers.dev
 
 ### Configuring the CMS
 
-In your CMS configuration, use the [GitHub backend](https://sveltiacms.app/en/docs/backends/github) with `auth_type: additions`, and set `base_url` to the Worker’s URL:
+In your CMS configuration, use the [GitHub backend](https://sveltiacms.app/docs/backends/github) with `auth_type: additions`, and set `base_url` to the Worker’s URL:
 
-```yaml [YAML]{5-6}
+```yaml YAML
 backend:
   name: github
   repo: owner/repo
@@ -276,7 +276,7 @@ backend:
   base_url: https://sveltia-cms-additions.example.workers.dev
 ```
 
-```toml [TOML]{5-6}
+```toml TOML
 [backend]
 name = "github"
 repo = "owner/repo"
@@ -285,7 +285,7 @@ auth_type = "additions"
 base_url = "https://sveltia-cms-additions.example.workers.dev"
 ```
 
-```json [JSON]{6-7}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -297,7 +297,7 @@ base_url = "https://sveltia-cms-additions.example.workers.dev"
 }
 ```
 
-```js [JavaScript]{6-7}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -315,35 +315,35 @@ The CMS loads the code for Sveltia CMS Additions only when `auth_type` is `addit
 
 **Content Security Policy**
 
-If the CMS page has a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy), allow the Worker’s origin in `connect-src` twice: with `https:` for requests, and with `wss:` for the connection that keeps locks and comments up to date. For example:
+If the CMS page has a [Content Security Policy](https://sveltiacms.app/docs/security#setting-up-content-security-policy), allow the Worker’s origin in `connect-src` twice: with `https:` for requests, and with `wss:` for the connection that keeps locks and comments up to date. For example:
 
 ```http
 Content-Security-Policy: connect-src 'self' https://sveltia-cms-additions.example.workers.dev wss://sveltia-cms-additions.example.workers.dev …
 ```
 
-Keep the other origins the policy already allows, such as `https://api.github.com`. Without the Worker’s origins, the browser blocks the CMS from reaching the service, and signing in fails. The [CSP builder](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) adds them for you: select **GitHub with Sveltia CMS Additions** and enter your Worker URL.
+Keep the other origins the policy already allows, such as `https://api.github.com`. Without the Worker’s origins, the browser blocks the CMS from reaching the service, and signing in fails. The [CSP builder](https://sveltiacms.app/docs/security#setting-up-content-security-policy) adds them for you: select **GitHub with Sveltia CMS Additions** and enter your Worker URL.
 
 ### Running the Setup Wizard
 
 Open the CMS and select **Use Admin Secret** on the sign-in page, then enter the admin secret. The wizard has two steps:
 
-1. It creates the first admin account, and adds the site’s domain to the [allowed domains](https://sveltiacms.app/en/docs/additions/administration#domains).
+1. It creates the first admin account, and adds the site’s domain to the [allowed domains](https://sveltiacms.app/docs/additions/administration#domains).
 1. It creates a GitHub App for the site, and asks you to install it. Install it on **Only select repositories**, with just the site’s repository.
 
 It shows one step at a time. Once both are done, opening it again with the admin secret shows a summary instead, where **Reset Admin Password** sets a new password for an admin who can’t sign in.
 
-GitHub then sends you back to the CMS. Sign in with the admin account you’ve just created, and open **Administration** in the toolbar to [add people](https://sveltiacms.app/en/docs/additions/users#adding-users).
+GitHub then sends you back to the CMS. Sign in with the admin account you’ve just created, and open **Administration** in the toolbar to [add people](https://sveltiacms.app/docs/additions/users#adding-users).
 
 **Tip**
 
-To try the CMS on your computer as well, add `localhost` to the [allowed domains](https://sveltiacms.app/en/docs/additions/administration#domains). Without it, the service refuses requests from a local development server.
+To try the CMS on your computer as well, add `localhost` to the [allowed domains](https://sveltiacms.app/docs/additions/administration#domains). Without it, the service refuses requests from a local development server.
 
 #### Getting Back In
 
 The same wizard gets you back in when no admin can sign in:
 
 - **Forgotten admin password:** open the wizard with the admin secret, and reset the password of an admin or create a new admin.
-- **Lost admin secret:** set a new one in the Cloudflare dashboard, open the wizard with it, and select **Start Over**. Passwords are kept, but everyone is signed out, and you need to [upload the GitHub App’s private key](https://sveltiacms.app/en/docs/additions/administration#github) again, as the stored secrets can’t be read without the old admin secret.
+- **Lost admin secret:** set a new one in the Cloudflare dashboard, open the wizard with it, and select **Start Over**. Passwords are kept, but everyone is signed out, and you need to [upload the GitHub App’s private key](https://sveltiacms.app/docs/additions/administration#github) again, as the stored secrets can’t be read without the old admin secret.
 - **Changed admin secret:** if you replace the admin secret but still know the old one, the wizard asks for it and keeps everything as it is. Nobody is signed out.
 
 Wrong admin secrets are rate limited, for each visitor and for everyone together, so repeated guesses can lock the wizard for up to 10 minutes, even for the right secret. Try again later.
@@ -355,10 +355,10 @@ Sveltia CMS Additions hands out tokens that can write to your repository, so tak
 1. Turn on two-factor authentication for your Cloudflare and GitHub accounts. Give Cloudflare members the smallest role that works, and scope API tokens.
 1. Keep `ADMIN_SECRET` in a password manager, and nowhere else.
 1. Make sure the GitHub App is installed on the site’s repository only.
-1. Add a [ruleset](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) to the repository that blocks force pushes and restricts deletions on the default branch and on tags, without the app on its bypass list. The [GitHub section](https://sveltiacms.app/en/docs/additions/administration#github) of the Administration page warns you until there is one.
+1. Add a [ruleset](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets) to the repository that blocks force pushes and restricts deletions on the default branch and on tags, without the app on its bypass list. The [GitHub section](https://sveltiacms.app/docs/additions/administration#github) of the Administration page warns you until there is one.
 1. Move deployment secrets to environment secrets limited to protected branches, so a change pushed through the CMS can’t reach them.
-1. Check the [allowed domains](https://sveltiacms.app/en/docs/additions/administration#domains). List only sites you control, prefer exact host names to wildcards, and never use a wildcard on a domain where anyone can get a subdomain.
-1. Add a [Content Security Policy](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) to the CMS page.
+1. Check the [allowed domains](https://sveltiacms.app/docs/additions/administration#domains). List only sites you control, prefer exact host names to wildcards, and never use a wildcard on a domain where anyone can get a subdomain.
+1. Add a [Content Security Policy](https://sveltiacms.app/docs/security#setting-up-content-security-policy) to the CMS page.
 1. Watch the [Sveltia CMS Additions releases](https://github.com/sveltia/sveltia-cms-additions/releases), and [update](#updating) when the Administration page says a new version is out.
 
 ### Updating
@@ -367,11 +367,11 @@ Dependabot opens a pull request in your copy of the repository when a new versio
 
 Don’t change `wrangler.jsonc` unless the release notes ask you to. The service applies its own database changes after an update, so there’s nothing else to run.
 
-When a new version is out, admins see a notice with a link to the release notes on the [Administration page](https://sveltiacms.app/en/docs/additions/administration).
+When a new version is out, admins see a notice with a link to the release notes on the [Administration page](https://sveltiacms.app/docs/additions/administration).
 
 ### Renaming or Moving the Repository
 
-Renaming the repository doesn’t break anything: the service knows it by its ID and picks up the new name, which the [GitHub section](https://sveltiacms.app/en/docs/additions/administration#github) of the Administration page then shows. Change `repo` in the CMS configuration to the new name as well, because GitHub redirects the old name only until another repository takes it.
+Renaming the repository doesn’t break anything: the service knows it by its ID and picks up the new name, which the [GitHub section](https://sveltiacms.app/docs/additions/administration#github) of the Administration page then shows. Change `repo` in the CMS configuration to the new name as well, because GitHub redirects the old name only until another repository takes it.
 
 Moving the repository to another owner takes it out of the GitHub App’s installation. Install the app for the new owner, with the repository selected, then run the setup wizard again to record the installation.
 
@@ -385,7 +385,7 @@ Manage the tenants in the setup wizard of the default tenant’s CMS: select **U
 
 It shows each tenant’s URL, with a button to copy it. The URL becomes the `base_url` in that site’s CMS configuration:
 
-```yaml [YAML]{5}
+```yaml YAML
 backend:
   name: github
   repo: acme/website
@@ -393,7 +393,7 @@ backend:
   base_url: https://sveltia-cms-additions.example.workers.dev/t/acme
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [backend]
 name = "github"
 repo = "acme/website"
@@ -401,7 +401,7 @@ auth_type = "additions"
 base_url = "https://sveltia-cms-additions.example.workers.dev/t/acme"
 ```
 
-```json [JSON]{6}
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -412,7 +412,7 @@ base_url = "https://sveltia-cms-additions.example.workers.dev/t/acme"
 }
 ```
 
-```js [JavaScript]{6}
+```js JavaScript
 {
   backend: {
     name: "github",
@@ -427,7 +427,7 @@ Then run the [setup wizard](#running-the-setup-wizard) in that site’s CMS. It 
 
 #### Managing Users of Each Site
 
-Each tenant’s admins manage its users on the [Administration page](https://sveltiacms.app/en/docs/additions/administration) of that site’s CMS, as on a single site. An admin of one tenant can’t see or manage the others, so to manage several sites yourself, add yourself as an admin to each. If nobody can sign in to a tenant any more, its setup wizard gets you back in with the admin secret, as described in [Getting Back In](#getting-back-in).
+Each tenant’s admins manage its users on the [Administration page](https://sveltiacms.app/docs/additions/administration) of that site’s CMS, as on a single site. An admin of one tenant can’t see or manage the others, so to manage several sites yourself, add yourself as an admin to each. If nobody can sign in to a tenant any more, its setup wizard gets you back in with the admin secret, as described in [Getting Back In](#getting-back-in).
 
 #### Deleting a Site
 
@@ -439,13 +439,13 @@ The tenants share the admin secret and the Free plan’s allowances. If you chan
 
 To keep clients apart at the Cloudflare account level as well, deploy a separate Worker for each instead, giving each its own Worker name. The Deploy button asks for it; from your computer, change `name` in `wrangler.jsonc` before the first deploy.
 
-Source: https://sveltiacms.app/en/docs/additions/setup
+Source: https://sveltiacms.app/docs/additions/setup
 
 ---
 
 ## Users and Roles
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), people sign in to the CMS with an account the service manages, rather than with their own GitHub account. Admins add people in the **Users** section of the [Administration page](https://sveltiacms.app/en/docs/additions/administration) and give each a role.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), people sign in to the CMS with an account the service manages, rather than with their own GitHub account. Admins add people in the **Users** section of the [Administration page](https://sveltiacms.app/docs/additions/administration) and give each a role.
 
 ### Roles
 
@@ -457,7 +457,7 @@ Each user has one of three roles:
 | Editor | Create, edit, delete and publish content and assets, and trigger deployments        |
 | Viewer | Browse content and assets, and comment on entries, without changing anything        |
 
-For a viewer, the whole CMS is read-only, as if the global [`readonly` option](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only) were set, with a message saying they have view-only access. They can’t trigger deployments, and they never take [entry locks](https://sveltiacms.app/en/docs/additions/collaboration#entry-locks), but they can still use the [Conversation panel](https://sveltiacms.app/en/docs/additions/collaboration#conversation-panel).
+For a viewer, the whole CMS is read-only, as if the global [`readonly` option](https://sveltiacms.app/docs/collections/entries/operations#making-content-read-only) were set, with a message saying they have view-only access. They can’t trigger deployments, and they never take [entry locks](https://sveltiacms.app/docs/additions/collaboration#entry-locks), but they can still use the [Conversation panel](https://sveltiacms.app/docs/additions/collaboration#conversation-panel).
 
 The role is enforced by GitHub as well as by the CMS: the token a viewer gets can only read the repository, while an editor’s or an admin’s can write to it. Either way, the token is limited to the site’s repository.
 
@@ -474,7 +474,7 @@ A promotion takes effect when the CMS next renews its GitHub token, which happen
 In the **Users** section, select **Add User** and enter:
 
 - **Username:** 3 to 30 lowercase letters, digits, dots, hyphens or underscores, used to sign in. It can’t be changed later.
-- **Name:** shown in the CMS, e.g. on [entry locks](https://sveltiacms.app/en/docs/additions/collaboration#entry-locks) and comments, and used as the [commit author](https://sveltiacms.app/en/docs/additions/administration#commit-author).
+- **Name:** shown in the CMS, e.g. on [entry locks](https://sveltiacms.app/docs/additions/collaboration#entry-locks) and comments, and used as the [commit author](https://sveltiacms.app/docs/additions/administration#commit-author).
 - **Email:** optional. It’s used as the commit author’s email, so GitHub can link commits to the person’s GitHub profile.
 - **Role:** admin, editor or viewer.
 - **GitHub username:** optional. With one, the person [signs in with that GitHub account](#signing-in-with-github) instead of a password.
@@ -520,7 +520,7 @@ Passwords never leave the browser: the CMS derives a hash from the password befo
 
 #### Signing In with GitHub
 
-An admin can turn on GitHub sign-in in the [**Sign-In**](https://sveltiacms.app/en/docs/additions/administration#sign-in) section of the Administration page. People who sign in with GitHub get a token for their own GitHub account, so their changes are committed as them, and their access to the repository is what GitHub allows them.
+An admin can turn on GitHub sign-in in the [**Sign-In**](https://sveltiacms.app/docs/additions/administration#sign-in) section of the Administration page. People who sign in with GitHub get a token for their own GitHub account, so their changes are committed as them, and their access to the repository is what GitHub allows them.
 
 GitHub sign-in never creates an account by itself. Someone can only sign in with GitHub if an admin has added them with their GitHub username, or if a [sign-up rule](#sign-up-rules) covers them. The account is tied to the GitHub user ID, so it keeps working if the person renames their GitHub account.
 
@@ -528,7 +528,7 @@ People with a password account can also select **Link GitHub Account** in the ac
 
 #### Sign-Up Rules
 
-By default, only admins add people. A sign-up rule lets the members of a GitHub organization sign in with GitHub without being added first. Add rules in the [**Sign-In**](https://sveltiacms.app/en/docs/additions/administration#sign-in) section of the Administration page. How they work:
+By default, only admins add people. A sign-up rule lets the members of a GitHub organization sign in with GitHub without being added first. Add rules in the [**Sign-In**](https://sveltiacms.app/docs/additions/administration#sign-in) section of the Administration page. How they work:
 
 - The GitHub App must be installed on that organization.
 - A rule gives new accounts the editor or viewer role, never admin. Promote people by hand when needed.
@@ -541,6 +541,6 @@ An account created by a rule shows an **Adopt Account** option. Adopting it turn
 
 People who sign in with GitHub, or have linked their GitHub account, commit as themselves.
 
-Everyone else saves through the site’s GitHub App, which can either commit in the person’s name, or as the app with the person as co-author. Admins choose in the [Commit Author](https://sveltiacms.app/en/docs/additions/administration#commit-author) setting.
+Everyone else saves through the site’s GitHub App, which can either commit in the person’s name, or as the app with the person as co-author. Admins choose in the [Commit Author](https://sveltiacms.app/docs/additions/administration#commit-author) setting.
 
-Source: https://sveltiacms.app/en/docs/additions/users
+Source: https://sveltiacms.app/docs/additions/users

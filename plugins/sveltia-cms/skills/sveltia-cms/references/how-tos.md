@@ -12,9 +12,9 @@ This section provides practical guides on how to implement common features and u
 
 If you write blog posts, for example, you may want to categorize them with taxonomies, often called tags, categories, labels or keywords. With Sveltia CMS, there are several ways to implement this feature, depending on your needs.
 
-If you don’t have a predefined list of tags, you can use a simple [List](https://sveltiacms.app/en/docs/fields/list) field. This configuration will produce a newline-separated text field where users can enter tags freely:
+If you don’t have a predefined list of tags, you can use a simple [List](https://sveltiacms.app/docs/fields/list) field. This configuration will produce a newline-separated text field where users can enter tags freely:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -31,7 +31,7 @@ collections:
         widget: richtext
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -53,7 +53,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -82,7 +82,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -111,9 +111,9 @@ widget = "richtext"
 }
 ```
 
-If you have a small number of predefined tags, you can use a [Select](https://sveltiacms.app/en/docs/fields/select) field. This configuration will produce a dropdown list where users can select one or more tags:
+If you have a small number of predefined tags, you can use a [Select](https://sveltiacms.app/docs/fields/select) field. This configuration will produce a dropdown list where users can select one or more tags:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: tags
     label: Tags
@@ -126,7 +126,7 @@ fields:
       - { label: Lifestyle, value: lifestyle }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "tags"
 label = "Tags"
@@ -150,7 +150,7 @@ label = "Lifestyle"
 value = "lifestyle"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -169,7 +169,7 @@ value = "lifestyle"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -188,17 +188,17 @@ value = "lifestyle"
 }
 ```
 
-If you want more flexibility, you can create a separate collection for tags and reference it using a [Relation](https://sveltiacms.app/en/docs/fields/relation) field from your blog post collection. This approach allows you to:
+If you want more flexibility, you can create a separate collection for tags and reference it using a [Relation](https://sveltiacms.app/docs/fields/relation) field from your blog post collection. This approach allows you to:
 
 - Add many tags without bloating the configuration file
 - Manage tags in one place within the CMS
 - Reuse tags across multiple collections
 - Add a description, image and other details to each tag (if you have tag index pages)
-- Localize tags with [i18n support](https://sveltiacms.app/en/docs/i18n) enabled
+- Localize tags with [i18n support](https://sveltiacms.app/docs/i18n) enabled
 
 This configuration will also produce a dropdown list where users can select one or more tags:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: tags
     label: Tags
@@ -210,7 +210,7 @@ fields:
     value_field: '{{slug}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "tags"
 label = "Tags"
@@ -222,7 +222,7 @@ display_fields = ["title"]
 value_field = "{{slug}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -239,7 +239,7 @@ value_field = "{{slug}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -258,7 +258,7 @@ value_field = "{{slug}}"
 
 And here is an example of the corresponding tag collection:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: tags
     label: Tags
@@ -277,7 +277,7 @@ collections:
         required: false
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "tags"
 label = "Tags"
@@ -301,7 +301,7 @@ widget = "image"
 required = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -332,7 +332,7 @@ required = false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -363,7 +363,7 @@ required = false
 }
 ```
 
-You don’t have to create the tags in the tag collection first: the Relation field offers an **Add Tag** button that opens a dialog to [create a tag on the fly](https://sveltiacms.app/en/docs/fields/relation#creating-related-entries) while editing a blog post. The new tag is selected in the field right away and saved along with the post, in the same commit.
+You don’t have to create the tags in the tag collection first: the Relation field offers an **Add Tag** button that opens a dialog to [create a tag on the fly](https://sveltiacms.app/docs/fields/relation#creating-related-entries) while editing a blog post. The new tag is selected in the field right away and saved along with the post, in the same commit.
 
 ### Editing Raw Text Files
 
@@ -371,7 +371,7 @@ Sveltia CMS allows users to edit raw text files without any front matter, such a
 
 Here is an example configuration for editing the `README.md` and `package.json` files:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: root_files
     label: Root Files
@@ -399,7 +399,7 @@ collections:
             default_language: json
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "root_files"
 label = "Root Files"
@@ -428,7 +428,7 @@ allow_language_selection = false
 default_language = "json"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -473,7 +473,7 @@ default_language = "json"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -522,9 +522,9 @@ default_language = "json"
 
 Sveltia CMS allows users to edit files without extensions. Examples include `_headers` and `_redirects`, which are used by some static site hosting providers, such as [Netlify](https://docs.netlify.com/routing/redirects/), [GitLab Pages](https://docs.gitlab.com/user/project/pages/redirects/) and [Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/redirects/).
 
-Since the `body` field is [saved without the field name](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) when using the default `yaml-frontmatter` format, you can use the following configuration to edit these files in the Content Editor. Or you can explicitly set the `format` option to `raw`, just like in the previous section.
+Since the `body` field is [saved without the field name](https://sveltiacms.app/docs/collections/entries/formats#body-field-for-front-matter-formats) when using the default `yaml-frontmatter` format, you can use the following configuration to edit these files in the Content Editor. Or you can explicitly set the `format` option to `raw`, just like in the previous section.
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: config
     label: Site Configuration
@@ -551,7 +551,7 @@ collections:
             allow_language_selection: false
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "config"
 label = "Site Configuration"
@@ -584,7 +584,7 @@ output_code_only = true
 allow_language_selection = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -628,7 +628,7 @@ allow_language_selection = false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -674,11 +674,11 @@ allow_language_selection = false
 
 ### Creating Conditional Fields
 
-Sometimes, you may want to create your content model in a flexible way. Sveltia CMS does not support dependent fields yet, but you can achieve similar functionality using variable types in [List](https://sveltiacms.app/en/docs/fields/list) and [Object](https://sveltiacms.app/en/docs/fields/object) fields. This approach lets you make fields that can hold different types of data based on what the user chooses. Look at the documentation for each field to see examples.
+Sometimes, you may want to create your content model in a flexible way. Sveltia CMS does not support dependent fields yet, but you can achieve similar functionality using variable types in [List](https://sveltiacms.app/docs/fields/list) and [Object](https://sveltiacms.app/docs/fields/object) fields. This approach lets you make fields that can hold different types of data based on what the user chooses. Look at the documentation for each field to see examples.
 
 ### Rendering Soft Line Breaks as Hard Line Breaks in Markdown
 
-In the [rich text](https://sveltiacms.app/en/docs/fields/richtext) editor, pressing `Shift+Enter` inserts a [soft line break](https://spec.commonmark.org/current/#soft-line-breaks) (`\n`). We can’t change the behavior to add a [hard line break](https://spec.commonmark.org/current/#hard-line-breaks) (`<br>`) — it’s a limitation of the underlying [Lexical framework](https://lexical.dev/). However, if you look at the preview, you may notice that soft line breaks are rendered as hard line breaks. That’s because the preview uses the [Marked](https://github.com/markedjs/marked) library with the [`breaks` option](https://marked.js.org/using_advanced#options) enabled. This mimics how comments are rendered on GitHub.
+In the [rich text](https://sveltiacms.app/docs/fields/richtext) editor, pressing `Shift+Enter` inserts a [soft line break](https://spec.commonmark.org/current/#soft-line-breaks) (`\n`). We can’t change the behavior to add a [hard line break](https://spec.commonmark.org/current/#hard-line-breaks) (`<br>`) — it’s a limitation of the underlying [Lexical framework](https://lexical.dev/). However, if you look at the preview, you may notice that soft line breaks are rendered as hard line breaks. That’s because the preview uses the [Marked](https://github.com/markedjs/marked) library with the [`breaks` option](https://marked.js.org/using_advanced#options) enabled. This mimics how comments are rendered on GitHub.
 
 Chances are the Markdown parser you use for your frontend can do the same:
 
@@ -691,4 +691,4 @@ Chances are the Markdown parser you use for your frontend can do the same:
 - [micromark](https://github.com/micromark/micromark) clarifies it doesn’t have such an option and recommends alternatives
 - [Tera](https://keats.github.io/tera/) (used in Zola) has the `newlines_to_br` filter
 
-Source: https://sveltiacms.app/en/docs/how-tos
+Source: https://sveltiacms.app/docs/how-tos

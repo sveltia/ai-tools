@@ -10,24 +10,24 @@ Sveltia CMS supports several workflows to accommodate different content manageme
 
 ### Development
 
-[Local Development Workflow](https://sveltiacms.app/en/docs/workflows/local) is available for development and testing purposes. It allows developers to run Sveltia CMS without needing to connect to a remote repository or authentication service.
+[Local Development Workflow](https://sveltiacms.app/docs/workflows/local) is available for development and testing purposes. It allows developers to run Sveltia CMS without needing to connect to a remote repository or authentication service.
 
 ### Production
 
 There are three main workflows for production use:
 
-- [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple): no review process, editors can directly commit changes to the main branch.
-- [Preview Workflow](https://sveltiacms.app/en/docs/workflows/preview): each change is saved to a pull request, so it can be checked on a deploy preview before it’s published, without a review process.
-- [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial): includes a review and approval process before changes are merged into the main branch.
+- [Simple Workflow](https://sveltiacms.app/docs/workflows/simple): no review process, editors can directly commit changes to the main branch.
+- [Preview Workflow](https://sveltiacms.app/docs/workflows/preview): each change is saved to a pull request, so it can be checked on a deploy preview before it’s published, without a review process.
+- [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial): includes a review and approval process before changes are merged into the main branch.
 
 Additionally, the following features enhance the content management experience:
 
-- [Open Authoring](https://sveltiacms.app/en/docs/workflows/open): allows external contributors to submit changes via pull requests.
-- [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews): links each entry to the build made for it, and shows whether that build has finished.
+- [Open Authoring](https://sveltiacms.app/docs/workflows/open): allows external contributors to submit changes via pull requests.
+- [Deploy Previews](https://sveltiacms.app/docs/deployments/previews): links each entry to the build made for it, and shows whether that build has finished.
 
 These production workflows can be used locally or remotely. Not all workflows are supported by every backend; refer to the specific workflow documentation for details.
 
-Source: https://sveltiacms.app/en/docs/workflows
+Source: https://sveltiacms.app/docs/workflows
 
 ---
 
@@ -41,7 +41,7 @@ Our local development workflow eliminates the need for a proxy server. For secur
 
 **Another Option: Test Backend**
 
-If you want to test the CMS but don’t want to modify local files, you can use the [Test backend](https://sveltiacms.app/en/docs/backends/test) instead. It lets you connect to a virtual file system in the browser, so the CMS can be tested without affecting your local files.
+If you want to test the CMS but don’t want to modify local files, you can use the [Test backend](https://sveltiacms.app/docs/backends/test) instead. It lets you connect to a virtual file system in the browser, so the CMS can be tested without affecting your local files.
 
 ### Use Cases
 
@@ -70,7 +70,7 @@ In the Brave browser, you must manually enable the File System Access API with a
 
 ### Configuration
 
-In your CMS configuration, you must configure one of the supported Git backends: [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo). No other configuration is required.
+In your CMS configuration, you must configure one of the supported Git backends: [GitHub](https://sveltiacms.app/docs/backends/github), [GitLab](https://sveltiacms.app/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/docs/backends/gitea-forgejo). No other configuration is required.
 
 **Authentication Not Required**
 
@@ -117,7 +117,7 @@ By default, the CMS only saves your changes to the files, and you commit them yo
 
 To turn it on, open the Settings, select Developer and turn on Commit Changes to Git. The setting is stored in your browser, so it only applies to you. Below the switch, the CMS shows the branch and the author it will commit with, or why it can’t commit right now.
 
-The commits use the same messages as with a Git backend, including any [custom commit messages](https://sveltiacms.app/en/docs/backends#commit-messages) you have configured.
+The commits use the same messages as with a Git backend, including any [custom commit messages](https://sveltiacms.app/docs/backends#commit-messages) you have configured.
 
 Only the files the CMS saves are committed. Other changes in your working tree, such as templates or styles you’re working on, are left out.
 
@@ -181,7 +181,7 @@ The CMS commits in the browser with the help of [isomorphic-git](https://isomorp
 
 ### Troubleshooting
 
-- Load Sveltia CMS from a static HTML file in your site’s [static files folder](https://sveltiacms.app/en/docs/start#manual-installation), such as `/public/admin/index.html`. Don’t load it from a page rendered by your framework, such as `/src/pages/admin.astro` with Astro or `/src/routes/admin/+page.svelte` with SvelteKit.
+- Load Sveltia CMS from a static HTML file in your site’s [static files folder](https://sveltiacms.app/docs/start#manual-installation), such as `/public/admin/index.html`. Don’t load it from a page rendered by your framework, such as `/src/pages/admin.astro` with Astro or `/src/routes/admin/+page.svelte` with SvelteKit.
 
   While your local development server is running, such a page is reloaded every time a file changes. This can interrupt saving and leave a file empty or a temporary `.sveltia-tmp-*` file behind. Live reload is not applied to a static file.
 
@@ -201,7 +201,7 @@ Apart from [committing your changes](#git-commits) if you turn it on, Sveltia CM
 
 We plan to use the newly available [File System Observer API](https://developer.chrome.com/blog/file-system-observer) to detect changes and eliminate the need for manual reloads.
 
-Source: https://sveltiacms.app/en/docs/workflows/local
+Source: https://sveltiacms.app/docs/workflows/local
 
 ---
 
@@ -221,7 +221,7 @@ No special requirements are needed to use the simple workflow. Users can start m
 
 ### Configuration
 
-No specific configuration is required for this workflow. It’s used when the top-level `publish_mode` option is omitted, set to `simple` or set to an empty string. A collection can override it with its own [`publish_mode`](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection) option.
+No specific configuration is required for this workflow. It’s used when the top-level `publish_mode` option is omitted, set to `simple` or set to an empty string. A collection can override it with its own [`publish_mode`](https://sveltiacms.app/docs/workflows/editorial#enabling-the-workflow-per-collection) option.
 
 ### Workflow
 
@@ -236,11 +236,11 @@ The simple workflow allows users to create, edit and delete entries directly in 
 
 Changes made through Sveltia CMS are automatically committed and pushed to the connected repository’s default branch (e.g. `main` or `master`, unless the `branch` option is set). If you have set up CI/CD for your site, the changes will be deployed automatically based on your existing deployment process.
 
-See the [deployments guide](https://sveltiacms.app/en/docs/deployments) for more details, including how to disable automatic deployments if needed.
+See the [deployments guide](https://sveltiacms.app/docs/deployments) for more details, including how to disable automatic deployments if needed.
 
 **Pull CMS Changes to Your Local Repository**
 
-Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/en/docs/workflows/local), where the CMS writes to your local files instead.
+Sveltia CMS commits changes to the remote repository, not to the copy on your computer. To see content published in the CMS on your local development server, run `git pull` first. Pulling before you make your own changes also helps avoid merge conflicts when you push. This doesn’t apply to the [local development workflow](https://sveltiacms.app/docs/workflows/local), where the CMS writes to your local files instead.
 
 ### Multiple Editors
 
@@ -248,13 +248,13 @@ While this workflow is designed for single users, multiple editors can still col
 
 At this time, Sveltia CMS does not provide built-in features for handling merge conflicts or simultaneous edits. We plan to add such features in future releases to enhance collaboration in the simple workflow.
 
-Source: https://sveltiacms.app/en/docs/workflows/simple
+Source: https://sveltiacms.app/docs/workflows/simple
 
 ---
 
 ## Deployments
 
-Sveltia CMS is a headless CMS, so it doesn’t involve any specific deployment process. The [two required CMS files](https://sveltiacms.app/en/docs/start#manual-installation), `index.html` and `config.yml`, can be hosted on any web server or static hosting service. This enables the project to be deployed like any other website using any preferred hosting service or platform.
+Sveltia CMS is a headless CMS, so it doesn’t involve any specific deployment process. The [two required CMS files](https://sveltiacms.app/docs/start#manual-installation), `index.html` and `config.yml`, can be hosted on any web server or static hosting service. This enables the project to be deployed like any other website using any preferred hosting service or platform.
 
 ### CI/CD Integration
 
@@ -271,11 +271,11 @@ Your choice of CI/CD service may depend on factors such as ease of use, pricing,
 
 A connected CI/CD provider does more than publish your site: it reports each build back to your Git repository, and Sveltia CMS reads those reports. Editors get a link straight to the page they just worked on and can see whether the build carrying their change has finished.
 
-This works in both production workflows. With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the preview built for its pull request, so a draft can be reviewed before it goes live. With [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), the entry links to the live site and the CMS reports whether the latest build is done.
+This works in both production workflows. With [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), an unpublished entry links to the preview built for its pull request, so a draft can be reviewed before it goes live. With [Simple Workflow](https://sveltiacms.app/docs/workflows/simple), the entry links to the live site and the CMS reports whether the latest build is done.
 
-Nothing needs to be turned on. Set a [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on the collections you want entry links for. Without it, only the root of a deploy preview is linked.
+Nothing needs to be turned on. Set a [`preview_path`](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) on the collections you want entry links for. Without it, only the root of a deploy preview is linked.
 
-See [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) for which providers are recognized and how the links behave while a build is running.
+See [Deploy Previews](https://sveltiacms.app/docs/deployments/previews) for which providers are recognized and how the links behave while a build is running.
 
 ### Disabling Automatic Deployments
 
@@ -285,7 +285,7 @@ With Sveltia CMS, you can disable automatic deployments by default and manually 
 
 **No build, no preview**
 
-A skipped commit produces no build, so there’s nothing for [Deploy Previews](https://sveltiacms.app/en/docs/deployments/previews) to report and the entry keeps its plain live-site link. This applies to Editorial Workflow saves too, where the prefix is added to the pull request’s commits. Deletion commits are never skipped.
+A skipped commit produces no build, so there’s nothing for [Deploy Previews](https://sveltiacms.app/docs/deployments/previews) to report and the entry keeps its plain live-site link. This applies to Editorial Workflow saves too, where the prefix is added to the pull request’s commits. Deletion commits are never skipped.
 
 #### Configuration
 
@@ -293,9 +293,7 @@ Here are the steps to use this feature:
 
 1. Add the `skip_ci` property to your `backend` configuration with a value of `true`:
 
-   ::: code-group
-
-   ```yaml [YAML]
+   ```yaml YAML
    backend:
      name: github
      repo: owner/repo
@@ -303,7 +301,7 @@ Here are the steps to use this feature:
      skip_ci: true
    ```
 
-   ```toml [TOML]
+   ```toml TOML
    [backend]
    name = "github"
    repo = "owner/repo"
@@ -311,7 +309,7 @@ Here are the steps to use this feature:
    skip_ci = true
    ```
 
-   ```json [JSON]
+   ```json JSON
    {
      "backend": {
        "name": "github",
@@ -322,7 +320,7 @@ Here are the steps to use this feature:
    }
    ```
 
-   ```js [JavaScript]
+   ```js JavaScript
    {
      backend: {
        name: "github",
@@ -332,8 +330,6 @@ Here are the steps to use this feature:
      },
    }
    ```
-
-   :::
 
 1. Commit and deploy the change to the config file and reload the CMS.
 1. Now, whenever an entry or asset is saved, `[skip ci]` is automatically added to each commit message. However, deletions are always committed without the prefix, so that deleted data doesn’t unexpectedly stay on the site.
@@ -397,7 +393,7 @@ Then, configure Sveltia CMS to use this URL:
 1. Select Settings under the Account button in the top right corner of the CMS.
 1. Select the Developer tab.
 1. Enter the deploy hook URL for your provider.
-1. [Configure the CSP](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) if necessary.
+1. [Configure the CSP](https://sveltiacms.app/docs/security#setting-up-content-security-policy) if necessary.
 
 **Why Deploy Hook URL Is Stored in User Settings**
 
@@ -405,9 +401,9 @@ Deploy hook URLs are confidential, so they can’t be stored in the CMS configur
 
 When the user signs out, the deploy hook URL and its authorization header are removed from the browser, along with the API keys for other integrations. They need to be entered again after signing back in.
 
-With [Sveltia CMS Additions](https://sveltiacms.app/en/docs/additions), an admin can instead [share the deploy hook](https://sveltiacms.app/en/docs/additions/administration#credentials) with everyone who signs in, so nobody has to enter it.
+With [Sveltia CMS Additions](https://sveltiacms.app/docs/additions), an admin can instead [share the deploy hook](https://sveltiacms.app/docs/additions/administration#credentials) with everyone who signs in, so nobody has to enter it.
 
-Source: https://sveltiacms.app/en/docs/deployments
+Source: https://sveltiacms.app/docs/deployments
 
 ---
 
@@ -417,14 +413,14 @@ Most hosting services build the site again whenever a commit lands, and many bui
 
 This works in both production workflows, with a different meaning in each:
 
-- In [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial), an unpublished entry links to the **deploy preview** built for its pull request, so editors can see a draft before it goes live.
-- In [Simple Workflow](https://sveltiacms.app/en/docs/workflows/simple), where changes are committed straight to the [configured branch](https://sveltiacms.app/en/docs/backends#branch-selection), an entry links to the **live site**, and the CMS reports whether the build for the latest change has finished.
+- In [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial), an unpublished entry links to the **deploy preview** built for its pull request, so editors can see a draft before it goes live.
+- In [Simple Workflow](https://sveltiacms.app/docs/workflows/simple), where changes are committed straight to the [configured branch](https://sveltiacms.app/docs/backends#branch-selection), an entry links to the **live site**, and the CMS reports whether the build for the latest change has finished.
 
 ### Requirements
 
-- A [GitHub](https://sveltiacms.app/en/docs/backends/github), [GitLab](https://sveltiacms.app/en/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/en/docs/backends/gitea-forgejo) backend.
-- A CI/CD provider connected to the repository. See [CI/CD Integration](https://sveltiacms.app/en/docs/deployments#ci-cd-integration).
-- A [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, where you can find the page manually. A published entry has no link.
+- A [GitHub](https://sveltiacms.app/docs/backends/github), [GitLab](https://sveltiacms.app/docs/backends/gitlab) or [Gitea/Forgejo](https://sveltiacms.app/docs/backends/gitea-forgejo) backend.
+- A CI/CD provider connected to the repository. See [CI/CD Integration](https://sveltiacms.app/docs/deployments#ci-cd-integration).
+- A [`preview_path`](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) on each collection you want entry links for. Without it, an unpublished entry links to the root of its deploy preview, where you can find the page manually. A published entry has no link.
 
 **Date tags need a date field**
 
@@ -445,9 +441,9 @@ The options below shape what the links do:
 
 | Option | Where | What it does |
 | --- | --- | --- |
-| [`preview_path`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
-| [`preview_path_date_field`](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Which top-level DateTime field the `{{year}}`, `{{month}}` and similar tags read. Default: the first DateTime field |
-| [`site_url`](https://sveltiacms.app/en/docs/customization#site-url) | Top level | Base URL of the live site |
+| [`preview_path`](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Path template appended to the site or preview URL. Without it, only the root of a deploy preview is linked |
+| [`preview_path_date_field`](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) | Entry collection, or each file of a file collection | Which top-level DateTime field the `{{year}}`, `{{month}}` and similar tags read. Default: the first DateTime field |
+| [`site_url`](https://sveltiacms.app/docs/customization#site-url) | Top level | Base URL of the live site |
 | `show_preview_links` | Top level | Set to `false` to hide every preview link. Default: `true` |
 | [`preview_context`](#specifying-a-status-context) | `backend` | Names the exact commit status or environment that carries the preview URL |
 
@@ -521,7 +517,7 @@ What the control does depends on whether a preview is still on its way.
 
 **Otherwise the button is a link.** It reads **View Preview** when it points at a deploy preview, and **View on Live Site** when it points at the live site.
 
-A build that’s still running or has failed is described on the control for screen readers. It’s also shown as a badge on the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page):
+A build that’s still running or has failed is described on the control for screen readers. It’s also shown as a badge on the [Editorial Workflow page](https://sveltiacms.app/docs/workflows/editorial#editorial-workflow-page):
 
 | Build state                                 | Badge on the workflow card |
 | ------------------------------------------- | -------------------------- |
@@ -554,10 +550,11 @@ A browser can’t read a cross-origin response without permission from that serv
 #### Where Links Appear
 
 - In the entry editor toolbar, for the default locale.
-- In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/en/docs/i18n/slugs#preview-paths).
-- On the cards of the [Editorial Workflow page](https://sveltiacms.app/en/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
+- In each locale pane’s options menu, so a multilingual entry links to the right translation. See [Managing Preview Paths with I18n](https://sveltiacms.app/docs/i18n/slugs#preview-paths).
+- On the cards of the [Editorial Workflow page](https://sveltiacms.app/docs/workflows/editorial#editorial-workflow-page), as an icon button, with a badge when a build is running or has failed.
+- In the entry list, as an icon button next to the status of each unpublished entry or file, for the default locale. Published entries aren’t linked from the list; open one to view it on the live site.
 
-### Reporting a Preview from Gitea/Forgejo Actions {#gitea-forgejo-actions}
+### Reporting a Preview from Gitea/Forgejo Actions
 
 Gitea and Forgejo Actions post a commit status for each job, but it links to the job log, not to anything the job deployed. A workflow that publishes a deploy preview has to report the address itself. Once the preview is up, post a commit status of your own on the head of the pull request:
 
@@ -577,7 +574,7 @@ Gitea and Forgejo Actions post a commit status for each job, but it links to the
 Posting a status takes write access to the repository. Whether the automatic token has it depends on where the pull request comes from:
 
 - **A branch of the same repository**, which is where Editorial Workflow saves entries: the token has write access by default, unless Gitea’s Actions settings restrict it to read access for the repository or its organization.
-- **A fork**, as in [Open Authoring](https://sveltiacms.app/en/docs/workflows/open): the token is read-only by default.
+- **A fork**, as in [Open Authoring](https://sveltiacms.app/docs/workflows/open): the token is read-only by default.
 
 When the automatic token is read-only, the preview needs an access token with write access, stored as a secret. Otherwise it goes unreported.
 
@@ -589,21 +586,21 @@ The job that posts the status may itself be named like a deployment — `Preview
 
 If several providers report on the same commit, or the CMS picks the wrong one, name the one you want with `preview_context` in the `backend` section. Only that commit status, check run or environment is then considered.
 
-```yaml [YAML]
+```yaml YAML
 backend:
   name: github
   repo: user/repo
   preview_context: Cloudflare Pages
 ```
 
-```toml [TOML]
+```toml TOML
 [backend]
 name = "github"
 repo = "user/repo"
 preview_context = "Cloudflare Pages"
 ```
 
-```json [JSON]
+```json JSON
 {
   "backend": {
     "name": "github",
@@ -613,7 +610,7 @@ preview_context = "Cloudflare Pages"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   backend: {
     name: 'github',
@@ -636,4 +633,4 @@ Setting this option narrows the search deliberately. If nothing matches, the CMS
 - On GitLab, deployments can’t be filtered by commit through the API, so the CMS scans the most recent 100 from the past week and matches them to the branch. A project that deploys more often than that may push a Review App out of range. Its commit status still covers it then.
 - A preview behind access control, such as Vercel’s Deployment Protection, answers the liveness check with an authentication error rather than a page. The CMS treats that as “can’t tell” and leaves the link alone, since it works for anyone signed in.
 
-Source: https://sveltiacms.app/en/docs/deployments/previews
+Source: https://sveltiacms.app/docs/deployments/previews

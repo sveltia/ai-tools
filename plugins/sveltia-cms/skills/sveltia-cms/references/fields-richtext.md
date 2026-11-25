@@ -10,7 +10,7 @@ The RichText field type provides a rich text editor that supports both Markdown 
 
 **Note for Netlify/Decap CMS users**
 
-For backward compatibility with Netlify/Decap CMS, the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type remains available as an alias of the RichText field type. You can use either `richtext` or `markdown` as the `widget` value in your field configuration.
+For backward compatibility with Netlify/Decap CMS, the [Markdown](https://sveltiacms.app/docs/fields/markdown) field type remains available as an alias of the RichText field type. You can use either `richtext` or `markdown` as the `widget` value in your field configuration.
 
 ### User Interface
 
@@ -52,11 +52,11 @@ A read-only view of the rich text content, rendered as HTML.
 
 ### Data Type
 
-If the [`format`](#format) option is set to `markdown` (default), the value will be a Markdown string. See the [Data Output](https://sveltiacms.app/en/docs/data-output#markdown-syntax) documentation for details on the Markdown syntax used by Lexical. If it is set to `html`, the value will be an HTML string.
+If the [`format`](#format) option is set to `markdown` (default), the value will be a Markdown string. See the [Data Output](https://sveltiacms.app/docs/data-output#markdown-syntax) documentation for details on the Markdown syntax used by Lexical. If it is set to `html`, the value will be an HTML string.
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string.
 
-When using the Markdown format, you need to parse the Markdown string using a Markdown parser in your framework to convert it to HTML for rendering on your website. Some frameworks have built-in support for Markdown, while others may require additional libraries. Please refer to your framework’s documentation on how to handle Markdown content. See also the [how-to](https://sveltiacms.app/en/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) for advice on handling line breaks in Markdown.
+When using the Markdown format, you need to parse the Markdown string using a Markdown parser in your framework to convert it to HTML for rendering on your website. Some frameworks have built-in support for Markdown, while others may require additional libraries. Please refer to your framework’s documentation on how to handle Markdown content. See also the [how-to](https://sveltiacms.app/docs/how-tos#rendering-soft-line-breaks-as-hard-line-breaks-in-markdown) for advice on handling line breaks in Markdown.
 
 When using the HTML format, the value can be rendered on your website as is. Make sure to sanitize it first if untrusted users can edit the content.
 
@@ -73,7 +73,7 @@ The following features are only available with the HTML format, as Markdown has 
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the RichText field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the RichText field supports the following options:
 
 #### Required Options
 
@@ -97,12 +97,12 @@ Also, Sveltia CMS does not support the deprecated camelCase `editorComponents` o
 - **Type**: `string`
 - **Default**: `markdown`
 
-Specifies the data format of the content. Possible values are `markdown` and `html`. This option is not available for the [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field type, which always saves Markdown.
+Specifies the data format of the content. Possible values are `markdown` and `html`. This option is not available for the [Markdown](https://sveltiacms.app/docs/fields/markdown) field type, which always saves Markdown.
 
 With the `html` format, the editor works as follows:
 
 - The `raw` mode shows the HTML source with syntax highlighting. The formatting buttons and editor components are hidden in this mode, as they insert Markdown.
-- Only the [editor components](#editor-components) that support HTML are available. All the built-in components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
+- Only the [editor components](#editor-components) that support HTML are available. All the built-in components do, so images can be inserted, pasted and dropped as usual, while a [custom component](https://sveltiacms.app/docs/api/editor-components#supporting-html) needs the `htmlSelector`, `fromBlockHTML` and `toBlockHTML` properties.
 - The [`underline` and `align`](#buttons) buttons and the “Open in New Tab” option of the link editor are available. See [Data Type](#data-type) for details.
 - HTML containing an element the rich text editor cannot handle, such as `<video>` without a component for it, can only be edited in the `raw` mode.
 - An existing value is kept as is until the content is changed in the rich text mode. Then the editor writes HTML in its own style, such as `<strong>` for `<b>`, and attributes it doesn’t use, such as `class`, are dropped.
@@ -178,14 +178,12 @@ The `task-list` button turns the selected paragraphs into a [task list](https://
 
 A task list is saved as `- [ ] item` and `- [x] item` in Markdown. With the `html` [format](#format), it’s saved the way GitHub renders it, as a list with disabled checkboxes:
 
-<!-- prettier-ignore-start -->
 ```html
 <ul class="contains-task-list">
   <li class="task-list-item"><input type="checkbox" disabled="" checked=""> Done</li>
   <li class="task-list-item"><input type="checkbox" disabled=""> To do</li>
 </ul>
 ```
-<!-- prettier-ignore-end -->
 
 The `align` button shows a menu to align the selected paragraphs, headings, block quotes or list items to the left, center or right, or to justify them. The button shows the current alignment. It’s only available with the `html` [format](#format), because Markdown has no syntax for alignment. In a Markdown field, it’s not displayed even if it’s listed. See the [example](#text-alignment-in-html) below.
 
@@ -204,7 +202,7 @@ These edits can be undone with the browser’s standard undo command, just like 
 ##### `editor_components`
 
 - **Type**: `array`
-- **Default**: `[code-block, image]` plus the names of all the registered [custom components](https://sveltiacms.app/en/docs/api/editor-components). The `table` and `hr` components are not included.
+- **Default**: `[code-block, image]` plus the names of all the registered [custom components](https://sveltiacms.app/docs/api/editor-components). The `table` and `hr` components are not included.
 
 The editor component names to include in the rich text editor.
 
@@ -221,11 +219,11 @@ The `code-block` and `image` components are enabled by default. You can disable 
 
 Editor components, including custom ones, can also be inserted in `raw` mode. Clicking a component button or menu item inserts the component’s Markdown at the cursor, like `![]()` for an image, so users can fill in the values directly in the text. This is not available with the `html` [format](#format).
 
-With the `html` format, the built-in `image` component is saved as an `<img>` element. It’s wrapped with an `<a>` element if it’s linked, and placed in a `<figure>` element along with a `<figcaption>` element if it has a caption. Custom components need to [support HTML](https://sveltiacms.app/en/docs/api/editor-components#supporting-html) to be available.
+With the `html` format, the built-in `image` component is saved as an `<img>` element. It’s wrapped with an `<a>` element if it’s linked, and placed in a `<figure>` element along with a `<figcaption>` element if it has a caption. Custom components need to [support HTML](https://sveltiacms.app/docs/api/editor-components#supporting-html) to be available.
 
 **Multiple Images**
 
-The built-in `image` component is designed for single-file selection. There is no option for selecting multiple images because there is no standard Markdown syntax for it. To enable multiple images, use a custom component to achieve the desired output, as shown in [this example](https://sveltiacms.app/en/docs/api/editor-components#multiple-images-with-caption).
+The built-in `image` component is designed for single-file selection. There is no option for selecting multiple images because there is no standard Markdown syntax for it. To enable multiple images, use a custom component to achieve the desired output, as shown in [this example](https://sveltiacms.app/docs/api/editor-components#multiple-images-with-caption).
 
 **Note for Netlify/Decap CMS users**
 
@@ -237,7 +235,6 @@ The built-in `image` component has an optional Caption field, in addition to Sou
 
 Markdown has no syntax for a caption, so an image with a caption is saved as an HTML `<figure>` element on a single line:
 
-<!-- prettier-ignore -->
 ```html
 <figure><img src="/uploads/dome.jpg" alt="The dome"><figcaption>Photo by <a href="https://example.com/jane">Jane Doe</a></figcaption></figure>
 ```
@@ -246,7 +243,7 @@ A linked image is wrapped with an `<a>` element within the `<figure>` element. W
 
 A `<figure>` element is loaded as the component when it’s on a single line, its attributes use double quotes, and it holds nothing but an image, optionally linked, followed by a `<figcaption>` element. Any other `<figure>` element is kept as HTML.
 
-When a [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos#photo-credits) is selected for the component, its credit can be inserted into the caption with a click.
+When a [stock photo](https://sveltiacms.app/docs/integrations/stock-photos#photo-credits) is selected for the component, its credit can be inserted into the caption with a click.
 
 If your framework or theme doesn’t support the `<figure>` element in Markdown, or you don’t want editors to write HTML, set the [`captioned_images`](#captioned-images) option to `false` to remove the Caption field.
 
@@ -267,11 +264,11 @@ A Markdown table has some limitations:
 - It always has a single header row on top. When a row is inserted above the header row, or the header row is deleted, the first row becomes the header row.
 - A cell can only have inline content, so the block type selector, horizontal rules and block-level editor components are not available in a cell.
 
-Inline components can be inserted into a cell and are kept when the table is saved. These include the built-in `image` component and [custom components](https://sveltiacms.app/en/docs/api/editor-components) whose `pattern` matches a single line. A pipe (`|`) in their Markdown is escaped as `\|` so it doesn’t end the cell.
+Inline components can be inserted into a cell and are kept when the table is saved. These include the built-in `image` component and [custom components](https://sveltiacms.app/docs/api/editor-components) whose `pattern` matches a single line. A pipe (`|`) in their Markdown is escaped as `\|` so it doesn’t end the cell.
 
 Merged cells and cell background colors are not supported. Tables can be read from Markdown and HTML even without the `table` component, but they can only be edited cell by cell then.
 
-Developers can create [custom editor components](https://sveltiacms.app/en/docs/api/editor-components) to extend the functionality of the rich text editor. Custom components can be registered globally in Sveltia CMS.
+Developers can create [custom editor components](https://sveltiacms.app/docs/api/editor-components) to extend the functionality of the rich text editor. Custom components can be registered globally in Sveltia CMS.
 
 ##### `allow_nested_components`
 
@@ -327,13 +324,13 @@ Whether to sanitize the preview content to prevent [cross-site scripting](https:
 
 **Security Risk**
 
-Setting the `sanitize_preview` option to `false` can expose your CMS to XSS vulnerabilities if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/en/docs/workflows/open). Malicious users could inject harmful scripts into the content, which would then be executed in the browsers of anyone viewing the preview. With Open Authoring, that includes maintainers [reviewing a contribution](https://sveltiacms.app/en/docs/workflows/open#reviewing-in-sveltia-cms) from their Editorial Workflow board, whose sign-in has write access to the repository.
+Setting the `sanitize_preview` option to `false` can expose your CMS to XSS vulnerabilities if untrusted users have access to the CMS, especially when using [Open Authoring](https://sveltiacms.app/docs/workflows/open). Malicious users could inject harmful scripts into the content, which would then be executed in the browsers of anyone viewing the preview. With Open Authoring, that includes maintainers [reviewing a contribution](https://sveltiacms.app/docs/workflows/open#reviewing-in-sveltia-cms) from their Editorial Workflow board, whose sign-in has write access to the repository.
 
 We recommend keeping this option enabled unless disabling it fixes a broken preview and you fully trust all users of your CMS or you’re the sole user.
 
 ### Global Field Defaults
 
-You can define default options for all RichText and [Markdown](https://sveltiacms.app/en/docs/fields/markdown) fields globally using the `field_defaults.richtext` option at the root of your CMS configuration. This allows you to set common configurations for all RichText and Markdown fields in your CMS without having to specify them in each field definition.
+You can define default options for all RichText and [Markdown](https://sveltiacms.app/docs/fields/markdown) fields globally using the `field_defaults.richtext` option at the root of your CMS configuration. This allows you to set common configurations for all RichText and Markdown fields in your CMS without having to specify them in each field definition.
 
 The following options can be defined globally:
 
@@ -353,7 +350,7 @@ The following options can be defined globally:
 
 The following example configures all RichText and Markdown fields to use `minimal: true`, disables Markdown shortcuts and enables only the `bold`, `italic` and `link` buttons by default.
 
-```yaml [YAML]
+```yaml YAML
 field_defaults:
   richtext:
     minimal: true
@@ -361,14 +358,14 @@ field_defaults:
     buttons: [bold, italic, link]
 ```
 
-```toml [TOML]
+```toml TOML
 [field_defaults.richtext]
 minimal = true
 use_markdown_shortcuts = false
 buttons = ["bold", "italic", "link"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "field_defaults": {
     "richtext": {
@@ -380,7 +377,7 @@ buttons = ["bold", "italic", "link"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   field_defaults: {
     richtext: {
@@ -398,20 +395,20 @@ buttons = ["bold", "italic", "link"]
 
 This example shows a basic Markdown editor with default settings.
 
-```yaml [YAML]
+```yaml YAML
 - name: body
   label: Body
   widget: richtext
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "body"
 label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "body",
   "label": "Body",
@@ -419,7 +416,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "body",
   label: "Body",
@@ -431,14 +428,14 @@ widget = "richtext"
 
 This example shows a rich text editor that saves content in HTML format.
 
-```yaml [YAML]
+```yaml YAML
 - name: body
   label: Body
   widget: richtext
   format: html
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "body"
 label = "Body"
@@ -446,7 +443,7 @@ widget = "richtext"
 format = "html"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "body",
   "label": "Body",
@@ -455,7 +452,7 @@ format = "html"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "body",
   label: "Body",
@@ -468,7 +465,7 @@ format = "html"
 
 This example shows a minimal Markdown editor with only bold, italic and link buttons.
 
-```yaml [YAML]
+```yaml YAML
 - name: content
   label: Content
   widget: richtext
@@ -477,7 +474,7 @@ This example shows a minimal Markdown editor with only bold, italic and link but
   buttons: [bold, italic, link]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "content"
 label = "Content"
@@ -487,7 +484,7 @@ minimal = true
 buttons = ["bold", "italic", "link"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "content",
   "label": "Content",
@@ -498,7 +495,7 @@ buttons = ["bold", "italic", "link"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "content",
   label: "Content",
@@ -513,7 +510,7 @@ buttons = ["bold", "italic", "link"]
 
 This example shows a title field that allows bold and italic text and links, but no paragraph or line breaks. The empty `editor_components` list turns off the editor components, including `image`.
 
-```yaml [YAML]
+```yaml YAML
 - name: title
   label: Title
   widget: richtext
@@ -522,7 +519,7 @@ This example shows a title field that allows bold and italic text and links, but
   editor_components: []
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "title"
 label = "Title"
@@ -532,7 +529,7 @@ buttons = ["bold", "italic", "link"]
 editor_components = []
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "title",
   "label": "Title",
@@ -543,7 +540,7 @@ editor_components = []
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "title",
   label: "Title",
@@ -558,14 +555,14 @@ editor_components = []
 
 This example shows how to disable the `code-block` editor component.
 
-```yaml [YAML]
+```yaml YAML
 - name: content
   label: Content
   widget: richtext
   editor_components: [image]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "content"
 label = "Content"
@@ -573,7 +570,7 @@ widget = "richtext"
 editor_components = ["image"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "content",
   "label": "Content",
@@ -582,7 +579,7 @@ editor_components = ["image"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "content",
   label: "Content",
@@ -595,14 +592,14 @@ editor_components = ["image"]
 
 This example enables the `table` and `hr` editor components along with the default ones.
 
-```yaml [YAML]
+```yaml YAML
 - name: content
   label: Content
   widget: richtext
   editor_components: [code-block, image, table, hr]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "content"
 label = "Content"
@@ -610,7 +607,7 @@ widget = "richtext"
 editor_components = ["code-block", "image", "table", "hr"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "content",
   "label": "Content",
@@ -619,7 +616,7 @@ editor_components = ["code-block", "image", "table", "hr"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "content",
   label: "Content",
@@ -632,7 +629,7 @@ editor_components = ["code-block", "image", "table", "hr"]
 
 This example enables the `align` button in an HTML field, along with a few other buttons.
 
-```yaml [YAML]
+```yaml YAML
 - name: content
   label: Content
   widget: richtext
@@ -640,7 +637,7 @@ This example enables the `align` button in an HTML field, along with a few other
   buttons: [bold, italic, link, heading-two, bulleted-list, align]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "content"
 label = "Content"
@@ -649,7 +646,7 @@ format = "html"
 buttons = ["bold", "italic", "link", "heading-two", "bulleted-list", "align"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "content",
   "label": "Content",
@@ -659,7 +656,7 @@ buttons = ["bold", "italic", "link", "heading-two", "bulleted-list", "align"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "content",
   label: "Content",
@@ -669,7 +666,7 @@ buttons = ["bold", "italic", "link", "heading-two", "bulleted-list", "align"]
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/richtext
+Source: https://sveltiacms.app/docs/fields/richtext
 
 ---
 
@@ -677,13 +674,11 @@ Source: https://sveltiacms.app/en/docs/fields/richtext
 
 The Markdown field type is an alias of the RichText field type, available for backward compatibility with Netlify/Decap CMS. It provides a rich text editor that allows content editors to create and format content using Markdown syntax.
 
-<!-- The Markdown field type is a variant of the RichText field type that is specifically designed to handle content formatted in Markdown syntax. It provides a rich text editor that allows content editors to create and format content using Markdown syntax. -->
-
 The `widget` property for this field type is `markdown`.
 
-See the [RichText field documentation](https://sveltiacms.app/en/docs/fields/richtext) for details on the UI, data type and available options.
+See the [RichText field documentation](https://sveltiacms.app/docs/fields/richtext) for details on the UI, data type and available options.
 
-Note that the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) option is not available for the Markdown field type since it is fixed to `markdown`. Use the RichText field type to save HTML.
+Note that the [`format`](https://sveltiacms.app/docs/fields/richtext#format) option is not available for the Markdown field type since it is fixed to `markdown`. Use the RichText field type to save HTML.
 
 ### Examples
 
@@ -691,20 +686,20 @@ Note that the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) 
 
 This example shows a basic Markdown editor with default settings.
 
-```yaml [YAML]
+```yaml YAML
 - name: body
   label: Body
   widget: markdown
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "body"
 label = "Body"
 widget = "markdown"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "body",
   "label": "Body",
@@ -712,7 +707,7 @@ widget = "markdown"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'body',
   label: 'Body',
@@ -722,7 +717,7 @@ widget = "markdown"
 
 Output example:
 
-```markdown [Markdown]
+```markdown Markdown
 # Welcome to the Markdown Field
 
 This is a sample paragraph in **Markdown** format.
@@ -731,7 +726,7 @@ This is a sample paragraph in **Markdown** format.
 - Item 2
 ```
 
-```yaml [YAML]
+```yaml YAML
 body: |
   # Welcome to the Markdown Field
 
@@ -741,7 +736,7 @@ body: |
   - Item 2
 ```
 
-```toml [TOML]
+```toml TOML
 body = """
 # Welcome to the Markdown Field
 
@@ -752,15 +747,15 @@ This is a sample paragraph in **Markdown** format.
 """
 ```
 
-```json [JSON]
+```json JSON
 {
   "body": "# Welcome to the Markdown Field\n\nThis is a sample paragraph in **Markdown** format.\n\n- Item 1\n- Item 2\n"
 }
 ```
 
-We have included a Markdown example output along with YAML, TOML and JSON representations because a field named `body` with the Markdown field type would be stored outside of the front matter in a Markdown file. If the name of the field were different, the content would be stored in the front matter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
+We have included a Markdown example output along with YAML, TOML and JSON representations because a field named `body` with the Markdown field type would be stored outside of the front matter in a Markdown file. If the name of the field were different, the content would be stored in the front matter instead. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
-Source: https://sveltiacms.app/en/docs/fields/markdown
+Source: https://sveltiacms.app/docs/fields/markdown
 
 ---
 
@@ -801,7 +796,7 @@ If the `output_code_only` option is set to `true`, the data type will be a strin
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Code field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Code field supports the following options:
 
 #### Required Options
 
@@ -871,20 +866,20 @@ The default programming language for the code editor. See the [list of supported
 
 The simplest configuration of a Code field:
 
-```yaml [YAML]
+```yaml YAML
 - widget: code
   label: Code Snippet
   name: code_snippet
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "code_snippet"
 label = "Code Snippet"
 widget = "code"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "code_snippet",
   "label": "Code Snippet",
@@ -892,7 +887,7 @@ widget = "code"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "code_snippet",
   label: "Code Snippet",
@@ -902,7 +897,7 @@ widget = "code"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 code_snippet:
   code: |
     function greet() {
@@ -911,7 +906,7 @@ code_snippet:
   lang: js
 ```
 
-```toml [TOML]
+```toml TOML
 [code_snippet]
 code = """function greet() {
   console.log("Hello, World!");
@@ -919,7 +914,7 @@ code = """function greet() {
 lang = "js"
 ```
 
-```json [JSON]
+```json JSON
 {
   "code_snippet": {
     "code": "function greet() {\n  console.log(\"Hello, World!\");\n}",
@@ -932,14 +927,14 @@ lang = "js"
 
 This example configures the field to output only the code as a string:
 
-```yaml [YAML]
+```yaml YAML
 - widget: code
   label: Code Only
   name: code_only
   output_code_only: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "code_only"
 label = "Code Only"
@@ -947,7 +942,7 @@ widget = "code"
 output_code_only = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "code_only",
   "label": "Code Only",
@@ -956,7 +951,7 @@ output_code_only = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "code_only",
   label: "Code Only",
@@ -967,20 +962,20 @@ output_code_only = true
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 code_only: |
   function greet() {
     console.log("Hello, World!");
   }
 ```
 
-```toml [TOML]
+```toml TOML
 code_only = """function greet() {
   console.log("Hello, World!");
 }"""
 ```
 
-```json [JSON]
+```json JSON
 {
   "code_only": "function greet() {\n  console.log(\"Hello, World!\");\n}"
 }
@@ -990,7 +985,7 @@ code_only = """function greet() {
 
 This example customizes the keys used in the data object and sets a default value, with language selection disabled:
 
-```yaml [YAML]
+```yaml YAML
 - widget: code
   label: Custom Code
   name: custom_code
@@ -1003,7 +998,7 @@ This example customizes the keys used in the data object and sets a default valu
     language: js
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "custom_code"
 label = "Custom Code"
@@ -1017,7 +1012,7 @@ source_code = "console.log('Hello, World!');"
 language = "js"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "custom_code",
   "label": "Custom Code",
@@ -1034,7 +1029,7 @@ language = "js"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "custom_code",
   label: "Custom Code",
@@ -1053,19 +1048,19 @@ language = "js"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 custom_code:
   source_code: "console.log('Hello, World!');"
   language: js
 ```
 
-```toml [TOML]
+```toml TOML
 [custom_code]
 source_code = "console.log('Hello, World!');"
 language = "js"
 ```
 
-```json [JSON]
+```json JSON
 {
   "custom_code": {
     "source_code": "console.log('Hello, World!');",
@@ -1074,4 +1069,4 @@ language = "js"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/code
+Source: https://sveltiacms.app/docs/fields/code

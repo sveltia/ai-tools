@@ -10,27 +10,27 @@ After creating an entry collection, you might want to customize how entries are 
 
 ### Summaries
 
-By default, Sveltia CMS uses the `title` field (or a field defined with the [`identifier_field` option](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field)) as the summary for each entry in the listing view. If the field is empty or missing, the `title`, `name` or `label` field is used instead, whichever has a value first.
+By default, Sveltia CMS uses the `title` field (or a field defined with the [`identifier_field` option](https://sveltiacms.app/docs/collections/entries/slugs#specifying-an-identifier-field)) as the summary for each entry in the listing view. If the field is empty or missing, the `title`, `name` or `label` field is used instead, whichever has a value first.
 
-Sometimes entries might only have a `body` field without a `title` field. In such cases, Sveltia CMS will look for a header in the Markdown body field, if it exists, or use the entry slug as a fallback to ensure that the summary is never empty. This behavior supports typical Markdown-based setups like [VitePress](https://sveltiacms.app/en/docs/frameworks/vitepress) and [Docusaurus](https://sveltiacms.app/en/docs/frameworks/docusaurus).
+Sometimes entries might only have a `body` field without a `title` field. In such cases, Sveltia CMS will look for a header in the Markdown body field, if it exists, or use the entry slug as a fallback to ensure that the summary is never empty. This behavior supports typical Markdown-based setups like [VitePress](https://sveltiacms.app/docs/frameworks/vitepress) and [Docusaurus](https://sveltiacms.app/docs/frameworks/docusaurus).
 
 You can customize the summary displayed for each entry using the `summary` option. This option accepts a string with template tags that will be replaced with entry-specific values when generating the summary. For example, to display both the title and date of each entry in the summary, you can use the following configuration:
 
-```yaml [YAML]
+```yaml YAML
 summary: '{{title}} ({{date}})'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title}} ({{date}})"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title}} ({{date}})"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title}} ({{date}})",
 }
@@ -38,58 +38,58 @@ summary = "{{title}} ({{date}})"
 
 Basic Markdown syntax is supported in the `summary` option, including bold, italics and inline code. The `<strong>`, `<em>` and `<code>` HTML tags work as well. Any other tag is shown as text, so a title like `Vec<T> in Rust` shows in full. For example:
 
-```yaml [YAML]
+```yaml YAML
 summary: '**{{title}}** - _{{date}}_ `{{status}}`'
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "**{{title}}** - _{{date}}_ `{{status}}`"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "**{{title}}** - _{{date}}_ `{{status}}`"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "**{{title}}** - _{{date}}_ `{{status}}`",
 }
 ```
 
-You can use [string transformations](https://sveltiacms.app/en/docs/string-transformations) with these template tags as well. For example:
+You can use [string transformations](https://sveltiacms.app/docs/string-transformations) with these template tags as well. For example:
 
-```yaml [YAML]
+```yaml YAML
 summary: "{{title}} - {{date | date('DD MMM YYYY')}} {{published | ternary('', '(draft)')}}"
 ```
 
-```toml [TOML]
+```toml TOML
 summary = "{{title}} - {{date | date('DD MMM YYYY')}} {{published | ternary('', '(draft)')}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "summary": "{{title}} - {{date | date('DD MMM YYYY')}} {{published | ternary('', '(draft)')}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   summary: "{{title}} - {{date | date('DD MMM YYYY')}} {{published | ternary('', '(draft)')}}",
 }
 ```
 
-The following template tags are supported in the `summary` option, in addition to [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags) except date-related ones:
+The following template tags are supported in the `summary` option, in addition to [slug template tags](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags) except date-related ones:
 
-- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/en/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
+- `{{dirname}}`: The name of the directory containing the entry file, relative to the collection `folder`. It never includes the locale folder of an [i18n structure](https://sveltiacms.app/docs/i18n/structures) with a folder per locale, so it’s the same in every locale.
 - `{{filename}}`: The entry filename without the extension.
 - `{{extension}}`: The entry file extension.
 - `{{commit_author}}`: The last commit author of the entry file from Git history (if available).
 - `{{commit_date}}`: The last commit date of the entry file from Git history (if available).
-- `{{locales}}`: The enabled locales for the entry when using [i18n support](https://sveltiacms.app/en/docs/i18n).
+- `{{locales}}`: The enabled locales for the entry when using [i18n support](https://sveltiacms.app/docs/i18n).
 
-Each file in a [file collection](https://sveltiacms.app/en/docs/collections/files#summaries) can have a `summary` option of its own, and so can an entry collection’s [special index file](#managing-hugo-s-special-index-file).
+Each file in a [file collection](https://sveltiacms.app/docs/collections/files#summaries) can have a `summary` option of its own, and so can an entry collection’s [special index file](#managing-hugo-s-special-index-file).
 
 **Known issue**
 
@@ -99,7 +99,7 @@ Git commit information is not available with the GitLab backend due to API limit
 
 By default, Sveltia CMS automatically looks for any non-nested, non-empty Image or File field in the entry to use as a thumbnail in the entry listing view. However, you can customize this behavior using the `thumbnail` option.
 
-```yaml [YAML]{5}
+```yaml YAML
 collections:
   - name: posts
     label: Blog Posts
@@ -111,7 +111,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -133,7 +133,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -151,7 +151,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -171,21 +171,21 @@ widget = "richtext"
 
 The `thumbnail` option can take a string or an array of strings representing the field names to be used as thumbnails. The first field that contains a valid image will be used as the thumbnail. For example:
 
-```yaml [YAML]
+```yaml YAML
 thumbnail: [thumbnailImage, coverImage]
 ```
 
-```toml [TOML]
+```toml TOML
 thumbnail = ["thumbnailImage", "coverImage"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "thumbnail": ["thumbnailImage", "coverImage"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   thumbnail: ["thumbnailImage", "coverImage"],
 }
@@ -195,27 +195,27 @@ A nested field can be specified using dot notation, e.g. `heroImage.src`. A wild
 
 #### Thumbnail Paths
 
-If your thumbnails are stored at predictable locations rather than referenced by a field, you can specify a file path instead of a field name. A value starting with a slash is treated as a path. It’s resolved in the same way as an Image field value, so it’s typically a path under your [`public_folder`](https://sveltiacms.app/en/docs/media/internal).
+If your thumbnails are stored at predictable locations rather than referenced by a field, you can specify a file path instead of a field name. A value starting with a slash is treated as a path. It’s resolved in the same way as an Image field value, so it’s typically a path under your [`public_folder`](https://sveltiacms.app/docs/media/internal).
 
 This avoids adding an extra field to every entry just to hold a thumbnail path that can be derived from the entry itself.
 
-The path can contain the same template tags as the [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths), including `{{slug}}`, `{{dirname}}`, `{{filename}}`, date and time tags, and field values. The date and time tags are based on the field specified with the `preview_path_date_field` option, or the first DateTime field in the collection. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be used as well. For example:
+The path can contain the same template tags as the [`preview_path` option](https://sveltiacms.app/docs/collections/entries/previews#preview-paths), including `{{slug}}`, `{{dirname}}`, `{{filename}}`, date and time tags, and field values. The date and time tags are based on the field specified with the `preview_path_date_field` option, or the first DateTime field in the collection. [String transformations](https://sveltiacms.app/docs/string-transformations) can be used as well. For example:
 
-```yaml [YAML]
+```yaml YAML
 thumbnail: '/images/thumbnails/{{slug}}.webp'
 ```
 
-```toml [TOML]
+```toml TOML
 thumbnail = "/images/thumbnails/{{slug}}.webp"
 ```
 
-```json [JSON]
+```json JSON
 {
   "thumbnail": "/images/thumbnails/{{slug}}.webp"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   thumbnail: "/images/thumbnails/{{slug}}.webp",
 }
@@ -223,21 +223,21 @@ thumbnail = "/images/thumbnails/{{slug}}.webp"
 
 Paths and field names can be combined in an array. They are tried in order, so the example below uses the `coverImage` field when no file exists at the given path:
 
-```yaml [YAML]
+```yaml YAML
 thumbnail: ['/images/thumbnails/{{slug}}.webp', coverImage]
 ```
 
-```toml [TOML]
+```toml TOML
 thumbnail = ["/images/thumbnails/{{slug}}.webp", "coverImage"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "thumbnail": ["/images/thumbnails/{{slug}}.webp", "coverImage"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   thumbnail: ["/images/thumbnails/{{slug}}.webp", "coverImage"],
 }
@@ -249,21 +249,21 @@ The template tags are filled with the values of the default locale. If a tag can
 
 Occasionally, you may not have suitable images for thumbnails. For example, your images may have subtle differences or varied aspect ratios. In that case, you can disable the thumbnail feature by setting the `thumbnail` option to `false` or an empty array:
 
-```yaml [YAML]
+```yaml YAML
 thumbnail: false
 ```
 
-```toml [TOML]
+```toml TOML
 thumbnail = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "thumbnail": false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   thumbnail: false,
 }
@@ -275,11 +275,11 @@ Sometimes, you may want to include or exclude specific entries from being displa
 
 #### Managing Hugo’s Special Index File
 
-By default, Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) are hidden in a folder collection unless the `path` option is configured to end with `_index` and the `extension` is set to `md`. You have to create a [file collection](https://sveltiacms.app/en/docs/collections/files) to manage the file, since it usually comes with a different set of fields than regular entry fields.
+By default, Hugo’s [special `_index.md` files](https://gohugo.io/content-management/organization/#index-pages-_indexmd) are hidden in a folder collection unless the `path` option is configured to end with `_index` and the `extension` is set to `md`. You have to create a [file collection](https://sveltiacms.app/docs/collections/files) to manage the file, since it usually comes with a different set of fields than regular entry fields.
 
 The `index_file` option allows you to include and manage the special index file within the same folder collection. This way, editors can easily access and edit the index file alongside regular entries.
 
-```yaml [YAML]{10-13}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -295,7 +295,7 @@ collections:
         - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{24-33}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -331,7 +331,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{13-18}
+```json JSON
 {
   "collections": [
     {
@@ -355,7 +355,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{13-18}
+```js JavaScript
 {
   collections: [
     {
@@ -381,7 +381,7 @@ widget = "richtext"
 
 Here is an example of full customization. All options are optional.
 
-```yaml [YAML]
+```yaml YAML
 index_file:
   name: _index # Filename without a locale or extension. Default: _index
   extension: md # File extension. Default: the collection’s extension
@@ -395,7 +395,7 @@ index_file:
     preview: false # Hide the preview pane if needed. Default: true
 ```
 
-```toml [TOML]
+```toml TOML
 [index_file]
 name = "_index"
 extension = "md"
@@ -409,7 +409,7 @@ summary = "{{title}} ({{locales}})"
 preview = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "index_file": {
     "name": "_index",
@@ -426,7 +426,7 @@ preview = false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   index_file: {
     name: "_index",
@@ -447,31 +447,31 @@ The index file is listed with its `label` by default. To show something about it
 
 If your regular entry fields and index file fields are identical and you don’t need any options, simply write:
 
-```yaml [YAML]
+```yaml YAML
 index_file: true
 ```
 
-```toml [TOML]
+```toml TOML
 index_file = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "index_file": true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   index_file: true,
 }
 ```
 
-Note that the special index file is placed right under the `folder`, regardless of the collection’s [`path` option](https://sveltiacms.app/en/docs/collections/entries/slugs#using-subfolders). For example, if the `path` is `{{year}}/{{slug}}`, a regular entry would be saved as `content/posts/2025/title.md`, but the index file remains at `content/posts/_index.md`.
+Note that the special index file is placed right under the `folder`, regardless of the collection’s [`path` option](https://sveltiacms.app/docs/collections/entries/slugs#using-subfolders). For example, if the `path` is `{{year}}/{{slug}}`, a regular entry would be saved as `content/posts/2025/title.md`, but the index file remains at `content/posts/_index.md`.
 
-For a multilingual Hugo site using [translation by content directory](https://gohugo.io/content-management/multilingual/#translation-by-content-directory), where the section folders sit below the locale folders, put the [`{{locale}}` placeholder](https://sveltiacms.app/en/docs/i18n/structures#custom-locale-folder-placement) in the `folder` option, e.g. `content/{{locale}}/posts`. The index file then lands in each locale’s section folder, e.g. `content/en/posts/_index.md`, rather than under the `content` folder.
+For a multilingual Hugo site using [translation by content directory](https://gohugo.io/content-management/multilingual/#translation-by-content-directory), where the section folders sit below the locale folders, put the [`{{locale}}` placeholder](https://sveltiacms.app/docs/i18n/structures#custom-locale-folder-placement) in the `folder` option, e.g. `content/{{locale}}/posts`. The index file then lands in each locale’s section folder, e.g. `content/en/posts/_index.md`, rather than under the `content` folder.
 
-The index file is listed beside the regular entries, but it isn’t counted as one of them, because it stands for the collection’s own page rather than for something in it. It’s left out of the entry count shown next to the collection in the [collection list](https://sveltiacms.app/en/docs/ui/content-library#collection-list). It also doesn’t take up a slot in the collection’s [`limit`](https://sveltiacms.app/en/docs/collections/entries/operations#limiting-entry-count). A collection holding nothing but its index file therefore shows a count of `0`.
+The index file is listed beside the regular entries, but it isn’t counted as one of them, because it stands for the collection’s own page rather than for something in it. It’s left out of the entry count shown next to the collection in the [collection list](https://sveltiacms.app/docs/ui/content-library#collection-list). It also doesn’t take up a slot in the collection’s [`limit`](https://sveltiacms.app/docs/collections/entries/operations#limiting-entry-count). A collection holding nothing but its index file therefore shows a count of `0`.
 
 Only the collection’s own index file is treated this way. One collection’s `folder` may contain another’s, such as a `pages` collection on `content` with a `posts` collection on `content/posts`. In that case, the inner collection’s `content/posts/_index.md` is an ordinary entry as far as the outer collection is concerned. The outer collection’s [`filter`](#filtering-entries) applies to it, and it’s counted like any other entry the filter lets through.
 
@@ -481,7 +481,7 @@ The index file doesn’t have to be a Hugo `_index.md`. Any file with a fixed na
 
 For example, Eleventy’s [directory data file](https://www.11ty.dev/docs/data-template-dir/) is a JSON (or YAML, if configured) file named after the folder, like `posts/posts.json`. It holds the data every Markdown entry in the folder inherits. Set the `name` and `extension` (or `format`) options to manage it beside the entries:
 
-```yaml [YAML]{9-10}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -499,7 +499,7 @@ collections:
         - { name: tags, label: Tags, widget: list }
 ```
 
-```toml [TOML]{16-17}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -530,7 +530,7 @@ label = "Tags"
 widget = "list"
 ```
 
-```json [JSON]{12-13}
+```json JSON
 {
   "collections": [
     {
@@ -556,7 +556,7 @@ widget = "list"
 }
 ```
 
-```js [JavaScript]{12-13}
+```js JavaScript
 {
   collections: [
     {
@@ -584,7 +584,7 @@ widget = "list"
 
 With this configuration, `content/posts/posts.json` is listed and edited as the collection’s index file, read and written as JSON, while `content/posts/*.md` are the regular entries. Other `.json` files in the folder are left alone.
 
-The `format` option works as it does for [the collection](https://sveltiacms.app/en/docs/collections/entries/formats). Give it alone to have the extension follow, or give both when they don’t go together, e.g. `extension: md` with `format: toml-frontmatter`. The [front matter delimiters](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter), body field and other file options are shared with the entries.
+The `format` option works as it does for [the collection](https://sveltiacms.app/docs/collections/entries/formats). Give it alone to have the extension follow, or give both when they don’t go together, e.g. `extension: md` with `format: toml-frontmatter`. The [front matter delimiters](https://sveltiacms.app/docs/collections/entries/formats#front-matter-delimiter), body field and other file options are shared with the entries.
 
 **Reserved Name**
 
@@ -604,7 +604,7 @@ This option takes an object with two properties:
 
 The example below shows how to create two separate collections for English and French blog posts, filtering entries based on the `lang` field:
 
-```yaml [YAML]{5,13}
+```yaml YAML
 collections:
   - name: english-posts
     label: English Posts
@@ -624,7 +624,7 @@ collections:
       - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{5,26}
+```toml TOML
 [[collections]]
 name = "english-posts"
 label = "English Posts"
@@ -668,7 +668,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{7,18}
+```json JSON
 {
   "collections": [
     {
@@ -697,7 +697,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{7,18}
+```js JavaScript
 {
   collections: [
     {
@@ -726,7 +726,7 @@ widget = "richtext"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/collections/entries/listings
+Source: https://sveltiacms.app/docs/collections/entries/listings
 
 ---
 
@@ -739,14 +739,14 @@ Sveltia CMS provides several options to customize how entries are displayed in t
 The entry list can be shown in three views: a table, a list and a grid of thumbnails.
 
 - The table view shows a column for each piece of information that tells the entries apart, such as the date, the author and the category.
-- The list view only shows the [entry summary](https://sveltiacms.app/en/docs/collections/entries/listings#summaries).
-- The grid view is only available when the entries have [thumbnails](https://sveltiacms.app/en/docs/collections/entries/listings#thumbnails).
+- The list view only shows the [entry summary](https://sveltiacms.app/docs/collections/entries/listings#summaries).
+- The grid view is only available when the entries have [thumbnails](https://sveltiacms.app/docs/collections/entries/listings#thumbnails).
 
 The table view is the default, until a user picks another view with the buttons in the toolbar. A collection opened before the table view was introduced keeps the view it was shown in then, usually the list view, until the user picks the table.
 
-The table view is shown on a large screen, where the columns fit. On a smaller screen, the list view is shown instead. In [reorder mode](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries), the entries are always shown in a list.
+The table view is shown on a large screen, where the columns fit. On a smaller screen, the list view is shown instead. In [reorder mode](https://sveltiacms.app/docs/collections/entries/operations#reordering-entries), the entries are always shown in a list.
 
-The table is read-only: click a row to open the entry, as in the list view. To change the values of many entries at once, use [bulk editing](https://sveltiacms.app/en/docs/collections/entries/operations#bulk-editing-entries).
+The table is read-only: click a row to open the entry, as in the list view. To change the values of many entries at once, use [bulk editing](https://sveltiacms.app/docs/collections/entries/operations#bulk-editing-entries).
 
 #### Choosing Columns
 
@@ -760,7 +760,7 @@ You can choose the columns with the `table_columns` option instead. It accepts a
 
 To give a column a header other than the field’s label, use an object with the `field` and `label` properties:
 
-```yaml [YAML]{11-15}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -778,7 +778,7 @@ collections:
       - draft
 ```
 
-```toml [TOML]{5-10}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -816,7 +816,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{14-19}
+```json JSON
 {
   "collections": [
     {
@@ -841,7 +841,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{14-19}
+```js JavaScript
 {
   collections: [
     {
@@ -866,7 +866,7 @@ widget = "richtext"
 }
 ```
 
-A column can also show a template, written the same way as the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries), with the same tags and [transformations](https://sveltiacms.app/en/docs/string-transformations). This lets the table show entry metadata such as `{{locales}}` for the enabled locales, `{{dirname}}`, `{{filename}}` and `{{extension}}`, or combine several values in one column:
+A column can also show a template, written the same way as the [`summary` option](https://sveltiacms.app/docs/collections/entries/listings#summaries), with the same tags and [transformations](https://sveltiacms.app/docs/string-transformations). This lets the table show entry metadata such as `{{locales}}` for the enabled locales, `{{dirname}}`, `{{filename}}` and `{{extension}}`, or combine several values in one column:
 
 ```yaml
 table_columns:
@@ -878,7 +878,7 @@ table_columns:
 
 A template made of a single tag, such as `{{locales}}` or `{{commit_date}}`, gets a header named after it, and its column can be sorted if the tag is one of the [sortable fields](#sorting). Give a longer template a `label`, or its header shows the template itself.
 
-Each cell shows the field’s value the way a [summary template](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) would:
+Each cell shows the field’s value the way a [summary template](https://sveltiacms.app/docs/collections/entries/listings#summaries) would:
 
 - a date in the user’s format
 - a Select field’s option by its label
@@ -886,7 +886,7 @@ Each cell shows the field’s value the way a [summary template](https://sveltia
 - a list as comma-separated values
 - a rich text field without its formatting
 
-A Boolean field is shown as a check mark when it’s on. With [i18n](https://sveltiacms.app/en/docs/i18n) enabled, the values are taken from the default locale. If a listed field isn’t defined in the collection, Sveltia CMS raises a configuration error on startup.
+A Boolean field is shown as a check mark when it’s on. With [i18n](https://sveltiacms.app/docs/i18n) enabled, the values are taken from the default locale. If a listed field isn’t defined in the collection, Sveltia CMS raises a configuration error on startup.
 
 A column whose field is also one of the [sortable fields](#sorting) has a clickable header that sorts the entries by it, the same way the **Sort** menu does; click it again to reverse the order.
 
@@ -896,11 +896,11 @@ The `summary_fields` option of Static CMS, a list of field names where `summary`
 
 ### Sorting
 
-By default, Sveltia CMS supports sorting by `title`, `name`, `date`, `author` and `description` fields if they exist in the collection, as well as by the [identifier field](https://sveltiacms.app/en/docs/collections/entries/slugs#specifying-an-identifier-field) if it’s set with the `identifier_field` option. If the `date` and `author` fields are not present, Sveltia CMS will look for commit date and author information from Git history (if available) to enable sorting by those fields.
+By default, Sveltia CMS supports sorting by `title`, `name`, `date`, `author` and `description` fields if they exist in the collection, as well as by the [identifier field](https://sveltiacms.app/docs/collections/entries/slugs#specifying-an-identifier-field) if it’s set with the `identifier_field` option. If the `date` and `author` fields are not present, Sveltia CMS will look for commit date and author information from Git history (if available) to enable sorting by those fields.
 
-When the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) is defined for a collection, Sveltia CMS also enables sorting by entry summaries. This allows you to sort entries based on the customized summary content, which can include multiple fields and string transformations.
+When the [`summary` option](https://sveltiacms.app/docs/collections/entries/listings#summaries) is defined for a collection, Sveltia CMS also enables sorting by entry summaries. This allows you to sort entries based on the customized summary content, which can include multiple fields and string transformations.
 
-When the [`reorder` option](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-entries) is enabled for a collection, Sveltia CMS enables manual sorting of entries in the listing view. This allows users to drag and drop entries to reorder them as needed.
+When the [`reorder` option](https://sveltiacms.app/docs/collections/entries/operations#reordering-entries) is enabled for a collection, Sveltia CMS enables manual sorting of entries in the listing view. This allows users to drag and drop entries to reorder them as needed.
 
 You can customize the sortable fields using the `sortable_fields` option. It accepts an array of field names that you want to enable for sorting in the entry listing view. It also accepts the following special keys, which read entry metadata instead of a field:
 
@@ -914,7 +914,7 @@ Entries without a value for the sort field, such as an empty date, are always li
 
 The example below shows how to enable sorting by custom fields such as `category` and nested fields like `author.name`:
 
-```yaml [YAML]{16}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -933,7 +933,7 @@ collections:
     sortable_fields: [title, published_date, author.name, category]
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -972,7 +972,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{22}
+```json JSON
 {
   "collections": [
     {
@@ -1000,7 +1000,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{17}
+```js JavaScript
 {
   collections: [
     {
@@ -1067,7 +1067,7 @@ The `view_groups` option allows you to group entries in the listing view based o
 
 The example below demonstrates how to group blog posts by their `draft` status and by the year extracted from the `date` field:
 
-```yaml [YAML]{10-15}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -1085,7 +1085,7 @@ collections:
         pattern: '\d{4}'
 ```
 
-```toml [TOML]{25-32}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -1120,7 +1120,7 @@ field = "date"
 pattern = "\\d{4}"
 ```
 
-```json [JSON]{13-23}
+```json JSON
 {
   "collections": [
     {
@@ -1149,7 +1149,7 @@ pattern = "\\d{4}"
 }
 ```
 
-```js [JavaScript]{13-23}
+```js JavaScript
 {
   collections: [
     {
@@ -1209,7 +1209,7 @@ sortable_fields:
     direction: descending
 ```
 
-A named view group can also be used with the [`reorder` option](https://sveltiacms.app/en/docs/collections/entries/operations#reordering-within-groups) to let editors reorder entries within their own group.
+A named view group can also be used with the [`reorder` option](https://sveltiacms.app/docs/collections/entries/operations#reordering-within-groups) to let editors reorder entries within their own group.
 
 #### Grouping by a Comparison
 
@@ -1244,7 +1244,7 @@ When the entries are grouped this way, each group stays collapsed until the user
 
 The `view_filters` option allows you to define preset filters that editors can quickly apply to the entry listing view. This is useful for quickly accessing specific subsets of entries based on common criteria.
 
-```yaml [YAML]{11-20}
+```yaml YAML
 collections:
   - name: posts
     label: Blog posts
@@ -1267,7 +1267,7 @@ collections:
         pattern: travel|food
 ```
 
-```toml [TOML]{29-42}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog posts"
@@ -1312,7 +1312,7 @@ field = "category"
 pattern = "travel|food"
 ```
 
-```json [JSON]{14-30}
+```json JSON
 {
   "collections": [
     {
@@ -1348,7 +1348,7 @@ pattern = "travel|food"
 }
 ```
 
-```js [JavaScript]{14-30}
+```js JavaScript
 {
   collections: [
     {
@@ -1444,7 +1444,7 @@ The `empty` option tells the entries that have a value for the field from those 
 
 Use this rather than `eq` or `ne`, which can’t express a missing value in TOML, where there is no `null`:
 
-```yaml [YAML]
+```yaml YAML
 view_filters:
   - label: With author
     field: author
@@ -1454,7 +1454,7 @@ view_filters:
     empty: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections.view_filters]]
 label = "With author"
 field = "author"
@@ -1466,7 +1466,7 @@ field = "author"
 empty = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "view_filters": [
     { "label": "With author", "field": "author", "empty": false },
@@ -1475,7 +1475,7 @@ empty = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   view_filters: [
     { label: "With author", field: "author", empty: false },
@@ -1502,7 +1502,7 @@ view_filters:
 
 The example below defines the filters for a list of events:
 
-```yaml [YAML]{10-24}
+```yaml YAML
 collections:
   - name: events
     label: Events
@@ -1530,7 +1530,7 @@ collections:
         ne: canceled
 ```
 
-```toml [TOML]{28-51}
+```toml TOML
 [[collections]]
 name = "events"
 label = "Events"
@@ -1583,7 +1583,7 @@ field = "status"
 ne = "canceled"
 ```
 
-```json [JSON]{13-39}
+```json JSON
 {
   "collections": [
     {
@@ -1628,7 +1628,7 @@ ne = "canceled"
 }
 ```
 
-```js [JavaScript]{13-39}
+```js JavaScript
 {
   collections: [
     {
@@ -1673,4 +1673,4 @@ ne = "canceled"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/collections/entries/views
+Source: https://sveltiacms.app/docs/collections/entries/views

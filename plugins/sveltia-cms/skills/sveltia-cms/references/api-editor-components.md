@@ -6,13 +6,13 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Custom Editor Components
 
-A custom editor component allows you to create reusable, complex block-level or inline components available in the [rich text editor](https://sveltiacms.app/en/docs/fields/richtext).
+A custom editor component allows you to create reusable, complex block-level or inline components available in the [rich text editor](https://sveltiacms.app/docs/fields/richtext).
 
 By default, registered components appear under the Insert button on the editor toolbar. You can also place them directly on the toolbar with the `trigger` option. When clicked, they insert a predefined template into the editor at the current cursor position.
 
 ### Overview
 
-To register a custom editor component, use the `registerEditorComponent` method on the [`CMS` object](https://sveltiacms.app/en/docs/api#accessing-the-cms-object):
+To register a custom editor component, use the `registerEditorComponent` method on the [`CMS` object](https://sveltiacms.app/docs/api#accessing-the-cms-object):
 
 ```js
 CMS.registerEditorComponent(definition);
@@ -24,11 +24,11 @@ These properties describe a field-based component, which is edited with its fiel
 
 #### Required Properties
 
-- `id` (string): A unique identifier for the component. This is the name you will use to reference this component in the `editor_components` option for a [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field. It should be unique and not conflict with built-in component IDs (`code-block`, `image`).
-- `fields` (array of field definitions): An array defining the [fields](https://sveltiacms.app/en/docs/fields) to be displayed in the component.
+- `id` (string): A unique identifier for the component. This is the name you will use to reference this component in the `editor_components` option for a [RichText](https://sveltiacms.app/docs/fields/richtext) or [Markdown](https://sveltiacms.app/docs/fields/markdown) field. It should be unique and not conflict with built-in component IDs (`code-block`, `image`).
+- `fields` (array of field definitions): An array defining the [fields](https://sveltiacms.app/docs/fields) to be displayed in the component.
 - `pattern` (RegExp): A regular expression used to identify existing instances of the component in the Markdown content.
   - It’s recommended to use [named capture groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Named_capturing_group) corresponding to the field names so that `fromBlock` can be omitted if no additional processing is needed.
-  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern. Otherwise, the component is treated as an inline component that matches text within a paragraph. Only an inline component can be inserted into a Markdown [table](https://sveltiacms.app/en/docs/fields/richtext#tables) cell.
+  - Matching could be either block (multiline) or inline, depending on the component. To match block content, use the `s` (dotAll) or `m` (multiline) flag, or include `[\s\S]` in the pattern. Otherwise, the component is treated as an inline component that matches text within a paragraph. Only an inline component can be inserted into a Markdown [table](https://sveltiacms.app/docs/fields/richtext#tables) cell.
   - The `g` (global) flag is ignored.
 - `fromBlock` (function): A function that takes a regex match array and returns an object mapping field names to their values.
   - This property can be omitted if the `pattern` regular expression contains named capture groups corresponding to the field names, and no additional processing like type conversion is needed.
@@ -46,21 +46,21 @@ These properties describe a field-based component, which is edited with its fiel
   - `dialog`: Renders a compact placeholder that opens a dialog when clicked.
   - `inline`: Renders the field’s own control, such as a select box or a date picker, right within the text, without a label or dialog. See [Status Select](#status-select-inline-mode) below.
 - `summary` (string): Template for the placeholder text when `mode` is `dialog`, e.g. `{{title}} - {{videoId}}`. Like the Object field’s `summary` option, it supports nested field names and transformations. Text without placeholders is shown as is. If the summary is empty, the placeholder falls back to the first String or Text field value, then to the component label.
-- `thumbnail` (string): The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) field whose image is displayed as a small thumbnail next to the summary in the placeholder when `mode` is `dialog`, e.g. `icon`. A nested field can be named with a key path like `media.src`. If there is no text to show, only the thumbnail is displayed, without the component label. The label is shown instead if the field is empty, the file is not an image or the image fails to load. See [Icon with Thumbnail](#icon-with-thumbnail-dialog-mode) below.
+- `thumbnail` (string): The name of an [Image](https://sveltiacms.app/docs/fields/image) or [File](https://sveltiacms.app/docs/fields/file) field whose image is displayed as a small thumbnail next to the summary in the placeholder when `mode` is `dialog`, e.g. `icon`. A nested field can be named with a key path like `media.src`. If there is no text to show, only the thumbnail is displayed, without the component label. The label is shown instead if the field is empty, the file is not an image or the image fails to load. See [Icon with Thumbnail](#icon-with-thumbnail-dialog-mode) below.
 - `collapsed` (boolean): If true, the component’s fields panel is collapsed by default when inserted (`block` mode only).
-- `htmlSelector` (string), `fromBlockHTML` (function) and `toBlockHTML` (function): The HTML counterparts of `pattern`, `fromBlock` and `toBlock`, which make the component available in a RichText field with the [`html` format](https://sveltiacms.app/en/docs/fields/richtext#format). All three are required to support HTML. See [Supporting HTML](#supporting-html) below.
+- `htmlSelector` (string), `fromBlockHTML` (function) and `toBlockHTML` (function): The HTML counterparts of `pattern`, `fromBlock` and `toBlock`, which make the component available in a RichText field with the [`html` format](https://sveltiacms.app/docs/fields/richtext#format). All three are required to support HTML. See [Supporting HTML](#supporting-html) below.
 
 #### Preview Output
 
 The optional `toPreview` function can return any of the following:
 
-- **A string**: Parsed as Markdown and HTML, then sanitized with [DOMPurify](https://github.com/cure53/DOMPurify) unless the field’s [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) option is disabled. Most of the [examples](#examples) below use this.
+- **A string**: Parsed as Markdown and HTML, then sanitized with [DOMPurify](https://github.com/cure53/DOMPurify) unless the field’s [`sanitize_preview`](https://sveltiacms.app/docs/fields/richtext#sanitize-preview) option is disabled. Most of the [examples](#examples) below use this.
 - **A DOM element**: Inserted as is, which allows you to mount a component built with Svelte, Vue or any other framework. See [Using a Framework Component for Preview](#using-a-framework-component-for-preview).
 - **A React element**: Rendered with React as is. See [Using React for Preview](#using-react-for-preview).
 
 “As is” means that neither Markdown parsing nor sanitization is applied. The value of a nested RichText or Markdown field is therefore displayed verbatim, such as `**bold**`, unless you render it yourself.
 
-The CMS provides the `renderRichText` method for exactly that purpose. It renders the value into an element of your choice just like the preview pane, nested components included — see [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown).
+The CMS provides the `renderRichText` method for exactly that purpose. It renders the value into an element of your choice just like the preview pane, nested components included — see [Rendering Markdown](https://sveltiacms.app/docs/api/rendering-markdown).
 
 Like `toBlock`, the function is also called once with an empty object while the editor is being initialized. Make sure it works without any field values, as the examples below do by using default values. A preview is reused as long as the component’s Markdown is unchanged.
 
@@ -68,7 +68,7 @@ Like `toBlock`, the function is also called once with an empty object while the 
 
 The `sanitize_preview` option applies to string previews only. Any HTML you write into a DOM element or React element, for example with `innerHTML` or `dangerouslySetInnerHTML`, is rendered as is.
 
-This can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS. The risk is especially high with [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody. Unless you’re the sole user of your CMS, insert field values as text or sanitize them yourself.
+This can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS. The risk is especially high with [Open Authoring](https://sveltiacms.app/docs/workflows/open), because entries can be written by anybody. Unless you’re the sole user of your CMS, insert field values as text or sanitize them yourself.
 
 #### Displaying Assets
 
@@ -84,9 +84,9 @@ The [Image with Caption](#image-with-caption) example relies on this.
 
 For anything else, such as a path your component transforms or a CSS background image in a DOM element or React element preview, use the `getAsset` function. `toPreview` receives it as the second argument.
 
-`getAsset` takes a file path and returns an asset object, or `undefined` if the file is not found. Its `url` property is the URL to display, and the object also turns into the URL when used as a string. See the [`getAsset` prop](https://sveltiacms.app/en/docs/api/preview-templates#component-props) of a custom preview template for the other properties of the asset object.
+`getAsset` takes a file path and returns an asset object, or `undefined` if the file is not found. Its `url` property is the URL to display, and the object also turns into the URL when used as a string. See the [`getAsset` prop](https://sveltiacms.app/docs/api/preview-templates#component-props) of a custom preview template for the other properties of the asset object.
 
-The path is resolved just like an image in the preview. A file in the entry folder, a [field-level media folder](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) of the component, or one the user has just picked is found as well. A complete URL, such as `https://example.com/photo.jpg`, is returned as is.
+The path is resolved just like an image in the preview. A file in the entry folder, a [field-level media folder](https://sveltiacms.app/docs/media/internal#field-level-configuration) of the component, or one the user has just picked is found as well. A complete URL, such as `https://example.com/photo.jpg`, is returned as is.
 
 ```js
 CMS.registerEditorComponent({
@@ -115,7 +115,7 @@ Immutable.js is loaded on demand when a component whose `toPreview` function tak
 
 #### Supporting HTML
 
-A RichText field with the [`format`](https://sveltiacms.app/en/docs/fields/richtext#format) option set to `html` saves its content as HTML, so the Markdown syntax defined with `pattern`, `fromBlock` and `toBlock` doesn’t apply there. A component is only available in such a field if it also defines its HTML syntax with the following properties:
+A RichText field with the [`format`](https://sveltiacms.app/docs/fields/richtext#format) option set to `html` saves its content as HTML, so the Markdown syntax defined with `pattern`, `fromBlock` and `toBlock` doesn’t apply there. A component is only available in such a field if it also defines its HTML syntax with the following properties:
 
 - `htmlSelector` (string): A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors) to identify existing instances of the component in the HTML content, such as `aside.note`. The outermost matching element is the component, including its content.
   - Each selector in a selector list has to name the element type it matches, such as `figure` or `a:has(> img), img`, because the editor finds the component by those types. A selector like `.note` is invalid.
@@ -257,11 +257,11 @@ In this example, selecting “Home” in a paragraph and choosing Wikilink from 
 
 ### Using Components
 
-Once registered, custom editor components can be used in any [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field. A RichText field with the `html` format, however, only offers the components that [support HTML](#supporting-html). By default, all built-in and custom components are included. You can restrict which components are available by adding their `id` to the field’s `editor_components` array in the collection configuration.
+Once registered, custom editor components can be used in any [RichText](https://sveltiacms.app/docs/fields/richtext) or [Markdown](https://sveltiacms.app/docs/fields/markdown) field. A RichText field with the `html` format, however, only offers the components that [support HTML](#supporting-html). By default, all built-in and custom components are included. You can restrict which components are available by adding their `id` to the field’s `editor_components` array in the collection configuration.
 
 For example, to allow only the built-in `image` component and custom `callout` and `youtube` components:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: content
     label: Content
@@ -269,7 +269,7 @@ fields:
     editor_components: [image, callout, youtube]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "content"
 label = "Content"
@@ -277,7 +277,7 @@ widget = "richtext"
 editor_components = ["image", "callout", "youtube"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -290,7 +290,7 @@ editor_components = ["image", "callout", "youtube"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -332,7 +332,7 @@ In this example, the “Callout” component allows users to insert a callout bl
 
 #### File Link
 
-This example demonstrates how to create a custom editor component for inserting a file link using the built-in [`file` field type](https://sveltiacms.app/en/docs/fields/file):
+This example demonstrates how to create a custom editor component for inserting a file link using the built-in [`file` field type](https://sveltiacms.app/docs/fields/file):
 
 ```js
 CMS.registerEditorComponent({
@@ -400,7 +400,7 @@ The `fromBlock` function is omitted again because the `pattern` regular expressi
 
 Note that the `src` attribute will be automatically replaced with a blob URL in the editor preview when an image is selected, while the actual file path will be stored in the Markdown content.
 
-Because the component has a String field named `caption` next to the Image field, the Photo Credit dialog can insert the credit of a [stock photo](https://sveltiacms.app/en/docs/integrations/stock-photos#photo-credits) into the caption. However, the credit is HTML with double quotes in its links, which would end the `caption` attribute of this shortcode early. To accept credits, output the caption as the content of an element instead, as the [next example](#multiple-images-with-caption) does.
+Because the component has a String field named `caption` next to the Image field, the Photo Credit dialog can insert the credit of a [stock photo](https://sveltiacms.app/docs/integrations/stock-photos#photo-credits) into the caption. However, the credit is HTML with double quotes in its links, which would end the `caption` attribute of this shortcode early. To accept credits, output the caption as the content of an element instead, as the [next example](#multiple-images-with-caption) does.
 
 #### Multiple Images with Caption
 
@@ -437,7 +437,7 @@ The `fromBlock` function extracts the image sources from the matched HTML and re
 
 #### Code Sample (Object Value)
 
-Most field types hold a primitive value, but some hold an object. The [Code](https://sveltiacms.app/en/docs/fields/code) field is one of them: unless the [`output_code_only`](https://sveltiacms.app/en/docs/fields/code#output-code-only) option is enabled, its value is an object with `code` and `lang` keys. The [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) and [Object](https://sveltiacms.app/en/docs/fields/object) fields behave the same way, as does any field with `multiple: true` — like the [gallery](#multiple-images-with-caption) above, which holds an array.
+Most field types hold a primitive value, but some hold an object. The [Code](https://sveltiacms.app/docs/fields/code) field is one of them: unless the [`output_code_only`](https://sveltiacms.app/docs/fields/code#output-code-only) option is enabled, its value is an object with `code` and `lang` keys. The [KeyValue](https://sveltiacms.app/docs/fields/keyvalue) and [Object](https://sveltiacms.app/docs/fields/object) fields behave the same way, as does any field with `multiple: true` — like the [gallery](#multiple-images-with-caption) above, which holds an array.
 
 The rule is the same for all of them: `fromBlock` must return the value nested under the field name, and `toBlock` and `toPreview` receive it nested.
 
@@ -469,7 +469,7 @@ Destructuring with a `= {}` default matters here. As noted in [Preview Output](#
 
 The `toPreview` function returns a fenced code block rather than `<pre><code>` markup. A string preview is parsed as Markdown, so the fence gives you syntax highlighting for free. The code is also escaped for you, so a snippet containing `<` or `&` is displayed rather than interpreted.
 
-If you customize the Code field’s [`keys`](https://sveltiacms.app/en/docs/fields/code#keys) option, use those key names in place of `code` and `lang`.
+If you customize the Code field’s [`keys`](https://sveltiacms.app/docs/fields/code#keys) option, use those key names in place of `code` and `lang`.
 
 #### Styled Separator
 
@@ -602,7 +602,7 @@ CMS.registerEditorComponent({
 
 The `inline` mode has the following requirements:
 
-- The `fields` option must have a single field of one of the following types: [Boolean](https://sveltiacms.app/en/docs/fields/boolean), [Color](https://sveltiacms.app/en/docs/fields/color), [DateTime](https://sveltiacms.app/en/docs/fields/datetime), [Number](https://sveltiacms.app/en/docs/fields/number), [Relation](https://sveltiacms.app/en/docs/fields/relation), [Select](https://sveltiacms.app/en/docs/fields/select) or [String](https://sveltiacms.app/en/docs/fields/string). A Relation or Select field can’t have the `multiple` option enabled. If the field doesn’t meet these conditions, a configuration error is displayed when the CMS starts. A component registered after the configuration is loaded falls back to the `block` mode instead.
+- The `fields` option must have a single field of one of the following types: [Boolean](https://sveltiacms.app/docs/fields/boolean), [Color](https://sveltiacms.app/docs/fields/color), [DateTime](https://sveltiacms.app/docs/fields/datetime), [Number](https://sveltiacms.app/docs/fields/number), [Relation](https://sveltiacms.app/docs/fields/relation), [Select](https://sveltiacms.app/docs/fields/select) or [String](https://sveltiacms.app/docs/fields/string). A Relation or Select field can’t have the `multiple` option enabled. If the field doesn’t meet these conditions, a configuration error is displayed when the CMS starts. A component registered after the configuration is loaded falls back to the `block` mode instead.
 - The `pattern` should match a single line, so the component is inline in Markdown as well, rather than a block of its own.
 
 A Select or Relation field always shows a dropdown list in the `inline` mode, as radio buttons wouldn’t fit in a line. The field’s label, hint and validation message are not displayed, while an invalid value is still highlighted.
@@ -613,9 +613,9 @@ The component can be removed with the Backspace key when the cursor is right aft
 
 You can use React components to create rich, interactive previews for your custom editor components. The `toPreview` function can return a React element instead of a string, allowing you to leverage React’s capabilities for rendering complex previews.
 
-You can write the markup with [HTM](https://sveltiacms.app/en/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/en/docs/api#writing-react-components) section for more details.
+You can write the markup with [HTM](https://sveltiacms.app/docs/api#using-htm), JSX or `h()` calls — see the [Writing React Components](https://sveltiacms.app/docs/api#writing-react-components) section for more details.
 
-```js [HTM]
+```js HTM
 CMS.registerEditorComponent({
   id: 'callout',
   label: 'Callout',
@@ -653,7 +653,7 @@ CMS.registerEditorComponent({
 });
 ```
 
-```jsx [JSX]
+```jsx JSX
 CMS.registerEditorComponent({
   id: 'callout',
   label: 'Callout',
@@ -691,7 +691,7 @@ CMS.registerEditorComponent({
 });
 ```
 
-```js [h()]
+```js h()
 CMS.registerEditorComponent({
   id: 'callout',
   label: 'Callout',
@@ -741,11 +741,11 @@ The CMS cannot destroy a component that it didn’t create. Instead, it dispatch
 
 Listen for that event to tear down your component and avoid memory leaks.
 
-The following example renders a “Warning” component that wraps some body text. The body is a nested [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, so its value arrives as a Markdown string. The element you return is inserted as is, so `**bold**` would show up with the asterisks intact unless you render it.
+The following example renders a “Warning” component that wraps some body text. The body is a nested [RichText](https://sveltiacms.app/docs/fields/richtext) field, so its value arrives as a Markdown string. The element you return is inserted as is, so `**bold**` would show up with the asterisks intact unless you render it.
 
-The example passes the value to the component. Once its element is available, the component renders the value with the [`renderRichText`](https://sveltiacms.app/en/docs/api/rendering-markdown) method — with an attachment in Svelte, or in the `onMounted` hook in Vue:
+The example passes the value to the component. Once its element is available, the component renders the value with the [`renderRichText`](https://sveltiacms.app/docs/api/rendering-markdown) method — with an attachment in Svelte, or in the `onMounted` hook in Vue:
 
-```js [Svelte]
+```js Svelte
 import { registerEditorComponent } from '@sveltia/cms';
 import { mount, unmount } from 'svelte';
 import Warning from '$lib/components/Warning.svelte';
@@ -768,7 +768,7 @@ registerEditorComponent({
 });
 ```
 
-```js [Vue]
+```js Vue
 import { registerEditorComponent } from '@sveltia/cms';
 import { createApp } from 'vue';
 import Warning from './components/Warning.vue';
@@ -792,7 +792,7 @@ registerEditorComponent({
 });
 ```
 
-```svelte [Svelte]
+```svelte Svelte
 <script>
   import { renderRichText } from '@sveltia/cms';
 
@@ -802,7 +802,7 @@ registerEditorComponent({
 <div class="bg-red-100" {@attach (element) => renderRichText(element, body)}></div>
 ```
 
-```vue [Vue]
+```vue Vue
 <script setup>
 import { renderRichText } from '@sveltia/cms';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -825,7 +825,7 @@ onUnmounted(() => {
 </template>
 ```
 
-Note that this approach requires a build step, so the CMS has to be [installed as an npm package](https://sveltiacms.app/en/docs/api#using-the-npm-package) and imported into your admin page, rather than loaded from a CDN.
+Note that this approach requires a build step, so the CMS has to be [installed as an npm package](https://sveltiacms.app/docs/api#using-the-npm-package) and imported into your admin page, rather than loaded from a CDN.
 
 `renderRichText` returns a function that destroys the rendered content. The examples call it when the component is unmounted: automatically in Svelte, as an attachment’s return value is its cleanup function, and in the `onUnmounted` hook in Vue.
 
@@ -833,7 +833,7 @@ This matters because the nested value may contain other editor components. They 
 
 The output is sanitized regardless of the field’s `sanitize_preview` option, so the nested value is safe to render even when the CMS has untrusted users. Any image in the nested value keeps working, too, as the method replaces internal image paths with blob URLs just like the preview pane does.
 
-If you need an HTML string instead, for example to insert with Svelte’s `{@html}` tag or Vue’s `v-html` directive, see [Rendering Markdown](https://sveltiacms.app/en/docs/api/rendering-markdown#using-marked-and-dompurify). It covers the lower-level `marked` and `DOMPurify` libraries and the sanitization caveats that apply.
+If you need an HTML string instead, for example to insert with Svelte’s `{@html}` tag or Vue’s `v-html` directive, see [Rendering Markdown](https://sveltiacms.app/docs/api/rendering-markdown#using-marked-and-dompurify). It covers the lower-level `marked` and `DOMPurify` libraries and the sanitization caveats that apply.
 
 #### Rendering Comark Components
 
@@ -907,7 +907,7 @@ With Svelte or Vue, it uses Comark’s [`<Markdown>`](https://comark.dev/renderi
 
 Without a build step, it can load [`@comark/html`](https://comark.dev/rendering/html) and render HTML strings, with the components written as functions. Comark doesn’t provide a browser build, so the example uses the ES module that jsDelivr’s [`+esm` endpoint](https://www.jsdelivr.com/esm) bundles from the npm package on demand. That module isn’t maintained by Comark, so pin the exact version you’ve tested:
 
-```js [Svelte]
+```js Svelte
 import { registerEditorComponent } from '@sveltia/cms';
 import { Markdown } from '@comark/svelte';
 import { mount, unmount } from 'svelte';
@@ -931,7 +931,7 @@ const renderComark = (value, { inline = false } = {}) => {
 };
 ```
 
-```js [Vue]
+```js Vue
 import { registerEditorComponent } from '@sveltia/cms';
 import { Markdown } from '@comark/vue';
 import { createApp, h, Suspense } from 'vue';
@@ -957,7 +957,7 @@ const renderComark = (value, { inline = false } = {}) => {
 };
 ```
 
-```js [Vanilla JS]
+```js Vanilla JS
 const { registerEditorComponent } = CMS;
 
 // Render each child on its own, as `render()` mistakes a list of children that starts with text for
@@ -1006,26 +1006,26 @@ A few things to note:
 
 - The `alert` pattern captures the opening colons as `fence` and matches the closing line with the `\k<fence>` backreference. A block therefore only ends at a line with the same number of colons. `toBlock` then picks a fence with one more colon than any component in the body, which keeps the output valid however deeply components are nested. `fromBlock` is specified to leave the `fence` group out of the field values.
 - The `m` flag makes `alert` a block component, while `badge`, which has no flag, is matched within a paragraph as an inline component.
-- Comark renders the whole Markdown of `alert`, its body included, so it renders the nested `alert` and `badge` as well, without [`renderRichText`](https://sveltiacms.app/en/docs/api/rendering-markdown).
+- Comark renders the whole Markdown of `alert`, its body included, so it renders the nested `alert` and `badge` as well, without [`renderRichText`](https://sveltiacms.app/docs/api/rendering-markdown).
 - Comark doesn’t know about the CMS, but an image, video or audio it renders is still displayed, even if it hasn’t been published yet. This is because the CMS [replaces the URLs](#displaying-assets) of these elements in the preview. If one of your components displays a file in another way, such as a CSS background image, pass the [`getAsset`](#displaying-assets) function from `toPreview` to `renderComark`, and on to the component, e.g. with Svelte’s [`setContext`](https://svelte.dev/docs/svelte/context) or Vue’s [`provide`](https://vuejs.org/guide/components/provide-inject).
 - Each pattern matches the props in a fixed order, as `toBlock` writes them. If your content has props in a different order, or uses other prop syntax such as `{.class}`, [slots](https://comark.dev/syntax/components) or a YAML props block, capture the whole props string or block with the pattern and parse it in `fromBlock` instead.
-- The Svelte and Vue examples don’t sanitize the output, and Comark keeps any raw HTML in the Markdown. See the [security risk](#preview-output) of DOM element previews if untrusted users have access to your CMS. The vanilla JS example sanitizes the HTML with [DOMPurify](https://sveltiacms.app/en/docs/api/rendering-markdown#using-marked-and-dompurify), which the CMS provides.
+- The Svelte and Vue examples don’t sanitize the output, and Comark keeps any raw HTML in the Markdown. See the [security risk](#preview-output) of DOM element previews if untrusted users have access to your CMS. The vanilla JS example sanitizes the HTML with [DOMPurify](https://sveltiacms.app/docs/api/rendering-markdown#using-marked-and-dompurify), which the CMS provides.
 
 ### Showcase
 
-Real-world examples of editor components can be found in our [showcase](https://sveltiacms.app/en/showcase?feature=editor-components).
+Real-world examples of editor components can be found in our [showcase](https://sveltiacms.app/showcase?feature=editor-components).
 
-Source: https://sveltiacms.app/en/docs/api/editor-components
+Source: https://sveltiacms.app/docs/api/editor-components
 
 ---
 
 ## Rendering Markdown
 
-The value of a [RichText](https://sveltiacms.app/en/docs/fields/richtext) or [Markdown](https://sveltiacms.app/en/docs/fields/markdown) field is a Markdown string. You may render such a value yourself, for example in:
+The value of a [RichText](https://sveltiacms.app/docs/fields/richtext) or [Markdown](https://sveltiacms.app/docs/fields/markdown) field is a Markdown string. You may render such a value yourself, for example in:
 
-- a [Custom Preview Template](https://sveltiacms.app/en/docs/api/preview-templates)
-- the [preview output](https://sveltiacms.app/en/docs/api/editor-components#preview-output) of a [Custom Editor Component](https://sveltiacms.app/en/docs/api/editor-components)
-- a [Custom Field Type](https://sveltiacms.app/en/docs/api/field-types)
+- a [Custom Preview Template](https://sveltiacms.app/docs/api/preview-templates)
+- the [preview output](https://sveltiacms.app/docs/api/editor-components#preview-output) of a [Custom Editor Component](https://sveltiacms.app/docs/api/editor-components)
+- a [Custom Field Type](https://sveltiacms.app/docs/api/field-types)
 
 In that case, the string is used as is, so text like `**bold**` appears verbatim unless you convert it to HTML.
 
@@ -1056,13 +1056,13 @@ The content is rendered asynchronously. The target element doesn’t have to be 
 
 The `options` object accepts the following property:
 
-- `fieldConfig` — [RichText field](https://sveltiacms.app/en/docs/fields/richtext) options to be applied, such as [`editor_components`](https://sveltiacms.app/en/docs/fields/richtext#editor-components) to restrict the available components and [`sanitize_preview`](https://sveltiacms.app/en/docs/fields/richtext#sanitize-preview) to disable sanitization. Options not given here fall back to the [`field_defaults`](https://sveltiacms.app/en/docs/fields/richtext#global-field-defaults) configuration. The exception is `sanitize_preview`: the output is sanitized unless it’s explicitly set to `false` here.
+- `fieldConfig` — [RichText field](https://sveltiacms.app/docs/fields/richtext) options to be applied, such as [`editor_components`](https://sveltiacms.app/docs/fields/richtext#editor-components) to restrict the available components and [`sanitize_preview`](https://sveltiacms.app/docs/fields/richtext#sanitize-preview) to disable sanitization. Options not given here fall back to the [`field_defaults`](https://sveltiacms.app/docs/fields/richtext#global-field-defaults) configuration. The exception is `sanitize_preview`: the output is sanitized unless it’s explicitly set to `false` here.
 
 The method is designed for an editor component whose `toPreview` returns a DOM element. There, the value of a nested RichText field would otherwise be displayed verbatim.
 
 Call the returned `destroy` function once the CMS dispatches the `Unmount` event on the element, so that the nested previews are destroyed along with your component:
 
-```js [Svelte]
+```js Svelte
 import { registerEditorComponent } from '@sveltia/cms';
 import { mount, unmount } from 'svelte';
 import Warning from '$lib/components/Warning.svelte';
@@ -1085,7 +1085,7 @@ registerEditorComponent({
 });
 ```
 
-```js [Vanilla JS]
+```js Vanilla JS
 CMS.registerEditorComponent({
   id: 'warning',
   label: 'Warning',
@@ -1117,7 +1117,7 @@ In the Svelte example, the component itself calls the method with an [attachment
 <div class="bg-red-100" {@attach (element) => renderRichText(element, body)}></div>
 ```
 
-The nested value goes through the same component matching as the field itself. A component can therefore contain other components, or even another instance of itself. This works as long as the [`pattern`](https://sveltiacms.app/en/docs/api/editor-components#required-properties) of each component can match its own block within the parent’s. Any nested component preview is rendered in place, whether it returns a string, a DOM element or a React element.
+The nested value goes through the same component matching as the field itself. A component can therefore contain other components, or even another instance of itself. This works as long as the [`pattern`](https://sveltiacms.app/docs/api/editor-components#required-properties) of each component can match its own block within the parent’s. Any nested component preview is rendered in place, whether it returns a string, a DOM element or a React element.
 
 **Raw values for nested fields**
 
@@ -1146,10 +1146,10 @@ Note that, unlike `renderRichText`, this approach doesn’t render custom editor
 
 **Security Risk**
 
-Always sanitize the HTML before inserting it into the DOM, as the examples above do. Markdown allows raw HTML, so skipping the sanitizer can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS. The risk is especially high with [Open Authoring](https://sveltiacms.app/en/docs/workflows/open), because entries can be written by anybody.
+Always sanitize the HTML before inserting it into the DOM, as the examples above do. Markdown allows raw HTML, so skipping the sanitizer can expose your CMS to [cross-site scripting](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS) (XSS) attacks if untrusted users have access to the CMS. The risk is especially high with [Open Authoring](https://sveltiacms.app/docs/workflows/open), because entries can be written by anybody.
 
 **Shared parser instance**
 
 `marked` is the very parser the CMS uses to render the Preview Pane, so any extension you add with [`marked.use()`](https://marked.js.org/using_pro) also changes how the CMS itself renders Markdown. Prefer passing [options](https://marked.js.org/using_advanced) to `marked.parse()` for one-off customization.
 
-Source: https://sveltiacms.app/en/docs/api/rendering-markdown
+Source: https://sveltiacms.app/docs/api/rendering-markdown

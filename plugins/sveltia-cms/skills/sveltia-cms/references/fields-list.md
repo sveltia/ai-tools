@@ -24,7 +24,7 @@ The List field type has four different UI modes, depending on the configuration:
 ##### Complex list field
 
 - Each item in the list can be expanded or collapsed to show or hide its subfields.
-- Each item comes with a Remove button and a menu. The menu lets users copy the item, paste a copied item in place of it or above/below it, duplicate the item, or insert a new item above/below it. A duplicated or pasted item gets new UUIDs for its [UUID](https://sveltiacms.app/en/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/en/docs/fields/compute#generating-a-unique-identifier) fields that generate one, and its [Hidden](https://sveltiacms.app/en/docs/fields/hidden) fields get their default values again. See [Copying and pasting items](#copying-and-pasting-items) below.
+- Each item comes with a Remove button and a menu. The menu lets users copy the item, paste a copied item in place of it or above/below it, duplicate the item, or insert a new item above/below it. A duplicated or pasted item gets new UUIDs for its [UUID](https://sveltiacms.app/docs/fields/uuid) fields and its [Compute](https://sveltiacms.app/docs/fields/compute#generating-a-unique-identifier) fields that generate one, and its [Hidden](https://sveltiacms.app/docs/fields/hidden) fields get their default values again. See [Copying and pasting items](#copying-and-pasting-items) below.
 - A removed item is replaced with a notice and a Restore button. Restore brings the item back to the same position with all its values, in every locale it was removed from. The notice is shown until the entry editor is closed, or until the list is changed in a way that leaves it out of place, e.g. by reverting the field. Restore is disabled while the list has reached its [`max`](#max) number of items.
 - Users can expand or collapse the entire list using the Expand All and Collapse All buttons.
 - Each item can be reordered in its header:
@@ -73,13 +73,13 @@ With the [`map_key_field`](#map-key-field) option, the list is stored as an obje
 
 - If the `required` option is set to `true`, the list must contain at least one item.
 - If the `min` and/or `max` options are specified, the number of items in the list must be within the defined limits.
-- For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list, not against each item. A pattern that describes a single item therefore has to allow for the commas. To accept lowercase words only, use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$`.
+- For a [simple list](#simple-list-field), if the [`pattern`](https://sveltiacms.app/docs/fields#pattern) option is provided, the list items joined with commas, e.g. `foo,bar,baz`, must match the regular expression. As with Decap CMS, the pattern is tested against the whole list, not against each item. A pattern that describes a single item therefore has to allow for the commas. To accept lowercase words only, use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$`.
 - Each item in the list is validated according to the subfield definitions, if applicable.
-- With the [`map_key_field`](#map-key-field) option, the key of each item is required, even in an [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) draft, must be unique within the list, and can’t be a whole number such as `1` or `2024`.
+- With the [`map_key_field`](#map-key-field) option, the key of each item is required, even in an [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) draft, must be unique within the list, and can’t be a whole number such as `1` or `2024`.
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the List field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the List field supports the following options:
 
 #### Required Options
 
@@ -100,7 +100,7 @@ Must be set to `list` to use the List field type.
 The default value for the field. It’s used when creating a new entry, and when opening an existing entry that doesn’t have the field, such as one written before the field was added to the configuration. The shape of the array depends on how the list is configured:
 
 - For a simple list without `field`, `fields` or `types`, an array of strings.
-- For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/en/docs/fields/object) or [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield and so on.
+- For a list with a single `field`, an array of values for that subfield: strings for a String subfield, objects for an [Object](https://sveltiacms.app/docs/fields/object) or [KeyValue](https://sveltiacms.app/docs/fields/keyvalue) subfield and so on.
 - For a list with `fields`, an array of objects whose keys are the subfield names.
 - For a list with `types`, an array of objects, each including the [`typeKey`](#typekey) property (`type` by default) to identify its variable type.
 
@@ -113,7 +113,7 @@ An item that doesn’t match the configuration is reported as a config validatio
 
 See the [Default Values](#default-values) example below for each shape.
 
-Note that the field can also be pre-filled with comma-separated [dynamic default values](https://sveltiacms.app/en/docs/ui/content-editor#dynamic-default-values) passed via URL query parameters. Dynamic values take precedence over the `default` option.
+Note that the field can also be pre-filled with comma-separated [dynamic default values](https://sveltiacms.app/docs/ui/content-editor#dynamic-default-values) passed via URL query parameters. Dynamic values take precedence over the `default` option.
 
 ##### `label_singular`
 
@@ -136,7 +136,7 @@ The minimum number of items required in the list. If the number of items is belo
 
 The maximum number of items allowed in the list. If the number of items exceeds this value, a validation error will be shown.
 
-A list limited to one item with `max: 1`, which is how a single object is stored in an array, is shown like an [Object field](https://sveltiacms.app/en/docs/fields/object) rather than a list, so users don’t have to deal with the array:
+A list limited to one item with `max: 1`, which is how a single object is stored in an array, is shown like an [Object field](https://sveltiacms.app/docs/fields/object) rather than a list, so users don’t have to deal with the array:
 
 - The item count, the list toggle and the reorder controls are hidden, and the item is kept expanded.
 - If the field is required, the item is there from the start, filled with the default values of the subfields, and it can’t be removed. It’s added to a new entry, and to an existing entry that doesn’t have one yet. This doesn’t apply to a [variable type](#types) list, where the user chooses the type of the item, and can remove it to choose another.
@@ -164,11 +164,11 @@ These options are mutually exclusive; you can only use one of them at a time:
 
 ##### `field`
 
-- **Type**: A single [field definition](https://sveltiacms.app/en/docs/fields)
+- **Type**: A single [field definition](https://sveltiacms.app/docs/fields)
 
 ##### `fields`
 
-- **Type**: `array` of [field definitions](https://sveltiacms.app/en/docs/fields)
+- **Type**: `array` of [field definitions](https://sveltiacms.app/docs/fields)
 
 ##### `types`
 
@@ -180,7 +180,7 @@ Each type definition is an object with the following properties:
 - `label` (string, optional): The display label for the type. Defaults to `name`.
 - `widget` (string, optional): The field type for this type. It must be `object` if not omitted. Another field type is reported as a config validation error on the login screen.
 - `description` (string, optional): A short description of the type, displayed below its label in the Add button’s dropdown menu. Markdown is not supported.
-- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/en/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
+- `hint` (string, optional): A help message displayed above the subfields of this type, like a field’s [`hint`](https://sveltiacms.app/docs/fields#hint). Limited Markdown formatting is supported: bold, italic, strikethrough, inline code and links. A line break can be given as `\n`. The hint is not displayed while the field is read-only.
 - `summary` (string, optional): A template for the summary shown on a collapsed item of this type. Overrides the field-level [`summary`](#summary).
 - `fields` (array of field definitions, optional): The subfields for this type.
 
@@ -193,9 +193,9 @@ These options are effective only when the `field`, `fields` or `types` option is
 - **Type**: `string`
 - **Default**: `""`
 
-A template string used to generate a summary for each item in the collapsed view. It can include subfield values using the `{{subfield_name}}` syntax. [String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option. If omitted, the summary will be automatically generated based on the first textual subfield found.
+A template string used to generate a summary for each item in the collapsed view. It can include subfield values using the `{{subfield_name}}` syntax. [String transformations](https://sveltiacms.app/docs/string-transformations) can be applied in this option. If omitted, the summary will be automatically generated based on the first textual subfield found.
 
-If the single subfield defined with the `field` option is of a [custom field type](https://sveltiacms.app/en/docs/api/field-types) that comes with a [summary component](https://sveltiacms.app/en/docs/api/field-types#summary-component), the component is drawn instead of the text.
+If the single subfield defined with the `field` option is of a [custom field type](https://sveltiacms.app/docs/api/field-types) that comes with a [summary component](https://sveltiacms.app/docs/api/field-types#summary-component), the component is drawn instead of the text.
 
 See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example below for details.
 
@@ -204,7 +204,7 @@ See the [Using Summary and Thumbnail](#using-summary-and-thumbnail) example belo
 - **Type**: `string`
 - **Default**: `""`
 
-The name of an [Image](https://sveltiacms.app/en/docs/fields/image) or [File](https://sveltiacms.app/en/docs/fields/file) subfield to be used as the thumbnail for each list item in the collapsed view. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
+The name of an [Image](https://sveltiacms.app/docs/fields/image) or [File](https://sveltiacms.app/docs/fields/file) subfield to be used as the thumbnail for each list item in the collapsed view. The thumbnail is displayed next to the summary. A File subfield holding an image, video or PDF gets a thumbnail; other kinds of files are not shown. If omitted, no thumbnail will be displayed.
 
 A subfield of a nested object can be referenced with dot notation, e.g. `mobile.src`. Like the `summary` template tags, the name can be prefixed with `fields.`. A name that doesn’t point to an Image or File subfield is reported as a config validation error on the login screen. With `types`, a name shared by the subfields of several types is accepted as long as one of them is an Image or File field.
 
@@ -299,18 +299,18 @@ darwin:
   title: On the Origin of Species
 ```
 
-In the editor, the key is a regular subfield. It can be placed anywhere among the subfields, used in the [`summary`](#summary) template and given a [`hint`](https://sveltiacms.app/en/docs/fields#hint), or a [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) if it’s a String field. The items are kept in the order of the object, and reordering them changes the order of the keys.
+In the editor, the key is a regular subfield. It can be placed anywhere among the subfields, used in the [`summary`](#summary) template and given a [`hint`](https://sveltiacms.app/docs/fields#hint), or a [`pattern`](https://sveltiacms.app/docs/fields#pattern) if it’s a String field. The items are kept in the order of the object, and reordering them changes the order of the keys.
 
 The key can also be picked from a list instead of typed:
 
-- Use a [Relation](https://sveltiacms.app/en/docs/fields/relation) field to key the items by entries in another collection, such as page slugs. An entry used as a key can’t be deleted until the item is removed or given another key, as the item can’t be saved without a key.
-- Use a [Select](https://sveltiacms.app/en/docs/fields/select) field to key them by a fixed set of values, such as sizes or languages.
+- Use a [Relation](https://sveltiacms.app/docs/fields/relation) field to key the items by entries in another collection, such as page slugs. An entry used as a key can’t be deleted until the item is removed or given another key, as the item can’t be saved without a key.
+- Use a [Select](https://sveltiacms.app/docs/fields/select) field to key them by a fixed set of values, such as sizes or languages.
 
 See the [Keyed List with Picked Keys](#keyed-list-with-picked-keys) example below.
 
 The following rules apply. A configuration that breaks one of the first four is reported as a config validation error, and a key that breaks one of the last two is shown as a validation error in the editor:
 
-- The subfield must be a [String](https://sveltiacms.app/en/docs/fields/string), [Relation](https://sveltiacms.app/en/docs/fields/relation) or [Select](https://sveltiacms.app/en/docs/fields/select) field. With `types`, every variable type must have it, but each type can use a different field type for it.
+- The subfield must be a [String](https://sveltiacms.app/docs/fields/string), [Relation](https://sveltiacms.app/docs/fields/relation) or [Select](https://sveltiacms.app/docs/fields/select) field. With `types`, every variable type must have it, but each type can use a different field type for it.
 - A Relation or Select field can’t have the `multiple` option, as each item needs a single key. A Select field’s option values must be strings, as the keys are always stored as strings.
 - The subfield must be required, so it can’t have the `required` option set to `false` or to a list of locales.
 - The subfield can’t have `i18n: false`, as the items need a key in every locale. Use `i18n: duplicate` to share the keys across locales.
@@ -327,20 +327,20 @@ The option works with [`root`](#root), which stores the object at the top level 
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 - name: tags
   label: Tags
   widget: list
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "tags"
 label = "Tags"
 widget = "list"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "tags",
   "label": "Tags",
@@ -348,7 +348,7 @@ widget = "list"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "tags",
   label: "Tags",
@@ -358,18 +358,18 @@ widget = "list"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 tags:
   - travel
   - photography
   - food
 ```
 
-```toml [TOML]
+```toml TOML
 tags = ["travel", "photography", "food"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "tags": ["travel", "photography", "food"]
 }
@@ -379,7 +379,7 @@ tags = ["travel", "photography", "food"]
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 - name: authors
   label: Authors
   widget: list
@@ -389,7 +389,7 @@ Configuration example:
     widget: string
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "authors"
 label = "Authors"
@@ -400,7 +400,7 @@ label = "Author"
 widget = "string"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "authors",
   "label": "Authors",
@@ -413,7 +413,7 @@ widget = "string"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "authors",
   label: "Authors",
@@ -428,18 +428,18 @@ widget = "string"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 authors:
   - Alice
   - Bob
   - Charlie
 ```
 
-```toml [TOML]
+```toml TOML
 authors = ["Alice", "Bob", "Charlie"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "authors": ["Alice", "Bob", "Charlie"]
 }
@@ -451,7 +451,7 @@ Note that the `name` of the subfield will not appear in the output; only the val
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 - name: team_members
   label: Team Members
   widget: list
@@ -464,7 +464,7 @@ Configuration example:
       widget: string
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "team_members"
 label = "Team Members"
@@ -479,7 +479,7 @@ label = "Role"
 widget = "string"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "team_members",
   "label": "Team Members",
@@ -499,7 +499,7 @@ widget = "string"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "team_members",
   label: "Team Members",
@@ -521,7 +521,7 @@ widget = "string"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 team_members:
   - name: Alice
     role: Developer
@@ -531,7 +531,7 @@ team_members:
     role: Product Manager
 ```
 
-```toml [TOML]
+```toml TOML
 [[team_members]]
 name = "Alice"
 role = "Developer"
@@ -545,7 +545,7 @@ name = "Charlie"
 role = "Product Manager"
 ```
 
-```json [JSON]
+```json JSON
 {
   "team_members": [
     {
@@ -568,7 +568,7 @@ role = "Product Manager"
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 - name: projects
   label: Projects
   widget: list
@@ -586,7 +586,7 @@ Configuration example:
       widget: image
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "projects"
 label = "Projects"
@@ -607,7 +607,7 @@ label = "Image"
 widget = "image"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "projects",
   "label": "Projects",
@@ -634,7 +634,7 @@ widget = "image"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "projects",
   label: "Projects",
@@ -665,7 +665,7 @@ widget = "image"
 
 The following example defines a variable type List field named `items` with two types: `text_item` and `image_item`. Users can add either type of item to the list. These types can be mixed in any order. Each type’s `description` is shown in the Add button’s dropdown menu, and the `hint` of the `image_item` type is shown above its subfields.
 
-```yaml [YAML]
+```yaml YAML
 - name: items
   label: Items
   widget: list
@@ -690,7 +690,7 @@ The following example defines a variable type List field named `items` with two 
           widget: string
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "items"
 label = "Items"
@@ -718,7 +718,7 @@ label = "Caption"
 widget = "string"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "items",
   "label": "Items",
@@ -758,7 +758,7 @@ widget = "string"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "items",
   label: "Items",
@@ -800,7 +800,7 @@ widget = "string"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 items:
   - type: text_item
     text: This is a text item.
@@ -811,7 +811,7 @@ items:
     text: Another text item.
 ```
 
-```toml [TOML]
+```toml TOML
 [[items]]
 type = "text_item"
 text = "This is a text item."
@@ -826,7 +826,7 @@ type = "text_item"
 text = "Another text item."
 ```
 
-```json [JSON]
+```json JSON
 {
   "items": [
     {
@@ -854,7 +854,7 @@ The following example defines a variable type List field named `sections` with t
 
 You cannot have a List field directly under the `types` option; it must be nested within a type Object field, as shown in this example.
 
-```yaml [YAML]
+```yaml YAML
 - name: sections
   label: Sections
   widget: list
@@ -886,7 +886,7 @@ You cannot have a List field directly under the `types` option; it must be neste
               widget: string
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "sections"
 label = "Sections"
@@ -923,7 +923,7 @@ label = "Alt Text"
 widget = "string"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "sections",
   "label": "Sections",
@@ -977,7 +977,7 @@ widget = "string"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "sections",
   label: "Sections",
@@ -1033,7 +1033,7 @@ widget = "string"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 sections:
   - type: text_section
     heading: Welcome to Our Site
@@ -1047,7 +1047,7 @@ sections:
         alt: Image 2
 ```
 
-```toml [TOML]
+```toml TOML
 [[sections]]
 type = "text_section"
 heading = "Welcome to Our Site"
@@ -1063,7 +1063,7 @@ src = "https://example.com/image2.jpg"
 alt = "Image 2"
 ```
 
-```json [JSON]
+```json JSON
 {
   "sections": [
     {
@@ -1095,7 +1095,7 @@ By default, the type field is named `type`, but you can customize it using the `
 
 The following example shows a simple page builder configuration with three block types: Heading, Paragraph and Horizontal Rule.
 
-```yaml [YAML]
+```yaml YAML
 - name: blocks
   label: Blocks
   widget: list
@@ -1117,7 +1117,7 @@ The following example shows a simple page builder configuration with three block
       label: Horizontal Rule
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "blocks"
 label = "Blocks"
@@ -1142,7 +1142,7 @@ name = "hr"
 label = "Horizontal Rule"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "blocks",
   "label": "Blocks",
@@ -1179,7 +1179,7 @@ label = "Horizontal Rule"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "blocks",
   label: "Blocks",
@@ -1218,7 +1218,7 @@ label = "Horizontal Rule"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 blocks:
   - tag: h2
     text: Welcome to Our Site
@@ -1229,7 +1229,7 @@ blocks:
     text: This is another paragraph after the horizontal rule.
 ```
 
-```toml [TOML]
+```toml TOML
 [[blocks]]
 tag = "h2"
 text = "Welcome to Our Site"
@@ -1243,7 +1243,7 @@ tag = "p"
 text = "This is another paragraph after the horizontal rule."
 ```
 
-```json [JSON]
+```json JSON
 {
   "blocks": [
     {
@@ -1269,7 +1269,7 @@ text = "This is another paragraph after the horizontal rule."
 
 It’s possible to define a List field at the top level of an output file, using the `root` option. The configuration below reproduces [this Jekyll data file example](https://jekyllrb.com/docs/datafiles/#example-list-of-members):
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: data
     label: Data Files
@@ -1291,7 +1291,7 @@ collections:
                 label: GitHub account
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "data"
 label = "Data Files"
@@ -1314,7 +1314,7 @@ name = "github"
 label = "GitHub account"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1352,7 +1352,7 @@ label = "GitHub account"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -1390,9 +1390,9 @@ label = "GitHub account"
 }
 ```
 
-It also works with a [singleton](https://sveltiacms.app/en/docs/collections/singletons). The configuration below reproduces the same data file example using a singleton:
+It also works with a [singleton](https://sveltiacms.app/docs/collections/singletons). The configuration below reproduces the same data file example using a singleton:
 
-```yaml [YAML]
+```yaml YAML
 singletons:
   - name: members
     label: Member List
@@ -1411,7 +1411,7 @@ singletons:
             label: GitHub account
 ```
 
-```toml [TOML]
+```toml TOML
 [[singletons]]
 name = "members"
 label = "Member List"
@@ -1431,7 +1431,7 @@ name = "github"
 label = "GitHub account"
 ```
 
-```json [JSON]
+```json JSON
 {
   "singletons": [
     {
@@ -1463,7 +1463,7 @@ label = "GitHub account"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   singletons: [
     {
@@ -1497,7 +1497,7 @@ label = "GitHub account"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 - name: Alice
   github: alicehub123
 - name: Bob
@@ -1506,7 +1506,7 @@ Output example:
   github: charliecode789
 ```
 
-```json [JSON]
+```json JSON
 [
   {
     "name": "Alice",
@@ -1529,7 +1529,7 @@ As you can see, the list is stored directly at the root level of the output file
 
 A list can be stored as an object mapping the key of each item to the item, using the [`map_key_field`](#map-key-field) option. The configuration below edits a [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) bibliography file, which maps a citation key to each reference, with the `root` option to store the object at the top level of the file:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: data
     label: Data Files
@@ -1561,7 +1561,7 @@ collections:
                 required: false
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "data"
 label = "Data Files"
@@ -1596,7 +1596,7 @@ label = "Author"
 required = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1648,7 +1648,7 @@ required = false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -1702,7 +1702,7 @@ required = false
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 harry:
   type: Book
   title: Harry Potter and the Order of the Phoenix
@@ -1713,7 +1713,7 @@ darwin:
   author: Darwin, Charles
 ```
 
-```toml [TOML]
+```toml TOML
 [harry]
 type = "Book"
 title = "Harry Potter and the Order of the Phoenix"
@@ -1725,7 +1725,7 @@ title = "On the Origin of Species"
 author = "Darwin, Charles"
 ```
 
-```json [JSON]
+```json JSON
 {
   "harry": {
     "type": "Book",
@@ -1744,9 +1744,9 @@ The citation keys are the keys of the object, not properties of the references. 
 
 #### Keyed List with Picked Keys
 
-The key of a [keyed list](#keyed-list) can be picked with a [Relation](https://sveltiacms.app/en/docs/fields/relation) or [Select](https://sveltiacms.app/en/docs/fields/select) field instead of typed. The configuration below stores settings for each page of the `pages` collection, keyed by the page slug, and a price for each size:
+The key of a [keyed list](#keyed-list) can be picked with a [Relation](https://sveltiacms.app/docs/fields/relation) or [Select](https://sveltiacms.app/docs/fields/select) field instead of typed. The configuration below stores settings for each page of the `pages` collection, keyed by the page slug, and a price for each size:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: data
     label: Data Files
@@ -1785,7 +1785,7 @@ collections:
                 widget: number
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "data"
 label = "Data Files"
@@ -1835,7 +1835,7 @@ label = "Price"
 widget = "number"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1891,7 +1891,7 @@ widget = "number"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -1968,14 +1968,14 @@ Each item shows a dropdown to pick the page or size. Picking the same page or si
 
 The shape of the [`default`](#default) option follows the shape of the list. A simple list takes an array of strings:
 
-```yaml [YAML]
+```yaml YAML
 - name: tags
   label: Tags
   widget: list
   default: [travel, photography]
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "tags"
 label = "Tags"
@@ -1983,7 +1983,7 @@ widget = "list"
 default = ["travel", "photography"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "tags",
   "label": "Tags",
@@ -1992,7 +1992,7 @@ default = ["travel", "photography"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "tags",
   label: "Tags",
@@ -2001,9 +2001,9 @@ default = ["travel", "photography"]
 }
 ```
 
-A list with a single `field` takes an array of values for that subfield — here, objects for a [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) subfield:
+A list with a single `field` takes an array of values for that subfield — here, objects for a [KeyValue](https://sveltiacms.app/docs/fields/keyvalue) subfield:
 
-```yaml [YAML]
+```yaml YAML
 - name: attributes
   label: Attributes
   widget: list
@@ -2016,7 +2016,7 @@ A list with a single `field` takes an array of values for that subfield — here
     - { color: blue, size: small }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "attributes"
 label = "Attributes"
@@ -2029,7 +2029,7 @@ label = "Attribute"
 widget = "keyvalue"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "attributes",
   "label": "Attributes",
@@ -2046,7 +2046,7 @@ widget = "keyvalue"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "attributes",
   label: "Attributes",
@@ -2065,7 +2065,7 @@ widget = "keyvalue"
 
 A list with `fields` takes an array of objects whose keys are the subfield names. A subfield left out of an item gets its own `default`, if any, or is left empty, just like an item added in the editor — so `external` is `false` for the first link below:
 
-```yaml [YAML]
+```yaml YAML
 - name: links
   label: Links
   widget: list
@@ -2088,7 +2088,7 @@ A list with `fields` takes an array of objects whose keys are the subfield names
       external: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "links"
 label = "Links"
@@ -2115,7 +2115,7 @@ widget = "boolean"
 default = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "links",
   "label": "Links",
@@ -2132,7 +2132,7 @@ default = false
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "links",
   label: "Links",
@@ -2151,7 +2151,7 @@ default = false
 
 A list with `types` takes an array of objects, each naming its variable type with the [`typeKey`](#typekey) property — `type` unless configured otherwise — alongside the subfields of that type. The subfields of that type left out of an item are filled in the same way:
 
-```yaml [YAML]
+```yaml YAML
 - name: sections
   label: Sections
   widget: list
@@ -2174,7 +2174,7 @@ A list with `types` takes an array of objects, each naming its variable type wit
     - type: paragraph
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "sections"
 label = "Sections"
@@ -2200,7 +2200,7 @@ label = "Body"
 widget = "markdown"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "sections",
   "label": "Sections",
@@ -2221,7 +2221,7 @@ widget = "markdown"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "sections",
   label: "Sections",
@@ -2269,4 +2269,4 @@ Each of the following would be reported as a config validation error on the logi
   default: [{ type: title }]
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/list
+Source: https://sveltiacms.app/docs/fields/list

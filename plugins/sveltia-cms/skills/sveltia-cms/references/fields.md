@@ -22,26 +22,26 @@ The functionality and configuration options remain the same. The `widget` proper
 
 Sveltia CMS includes the following field types out of the box:
 
-- [Boolean](https://sveltiacms.app/en/docs/fields/boolean): A toggle switch for true/false values.
-- [Code](https://sveltiacms.app/en/docs/fields/code): A code editor for various programming languages.
-- [Color](https://sveltiacms.app/en/docs/fields/color): A color picker.
-- [Compute](https://sveltiacms.app/en/docs/fields/compute): A read-only field that computes its value based on other fields.
-- [DateTime](https://sveltiacms.app/en/docs/fields/datetime): A date and time picker.
-- [File](https://sveltiacms.app/en/docs/fields/file): A file uploader and selector.
-- [Hidden](https://sveltiacms.app/en/docs/fields/hidden): A hidden field that is not displayed in the UI.
-- [Image](https://sveltiacms.app/en/docs/fields/image): A variant of [File](https://sveltiacms.app/en/docs/fields/file) with image-specific features.
-- [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue): A field for storing key-value pairs.
-- [List](https://sveltiacms.app/en/docs/fields/list): A list of items, which can be of any field type.
-- [Map](https://sveltiacms.app/en/docs/fields/map): A geo-location picker.
-- [Markdown](https://sveltiacms.app/en/docs/fields/markdown): An alias of [RichText](https://sveltiacms.app/en/docs/fields/richtext) with no HTML support.
-- [Number](https://sveltiacms.app/en/docs/fields/number): A numeric input field.
-- [Object](https://sveltiacms.app/en/docs/fields/object): A field for storing nested objects.
-- [Relation](https://sveltiacms.app/en/docs/fields/relation): A field for creating relationships between entries in different collections.
-- [RichText](https://sveltiacms.app/en/docs/fields/richtext): A rich text editor with Markdown and HTML support.
-- [Select](https://sveltiacms.app/en/docs/fields/select): A dropdown or multi-select field.
-- [String](https://sveltiacms.app/en/docs/fields/string): A single-line text input.
-- [Text](https://sveltiacms.app/en/docs/fields/text): A multi-line text input.
-- [UUID](https://sveltiacms.app/en/docs/fields/uuid): A field that generates a unique identifier.
+- [Boolean](https://sveltiacms.app/docs/fields/boolean): A toggle switch for true/false values.
+- [Code](https://sveltiacms.app/docs/fields/code): A code editor for various programming languages.
+- [Color](https://sveltiacms.app/docs/fields/color): A color picker.
+- [Compute](https://sveltiacms.app/docs/fields/compute): A read-only field that computes its value based on other fields.
+- [DateTime](https://sveltiacms.app/docs/fields/datetime): A date and time picker.
+- [File](https://sveltiacms.app/docs/fields/file): A file uploader and selector.
+- [Hidden](https://sveltiacms.app/docs/fields/hidden): A hidden field that is not displayed in the UI.
+- [Image](https://sveltiacms.app/docs/fields/image): A variant of [File](https://sveltiacms.app/docs/fields/file) with image-specific features.
+- [KeyValue](https://sveltiacms.app/docs/fields/keyvalue): A field for storing key-value pairs.
+- [List](https://sveltiacms.app/docs/fields/list): A list of items, which can be of any field type.
+- [Map](https://sveltiacms.app/docs/fields/map): A geo-location picker.
+- [Markdown](https://sveltiacms.app/docs/fields/markdown): An alias of [RichText](https://sveltiacms.app/docs/fields/richtext) with no HTML support.
+- [Number](https://sveltiacms.app/docs/fields/number): A numeric input field.
+- [Object](https://sveltiacms.app/docs/fields/object): A field for storing nested objects.
+- [Relation](https://sveltiacms.app/docs/fields/relation): A field for creating relationships between entries in different collections.
+- [RichText](https://sveltiacms.app/docs/fields/richtext): A rich text editor with Markdown and HTML support.
+- [Select](https://sveltiacms.app/docs/fields/select): A dropdown or multi-select field.
+- [String](https://sveltiacms.app/docs/fields/string): A single-line text input.
+- [Text](https://sveltiacms.app/docs/fields/text): A multi-line text input.
+- [UUID](https://sveltiacms.app/docs/fields/uuid): A field that generates a unique identifier.
 
 **Breaking change from Netlify CMS**
 
@@ -49,7 +49,7 @@ The deprecated Date widget is not supported in Sveltia CMS (and Decap CMS). Use 
 
 #### Custom field types
 
-Developers can create [custom field types](https://sveltiacms.app/en/docs/api/field-types) to extend the functionality of Sveltia CMS.
+Developers can create [custom field types](https://sveltiacms.app/docs/api/field-types) to extend the functionality of Sveltia CMS.
 
 ### Designing Fields
 
@@ -59,14 +59,14 @@ When designing fields for a collection, consider the following best practices:
 - Provide clear labels and hints to guide users in entering data correctly.
 - Utilize default values where applicable to streamline data entry.
 - Organize fields logically, especially when using nested objects or lists.
-- Leverage the [relation field](https://sveltiacms.app/en/docs/fields/relation) to create connections between different collections, enhancing data integrity and usability.
-- Consider the use of [i18n](https://sveltiacms.app/en/docs/i18n) for fields that require localization.
+- Leverage the [relation field](https://sveltiacms.app/docs/fields/relation) to create connections between different collections, enhancing data integrity and usability.
+- Consider the use of [i18n](https://sveltiacms.app/docs/i18n) for fields that require localization.
 - Take advantage of [field validation](#field-validation) to enforce data integrity.
 - Plan for scalability by anticipating future data requirements and structuring fields accordingly.
 - Regularly review and update field configurations to adapt to changing content needs.
 - Test field configurations thoroughly to ensure they meet user requirements and function as expected.
 
-See also the [Content Modeling Guide](https://sveltiacms.app/en/docs/content-modeling) for more in-depth advice on designing content structures.
+See also the [Content Modeling Guide](https://sveltiacms.app/docs/content-modeling) for more in-depth advice on designing content structures.
 
 ### Common Options
 
@@ -80,14 +80,14 @@ An exception is the Hidden field type that only supports `name`, `widget`, `defa
 
 - **Type**: `string`
 
-The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/en/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/en/docs/fields/compute) and [Relation](https://sveltiacms.app/en/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/en/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields` and so on.
+The unique identifier for the field among its sibling fields. This option is required for all field types, including the [Hidden](https://sveltiacms.app/docs/fields/hidden) field type. It’s used as the key in the output data and to reference the field in various contexts, such as in [Compute](https://sveltiacms.app/docs/fields/compute) and [Relation](https://sveltiacms.app/docs/fields/relation) fields as well as an [entry collection](https://sveltiacms.app/docs/collections/entries)’s `identifier_field`, `summary`, `sortable_fields` and so on.
 
 The naming convention for field names is typically `snake_case` or `camelCase` — the choice is yours, but keep the style consistent. However, it cannot contain spaces, periods (`.`), asterisks (`*`), colons (`:`) or angle brackets (`<`, `>`).
 
 There are two special field names to be aware of:
 
-- A field named `title` is treated as the default `identifier_field` for an [entry collection](https://sveltiacms.app/en/docs/collections/entries), meaning it will be used as the entry title and slug unless another field is explicitly set as the `identifier_field`.
-- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
+- A field named `title` is treated as the default `identifier_field` for an [entry collection](https://sveltiacms.app/docs/collections/entries), meaning it will be used as the entry title and slug unless another field is explicitly set as the `identifier_field`.
+- A field named `body` is treated as the main content of the entry, and its value will be placed below the front matter if the collection uses a front matter format like YAML, TOML or JSON. This behavior can be configured using the [`body_field` option](https://sveltiacms.app/docs/collections/entries/formats#body-field-for-front-matter-formats) for collections and collection files.
 
 #### Optional Options
 
@@ -96,7 +96,7 @@ There are two special field names to be aware of:
 - **Type**: `string`
 - **Default**: `string`
 
-A field type. It’s one of the lowercase names of the [built-in field types](#built-in-field-types) or a registered [custom field type](https://sveltiacms.app/en/docs/api/field-types) name. If not specified, it defaults to `string`, which is a single-line text input.
+A field type. It’s one of the lowercase names of the [built-in field types](#built-in-field-types) or a registered [custom field type](https://sveltiacms.app/docs/api/field-types) name. If not specified, it defaults to `string`, which is a single-line text input.
 
 ##### `label`
 
@@ -109,7 +109,7 @@ The human-readable label for the field. It’s displayed in the UI as the field�
 
 - **Type**: `object`
 
-Labels for specific locales, keyed by locale code, taking precedence over `label`. See [Localized Field Options](https://sveltiacms.app/en/docs/i18n/options#localized-field-options) for details.
+Labels for specific locales, keyed by locale code, taking precedence over `label`. See [Localized Field Options](https://sveltiacms.app/docs/i18n/options#localized-field-options) for details.
 
 ##### `comment`
 
@@ -133,7 +133,7 @@ The output file will look like this:
 title: My First Post
 ```
 
-Comments on subfields of an [Object](https://sveltiacms.app/en/docs/fields/object) field are also added before the corresponding keys, while comments on subfields of a [List](https://sveltiacms.app/en/docs/fields/list) field or a [variable-type](https://sveltiacms.app/en/docs/fields/object#variable-type) Object field are ignored.
+Comments on subfields of an [Object](https://sveltiacms.app/docs/fields/object) field are also added before the corresponding keys, while comments on subfields of a [List](https://sveltiacms.app/docs/fields/list) field or a [variable-type](https://sveltiacms.app/docs/fields/object#variable-type) Object field are ignored.
 
 ##### `hint`
 
@@ -148,7 +148,7 @@ To add a line break, use a literal backslash followed by `n`. In a plain or sing
 
 - **Type**: `object`
 
-Hints for specific locales, keyed by locale code, taking precedence over `hint`. See [Localized Field Options](https://sveltiacms.app/en/docs/i18n/options#localized-field-options) for details.
+Hints for specific locales, keyed by locale code, taking precedence over `hint`. See [Localized Field Options](https://sveltiacms.app/docs/i18n/options#localized-field-options) for details.
 
 ##### `required`
 
@@ -157,11 +157,11 @@ Hints for specific locales, keyed by locale code, taking precedence over `hint`.
 
 A boolean indicating whether **data input** is required for the field. Unless explicitly set to `false`, fields are required by default, meaning users must provide a value when creating or editing an entry.
 
-If [i18n](https://sveltiacms.app/en/docs/i18n) is enabled, the option accepts an array of locale codes to specify which locales require input. For example, `required: [en, fr]` means that input is required for English and French locales only.
+If [i18n](https://sveltiacms.app/docs/i18n) is enabled, the option accepts an array of locale codes to specify which locales require input. For example, `required: [en, fr]` means that input is required for English and French locales only.
 
-With [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) enabled, an entry in draft can be saved with its required fields left empty, so unfinished work isn’t held up. They’re enforced again once the entry moves on from the drafting stage. See [Required Fields](https://sveltiacms.app/en/docs/workflows/editorial#required-fields).
+With [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) enabled, an entry in draft can be saved with its required fields left empty, so unfinished work isn’t held up. They’re enforced again once the entry moves on from the drafting stage. See [Required Fields](https://sveltiacms.app/docs/workflows/editorial#required-fields).
 
-If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/en/docs/data-output#controlling-data-output) is enabled, this option affects **data output** as well. The default value is `true`, meaning optional fields left empty will be omitted from the output. If set to `false`, optional fields left empty will be included in the output with a value of `null`, empty string or empty array/object, depending on the field type.
+If the `omit_empty_optional_fields` [output option](https://sveltiacms.app/docs/data-output#controlling-data-output) is enabled, this option affects **data output** as well. The default value is `true`, meaning optional fields left empty will be omitted from the output. If set to `false`, optional fields left empty will be included in the output with a value of `null`, empty string or empty array/object, depending on the field type.
 
 ##### `pattern`
 
@@ -171,28 +171,28 @@ An array containing a [regular expression](https://developer.mozilla.org/en-US/d
 
 - A string representing the regex pattern without delimiters, e.g. `'^[A-Za-z0-9]+$'`.
 - A string representing the regex pattern with delimiters and flags, e.g. `'/^[a-z0-9]+$/i'`. The delimiters must be slashes `/`.
-- A `RegExp` object when using the [JavaScript API](https://sveltiacms.app/en/docs/api/initialization).
+- A `RegExp` object when using the [JavaScript API](https://sveltiacms.app/docs/api/initialization).
 
 For example, to restrict a string field to only alphanumeric characters, you can use the following configuration:
 
-```yaml [YAML]
+```yaml YAML
 pattern:
   - '^[A-Za-z0-9]+$'
   - 'Only alphanumeric characters are allowed.'
 ```
 
-```toml [TOML]
+```toml TOML
 pattern = [ "^[A-Za-z0-9]+$", "Only alphanumeric characters are allowed." ]
 ```
 
-```json [JSON]
+```json JSON
 "pattern": [
   "^[A-Za-z0-9]+$",
   "Only alphanumeric characters are allowed."
 ]
 ```
 
-```js [JavaScript]
+```js JavaScript
 pattern: [/^[A-Za-z0-9]+$/, 'Only alphanumeric characters are allowed.'];
 ```
 
@@ -203,22 +203,22 @@ pattern: [/^[A-Za-z0-9]+$/, 'Only alphanumeric characters are allowed.'];
 
 Whether the field’s value must be different from the value of the same field in every other entry of the collection, like a `UNIQUE` constraint in a relational database. An entry whose value is already used by another entry can’t be saved until the value is changed. This is useful for a product code, an ISBN or an email address that has to be distinct.
 
-The option is available for the [String](https://sveltiacms.app/en/docs/fields/string), [Text](https://sveltiacms.app/en/docs/fields/text), [Number](https://sveltiacms.app/en/docs/fields/number), [Color](https://sveltiacms.app/en/docs/fields/color), [DateTime](https://sveltiacms.app/en/docs/fields/datetime), [Markdown](https://sveltiacms.app/en/docs/fields/markdown) and [RichText](https://sveltiacms.app/en/docs/fields/richtext) fields, as well as the [File](https://sveltiacms.app/en/docs/fields/file), [Image](https://sveltiacms.app/en/docs/fields/image), [Relation](https://sveltiacms.app/en/docs/fields/relation) and [Select](https://sveltiacms.app/en/docs/fields/select) fields taking a single value.
+The option is available for the [String](https://sveltiacms.app/docs/fields/string), [Text](https://sveltiacms.app/docs/fields/text), [Number](https://sveltiacms.app/docs/fields/number), [Color](https://sveltiacms.app/docs/fields/color), [DateTime](https://sveltiacms.app/docs/fields/datetime), [Markdown](https://sveltiacms.app/docs/fields/markdown) and [RichText](https://sveltiacms.app/docs/fields/richtext) fields, as well as the [File](https://sveltiacms.app/docs/fields/file), [Image](https://sveltiacms.app/docs/fields/image), [Relation](https://sveltiacms.app/docs/fields/relation) and [Select](https://sveltiacms.app/docs/fields/select) fields taking a single value.
 
-```yaml [YAML]
+```yaml YAML
 - name: sku
   label: SKU
   unique: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "sku"
 label = "SKU"
 unique = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "sku",
   "label": "SKU",
@@ -226,7 +226,7 @@ unique = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'sku',
   label: 'SKU',
@@ -236,17 +236,17 @@ unique = true
 
 How values are compared:
 
-- The value is compared with the value of the same field in the same locale of the other entries in the collection, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The entries the collection’s [`filter`](https://sveltiacms.app/en/docs/collections/entries/listings#filtering-entries) option leaves out don’t count.
+- The value is compared with the value of the same field in the same locale of the other entries in the collection, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial). The entries the collection’s [`filter`](https://sveltiacms.app/docs/collections/entries/listings#filtering-entries) option leaves out don’t count.
 - Leading and trailing whitespace is ignored, and the comparison is case-sensitive, except for a Color field, where `#FF0000` and `#ff0000` are the same color. A Number field value is compared numerically, so `1` and `01` are the same number.
 - An empty value is never a duplicate. A field with `required: false` can therefore be left empty in any number of entries.
 - A file just uploaded to a File or Image field is a new file, so it’s never a duplicate.
 
-The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in:
+The option is only available in an [entry collection](https://sveltiacms.app/docs/collections/entries). It’s ignored in:
 
-- a [file collection](https://sveltiacms.app/en/docs/collections/files)
-- the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file)
+- a [file collection](https://sveltiacms.app/docs/collections/files)
+- the [Hugo’s special index file](https://sveltiacms.app/docs/collections/entries/listings#managing-hugo-s-special-index-file)
 - a field taking multiple values
-- a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component, because it can appear more than once in an entry
+- a field in a [List](https://sveltiacms.app/docs/fields/list) field or a rich text editor component, because it can appear more than once in an entry
 
 **Tip**
 
@@ -259,7 +259,7 @@ If entries already share a value when the option is added, each of them has to b
 
 A boolean indicating whether the field is read-only. It’s useful for fields with a default value that should not be modified by users.
 
-On a [List](https://sveltiacms.app/en/docs/fields/list) or [Object](https://sveltiacms.app/en/docs/fields/object) field, the subfields are read-only as well, and no subfield can opt out. On a [RichText](https://sveltiacms.app/en/docs/fields/richtext) field, the editor components in the value can’t be changed or removed either, and no image can be dropped or pasted into it.
+On a [List](https://sveltiacms.app/docs/fields/list) or [Object](https://sveltiacms.app/docs/fields/object) field, the subfields are read-only as well, and no subfield can opt out. On a [RichText](https://sveltiacms.app/docs/fields/richtext) field, the editor components in the value can’t be changed or removed either, and no image can be dropped or pasted into it.
 
 ##### `preview`
 
@@ -281,22 +281,22 @@ Indicates whether the field supports internationalization (i18n). The values are
 - `sync`: The field can be edited in every locale, and a change made in any locale is copied to the other locales, so every locale keeps the same value.
 - `duplicate_if_empty`: The default locale’s value is copied only to the non-default locales where the field is empty. The field can still be edited there. This value is available for the Code, DateTime, File, Image, Number, Relation, RichText, Select, String and Text field types.
 
-A subfield without its own `i18n` option follows its parent’s `duplicate` or `sync` strategy. Under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration) for more details.
+A subfield without its own `i18n` option follows its parent’s `duplicate` or `sync` strategy. Under a parent with `true`, such a subfield is hidden in non-default locales. See the [i18n documentation](https://sveltiacms.app/docs/i18n/options#field-level-configuration) for more details.
 
 ### Field Validation
 
 All visible fields support various validation options to ensure data integrity. Common validation options include:
 
-- By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration).
+- By default, fields are required to be filled out unless the `required` option is explicitly set to `false`. If i18n is enabled for a field, all localized versions of the field are required unless [specified otherwise](https://sveltiacms.app/docs/i18n/options#field-level-configuration).
 - String-type and some other simple array-type fields support the `pattern` option, which allows you to define a regular expression that the field’s value must match. This is useful for enforcing specific formats.
 - String, Number and several other single-value fields support the [`unique`](#unique) option, which makes sure the value isn’t used in the same field of any other entry in the collection.
 - Some fields support minimum and maximum values/items/lengths or value types, depending on the field type. For example:
-  - The [String](https://sveltiacms.app/en/docs/fields/string) field supports `minlength` and `maxlength` options as well as the `type` option that can enforce formats like `email` or `url`.
-  - The [Number](https://sveltiacms.app/en/docs/fields/number) field supports `min`, `max` and `value_type` options.
-  - Other multi-value fields like [List](https://sveltiacms.app/en/docs/fields/list) and [KeyValue](https://sveltiacms.app/en/docs/fields/keyvalue) support `min` and `max` options.
+  - The [String](https://sveltiacms.app/docs/fields/string) field supports `minlength` and `maxlength` options as well as the `type` option that can enforce formats like `email` or `url`.
+  - The [Number](https://sveltiacms.app/docs/fields/number) field supports `min`, `max` and `value_type` options.
+  - Other multi-value fields like [List](https://sveltiacms.app/docs/fields/list) and [KeyValue](https://sveltiacms.app/docs/fields/keyvalue) support `min` and `max` options.
 - Validation options other than `required` describe a value, so they only apply to a field that has one. An optional field left empty is valid even when a `pattern`, `minlength`, `min` or similar option is set on it — those rules take effect as soon as something is entered.
 
-If more complicated validation logic is needed, consider creating a [custom field type](https://sveltiacms.app/en/docs/api/field-types) that implements the desired validation behavior.
+If more complicated validation logic is needed, consider creating a [custom field type](https://sveltiacms.app/docs/api/field-types) that implements the desired validation behavior.
 
 ### Examples
 
@@ -304,7 +304,7 @@ If more complicated validation logic is needed, consider creating a [custom fiel
 
 Here is an example configuration for fields in a blog post collection:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: title
     label: Title
@@ -325,7 +325,7 @@ fields:
     widget: richtext
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "title"
 label = "Title"
@@ -352,7 +352,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -384,7 +384,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 fields: [
   {
     name: 'title',
@@ -416,7 +416,7 @@ fields: [
 
 Output data for a blog post using the above configuration might look like this:
 
-```md [Markdown]
+```md Markdown
 ---
 title: My First Blog Post
 published: true
@@ -428,7 +428,7 @@ date: 2024-06-15T10:00:00Z
 This is the content of my first blog post.
 ```
 
-```yaml [YAML]
+```yaml YAML
 title: My First Blog Post
 published: true
 date: 2024-06-15T10:00:00Z
@@ -438,7 +438,7 @@ body: |
   This is the content of my first blog post.
 ```
 
-```toml [TOML]
+```toml TOML
 title = "My First Blog Post"
 published = true
 date = 2024-06-15T10:00:00Z
@@ -448,7 +448,7 @@ This is the content of my first blog post.
 '''
 ```
 
-```json [JSON]
+```json JSON
 {
   "title": "My First Blog Post",
   "published": true,
@@ -457,7 +457,7 @@ This is the content of my first blog post.
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields
+Source: https://sveltiacms.app/docs/fields
 
 ---
 
@@ -467,9 +467,9 @@ The String field type allows users to input and manage short to medium-length te
 
 **Alternative for longer or multiple strings**
 
-If you need to handle longer text content, consider using the [Text](https://sveltiacms.app/en/docs/fields/text) or [RichText](https://sveltiacms.app/en/docs/fields/richtext) field type instead.
+If you need to handle longer text content, consider using the [Text](https://sveltiacms.app/docs/fields/text) or [RichText](https://sveltiacms.app/docs/fields/richtext) field type instead.
 
-If you need to manage multiple strings, consider using the simple [List](https://sveltiacms.app/en/docs/fields/list) field type instead.
+If you need to manage multiple strings, consider using the simple [List](https://sveltiacms.app/docs/fields/list) field type instead.
 
 ### User Interface
 
@@ -493,7 +493,7 @@ If the string is a regular URL, it will be displayed as a clickable link that op
 
 **CSP**
 
-You may need to update your Content Security Policy (CSP) to allow embedding YouTube videos. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+You may need to update your Content Security Policy (CSP) to allow embedding YouTube videos. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Data Type
 
@@ -508,7 +508,7 @@ A string. If the `required` option is set to `false` and the field is left empty
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the String field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the String field supports the following options:
 
 #### Optional Options
 
@@ -590,25 +590,25 @@ The colon must be at the beginning of the input or preceded by a space or an ope
 
 The following example demonstrates a basic String field for entering a title. Note that the `widget` option is optional since `string` is the default field type.
 
-```yaml [YAML]
+```yaml YAML
 - name: title
   label: Title
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "title"
 label = "Title"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "title",
   "label": "Title"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "title",
   label: "Title",
@@ -617,15 +617,15 @@ label = "Title"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 title: My First Post
 ```
 
-```toml [TOML]
+```toml TOML
 title = "My First Post"
 ```
 
-```json [JSON]
+```json JSON
 {
   "title": "My First Post"
 }
@@ -635,7 +635,7 @@ title = "My First Post"
 
 The following example demonstrates a String field with `minlength` and `maxlength` options set to enforce input length constraints. It also includes a `default` value.
 
-```yaml [YAML]
+```yaml YAML
 - name: title
   label: Title
   widget: string
@@ -644,7 +644,7 @@ The following example demonstrates a String field with `minlength` and `maxlengt
   maxlength: 100
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "title"
 label = "Title"
@@ -654,7 +654,7 @@ minlength = 5
 maxlength = 100
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "title",
   "label": "Title",
@@ -665,7 +665,7 @@ maxlength = 100
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "title",
   label: "Title",
@@ -678,15 +678,15 @@ maxlength = 100
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 title: My Second Post
 ```
 
-```toml [TOML]
+```toml TOML
 title = "My Second Post"
 ```
 
-```json [JSON]
+```json JSON
 {
   "title": "My Second Post"
 }
@@ -696,14 +696,14 @@ title = "My Second Post"
 
 The following example demonstrates a String field configured for URL input. Validation will ensure that the entered value is a properly formatted URL.
 
-```yaml [YAML]
+```yaml YAML
 - name: website
   label: Website
   widget: string
   type: url
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "website"
 label = "Website"
@@ -711,7 +711,7 @@ widget = "string"
 type = "url"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "website",
   "label": "Website",
@@ -720,7 +720,7 @@ type = "url"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "website",
   label: "Website",
@@ -731,15 +731,15 @@ type = "url"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 website: https://example.com
 ```
 
-```toml [TOML]
+```toml TOML
 website = "https://example.com"
 ```
 
-```json [JSON]
+```json JSON
 {
   "website": "https://example.com"
 }
@@ -749,7 +749,7 @@ website = "https://example.com"
 
 Some use cases may require adding specific text before or after the input value, such as `mailto:` for email links or query parameters. The following example demonstrates a String field configured for email input with `prefix` and `suffix` options.
 
-```yaml [YAML]
+```yaml YAML
 - name: contact_email_link
   label: Contact Email Link
   widget: string
@@ -758,7 +758,7 @@ Some use cases may require adding specific text before or after the input value,
   suffix: '?subject=Inquiry'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "contact_email_link"
 label = "Contact Email Link"
@@ -768,7 +768,7 @@ prefix = "mailto:"
 suffix = "?subject=Inquiry"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "contact_email_link",
   "label": "Contact Email Link",
@@ -779,7 +779,7 @@ suffix = "?subject=Inquiry"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "contact_email_link",
   label: "Contact Email Link",
@@ -792,27 +792,27 @@ suffix = "?subject=Inquiry"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 contact_email_link: mailto:contact@example.com?subject=Inquiry
 ```
 
-```toml [TOML]
+```toml TOML
 contact_email_link = "mailto:contact@example.com?subject=Inquiry"
 ```
 
-```json [JSON]
+```json JSON
 {
   "contact_email_link": "mailto:contact@example.com?subject=Inquiry"
 }
 ```
 
-Alternatively, you can use a Compute field to generate the full email link based on a separate email String field, as shown in the [Compute field documentation](https://sveltiacms.app/en/docs/fields/compute#email-link).
+Alternatively, you can use a Compute field to generate the full email link based on a separate email String field, as shown in the [Compute field documentation](https://sveltiacms.app/docs/fields/compute#email-link).
 
 #### Hashtag Field
 
 The following example demonstrates a String field configured for entering hashtags, with a `#` symbol displayed before the input field and a hint to guide users. Unlike the `prefix` option, which adds text to the saved value, the `before_input` option only affects the UI display, not the stored data.
 
-```yaml [YAML]
+```yaml YAML
 - name: hashtag
   label: Hashtag
   widget: string
@@ -820,7 +820,7 @@ The following example demonstrates a String field configured for entering hashta
   hint: 'Enter a hashtag without the # symbol.'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "hashtag"
 label = "Hashtag"
@@ -829,7 +829,7 @@ before_input = "#"
 hint = "Enter a hashtag without the # symbol."
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "hashtag",
   "label": "Hashtag",
@@ -839,7 +839,7 @@ hint = "Enter a hashtag without the # symbol."
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "hashtag",
   label: "Hashtag",
@@ -851,21 +851,21 @@ hint = "Enter a hashtag without the # symbol."
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 hashtag: travel
 ```
 
-```toml [TOML]
+```toml TOML
 hashtag = "travel"
 ```
 
-```json [JSON]
+```json JSON
 {
   "hashtag": "travel"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/string
+Source: https://sveltiacms.app/docs/fields/string
 
 ---
 
@@ -875,9 +875,9 @@ The Text field type provides a multi-line text area for users to input longer st
 
 **Alternative for shorter or rich text**
 
-If you need to handle shorter text content, consider using the [String](https://sveltiacms.app/en/docs/fields/string) field type instead.
+If you need to handle shorter text content, consider using the [String](https://sveltiacms.app/docs/fields/string) field type instead.
 
-If you need rich text formatting, consider using the [RichText](https://sveltiacms.app/en/docs/fields/richtext) field type instead.
+If you need rich text formatting, consider using the [RichText](https://sveltiacms.app/docs/fields/richtext) field type instead.
 
 ### User Interface
 
@@ -905,7 +905,7 @@ A string with possible line breaks (`\n` characters) representing the entered te
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Text field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Text field supports the following options:
 
 #### Required Options
 
@@ -954,20 +954,20 @@ The colon must be at the beginning of a line or preceded by a space or an openin
 
 This example shows a simple Text field without any additional options.
 
-```yaml [YAML]
+```yaml YAML
 - name: description
   label: Description
   widget: text
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "description"
 label = "Description"
 widget = "text"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "description",
   "label": "Description",
@@ -975,7 +975,7 @@ widget = "text"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "description",
   label: "Description",
@@ -985,16 +985,16 @@ widget = "text"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 description: "This is a sample description.\nIt can span multiple lines."
 ```
 
-```toml [TOML]
+```toml TOML
 description = """This is a sample description.
 It can span multiple lines."""
 ```
 
-```json [JSON]
+```json JSON
 {
   "description": "This is a sample description.\nIt can span multiple lines."
 }
@@ -1004,7 +1004,7 @@ It can span multiple lines."""
 
 This example shows a Text field with a default value and length restrictions. The field requires a minimum of 10 characters and allows a maximum of 500 characters.
 
-```yaml [YAML]
+```yaml YAML
 - name: description
   label: Description
   widget: text
@@ -1013,7 +1013,7 @@ This example shows a Text field with a default value and length restrictions. Th
   maxlength: 500
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "description"
 label = "Description"
@@ -1023,7 +1023,7 @@ minlength = 10
 maxlength = 500
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "description",
   "label": "Description",
@@ -1034,7 +1034,7 @@ maxlength = 500
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "description",
   label: "Description",
@@ -1047,21 +1047,21 @@ maxlength = 500
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 description: 'Enter your description here.'
 ```
 
-```toml [TOML]
+```toml TOML
 description = "Enter your description here."
 ```
 
-```json [JSON]
+```json JSON
 {
   "description": "Enter your description here."
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/text
+Source: https://sveltiacms.app/docs/fields/text
 
 ---
 
@@ -1095,13 +1095,13 @@ If `value_type` is other than `int` or `float`, the value will be stored as a st
 - The number value must be within the range defined by the `min` and `max` options, if specified.
 - The number value must conform to the type defined by the `value_type` option.
 - The input must be a number the field can store. Text that isn’t a number, such as `abc`, an infinite number and, with `value_type: int`, an integer beyond the range JavaScript can represent exactly (2<sup>53</sup>) are reported as invalid rather than being saved as an empty value.
-- If the [`unique`](https://sveltiacms.app/en/docs/fields#unique) option is set to `true`, the number must not be used in the same field of any other entry in the collection.
+- If the [`unique`](https://sveltiacms.app/docs/fields#unique) option is set to `true`, the number must not be used in the same field of any other entry in the collection.
 
 A field with the [`auto_increment`](#auto-increment) option is not validated, as its value is assigned automatically.
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Number field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Number field supports the following options:
 
 #### Required Options
 
@@ -1173,15 +1173,15 @@ Set it to `-1` to hide the up and down buttons and disable stepping with the arr
 
 Whether to number the entries automatically when they’re saved, like an `AUTO_INCREMENT` column in a relational database. This is useful for an invoice number, a podcast episode number or any other sequential ID. See the [example](#sequential-number) below.
 
-- A new entry is given the integer after the highest number any entry in the collection has, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial). The first entry is numbered `1`, or the [`min`](#min) value if it’s set, so `min: 1000` starts the numbering from `1000`, and `min: 0` from `0`.
-- The number is assigned when the entry is saved, before its slug is created, so it can be used in the collection’s [`slug`](https://sveltiacms.app/en/docs/collections/entries/slugs) template.
+- A new entry is given the integer after the highest number any entry in the collection has, including the unpublished entries with [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial). The first entry is numbered `1`, or the [`min`](#min) value if it’s set, so `min: 1000` starts the numbering from `1000`, and `min: 0` from `0`.
+- The number is assigned when the entry is saved, before its slug is created, so it can be used in the collection’s [`slug`](https://sveltiacms.app/docs/collections/entries/slugs) template.
 - An existing entry keeps its number. An entry saved before the option was enabled is given one the next time it’s saved.
 - A duplicated entry is given a new number.
 - With a [`value_type`](#value-type) that stores the value as a string, such as `int/string`, the number is stored as a string.
 
-If the number is only used as the slug and doesn’t need to be stored in the entry, use the collection’s [`slug.auto_increment`](https://sveltiacms.app/en/docs/collections/entries/slugs#numbering-slugs-automatically) option instead.
+If the number is only used as the slug and doesn’t need to be stored in the entry, use the collection’s [`slug.auto_increment`](https://sveltiacms.app/docs/collections/entries/slugs#numbering-slugs-automatically) option instead.
 
-The option is only available in an [entry collection](https://sveltiacms.app/en/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/en/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/en/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field in a [List](https://sveltiacms.app/en/docs/fields/list) field or a rich text editor component.
+The option is only available in an [entry collection](https://sveltiacms.app/docs/collections/entries). It’s ignored in a [file collection](https://sveltiacms.app/docs/collections/files) and the [Hugo’s special index file](https://sveltiacms.app/docs/collections/entries/listings#managing-hugo-s-special-index-file), as well as for a field in a [List](https://sveltiacms.app/docs/fields/list) field or a rich text editor component.
 
 **Warning**
 
@@ -1210,20 +1210,20 @@ Additional text to display after the input field.
 
 This example demonstrates a simple Number field configuration that allows users to input integer values.
 
-```yaml [YAML]
+```yaml YAML
 - name: quantity
   label: Quantity
   widget: number
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "quantity"
 label = "Quantity"
 widget = "number"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "quantity",
   "label": "Quantity",
@@ -1231,7 +1231,7 @@ widget = "number"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'quantity',
   label: 'Quantity',
@@ -1241,15 +1241,15 @@ widget = "number"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 quantity: 5
 ```
 
-```toml [TOML]
+```toml TOML
 quantity = 5
 ```
 
-```json [JSON]
+```json JSON
 {
   "quantity": 5
 }
@@ -1259,7 +1259,7 @@ quantity = 5
 
 This example demonstrates a Number field configured to store floating-point values, suitable for representing prices. It includes a dollar sign before the input field and sets a default value.
 
-```yaml [YAML]
+```yaml YAML
 - name: price
   label: Price
   widget: number
@@ -1268,7 +1268,7 @@ This example demonstrates a Number field configured to store floating-point valu
   default: 9.99
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "price"
 label = "Price"
@@ -1278,7 +1278,7 @@ before_input = "$"
 default = 9.99
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "price",
   "label": "Price",
@@ -1289,7 +1289,7 @@ default = 9.99
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'price',
   label: 'Price',
@@ -1302,15 +1302,15 @@ default = 9.99
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 price: 19.99
 ```
 
-```toml [TOML]
+```toml TOML
 price = 19.99
 ```
 
-```json [JSON]
+```json JSON
 {
   "price": 19.99
 }
@@ -1320,7 +1320,7 @@ price = 19.99
 
 This example numbers invoices automatically, starting from `1000`, and names each invoice file after its number, e.g. `content/invoices/1000.md`:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: invoices
     label: Invoices
@@ -1338,7 +1338,7 @@ collections:
         label: Customer
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "invoices"
 label = "Invoices"
@@ -1359,7 +1359,7 @@ name = "customer"
 label = "Customer"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -1387,7 +1387,7 @@ label = "Customer"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 collections: [
   {
     name: 'invoices',
@@ -1415,24 +1415,24 @@ collections: [
 
 Output example of the first invoice:
 
-```yaml [YAML]
+```yaml YAML
 number: 1000
 customer: Acme
 ```
 
-```toml [TOML]
+```toml TOML
 number = 1000
 customer = "Acme"
 ```
 
-```json [JSON]
+```json JSON
 {
   "number": 1000,
   "customer": "Acme"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/number
+Source: https://sveltiacms.app/docs/fields/number
 
 ---
 
@@ -1469,7 +1469,7 @@ No special validation is performed for Boolean fields as the value will always b
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Boolean field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Boolean field supports the following options:
 
 #### Required Options
 
@@ -1509,14 +1509,14 @@ Text to display after the toggle switch. It’s placed at the `true` position.
 
 Configuration example:
 
-```yaml [YAML]
+```yaml YAML
 - name: draft
   label: Draft
   widget: boolean
   default: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "draft"
 label = "Draft"
@@ -1524,7 +1524,7 @@ widget = "boolean"
 default = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "draft",
   "label": "Draft",
@@ -1533,7 +1533,7 @@ default = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "draft",
   label: "Draft",
@@ -1544,21 +1544,21 @@ default = true
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 draft: true
 ```
 
-```toml [TOML]
+```toml TOML
 draft = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "draft": true
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/boolean
+Source: https://sveltiacms.app/docs/fields/boolean
 
 ---
 
@@ -1568,9 +1568,9 @@ The Select field type allows users to choose one or more options from a predefin
 
 **Alternative for dynamic or boolean selects**
 
-The options in a Select field are meant to be a static list of a small number of choices defined in the configuration file. If you need dynamic options based on other collections, consider using the [Relation](https://sveltiacms.app/en/docs/fields/relation) field type instead. See also our [how-to guide](https://sveltiacms.app/en/docs/how-tos#using-entry-tags-for-categorization) on using entry tags for categorization.
+The options in a Select field are meant to be a static list of a small number of choices defined in the configuration file. If you need dynamic options based on other collections, consider using the [Relation](https://sveltiacms.app/docs/fields/relation) field type instead. See also our [how-to guide](https://sveltiacms.app/docs/how-tos#using-entry-tags-for-categorization) on using entry tags for categorization.
 
-For a simple true/false choice, consider using the [Boolean](https://sveltiacms.app/en/docs/fields/boolean) field type. A Select field with `true` and `false` option values is useful when the choice needs custom labels or a third state, such as `null`. See the [example](#boolean-and-null-values) below.
+For a simple true/false choice, consider using the [Boolean](https://sveltiacms.app/docs/fields/boolean) field type. A Select field with `true` and `false` option values is useful when the choice needs custom labels or a third state, such as `null`. See the [example](#boolean-and-null-values) below.
 
 ### User Interface
 
@@ -1594,12 +1594,12 @@ If the `required` option is set to `false` and no option is selected, the value 
 
 - If the `required` option is set to `true`, at least one option must be selected. An option with the value `null` or an empty string counts as a selection.
 - If the `multiple` option is enabled, the number of selected options must be between the `min` and `max` limits, if specified.
-- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the selected option value must match the regular expression. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
+- If the [`pattern`](https://sveltiacms.app/docs/fields#pattern) option is provided, the selected option value must match the regular expression. Numbers are tested as strings, and the pattern is not tested while nothing is selected.
   - For multi select, the selected values joined with commas, e.g. `foo,bar,baz`, must match instead. As with Decap CMS, the pattern is tested against the whole selection, not against each value. To accept lowercase values only, use `^[a-z]+(,[a-z]+)*$` rather than `^[a-z]+$`.
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Select field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Select field supports the following options:
 
 #### Required Options
 
@@ -1620,53 +1620,53 @@ TOML doesn’t support `null`, so an option with the value `null` can’t be def
 
 The following are valid examples of the `options` configuration:
 
-```yaml [YAML]
+```yaml YAML
 options:
   - London
   - Paris
   - New York
 ```
 
-```toml [TOML]
+```toml TOML
 options = ["London", "Paris", "New York"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "options": ["London", "Paris", "New York"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 options: ['London', 'Paris', 'New York'],
 ```
 
-```yaml [YAML]
+```yaml YAML
 options: [1, 2, 3]
 ```
 
-```toml [TOML]
+```toml TOML
 options = [1, 2, 3]
 ```
 
-```json [JSON]
+```json JSON
 {
   "options": [1, 2, 3]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 options: [1, 2, 3],
 ```
 
-```yaml [YAML]
+```yaml YAML
 options:
   - { label: Toronto, value: YYZ }
   - { label: Vancouver, value: YVR }
   - { label: Montreal, value: YUL }
 ```
 
-```toml [TOML]
+```toml TOML
 [[options]]
 label = "Toronto"
 value = "YYZ"
@@ -1678,7 +1678,7 @@ label = "Montreal"
 value = "YUL"
 ```
 
-```json [JSON]
+```json JSON
 {
   "options": [
     { "label": "Toronto", "value": "YYZ" },
@@ -1688,7 +1688,7 @@ value = "YUL"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 options: [
   { label: 'Toronto', value: 'YYZ' },
   { label: 'Vancouver', value: 'YVR' },
@@ -1696,14 +1696,14 @@ options: [
 ],
 ```
 
-```yaml [YAML]
+```yaml YAML
 options:
   - { label: Red, value: 1 }
   - { label: Green, value: 2 }
   - { label: Blue, value: 3 }
 ```
 
-```toml [TOML]
+```toml TOML
 [[options]]
 label = "Red"
 value = 1
@@ -1715,7 +1715,7 @@ label = "Blue"
 value = 3
 ```
 
-```json [JSON]
+```json JSON
 {
   "options": [
     { "label": "Red", "value": 1 },
@@ -1725,7 +1725,7 @@ value = 3
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 options: [
   { label: 'Red', value: 1 },
   { label: 'Green', value: 2 },
@@ -1782,7 +1782,7 @@ The maximum number of options allowed. This enables validation to prevent users 
 
 The following example shows a basic single select field for choosing a country.
 
-```yaml [YAML]
+```yaml YAML
 - name: country
   label: Country
   widget: select
@@ -1792,7 +1792,7 @@ The following example shows a basic single select field for choosing a country.
     - Mexico
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "country"
 label = "Country"
@@ -1800,7 +1800,7 @@ widget = "select"
 options = ["USA", "Canada", "Mexico"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1813,7 +1813,7 @@ options = ["USA", "Canada", "Mexico"]
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -1828,15 +1828,15 @@ options = ["USA", "Canada", "Mexico"]
 
 Output example when “Canada” is selected:
 
-```yaml [YAML]
+```yaml YAML
 country: Canada
 ```
 
-```toml [TOML]
+```toml TOML
 country = "Canada"
 ```
 
-```json [JSON]
+```json JSON
 {
   "country": "Canada"
 }
@@ -1846,7 +1846,7 @@ country = "Canada"
 
 The `options` can be defined with custom labels and values. The following example shows a select field for choosing a color with specific hex values.
 
-```yaml [YAML]
+```yaml YAML
 - name: color
   label: Color
   widget: select
@@ -1856,7 +1856,7 @@ The `options` can be defined with custom labels and values. The following exampl
     - { label: Blue, value: '#0000FF' }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "color"
 label = "Color"
@@ -1872,7 +1872,7 @@ label = "Blue"
 value = "#0000FF"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1889,7 +1889,7 @@ value = "#0000FF"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -1908,15 +1908,15 @@ value = "#0000FF"
 
 Output example when “Green” is selected:
 
-```yaml [YAML]
+```yaml YAML
 color: '#00FF00'
 ```
 
-```toml [TOML]
+```toml TOML
 color = "#00FF00"
 ```
 
-```json [JSON]
+```json JSON
 {
   "color": "#00FF00"
 }
@@ -1928,7 +1928,7 @@ Option values can be booleans or `null`, which is useful when a choice needs cus
 
 TOML doesn’t support `null`, so this example is only available in YAML, JSON and JavaScript.
 
-```yaml [YAML]
+```yaml YAML
 - name: accessible
   label: Wheelchair Accessible
   widget: select
@@ -1939,7 +1939,7 @@ TOML doesn’t support `null`, so this example is only available in YAML, JSON a
   default: null
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1957,7 +1957,7 @@ TOML doesn’t support `null`, so this example is only available in YAML, JSON a
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -1977,15 +1977,15 @@ TOML doesn’t support `null`, so this example is only available in YAML, JSON a
 
 Output example when “No” is selected:
 
-```yaml [YAML]
+```yaml YAML
 accessible: false
 ```
 
-```toml [TOML]
+```toml TOML
 accessible = false
 ```
 
-```json [JSON]
+```json JSON
 {
   "accessible": false
 }
@@ -1999,7 +1999,7 @@ In YAML 1.1, unquoted `yes` and `no` can be read as booleans by some parsers, so
 
 The following example shows a multi select field for choosing fruits, with a minimum of 1 and a maximum of 3 selections.
 
-```yaml [YAML]
+```yaml YAML
 - name: fruits
   label: Fruits
   widget: select
@@ -2013,7 +2013,7 @@ The following example shows a multi select field for choosing fruits, with a min
   max: 3
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "fruits"
 label = "Fruits"
@@ -2024,7 +2024,7 @@ min = 1
 max = 3
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -2040,7 +2040,7 @@ max = 3
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -2058,23 +2058,23 @@ max = 3
 
 Output example when “Apple” and “Cherry” are selected:
 
-```yaml [YAML]
+```yaml YAML
 fruits:
   - Apple
   - Cherry
 ```
 
-```toml [TOML]
+```toml TOML
 fruits = ["Apple", "Cherry"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "fruits": ["Apple", "Cherry"]
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/select
+Source: https://sveltiacms.app/docs/fields/select
 
 ---
 
@@ -2116,7 +2116,7 @@ If the `required` option is set to `false` and the field is left empty, the valu
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Color field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Color field supports the following options:
 
 #### Required Options
 
@@ -2160,20 +2160,20 @@ If set to `true`, users can manually enter color values as text in addition to u
 
 This example shows a simple Color field configuration.
 
-```yaml [YAML]
+```yaml YAML
 - name: background_color
   label: Background Color
   widget: color
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "background_color"
 label = "Background Color"
 widget = "color"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "background_color",
   "label": "Background Color",
@@ -2181,7 +2181,7 @@ widget = "color"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "background_color",
   label: "Background Color",
@@ -2191,15 +2191,15 @@ widget = "color"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 background_color: '#FFFFFF'
 ```
 
-```toml [TOML]
+```toml TOML
 background_color = "#FFFFFF"
 ```
 
-```json [JSON]
+```json JSON
 {
   "background_color": "#FFFFFF"
 }
@@ -2209,7 +2209,7 @@ background_color = "#FFFFFF"
 
 This example shows a Color field configuration with alpha channel enabled, manual input allowed and a default value set.
 
-```yaml [YAML]
+```yaml YAML
 - name: overlay_color
   label: Overlay Color
   widget: color
@@ -2218,7 +2218,7 @@ This example shows a Color field configuration with alpha channel enabled, manua
   default: '#00000080'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "overlay_color"
 label = "Overlay Color"
@@ -2228,7 +2228,7 @@ allowInput = true
 default = "#00000080"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "overlay_color",
   "label": "Overlay Color",
@@ -2239,7 +2239,7 @@ default = "#00000080"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "overlay_color",
   label: "Overlay Color",
@@ -2252,21 +2252,21 @@ default = "#00000080"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 overlay_color: '#00000080'
 ```
 
-```toml [TOML]
+```toml TOML
 overlay_color = "#00000080"
 ```
 
-```json [JSON]
+```json JSON
 {
   "overlay_color": "#00000080"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/color
+Source: https://sveltiacms.app/docs/fields/color
 
 ---
 
@@ -2288,7 +2288,7 @@ No specific data validation is applied to the Hidden field, as its value is not 
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Hidden field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Hidden field supports the following options:
 
 #### Required Options
 
@@ -2310,17 +2310,17 @@ TOML does not support `null` values, so avoid using `null` as the default value 
 
 A string `default` value supports the following template tags, which are filled in when a new entry draft is created:
 
-- `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/en/docs/i18n) is enabled, e.g. `en` or `fr`. The tag requires i18n support for the collection or file; otherwise, a configuration error is reported, since there is no locale to fill it with.
+- `{{locale}}`: The current locale code when [i18n support](https://sveltiacms.app/docs/i18n) is enabled, e.g. `en` or `fr`. The tag requires i18n support for the collection or file; otherwise, a configuration error is reported, since there is no locale to fill it with.
 - `{{datetime}}`: The current date/time in [ISO 8601 format](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format).
-- `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/en/docs/collections/entries/slugs#slug-template-tags).
-- `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/en/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/en/docs/workflows/local) because the user is not authenticated via a Git backend.
+- `{{uuid}}`, `{{uuid_short}}` and `{{uuid_shorter}}`: A random UUID or its shorter version, just like the [slug template tags](https://sveltiacms.app/docs/collections/entries/slugs#slug-template-tags).
+- `{{author-email}}`, `{{author-login}}` and `{{author-name}}`: The signed-in user’s email, login name and display name, respectively, just like [commit message tags](https://sveltiacms.app/docs/backends#commit-messages). These tags don’t work with the [local development workflow](https://sveltiacms.app/docs/workflows/local) because the user is not authenticated via a Git backend.
 
 The default value is also applied again in the following cases:
 
-- When an entry is duplicated, or a [List](https://sveltiacms.app/en/docs/fields/list) item holding the field is duplicated or pasted, the field gets its default value again, with any tags filled in anew, so the copy doesn’t share a UUID or a date with its original.
+- When an entry is duplicated, or a [List](https://sveltiacms.app/docs/fields/list) item holding the field is duplicated or pasted, the field gets its default value again, with any tags filled in anew, so the copy doesn’t share a UUID or a date with its original.
 - When a locale is enabled for an existing entry, a translatable field (`i18n: true`) whose default contains a tag gets the tags filled in for the new locale, e.g. `{{locale}}` becomes the new locale code. If the default has no tag, the value is copied from the default locale like any other field’s.
 
-[String transformations](https://sveltiacms.app/en/docs/string-transformations) can be applied in this option. Any other tag, such as `{{title}}` or `{{slug}}`, is replaced with an empty string. The slug isn’t known until the entry is saved, so to store a path containing it, use the [`permalink_field` option](https://sveltiacms.app/en/docs/collections/entries/previews#permalinks). To keep a template tag for your static site generator, [escape it](https://sveltiacms.app/en/docs/string-transformations#escaping-template-tags) with a backslash. See the [example below](#passing-a-template-to-a-static-site-generator).
+[String transformations](https://sveltiacms.app/docs/string-transformations) can be applied in this option. Any other tag, such as `{{title}}` or `{{slug}}`, is replaced with an empty string. The slug isn’t known until the entry is saved, so to store a path containing it, use the [`permalink_field` option](https://sveltiacms.app/docs/collections/entries/previews#permalinks). To keep a template tag for your static site generator, [escape it](https://sveltiacms.app/docs/string-transformations#escaping-template-tags) with a backslash. See the [example below](#passing-a-template-to-a-static-site-generator).
 
 ### Examples
 
@@ -2328,14 +2328,14 @@ The default value is also applied again in the following cases:
 
 This example shows how to create a hidden field that automatically generates and stores a UUID for each entry. This can be useful for uniquely identifying entries.
 
-```yaml [YAML]
+```yaml YAML
 - name: unique_id
   label: Unique ID
   widget: hidden
   default: '{{uuid}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "unique_id"
 label = "Unique ID"
@@ -2343,7 +2343,7 @@ widget = "hidden"
 default = "{{uuid}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "unique_id",
   "label": "Unique ID",
@@ -2352,7 +2352,7 @@ default = "{{uuid}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'unique_id',
   label: 'Unique ID',
@@ -2365,14 +2365,14 @@ default = "{{uuid}}"
 
 This example shows how to create a hidden field that automatically captures the name of the user creating the entry.
 
-```yaml [YAML]
+```yaml YAML
 - name: author_name
   label: Author Name
   widget: hidden
   default: '{{author-name}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "author_name"
 label = "Author Name"
@@ -2380,7 +2380,7 @@ widget = "hidden"
 default = "{{author-name}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "author_name",
   "label": "Author Name",
@@ -2389,7 +2389,7 @@ default = "{{author-name}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'author_name',
   label: 'Author Name',
@@ -2402,14 +2402,14 @@ default = "{{author-name}}"
 
 This example shows how to store an [Eleventy permalink](https://www.11ty.dev/docs/permalinks/) template that Eleventy fills in at build time. The backslash before the curly braces keeps Sveltia CMS from processing the template tag, and is removed from the saved value, which is `portfolio/{{ title | slugify }}/index.html`.
 
-```yaml [YAML]
+```yaml YAML
 - name: permalink
   label: Permalink
   widget: hidden
   default: 'portfolio/\{{ title | slugify }}/index.html'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "permalink"
 label = "Permalink"
@@ -2417,7 +2417,7 @@ widget = "hidden"
 default = "portfolio/\\{{ title | slugify }}/index.html"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "permalink",
   "label": "Permalink",
@@ -2426,7 +2426,7 @@ default = "portfolio/\\{{ title | slugify }}/index.html"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'permalink',
   label: 'Permalink',
@@ -2437,6 +2437,6 @@ default = "portfolio/\\{{ title | slugify }}/index.html"
 
 **Tip**
 
-If you want the path to use the slug generated by the CMS, you can use the [`permalink_field` collection option](https://sveltiacms.app/en/docs/collections/entries/previews#permalinks) instead of a Hidden field. It fills the `permalink` property from the `preview_path` option each time an entry is saved, so the site is built at the same path the CMS links to. Remove the `permalink` field from the `fields` option in that case, because the CMS leaves the property alone when a field of the same name is defined.
+If you want the path to use the slug generated by the CMS, you can use the [`permalink_field` collection option](https://sveltiacms.app/docs/collections/entries/previews#permalinks) instead of a Hidden field. It fills the `permalink` property from the `preview_path` option each time an entry is saved, so the site is built at the same path the CMS links to. Remove the `permalink` field from the `fields` option in that case, because the CMS leaves the property alone when a field of the same name is defined.
 
-Source: https://sveltiacms.app/en/docs/fields/hidden
+Source: https://sveltiacms.app/docs/fields/hidden

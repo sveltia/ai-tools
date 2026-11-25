@@ -6,11 +6,11 @@ Generated from the Sveltia CMS documentation. Do not edit by hand.
 
 ## Image Field
 
-The Image field type allows users to upload and manage images within the CMS. It’s basically an alias of the [File](https://sveltiacms.app/en/docs/fields/file) field type but limited to image files.
+The Image field type allows users to upload and manage images within the CMS. It’s basically an alias of the [File](https://sveltiacms.app/docs/fields/file) field type but limited to image files.
 
 The `widget` property for this field type is `image`.
 
-See the [File field documentation](https://sveltiacms.app/en/docs/fields/file) for details on the UI, data type and available options. Note that the `select_folder` option is not available for the Image field type.
+See the [File field documentation](https://sveltiacms.app/docs/fields/file) for details on the UI, data type and available options. Note that the `select_folder` option is not available for the Image field type.
 
 ### Examples
 
@@ -18,20 +18,20 @@ See the [File field documentation](https://sveltiacms.app/en/docs/fields/file) f
 
 This example shows a basic Image field.
 
-```yaml [YAML]
+```yaml YAML
 - name: image
   label: Image
   widget: image
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "image"
 label = "Image"
 widget = "image"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "image",
   "label": "Image",
@@ -39,7 +39,7 @@ widget = "image"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'image',
   label: 'Image',
@@ -49,15 +49,15 @@ widget = "image"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 image: /uploads/photo.jpg
 ```
 
-```toml [TOML]
+```toml TOML
 image = "/uploads/photo.jpg"
 ```
 
-```json [JSON]
+```json JSON
 {
   "image": "/uploads/photo.jpg"
 }
@@ -65,9 +65,9 @@ image = "/uploads/photo.jpg"
 
 #### Image Field with Alt Text
 
-To include additional metadata such as alt text for accessibility, you can use an [object field](https://sveltiacms.app/en/docs/fields/object) to group the image source and alt text together.
+To include additional metadata such as alt text for accessibility, you can use an [object field](https://sveltiacms.app/docs/fields/object) to group the image source and alt text together.
 
-```yaml [YAML]
+```yaml YAML
 - name: image
   widget: object
   fields:
@@ -75,7 +75,7 @@ To include additional metadata such as alt text for accessibility, you can use a
     - { name: alt, widget: string }
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "image"
 widget = "object"
@@ -87,7 +87,7 @@ name = "alt"
 widget = "string"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "image",
   "widget": "object",
@@ -98,7 +98,7 @@ widget = "string"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'image',
   widget: 'object',
@@ -111,19 +111,19 @@ widget = "string"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 image:
   src: /uploads/photo.jpg
   alt: A beautiful sunset
 ```
 
-```toml [TOML]
+```toml TOML
 [image]
 src = "/uploads/photo.jpg"
 alt = "A beautiful sunset"
 ```
 
-```json [JSON]
+```json JSON
 {
   "image": {
     "src": "/uploads/photo.jpg",
@@ -138,7 +138,7 @@ In the future, we may add built-in support for alt text and other metadata direc
 
 This example shows how to allow multiple image uploads using the `multiple` option, along with minimum and maximum limits and file type restrictions.
 
-```yaml [YAML]
+```yaml YAML
 - name: gallery
   label: Gallery
   widget: image
@@ -148,7 +148,7 @@ This example shows how to allow multiple image uploads using the `multiple` opti
   accept: image/webp
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "gallery"
 label = "Gallery"
@@ -159,7 +159,7 @@ max = 5
 accept = "image/webp"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "gallery",
   "label": "Gallery",
@@ -171,7 +171,7 @@ accept = "image/webp"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'gallery',
   label: 'Gallery',
@@ -185,24 +185,24 @@ accept = "image/webp"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 gallery:
   - /uploads/photo1.webp
   - /uploads/photo2.webp
   - /uploads/photo3.webp
 ```
 
-```toml [TOML]
+```toml TOML
 gallery = ["/uploads/photo1.webp", "/uploads/photo2.webp", "/uploads/photo3.webp"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "gallery": ["/uploads/photo1.webp", "/uploads/photo2.webp", "/uploads/photo3.webp"]
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/image
+Source: https://sveltiacms.app/docs/fields/image
 
 ---
 
@@ -212,7 +212,7 @@ The File field type allows users to upload and manage files within the CMS.
 
 **Alternative for images**
 
-If you need to limit uploads to images only, consider using the [Image](https://sveltiacms.app/en/docs/fields/image) field type instead.
+If you need to limit uploads to images only, consider using the [Image](https://sveltiacms.app/docs/fields/image) field type instead.
 
 ### User Interface
 
@@ -220,12 +220,12 @@ If you need to limit uploads to images only, consider using the [Image](https://
 
 A large upload button is displayed for the File field. When it’s clicked, a file selection dialog with the following features appears:
 
-- Tabs to select files from different sources: field assets, entry assets, file assets, collection assets and global assets (if the [internal media storage](https://sveltiacms.app/en/docs/media/internal) is enabled).
-- [Subfolders](https://sveltiacms.app/en/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened with a click or the Enter key to browse them, with a breadcrumb leading back. The arrow keys move between the subfolders, like between the files. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
+- Tabs to select files from different sources: field assets, entry assets, file assets, collection assets and global assets (if the [internal media storage](https://sveltiacms.app/docs/media/internal) is enabled).
+- [Subfolders](https://sveltiacms.app/docs/ui/asset-library#subfolders) of a repository folder are listed ahead of its files, and can be opened with a click or the Enter key to browse them, with a breadcrumb leading back. The arrow keys move between the subfolders, like between the files. A file uploaded while browsing a subfolder is saved there. A new folder can be created from the dialog, too.
 - An option to upload new files by dragging and dropping them into the dialog or by selecting them from the file system.
 - An option to enter a URL to select a file from an external source (if the `choose_url` option is enabled).
-- Integration with [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage) if configured. The dialog can [open on one of them](https://sveltiacms.app/en/docs/media#storage-opened-first) instead of a repository folder.
-- Integration with [stock photo providers](https://sveltiacms.app/en/docs/integrations/stock-photos) for easy selection of free images (for Image fields only).
+- Integration with [external media storage providers](https://sveltiacms.app/docs/media#external-storage) if configured. The dialog can [open on one of them](https://sveltiacms.app/docs/media#storage-opened-first) instead of a repository folder.
+- Integration with [stock photo providers](https://sveltiacms.app/docs/integrations/stock-photos) for easy selection of free images (for Image fields only).
 - File type filtering based on the `accept` option.
 - A search bar to quickly find existing assets.
 
@@ -241,10 +241,10 @@ Users can paste an image from the clipboard directly into a File or Image field 
 
 On desktop, users can drag and drop file(s) directly onto the field to attach them without opening the file selection dialog. This is only possible when exactly one location can store them, so it’s clear where they go:
 
-- the [internal media storage](https://sveltiacms.app/en/docs/media/internal), or
-- a single [external storage provider](https://sveltiacms.app/en/docs/media#external-storage) that supports uploads.
+- the [internal media storage](https://sveltiacms.app/docs/media/internal), or
+- a single [external storage provider](https://sveltiacms.app/docs/media#external-storage) that supports uploads.
 
-A provider that only takes files through its own widget, like [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary), doesn’t count. With more than one location, upload the files from the dialog instead. If the provider needs credentials the user hasn’t entered yet, the dialog asks for them, and the dropped files are uploaded once they’re entered.
+A provider that only takes files through its own widget, like [Cloudinary](https://sveltiacms.app/docs/media/cloudinary), doesn’t count. With more than one location, upload the files from the dialog instead. If the provider needs credentials the user hasn’t entered yet, the dialog asks for them, and the dropped files are uploaded once they’re entered.
 
 Unsaved files can be renamed.
 
@@ -261,9 +261,9 @@ With the [`select_folder`](#select-folder) option, the field takes a folder inst
 
 Only repository folders with a fixed path can be browsed. The following aren’t available:
 
-- [entry-relative folders](https://sveltiacms.app/en/docs/media/internal#using-entry-relative-folders)
+- [entry-relative folders](https://sveltiacms.app/docs/media/internal#using-entry-relative-folders)
 - folders whose path contains a template tag such as `{{slug}}`
-- [external media storage providers](https://sveltiacms.app/en/docs/media#external-storage)
+- [external media storage providers](https://sveltiacms.app/docs/media#external-storage)
 - the URL input
 
 Files can’t be uploaded, dropped or pasted in this dialog.
@@ -274,7 +274,7 @@ A list of uploaded filenames with links to access each file. For images, a thumb
 
 **CSP**
 
-If your site uses a Content Security Policy (CSP), you may need to update it to display external images properly. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+If your site uses a Content Security Policy (CSP), you may need to update it to display external images properly. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 ### Data Type
 
@@ -282,19 +282,19 @@ A string representing the URL or path to a file, or the public path to a folder 
 
 If the `required` option is set to `false` and the field is left empty, the value will be an empty string or an empty array, depending on whether `multiple` is enabled.
 
-By default, Sveltia CMS does not slugify uploaded filenames. If your site generator expects hyphenated filenames, you can enable the [`slugify_filename`](https://sveltiacms.app/en/docs/media#slugification-of-filenames) media storage option. To rename uploaded files automatically, for example after the entry slug, use the [`filename_template`](https://sveltiacms.app/en/docs/media#renaming-uploaded-files) option.
+By default, Sveltia CMS does not slugify uploaded filenames. If your site generator expects hyphenated filenames, you can enable the [`slugify_filename`](https://sveltiacms.app/docs/media#slugification-of-filenames) media storage option. To rename uploaded files automatically, for example after the entry slug, use the [`filename_template`](https://sveltiacms.app/docs/media#renaming-uploaded-files) option.
 
 ### Data Validation
 
 - If the `required` option is set to `true`, at least one file must be selected.
 - If the `multiple` option is enabled, the number of selected files must be between the `min` and `max` limits, if specified.
 - The selected file(s) must match the allowed file types specified in the `accept` option, if provided.
-- If the [`pattern`](https://sveltiacms.app/en/docs/fields#pattern) option is provided, the file path or URL must match the regular expression. A file just uploaded is tested by its name until the entry is saved. The pattern is not tested while no file is selected.
+- If the [`pattern`](https://sveltiacms.app/docs/fields#pattern) option is provided, the file path or URL must match the regular expression. A file just uploaded is tested by its name until the entry is saved. The pattern is not tested while no file is selected.
   - If the `multiple` option is enabled, the paths or URLs joined with commas, e.g. `/uploads/a.jpg,/uploads/b.jpg`, must match instead. As with Decap CMS, the pattern is tested against all the files together, not against each one. A pattern like `\.pdf$` would therefore only check the last file. To accept PDF files only, use `^[^,]+\.pdf(,[^,]+\.pdf)*$`.
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the File field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the File field supports the following options:
 
 #### Required Options
 
@@ -362,45 +362,45 @@ Whether to select a folder instead of a file. The public path of the selected fo
 
 A comma-separated list of allowed file types ([MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types) or file extensions) for upload. For example, to allow only PDF files, set this option to `application/pdf` or `.pdf`. To allow only image files, set it to `image/*`. If not specified, all file types are allowed. See the [`accept` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/accept) documentation on MDN for more details.
 
-The Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD and TIFF are excluded, with one exception: HEIC photos are accepted when [HEIC conversion](https://sveltiacms.app/en/docs/media#heic-photos) is enabled as part of image optimization. The File field has no default restriction.
+The Image field only accepts AVIF, GIF, JPEG, PNG, WebP or SVG images by default. Other image formats like BMP, HEIC, JPEG XL, PSD and TIFF are excluded, with one exception: HEIC photos are accepted when [HEIC conversion](https://sveltiacms.app/docs/media#heic-photos) is enabled as part of image optimization. The File field has no default restriction.
 
 ##### `media_library`
 
 - **Type**: `object`
 - **Default**: `undefined`
 
-Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/en/docs/media#configuration) for this field. Its options are merged over those of the top-level `media_library` option.
+Legacy option from Netlify/Decap CMS to configure a single [media storage provider](https://sveltiacms.app/docs/media#configuration) for this field. Its options are merged over those of the top-level `media_library` option.
 
-It applies to the provider set with its own `name`. Without a `name`, it applies to the provider named in the top-level `media_library` option, or to the [internal media storage](https://sveltiacms.app/en/docs/media/internal) if there is none. In the latter case, `media_library.config.max_file_size` limits the upload size for the field.
+It applies to the provider set with its own `name`. Without a `name`, it applies to the provider named in the top-level `media_library` option, or to the [internal media storage](https://sveltiacms.app/docs/media/internal) if there is none. In the latter case, `media_library.config.max_file_size` limits the upload size for the field.
 
-This option is supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/en/docs/media#configuration) for details.
+This option is supported for backward compatibility only; use `media_libraries` for new configurations. See the [media storage configuration](https://sveltiacms.app/docs/media#configuration) for details.
 
 ##### `media_libraries`
 
 - **Type**: `object`
 - **Default**: `undefined`
 
-Field-level [media storage provider](https://sveltiacms.app/en/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field.
+Field-level [media storage provider](https://sveltiacms.app/docs/media#configuration) settings, such as the provider-specific `config` or the `max_file_size` limit, that override the top-level `media_libraries` option for this field.
 
 Each provider’s settings, including those of the internal media storage (`default`), are merged over the same provider’s top-level settings. A nested object such as `config` is merged too, key by key, so you only need to set the options that differ. However, the merge is only one level deep, and the shared `all` options are merged shallowly. A `transformations` map set here therefore replaces the top-level one as a whole. Providers not defined here fall back to the top-level configuration.
 
-This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/en/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/en/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/en/docs/media/uploadcare#field-level-configuration), for examples.
+This option can also be used to [disable the internal media storage for the field](https://sveltiacms.app/docs/media/internal#disabling-internal-media-storage-for-a-field) by setting the `default` library to `false`. See the field-level configuration sections of each provider, such as [Cloudinary](https://sveltiacms.app/docs/media/cloudinary#field-level-configuration) and [Uploadcare](https://sveltiacms.app/docs/media/uploadcare#field-level-configuration), for examples.
 
-With a cloud storage provider, the `prefix` option set here can contain template tags to keep the files of each entry in a folder of their own. See [Entry-Based Folders](https://sveltiacms.app/en/docs/media#entry-based-folders).
+With a cloud storage provider, the `prefix` option set here can contain template tags to keep the files of each entry in a folder of their own. See [Entry-Based Folders](https://sveltiacms.app/docs/media#entry-based-folders).
 
 ##### `media_folder`
 
 - **Type**: `string`
 - **Default**: `undefined`
 
-The folder in the repository where files uploaded to this field will be stored, overriding the top-level and collection-level `media_folder` options. Must start with a slash (`/`) to indicate an absolute path from the root of the repository, or be an empty string or subfolder name to use entry-relative paths. See the [field-level configuration](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
+The folder in the repository where files uploaded to this field will be stored, overriding the top-level and collection-level `media_folder` options. Must start with a slash (`/`) to indicate an absolute path from the root of the repository, or be an empty string or subfolder name to use entry-relative paths. See the [field-level configuration](https://sveltiacms.app/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
 
 ##### `public_folder`
 
 - **Type**: `string`
 - **Default**: `undefined`
 
-The public URL path that corresponds to the field-level `media_folder` option, overriding the top-level and collection-level `public_folder` options. If not specified, it defaults to the value of the field-level `media_folder`. See the [field-level configuration](https://sveltiacms.app/en/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
+The public URL path that corresponds to the field-level `media_folder` option, overriding the top-level and collection-level `public_folder` options. If not specified, it defaults to the value of the field-level `media_folder`. See the [field-level configuration](https://sveltiacms.app/docs/media/internal#field-level-configuration) of the internal media storage for details and examples.
 
 ### Examples
 
@@ -408,20 +408,20 @@ The public URL path that corresponds to the field-level `media_folder` option, o
 
 This example demonstrates a basic File field that allows users to upload or select a single file.
 
-```yaml [YAML]
+```yaml YAML
 - name: document
   label: Document
   widget: file
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "document"
 label = "Document"
 widget = "file"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -433,7 +433,7 @@ widget = "file"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -447,15 +447,15 @@ widget = "file"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 document: /uploads/sample.pdf
 ```
 
-```toml [TOML]
+```toml TOML
 document = "/uploads/sample.pdf"
 ```
 
-```json [JSON]
+```json JSON
 {
   "document": "/uploads/sample.pdf"
 }
@@ -465,7 +465,7 @@ document = "/uploads/sample.pdf"
 
 This example shows a File field configured to allow multiple file uploads with minimum and maximum limits.
 
-```yaml [YAML]
+```yaml YAML
 - name: flyers
   label: Flyers
   widget: file
@@ -475,7 +475,7 @@ This example shows a File field configured to allow multiple file uploads with m
   accept: application/pdf,.pdf
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "flyers"
 label = "Flyers"
@@ -486,7 +486,7 @@ max = 5
 accept = "application/pdf,.pdf"
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -502,7 +502,7 @@ accept = "application/pdf,.pdf"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -520,17 +520,17 @@ accept = "application/pdf,.pdf"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 flyers:
   - /uploads/flyer1.pdf
   - /uploads/flyer2.pdf
 ```
 
-```toml [TOML]
+```toml TOML
 flyers = ["/uploads/flyer1.pdf", "/uploads/flyer2.pdf"]
 ```
 
-```json [JSON]
+```json JSON
 {
   "flyers": ["/uploads/flyer1.pdf", "/uploads/flyer2.pdf"]
 }
@@ -540,14 +540,14 @@ flyers = ["/uploads/flyer1.pdf", "/uploads/flyer2.pdf"]
 
 This example shows a File field that takes a folder instead of a file, such as a folder of images to be displayed as a gallery.
 
-```yaml [YAML]
+```yaml YAML
 - name: gallery
   label: Gallery
   widget: file
   select_folder: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "gallery"
 label = "Gallery"
@@ -555,7 +555,7 @@ widget = "file"
 select_folder = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -568,7 +568,7 @@ select_folder = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   fields: [
     {
@@ -583,21 +583,21 @@ select_folder = true
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 gallery: /uploads/gallery/2024
 ```
 
-```toml [TOML]
+```toml TOML
 gallery = "/uploads/gallery/2024"
 ```
 
-```json [JSON]
+```json JSON
 {
   "gallery": "/uploads/gallery/2024"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/file
+Source: https://sveltiacms.app/docs/fields/file
 
 ---
 
@@ -656,7 +656,7 @@ A field with the [`auto_now`](#auto-now) option is not validated, as its value i
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the DateTime field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the DateTime field supports the following options:
 
 #### Required Options
 
@@ -703,7 +703,7 @@ The field is read-only: its value is shown as text rather than an input, and it�
 
 **Limitations**
 
-The option is ignored in a field within a [rich text editor component](https://sveltiacms.app/en/docs/fields/richtext#editor-components), where the field can be edited as usual. Setting the value when an entry is published with the [Editorial Workflow](https://sveltiacms.app/en/docs/workflows/editorial) is not supported yet.
+The option is ignored in a field within a [rich text editor component](https://sveltiacms.app/docs/fields/richtext#editor-components), where the field can be edited as usual. Setting the value when an entry is published with the [Editorial Workflow](https://sveltiacms.app/docs/workflows/editorial) is not supported yet.
 
 ##### `type`
 
@@ -818,22 +818,22 @@ For data portability, we recommend saving date/time values in ISO 8601 format by
 Whether to write the locale-dependent parts of a custom [`format`](#format), such as month names (`MMMM`, `MMM`) and the AM/PM marker (`A`, `a`), in a language other than English. Accepted values:
 
 - `false` (default): English is used, as with Netlify/Decap CMS.
-- `true`: The locale of the content is used. With [i18n support](https://sveltiacms.app/en/docs/i18n) enabled, each locale gets the value in its own language, e.g. `1 March 2026` in English and `1 März 2026` in German.
+- `true`: The locale of the content is used. With [i18n support](https://sveltiacms.app/docs/i18n) enabled, each locale gets the value in its own language, e.g. `1 March 2026` in English and `1 März 2026` in German.
 - A locale code, e.g. `de` or `pt-BR`: That locale is used for every value. This also works without i18n support, e.g. on a German-only site.
 
 Values are read in the same locale, so an existing value is shown in the date/time picker as usual.
 
 With `true`, a value copied to another locale is written again in that locale. A value is copied in these cases:
 
-- with the `duplicate` [i18n strategy](https://sveltiacms.app/en/docs/i18n/options#field-level-configuration)
+- with the `duplicate` [i18n strategy](https://sveltiacms.app/docs/i18n/options#field-level-configuration)
 - when a locale is enabled for an entry
 - with bulk editing
 
-The locale also applies to the `date` [string transformation](https://sveltiacms.app/en/docs/string-transformations), entry summaries, sorting and filtering.
+The locale also applies to the `date` [string transformation](https://sveltiacms.app/docs/string-transformations), entry summaries, sorting and filtering.
 
 The option has no effect without a custom format, because an ISO 8601 value doesn’t depend on the locale. A locale code Day.js doesn’t [support](https://github.com/iamkun/dayjs/tree/dev/src/locale) falls back to English. Both cases are reported as a warning in the browser console, as is `true` in a collection without i18n support.
 
-The locale data is loaded from the UNPKG CDN when the CMS starts, or bundled with the [npm package](https://sveltiacms.app/en/docs/releases#cdn-or-npm-package). If it can’t be loaded, values are written in English.
+The locale data is loaded from the UNPKG CDN when the CMS starts, or bundled with the [npm package](https://sveltiacms.app/docs/releases#cdn-or-npm-package). If it can’t be loaded, values are written in English.
 
 **Limitations**
 
@@ -868,20 +868,20 @@ This option is available for backward compatibility with Netlify/Decap CMS. Use 
 
 By default, the DateTime field includes both date/time pickers. The output is in ISO 8601 format:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventDateTime
   label: Event Date and Time
   widget: datetime
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventDateTime"
 label = "Event Date and Time"
 widget = "datetime"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventDateTime",
   "label": "Event Date and Time",
@@ -889,7 +889,7 @@ widget = "datetime"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventDateTime",
   label: "Event Date and Time",
@@ -899,15 +899,15 @@ widget = "datetime"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 eventDateTime: 2025-08-15T14:30:00
 ```
 
-```toml [TOML]
+```toml TOML
 eventDateTime = 2025-08-15T14:30:00.000
 ```
 
-```json [JSON]
+```json JSON
 {
   "eventDateTime": "2025-08-15T14:30:00"
 }
@@ -917,14 +917,14 @@ eventDateTime = 2025-08-15T14:30:00.000
 
 Set `type` to `"date"` to make the input [date only](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date):
 
-```yaml [YAML]
+```yaml YAML
 - name: startDate
   label: Start Date
   widget: datetime
   type: date
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "startDate"
 label = "Start Date"
@@ -932,7 +932,7 @@ widget = "datetime"
 type = "date"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "startDate",
   "label": "Start Date",
@@ -941,7 +941,7 @@ type = "date"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "startDate",
   label: "Start Date",
@@ -952,15 +952,15 @@ type = "date"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 startDate: 2025-08-15
 ```
 
-```toml [TOML]
+```toml TOML
 startDate = 2025-08-15
 ```
 
-```json [JSON]
+```json JSON
 {
   "startDate": "2025-08-15"
 }
@@ -970,14 +970,14 @@ startDate = 2025-08-15
 
 Set `type` to `"time"` to make the input [time only](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time):
 
-```yaml [YAML]
+```yaml YAML
 - name: startTime
   label: Start Time
   widget: datetime
   type: time
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "startTime"
 label = "Start Time"
@@ -985,7 +985,7 @@ widget = "datetime"
 type = "time"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "startTime",
   "label": "Start Time",
@@ -994,7 +994,7 @@ type = "time"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "startTime",
   label: "Start Time",
@@ -1005,15 +1005,15 @@ type = "time"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 startTime: 14:30:00
 ```
 
-```toml [TOML]
+```toml TOML
 startTime = 14:30:00.000
 ```
 
-```json [JSON]
+```json JSON
 {
   "startTime": "14:30:00"
 }
@@ -1023,7 +1023,7 @@ startTime = 14:30:00.000
 
 Set `picker_utc` to `true` to use UTC time in the date/time picker. The `default` option is set to `{{now}}` to use the current date and time as the default value:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventDateTimeUtc
   label: Event Date and Time (UTC)
   widget: datetime
@@ -1031,7 +1031,7 @@ Set `picker_utc` to `true` to use UTC time in the date/time picker. The `default
   default: '{{now}}'
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventDateTimeUtc"
 label = "Event Date and Time (UTC)"
@@ -1040,7 +1040,7 @@ picker_utc = true
 default = "{{now}}"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventDateTimeUtc",
   "label": "Event Date and Time (UTC)",
@@ -1050,7 +1050,7 @@ default = "{{now}}"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventDateTimeUtc",
   label: "Event Date and Time (UTC)",
@@ -1062,15 +1062,15 @@ default = "{{now}}"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 eventDateTimeUtc: 2025-08-15T14:30:00Z
 ```
 
-```toml [TOML]
+```toml TOML
 eventDateTimeUtc = 2025-08-15T14:30:00.000Z
 ```
 
-```json [JSON]
+```json JSON
 {
   "eventDateTimeUtc": "2025-08-15T14:30:00Z"
 }
@@ -1080,7 +1080,7 @@ eventDateTimeUtc = 2025-08-15T14:30:00.000Z
 
 Use the `auto_now` option to record when an entry was created and last modified. The `date` field is set when the entry is first saved, and the `lastmod` field whenever it’s saved:
 
-```yaml [YAML]
+```yaml YAML
 fields:
   - name: date
     label: Created
@@ -1092,7 +1092,7 @@ fields:
     auto_now: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "date"
 label = "Created"
@@ -1106,7 +1106,7 @@ widget = "datetime"
 auto_now = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "fields": [
     {
@@ -1125,7 +1125,7 @@ auto_now = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 fields: [
   {
     name: 'date',
@@ -1144,17 +1144,17 @@ fields: [
 
 Output example, after the entry is updated:
 
-```yaml [YAML]
+```yaml YAML
 date: 2025-08-15T14:30:12
 lastmod: 2025-09-02T09:05:47
 ```
 
-```toml [TOML]
+```toml TOML
 date = 2025-08-15T14:30:12.000
 lastmod = 2025-09-02T09:05:47.000
 ```
 
-```json [JSON]
+```json JSON
 {
   "date": "2025-08-15T14:30:12",
   "lastmod": "2025-09-02T09:05:47"
@@ -1165,14 +1165,14 @@ lastmod = 2025-09-02T09:05:47.000
 
 The `format` option allows specifying a custom format for both displaying and storing the date and/or time using [Day.js format tokens](https://day.js.org/docs/en/display/format). For example, to use the format `MM/DD/YYYY HH:mm`:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventDateTime
   label: Event Date and Time
   widget: datetime
   format: MM/DD/YYYY HH:mm
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventDateTime"
 label = "Event Date and Time"
@@ -1180,7 +1180,7 @@ widget = "datetime"
 format = "MM/DD/YYYY HH:mm"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventDateTime",
   "label": "Event Date and Time",
@@ -1189,7 +1189,7 @@ format = "MM/DD/YYYY HH:mm"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventDateTime",
   label: "Event Date and Time",
@@ -1200,15 +1200,15 @@ format = "MM/DD/YYYY HH:mm"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 eventDateTime: 08/15/2025 14:30
 ```
 
-```toml [TOML]
+```toml TOML
 eventDateTime = "08/15/2025 14:30"
 ```
 
-```json [JSON]
+```json JSON
 {
   "eventDateTime": "08/15/2025 14:30"
 }
@@ -1216,9 +1216,9 @@ eventDateTime = "08/15/2025 14:30"
 
 #### Localized Format
 
-Use the `localize_format` option to write month names in the language of each locale. For example, with English and German enabled in the [i18n options](https://sveltiacms.app/en/docs/i18n), the `duplicate` strategy copies a date picked in English to the German content, written in German:
+Use the `localize_format` option to write month names in the language of each locale. For example, with English and German enabled in the [i18n options](https://sveltiacms.app/docs/i18n), the `duplicate` strategy copies a date picked in English to the German content, written in German:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventDate
   label: Event Date
   widget: datetime
@@ -1228,7 +1228,7 @@ Use the `localize_format` option to write month names in the language of each lo
   i18n: duplicate
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventDate"
 label = "Event Date"
@@ -1239,7 +1239,7 @@ localize_format = true
 i18n = "duplicate"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventDate",
   "label": "Event Date",
@@ -1251,7 +1251,7 @@ i18n = "duplicate"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventDate",
   label: "Event Date",
@@ -1265,11 +1265,11 @@ i18n = "duplicate"
 
 Output example in English and German:
 
-```yaml [English]
+```yaml English
 eventDate: 1 March 2026
 ```
 
-```yaml [German]
+```yaml German
 eventDate: 1 März 2026
 ```
 
@@ -1279,7 +1279,7 @@ To write the value in a single language on a site without i18n support, set the 
 
 Use `min`, `max` and `step` to restrict the allowed date range and increment. For example, to limit a booking date to the first quarter of 2026 with weekly steps:
 
-```yaml [YAML]
+```yaml YAML
 - name: bookingDate
   label: Booking Date
   widget: datetime
@@ -1289,7 +1289,7 @@ Use `min`, `max` and `step` to restrict the allowed date range and increment. Fo
   step: 7
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "bookingDate"
 label = "Booking Date"
@@ -1300,7 +1300,7 @@ max = "2026-03-31"
 step = 7
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "bookingDate",
   "label": "Booking Date",
@@ -1312,7 +1312,7 @@ step = 7
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "bookingDate",
   label: "Booking Date",
@@ -1326,15 +1326,15 @@ step = 7
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 bookingDate: 2026-01-08
 ```
 
-```toml [TOML]
+```toml TOML
 bookingDate = 2026-01-08
 ```
 
-```json [JSON]
+```json JSON
 {
   "bookingDate": "2026-01-08"
 }
@@ -1344,7 +1344,7 @@ bookingDate = 2026-01-08
 
 Use `step` to control the time increment in seconds. For example, to allow 15-minute steps for a time-only input:
 
-```yaml [YAML]
+```yaml YAML
 - name: appointmentTime
   label: Appointment Time
   widget: datetime
@@ -1354,7 +1354,7 @@ Use `step` to control the time increment in seconds. For example, to allow 15-mi
   step: 900
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "appointmentTime"
 label = "Appointment Time"
@@ -1365,7 +1365,7 @@ max = "17:00"
 step = 900
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "appointmentTime",
   "label": "Appointment Time",
@@ -1377,7 +1377,7 @@ step = 900
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "appointmentTime",
   label: "Appointment Time",
@@ -1391,15 +1391,15 @@ step = 900
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 appointmentTime: 10:15:00
 ```
 
-```toml [TOML]
+```toml TOML
 appointmentTime = 10:15:00.000
 ```
 
-```json [JSON]
+```json JSON
 {
   "appointmentTime": "10:15:00"
 }
@@ -1409,14 +1409,14 @@ appointmentTime = 10:15:00.000
 
 Use `input_timezone` to make the date/time picker use a specific timezone. For example, to allow users to schedule events in New York time:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventTime
   label: Event Time (New York)
   widget: datetime
   input_timezone: America/New_York
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventTime"
 label = "Event Time (New York)"
@@ -1424,7 +1424,7 @@ widget = "datetime"
 input_timezone = "America/New_York"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventTime",
   "label": "Event Time (New York)",
@@ -1433,7 +1433,7 @@ input_timezone = "America/New_York"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventTime",
   label: "Event Time (New York)",
@@ -1444,15 +1444,15 @@ input_timezone = "America/New_York"
 
 Output example (with timezone offset preserved):
 
-```yaml [YAML]
+```yaml YAML
 eventTime: 2025-08-15T14:30:00-04:00
 ```
 
-```toml [TOML]
+```toml TOML
 eventTime = 2025-08-15T14:30:00.000-04:00
 ```
 
-```json [JSON]
+```json JSON
 {
   "eventTime": "2025-08-15T14:30:00-04:00"
 }
@@ -1462,7 +1462,7 @@ eventTime = 2025-08-15T14:30:00.000-04:00
 
 Use `output_utc: true` to store all date/time values in UTC, regardless of the user’s input timezone. This is useful for ensuring consistent data storage:
 
-```yaml [YAML]
+```yaml YAML
 - name: eventTime
   label: Event Time
   widget: datetime
@@ -1470,7 +1470,7 @@ Use `output_utc: true` to store all date/time values in UTC, regardless of the u
   output_utc: true
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "eventTime"
 label = "Event Time"
@@ -1479,7 +1479,7 @@ input_timezone = "America/New_York"
 output_utc = true
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "eventTime",
   "label": "Event Time",
@@ -1489,7 +1489,7 @@ output_utc = true
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "eventTime",
   label: "Event Time",
@@ -1501,15 +1501,15 @@ output_utc = true
 
 Output example (converted to UTC with `Z` suffix):
 
-```yaml [YAML]
+```yaml YAML
 eventTime: 2025-08-15T18:30:00Z
 ```
 
-```toml [TOML]
+```toml TOML
 eventTime = 2025-08-15T18:30:00Z
 ```
 
-```json [JSON]
+```json JSON
 {
   "eventTime": "2025-08-15T18:30:00Z"
 }
@@ -1519,7 +1519,7 @@ eventTime = 2025-08-15T18:30:00Z
 
 Combine `input_timezone`, `output_utc` and `format` to store values in a custom format while maintaining timezone awareness:
 
-```yaml [YAML]
+```yaml YAML
 - name: publishTime
   label: Publish Time
   widget: datetime
@@ -1528,7 +1528,7 @@ Combine `input_timezone`, `output_utc` and `format` to store values in a custom 
   format: YYYY-MM-DD HH:mm
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "publishTime"
 label = "Publish Time"
@@ -1538,7 +1538,7 @@ output_utc = true
 format = "YYYY-MM-DD HH:mm"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "publishTime",
   "label": "Publish Time",
@@ -1549,7 +1549,7 @@ format = "YYYY-MM-DD HH:mm"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: "publishTime",
   label: "Publish Time",
@@ -1562,21 +1562,21 @@ format = "YYYY-MM-DD HH:mm"
 
 Output example (UTC time in custom format):
 
-```yaml [YAML]
+```yaml YAML
 publishTime: 2025-08-15 18:30
 ```
 
-```toml [TOML]
+```toml TOML
 publishTime = "2025-08-15 18:30"
 ```
 
-```json [JSON]
+```json JSON
 {
   "publishTime": "2025-08-15 18:30"
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/datetime
+Source: https://sveltiacms.app/docs/fields/datetime
 
 ---
 
@@ -1598,7 +1598,7 @@ The map UI is built with the [Leaflet](https://leafletjs.com/) and [Terra Draw](
 
 **CSP**
 
-You may need to update your Content Security Policy (CSP) to allow loading map tiles and making search API requests. See the [CSP documentation](https://sveltiacms.app/en/docs/security#setting-up-content-security-policy) for more details.
+You may need to update your Content Security Policy (CSP) to allow loading map tiles and making search API requests. See the [CSP documentation](https://sveltiacms.app/docs/security#setting-up-content-security-policy) for more details.
 
 **Future Plans**
 
@@ -1640,7 +1640,7 @@ If the `required` option is set to `false` and locations are not selected, the v
 
 ### Options
 
-In addition to the [common field options](https://sveltiacms.app/en/docs/fields#common-options), the Map field supports the following options:
+In addition to the [common field options](https://sveltiacms.app/docs/fields#common-options), the Map field supports the following options:
 
 #### Required Options
 
@@ -1698,20 +1698,20 @@ Default zoom level of the map when no value is set.
 
 This example shows a simple Map field configuration, which allows users to select a single location on the map.
 
-```yaml [YAML]
+```yaml YAML
 - name: location
   label: Location
   widget: map
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "location"
 label = "Location"
 widget = "map"
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "location",
   "label": "Location",
@@ -1719,7 +1719,7 @@ widget = "map"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'location',
   label: 'Location',
@@ -1729,15 +1729,15 @@ widget = "map"
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 location: '{"type":"Point","coordinates":[-122.4194015,37.7749144]}'
 ```
 
-```toml [TOML]
+```toml TOML
 location = '{"type":"Point","coordinates":[-122.4194015,37.7749144]}'
 ```
 
-```json [JSON]
+```json JSON
 {
   "location": "{\"type\":\"Point\",\"coordinates\":[-122.4194015,37.7749144]}"
 }
@@ -1747,7 +1747,7 @@ location = '{"type":"Point","coordinates":[-122.4194015,37.7749144]}'
 
 This example shows a Map field configured to select a LineString geometry with a specified number of decimal places for coordinates.
 
-```yaml [YAML]
+```yaml YAML
 - name: route
   label: Route
   widget: map
@@ -1755,7 +1755,7 @@ This example shows a Map field configured to select a LineString geometry with a
   decimals: 5
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "route"
 label = "Route"
@@ -1764,7 +1764,7 @@ type = "LineString"
 decimals = 5
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "route",
   "label": "Route",
@@ -1774,7 +1774,7 @@ decimals = 5
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'route',
   label: 'Route',
@@ -1786,15 +1786,15 @@ decimals = 5
 
 Output example:
 
-```yaml [YAML]
+```yaml YAML
 route: '{"type":"LineString","coordinates":[[-122.41940,37.77490],[-122.41800,37.77550]]}'
 ```
 
-```toml [TOML]
+```toml TOML
 route = '{"type":"LineString","coordinates":[[-122.41940,37.77490],[-122.41800,37.77550]]}'
 ```
 
-```json [JSON]
+```json JSON
 {
   "route": "{\"type\":\"LineString\",\"coordinates\":[[-122.41940,37.77490],[-122.41800,37.77550]]}"
 }
@@ -1804,7 +1804,7 @@ route = '{"type":"LineString","coordinates":[[-122.41940,37.77490],[-122.41800,3
 
 This example shows a Map field configured with a default center and zoom level, so the map opens in a specific region when no value is set.
 
-```yaml [YAML]
+```yaml YAML
 - name: location
   label: Location
   widget: map
@@ -1812,7 +1812,7 @@ This example shows a Map field configured with a default center and zoom level, 
   zoom: 12
 ```
 
-```toml [TOML]
+```toml TOML
 [[fields]]
 name = "location"
 label = "Location"
@@ -1821,7 +1821,7 @@ center = [-122.4194, 37.7749]
 zoom = 12
 ```
 
-```json [JSON]
+```json JSON
 {
   "name": "location",
   "label": "Location",
@@ -1831,7 +1831,7 @@ zoom = 12
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   name: 'location',
   label: 'Location',
@@ -1841,4 +1841,4 @@ zoom = 12
 }
 ```
 
-Source: https://sveltiacms.app/en/docs/fields/map
+Source: https://sveltiacms.app/docs/fields/map

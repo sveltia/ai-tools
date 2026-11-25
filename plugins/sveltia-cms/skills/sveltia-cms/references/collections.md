@@ -14,22 +14,22 @@ There are two types of collections, as well as dividers to visually separate sec
 
 There are two main types of collections in Sveltia CMS:
 
-- [Entry Collections](https://sveltiacms.app/en/docs/collections/entries): Used for managing multiple entries of similar content, such as blog posts, tags, products and events. Each entry is stored as a separate file in a specified folder.
-- [File Collections](https://sveltiacms.app/en/docs/collections/files): Used for managing individual files, such as static pages or configuration files. Each file is defined explicitly in the configuration.
+- [Entry Collections](https://sveltiacms.app/docs/collections/entries): Used for managing multiple entries of similar content, such as blog posts, tags, products and events. Each entry is stored as a separate file in a specified folder.
+- [File Collections](https://sveltiacms.app/docs/collections/files): Used for managing individual files, such as static pages or configuration files. Each file is defined explicitly in the configuration.
 
 Additionally, there is a special type of file collection:
 
-- [Singleton Collection](https://sveltiacms.app/en/docs/collections/singletons): Defined at the top level of the config file, singletons are used for managing unique content items, such as site settings or homepage content.
+- [Singleton Collection](https://sveltiacms.app/docs/collections/singletons): Defined at the top level of the config file, singletons are used for managing unique content items, such as site settings or homepage content.
 
 ### Designing Content Models with Collections
 
-In Sveltia CMS, collections are fundamental building blocks for creating content models. They help organize and structure your content effectively. See the [Content Modeling Guide](https://sveltiacms.app/en/docs/content-modeling) for more information on designing effective content models using collections.
+In Sveltia CMS, collections are fundamental building blocks for creating content models. They help organize and structure your content effectively. See the [Content Modeling Guide](https://sveltiacms.app/docs/content-modeling) for more information on designing effective content models using collections.
 
 ### Creating Collections
 
 Collections are defined in your configuration file under the `collections` property. Here’s how to create both entry and file collections:
 
-```yaml [YAML]{5,12}
+```yaml YAML
 collections:
   # Entry Collection for Blog Posts
   - name: posts
@@ -50,7 +50,7 @@ collections:
           - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{4,22}
+```toml TOML
 [[collections]]
 name = "posts"
 label = "Blog Posts"
@@ -84,7 +84,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{6,15}
+```json JSON
 {
   "collections": [
     {
@@ -115,7 +115,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{6,15}
+```js JavaScript
 {
   collections: [
     {
@@ -173,7 +173,7 @@ The font file is served by Fontsource, which may not include the latest icons av
 
 Here’s an example of adding an icon to an entry collection that manages tags:
 
-```yaml [YAML]{4}
+```yaml YAML
 collections:
   - name: tags
     label: Tags
@@ -181,7 +181,7 @@ collections:
     folder: content/tags
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [[collections]]
 name = "tags"
 label = "Tags"
@@ -189,7 +189,7 @@ icon = "sell"
 folder = "content/tags"
 ```
 
-```json [JSON]{6}
+```json JSON
 {
   "collections": [
     {
@@ -202,7 +202,7 @@ folder = "content/tags"
 }
 ```
 
-```js [JavaScript]{6}
+```js JavaScript
 {
   collections: [
     {
@@ -217,9 +217,9 @@ folder = "content/tags"
 
 #### Dividers
 
-With Sveltia CMS, developers can add dividers to the collection list to distinguish between different types of collections. To do so, insert a new item with the `divider` option set to `true`. In VS Code, you may receive a validation error if `config.yml` is treated as a Netlify CMS configuration file. You can resolve this issue by [using our JSON schema](https://sveltiacms.app/en/docs/config-basics#json-schema).
+With Sveltia CMS, developers can add dividers to the collection list to distinguish between different types of collections. To do so, insert a new item with the `divider` option set to `true`. In VS Code, you may receive a validation error if `config.yml` is treated as a Netlify CMS configuration file. You can resolve this issue by [using our JSON schema](https://sveltiacms.app/docs/config-basics#json-schema).
 
-```yaml [YAML]{4}
+```yaml YAML
 collections:
   - name: products
     ...
@@ -228,7 +228,7 @@ collections:
     ...
 ```
 
-```toml [TOML]{5}
+```toml TOML
 [[collections]]
 name = "products"
 
@@ -239,7 +239,7 @@ divider = true
 name = "pages"
 ```
 
-```json [JSON]{7}
+```json JSON
 {
   "collections": [
     {
@@ -255,7 +255,7 @@ name = "pages"
 }
 ```
 
-```js [JavaScript]{7}
+```js JavaScript
 {
   collections: [
     {
@@ -271,9 +271,9 @@ name = "pages"
 }
 ```
 
-The [singleton collection](https://sveltiacms.app/en/docs/collections/files#singletons) also supports dividers.
+The [singleton collection](https://sveltiacms.app/docs/collections/files#singletons) also supports dividers.
 
-Source: https://sveltiacms.app/en/docs/collections
+Source: https://sveltiacms.app/docs/collections
 
 ---
 
@@ -285,7 +285,7 @@ A file collection contains pre-defined files, each representing a single piece o
 
 The example below defines a file collection for managing static pages:
 
-```yaml [YAML]
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -298,7 +298,7 @@ collections:
           - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -318,7 +318,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]
+```json JSON
 {
   "collections": [
     {
@@ -340,7 +340,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   collections: [
     {
@@ -374,14 +374,14 @@ A file collection supports the following options:
 - `description`: A brief description of the collection, displayed in the UI. Optional. Basic Markdown formatting is supported.
 - `icon`: A Material Symbols icon name to represent the collection in the CMS UI. Optional.
 - `files`: An array of file definitions within the collection. Required.
-- `hide`: Whether to hide the collection from the UI. Optional. See [Hiding the Collection](https://sveltiacms.app/en/docs/collections/entries/operations#hiding-the-collection).
+- `hide`: Whether to hide the collection from the UI. Optional. See [Hiding the Collection](https://sveltiacms.app/docs/collections/entries/operations#hiding-the-collection).
 - `format`, `frontmatter_delimiter`, `body_field`: The default file format options for the files in the collection. Optional. Each file can override them. [See below](#file-format-and-extension) for details.
-- `media_folder`, `public_folder`: Media folder options for the collection. Optional. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/media/internal#collection-level-configuration).
-- `i18n`: I18n options for the collection. Optional. Each file also needs its own `i18n` option to be localized. See [Collection-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#collection-level-configuration).
-- `editor`: Content Editor options, such as `preview: false` to disable the preview pane and `second_pane: false` to keep the editor to a single pane. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#collection-level) and [Disabling the Second Pane](https://sveltiacms.app/en/docs/ui/content-editor#disabling-the-second-pane).
-- `publish_mode`: The publish mode for the collection, overriding the top-level option. Optional. See [Enabling the Workflow per Collection](https://sveltiacms.app/en/docs/workflows/editorial#enabling-the-workflow-per-collection).
-- `publish`: Set to `false` to hide the publishing controls in Editorial Workflow. Optional. See [Restricting Publishing and Deletion](https://sveltiacms.app/en/docs/workflows/editorial#restricting-publishing-and-deletion).
-- `readonly`: Set to `true` to make every file in the collection read-only. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
+- `media_folder`, `public_folder`: Media folder options for the collection. Optional. See [Collection-Level Configuration](https://sveltiacms.app/docs/media/internal#collection-level-configuration).
+- `i18n`: I18n options for the collection. Optional. Each file also needs its own `i18n` option to be localized. See [Collection-Level Configuration](https://sveltiacms.app/docs/i18n/options#collection-level-configuration).
+- `editor`: Content Editor options, such as `preview: false` to disable the preview pane and `second_pane: false` to keep the editor to a single pane. Optional. See [Disabling Previews](https://sveltiacms.app/docs/ui/content-editor#collection-level) and [Disabling the Second Pane](https://sveltiacms.app/docs/ui/content-editor#disabling-the-second-pane).
+- `publish_mode`: The publish mode for the collection, overriding the top-level option. Optional. See [Enabling the Workflow per Collection](https://sveltiacms.app/docs/workflows/editorial#enabling-the-workflow-per-collection).
+- `publish`: Set to `false` to hide the publishing controls in Editorial Workflow. Optional. See [Restricting Publishing and Deletion](https://sveltiacms.app/docs/workflows/editorial#restricting-publishing-and-deletion).
+- `readonly`: Set to `true` to make every file in the collection read-only. Optional. See [Making Content Read-Only](https://sveltiacms.app/docs/collections/entries/operations#making-content-read-only).
 
 Unlike entry collections, the collection-level `preview_path` and `preview_path_date_field` options don’t apply to file collections. Set them on each file instead.
 
@@ -398,10 +398,10 @@ A file definition within a file collection supports the following options:
 - `frontmatter_delimiter`: The front matter delimiter. Optional. [See below](#front-matter-delimiter) for details.
 - `body_field`: The body field options for front matter formats. Optional. [See below](#body-field-for-front-matter-formats) for details.
 - `fields`: An array of field definitions for the file content. Required.
-- `media_folder`, `public_folder`: Media folder options for the file, overriding the top-level and collection-level options. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/media/internal#file-level-configuration).
-- `i18n`: I18n options for the file. Optional. See [File-Level Configuration](https://sveltiacms.app/en/docs/i18n/options#file-level-configuration).
-- `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/en/docs/ui/content-editor#file-level) and [Disabling the Second Pane](https://sveltiacms.app/en/docs/ui/content-editor#disabling-the-second-pane).
-- `readonly`: Set to `true` to make the file read-only, while the other files in the collection stay editable. Optional. See [Making Content Read-Only](https://sveltiacms.app/en/docs/collections/entries/operations#making-content-read-only).
+- `media_folder`, `public_folder`: Media folder options for the file, overriding the top-level and collection-level options. Optional. See [File-Level Configuration](https://sveltiacms.app/docs/media/internal#file-level-configuration).
+- `i18n`: I18n options for the file. Optional. See [File-Level Configuration](https://sveltiacms.app/docs/i18n/options#file-level-configuration).
+- `editor`: Content Editor options for the file, overriding the collection-level options. Optional. See [Disabling Previews](https://sveltiacms.app/docs/ui/content-editor#file-level) and [Disabling the Second Pane](https://sveltiacms.app/docs/ui/content-editor#disabling-the-second-pane).
+- `readonly`: Set to `true` to make the file read-only, while the other files in the collection stay editable. Optional. See [Making Content Read-Only](https://sveltiacms.app/docs/collections/entries/operations#making-content-read-only).
 - `preview_path`, `preview_path_date_field`: The file’s URL path on the live site. Optional. [See below](#preview-path) for details.
 
 A listed file doesn’t have to exist in the repository. If it’s missing, the Content Editor opens with empty fields (or their default values), and the file is created when the editor saves it.
@@ -410,11 +410,11 @@ A listed file doesn’t have to exist in the repository. If it’s missing, the 
 
 The file format and extension for each file in a file collection can be customized using the `format` property within each file definition. Sveltia CMS supports various file formats, including Markdown, YAML, JSON and TOML.
 
-By default, the file format is determined based on the file extension. If it is a Markdown file (e.g. `.md`), it uses the `frontmatter` format, which detects YAML, TOML or JSON front matter automatically. A new file is saved with YAML front matter. For other extensions, it uses the corresponding format (e.g. `.yaml` uses `yaml` format). See [Default Format and Extension](https://sveltiacms.app/en/docs/collections/entries/formats#default-format-and-extension) for the full list.
+By default, the file format is determined based on the file extension. If it is a Markdown file (e.g. `.md`), it uses the `frontmatter` format, which detects YAML, TOML or JSON front matter automatically. A new file is saved with YAML front matter. For other extensions, it uses the corresponding format (e.g. `.yaml` uses `yaml` format). See [Default Format and Extension](https://sveltiacms.app/docs/collections/entries/formats#default-format-and-extension) for the full list.
 
 To illustrate, here is a file collection with two files using different formats:
 
-```yaml [YAML]{7,13}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -433,7 +433,7 @@ collections:
           - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{8,22}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -467,7 +467,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{10,19}
+```json JSON
 {
   "collections": [
     {
@@ -498,7 +498,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{10,19}
+```js JavaScript
 {
   collections: [
     {
@@ -533,7 +533,7 @@ widget = "richtext"
 
 To explicitly set the file format, you can add the `format` property to each file definition. This is useful if you want to use TOML or JSON formats for Markdown files. Here is an example:
 
-```yaml [YAML]{4}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -544,7 +544,7 @@ collections:
         file: content/pages/about.md
 ```
 
-```toml [TOML]{4}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -556,7 +556,7 @@ label = "About Page"
 file = "content/pages/about.md"
 ```
 
-```json [JSON]{6}
+```json JSON
 {
   "collections": [
     {
@@ -575,7 +575,7 @@ file = "content/pages/about.md"
 }
 ```
 
-```js [JavaScript]{6}
+```js JavaScript
 {
   collections: [
     {
@@ -604,13 +604,13 @@ Unlike entry collections, file collections do not support the `extension` option
 
 Extension-less files are supported in file collections. When using extension-less files, it is recommended to explicitly set the `format` property to ensure the correct parsing of the file content. If `format` is not set, it defaults to `yaml-frontmatter`.
 
-See [Editing site deployment configuration files](https://sveltiacms.app/en/docs/how-tos#editing-site-deployment-configuration-files) in our how-tos for an example of using extension-less files in a file collection.
+See [Editing site deployment configuration files](https://sveltiacms.app/docs/how-tos#editing-site-deployment-configuration-files) in our how-tos for an example of using extension-less files in a file collection.
 
 #### Front Matter Delimiter
 
-As with entry collections, the [`frontmatter_delimiter` option](https://sveltiacms.app/en/docs/collections/entries/formats#front-matter-delimiter) can also be used to customize the front matter delimiter for Markdown files, either at the collection or file level. Here is an example of setting both `format` and `frontmatter_delimiter` at the file level:
+As with entry collections, the [`frontmatter_delimiter` option](https://sveltiacms.app/docs/collections/entries/formats#front-matter-delimiter) can also be used to customize the front matter delimiter for Markdown files, either at the collection or file level. Here is an example of setting both `format` and `frontmatter_delimiter` at the file level:
 
-```yaml [YAML]{8-9}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -622,7 +622,7 @@ collections:
         frontmatter_delimiter: ~~~
 ```
 
-```toml [TOML]{9-10}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -635,7 +635,7 @@ format = "toml-frontmatter"
 frontmatter_delimiter = "~~~"
 ```
 
-```json [JSON]{11-12}
+```json JSON
 {
   "collections": [
     {
@@ -655,7 +655,7 @@ frontmatter_delimiter = "~~~"
 }
 ```
 
-```js [JavaScript]{11-12}
+```js JavaScript
 {
   collections: [
     {
@@ -679,17 +679,17 @@ frontmatter_delimiter = "~~~"
 
 When using front matter formats (e.g. `yaml-frontmatter`, `toml-frontmatter`, `json-frontmatter`), you can configure the body field to specify where the main content of the file should be stored. By default, the body field is named `body`, but you can customize this by setting the `body_field` option at either the collection or file level.
 
-See [Body Field for Front Matter Formats](https://sveltiacms.app/en/docs/collections/entries/formats#body-field-for-front-matter-formats) in the entry collections documentation for more details.
+See [Body Field for Front Matter Formats](https://sveltiacms.app/docs/collections/entries/formats#body-field-for-front-matter-formats) in the entry collections documentation for more details.
 
 ### Preview Path
 
-A file has no preview link by default. To link it to its page on the live site, or on a [deploy preview](https://sveltiacms.app/en/docs/deployments/previews), set the `preview_path` option on the file. It works like the collection-level [`preview_path` option](https://sveltiacms.app/en/docs/collections/entries/previews#preview-paths) of an entry collection, with the following differences:
+A file has no preview link by default. To link it to its page on the live site, or on a [deploy preview](https://sveltiacms.app/docs/deployments/previews), set the `preview_path` option on the file. It works like the collection-level [`preview_path` option](https://sveltiacms.app/docs/collections/entries/previews#preview-paths) of an entry collection, with the following differences:
 
 - `{{slug}}` is the file’s `name` option value.
 - `{{dirname}}` is the directory of the `file` path, relative to the repository’s root directory, since a file collection has no `folder`.
 - Field values, date/time tags, `{{filename}}`, `{{extension}}` and `{{locale}}` are filled in the same way, using the file’s own `fields`. The date/time tags use the file’s first DateTime field unless `preview_path_date_field` is set.
 
-```yaml [YAML]{8}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -703,7 +703,7 @@ collections:
           - { name: body, label: Body, widget: richtext }
 ```
 
-```toml [TOML]{9}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -724,7 +724,7 @@ label = "Body"
 widget = "richtext"
 ```
 
-```json [JSON]{11}
+```json JSON
 {
   "collections": [
     {
@@ -747,7 +747,7 @@ widget = "richtext"
 }
 ```
 
-```js [JavaScript]{11}
+```js JavaScript
 {
   collections: [
     {
@@ -772,15 +772,15 @@ widget = "richtext"
 
 ### Summaries
 
-The file list shows each file’s `label`, or its `name` if the label is missing. To show something about the file’s content instead, such as the locales it’s available in, set the `summary` option on the file. It works like the [`summary` option](https://sveltiacms.app/en/docs/collections/entries/listings#summaries) of an entry collection. It can contain basic Markdown formatting, the values of the file’s own `fields`, transformations and the same special template tags, with the following differences:
+The file list shows each file’s `label`, or its `name` if the label is missing. To show something about the file’s content instead, such as the locales it’s available in, set the `summary` option on the file. It works like the [`summary` option](https://sveltiacms.app/docs/collections/entries/listings#summaries) of an entry collection. It can contain basic Markdown formatting, the values of the file’s own `fields`, transformations and the same special template tags, with the following differences:
 
 - `{{slug}}` is the file’s `name` option value.
 - `{{dirname}}` is the directory of the `file` path, relative to the repository’s root directory, since a file collection has no `folder`.
 - If the `title` field is missing or empty, `{{title}}` falls back to the `name` or `label` field, then to a header in the Markdown body, and finally to the file’s label instead of the slug.
 
-For example, with [i18n support](https://sveltiacms.app/en/docs/i18n) set up at the top level, the following configuration shows the page title along with the locales the file is available in:
+For example, with [i18n support](https://sveltiacms.app/docs/i18n) set up at the top level, the following configuration shows the page title along with the locales the file is available in:
 
-```yaml [YAML]{9}
+```yaml YAML
 collections:
   - name: pages
     label: Pages
@@ -796,7 +796,7 @@ collections:
           - { name: body, label: Body, widget: richtext, i18n: true }
 ```
 
-```toml [TOML]{10}
+```toml TOML
 [[collections]]
 name = "pages"
 label = "Pages"
@@ -821,7 +821,7 @@ widget = "richtext"
 i18n = true
 ```
 
-```json [JSON]{12}
+```json JSON
 {
   "collections": [
     {
@@ -846,7 +846,7 @@ i18n = true
 }
 ```
 
-```js [JavaScript]{12}
+```js JavaScript
 {
   collections: [
     {
@@ -873,13 +873,13 @@ i18n = true
 
 With English and French enabled and an English title of “About Us”, the file is listed as “About Us (en, fr)”. The field values are taken from the default locale. A file that doesn’t exist in the repository yet has no content to fill in the template, so it’s listed with its label until it’s first saved.
 
-The `summary` option is only used in the file list. A [singleton](https://sveltiacms.app/en/docs/collections/singletons) has no file list, so the option has no effect there.
+The `summary` option is only used in the file list. A [singleton](https://sveltiacms.app/docs/collections/singletons) has no file list, so the option has no effect there.
 
 ### Singletons
 
-The singleton collection is a special type of file collection that allows you to manage a set of pre-defined files without the ability to create or delete them. Singletons are useful for managing site-wide settings or content that should only exist as a single instance. See [Singletons](https://sveltiacms.app/en/docs/collections/singletons) for more details.
+The singleton collection is a special type of file collection that allows you to manage a set of pre-defined files without the ability to create or delete them. Singletons are useful for managing site-wide settings or content that should only exist as a single instance. See [Singletons](https://sveltiacms.app/docs/collections/singletons) for more details.
 
-Source: https://sveltiacms.app/en/docs/collections/files
+Source: https://sveltiacms.app/docs/collections/files
 
 ---
 
@@ -893,7 +893,7 @@ Singletons may be referred to as “singles” or “singular resources” in ot
 
 ### Differences from File Collections
 
-The differences between the Singleton collection and a regular [file collection](https://sveltiacms.app/en/docs/collections/files) are as follows:
+The differences between the Singleton collection and a regular [file collection](https://sveltiacms.app/docs/collections/files) are as follows:
 
 #### Configuration
 
@@ -910,7 +910,7 @@ The differences between the Singleton collection and a regular [file collection]
 
 ### When to Use Singletons
 
-If your project has multiple similar files, you might consider creating a regular [file collection](https://sveltiacms.app/en/docs/collections/files) and including all your relevant files there. A typical example is a `pages` collection that contains multiple page files like `home`, `about` and `contact`.
+If your project has multiple similar files, you might consider creating a regular [file collection](https://sveltiacms.app/docs/collections/files) and including all your relevant files there. A typical example is a `pages` collection that contains multiple page files like `home`, `about` and `contact`.
 
 However, if your project has only a few pages or configuration files that are not part of a larger collection, using singletons can be more straightforward.
 
@@ -922,7 +922,7 @@ To create this special file collection, add the new `singletons` option, along w
 
 Here’s an example configuration with two singleton files:
 
-```yaml [YAML]
+```yaml YAML
 singletons:
   - name: home
     label: Home Page
@@ -938,7 +938,7 @@ singletons:
       - { label: Description, name: description, widget: text }
 ```
 
-```toml [TOML]
+```toml TOML
 [[singletons]]
 name = "home"
 label = "Home Page"
@@ -968,7 +968,7 @@ name = "description"
 widget = "text"
 ```
 
-```json [JSON]
+```json JSON
 {
   "singletons": [
     {
@@ -993,7 +993,7 @@ widget = "text"
 }
 ```
 
-```js [JavaScript]
+```js JavaScript
 {
   singletons: [
     {
@@ -1018,13 +1018,13 @@ widget = "text"
 }
 ```
 
-File options are the same as those for [file collections](https://sveltiacms.app/en/docs/collections/files).
+File options are the same as those for [file collections](https://sveltiacms.app/docs/collections/files).
 
 ### Converting from File Collections
 
 It’s easy to convert an existing file collection into the Singleton collection. This is a conventional file collection:
 
-```yaml [YAML]{1-4}
+```yaml YAML
 collections:
   - name: data
     label: Data
@@ -1039,7 +1039,7 @@ collections:
         fields: ...
 ```
 
-```toml [TOML]{1-3}
+```toml TOML
 [[collections]]
 name = "data"
 label = "Data"
@@ -1055,7 +1055,7 @@ label = "Site Settings"
 file = "content/settings.yaml"
 ```
 
-```json [JSON]{2-6}
+```json JSON
 {
   "collections": [
     {
@@ -1078,7 +1078,7 @@ file = "content/settings.yaml"
 }
 ```
 
-```js [JavaScript]{2-6}
+```js JavaScript
 {
   collections: [
     {
@@ -1103,7 +1103,7 @@ file = "content/settings.yaml"
 
 It can be converted to the Singleton collection like this:
 
-```yaml [YAML]{1}
+```yaml YAML
 singletons:
   - name: home
     label: Home Page
@@ -1115,7 +1115,7 @@ singletons:
     fields: ...
 ```
 
-```toml [TOML]
+```toml TOML
 [[singletons]]
 name = "home"
 label = "Home Page"
@@ -1127,7 +1127,7 @@ label = "Site Settings"
 file = "content/settings.yaml"
 ```
 
-```json [JSON]{2}
+```json JSON
 {
   "singletons": [
     {
@@ -1144,7 +1144,7 @@ file = "content/settings.yaml"
 }
 ```
 
-```js [JavaScript]{2}
+```js JavaScript
 {
   singletons: [
     {
@@ -1165,7 +1165,7 @@ file = "content/settings.yaml"
 
 You can add icons to singleton items using the `icon` option, and you can add dividers between items using the `divider` option. Here’s an example:
 
-```yaml [YAML]{5,7,11}
+```yaml YAML
 singletons:
   - name: home
     label: Home Page
@@ -1180,7 +1180,7 @@ singletons:
     fields: ...
 ```
 
-```toml [TOML]{5,8,14}
+```toml TOML
 [[singletons]]
 name = "home"
 label = "Home Page"
@@ -1197,7 +1197,7 @@ file = "content/settings.yaml"
 icon = "settings"
 ```
 
-```json [JSON]{7,10,16}
+```json JSON
 {
   "singletons": [
     {
@@ -1219,7 +1219,7 @@ icon = "settings"
 }
 ```
 
-```js [JavaScript]{7,10,16}
+```js JavaScript
 {
   singletons: [
     {
@@ -1245,11 +1245,11 @@ icon = "settings"
 
 Singletons belong to a collection named `_singletons` (note the underscore prefix). Use this name wherever a collection name is expected, along with the singleton’s `name` as the filename:
 
-- In a [Relation](https://sveltiacms.app/en/docs/fields/relation) field, set `collection` to `_singletons` and `file` to the singleton’s name.
-- In a [custom preview style](https://sveltiacms.app/en/docs/api/preview-styles#applying-preview-styles-to-specific-collections-or-files), set the `collection` option to `_singletons` and the `file` option to the singleton’s name, e.g. `registerPreviewStyle('/settings.css', { collection: '_singletons', file: 'settings' })`.
-- In a [custom preview template](https://sveltiacms.app/en/docs/api/preview-templates), call `getCollection('_singletons', 'settings')` to get the `settings` singleton, or `getCollection('_singletons')` to get all the singletons. `getCollection('settings')` doesn’t work, because `settings` is a filename, not a collection name.
-- In a custom preview template or an [event hook](https://sveltiacms.app/en/docs/api/events), the `collection` property of a singleton’s entry is `_singletons`.
+- In a [Relation](https://sveltiacms.app/docs/fields/relation) field, set `collection` to `_singletons` and `file` to the singleton’s name.
+- In a [custom preview style](https://sveltiacms.app/docs/api/preview-styles#applying-preview-styles-to-specific-collections-or-files), set the `collection` option to `_singletons` and the `file` option to the singleton’s name, e.g. `registerPreviewStyle('/settings.css', { collection: '_singletons', file: 'settings' })`.
+- In a [custom preview template](https://sveltiacms.app/docs/api/preview-templates), call `getCollection('_singletons', 'settings')` to get the `settings` singleton, or `getCollection('_singletons')` to get all the singletons. `getCollection('settings')` doesn’t work, because `settings` is a filename, not a collection name.
+- In a custom preview template or an [event hook](https://sveltiacms.app/docs/api/events), the `collection` property of a singleton’s entry is `_singletons`.
 
 `registerPreviewTemplate()` is different: like with a file collection, it takes the filename, which is the singleton’s own name, e.g. `registerPreviewTemplate('settings', SettingsPreview)`.
 
-Source: https://sveltiacms.app/en/docs/collections/singletons
+Source: https://sveltiacms.app/docs/collections/singletons
