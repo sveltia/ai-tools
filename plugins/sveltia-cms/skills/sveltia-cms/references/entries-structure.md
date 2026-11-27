@@ -488,7 +488,7 @@ Other entry collection options, such as `create`, `delete`, `duplicate`, `limit`
 
 The following entry collection options assume one file per entry, so they can’t be used with the `file` option, and the configuration is reported as invalid if they are:
 
-- `extension`, `path`, `slug` and `slug_length`
+- `extension`, `path` and `slug`
 - `nested` and `meta`
 - `index_file`
 - `reorder`, as the entries can always be reordered

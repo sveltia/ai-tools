@@ -16,10 +16,6 @@ The `structure` i18n option defines how localized content is stored on disk. It 
 
 An entry collection can also put the `{{locale}}` placeholder in its `folder` option to place the locale folder anywhere in the path, as in `content/{{locale}}/posts`. See [Custom Locale Folder Placement](#custom-locale-folder-placement) below.
 
-**Deprecation Notice**
-
-The `multiple_folders_i18n_root` structure is deprecated and will be removed in Sveltia CMS v1.0.0. Use `multiple_root_folders` instead, which has a more intuitive name and the same file structure.
-
 Some frameworks and static site generators may have specific requirements for multilingual content organization. Choose the structure that best fits your project’s needs.
 
 When using a structure other than `single_file`, Sveltia CMS automatically links localized entries and files based on their filenames or folder paths. From the Content Editor perspective, they appear as a single entry or file with multiple locales, regardless of the underlying file structure. There’s no need to manually link translations.
@@ -1222,10 +1218,6 @@ i18n = true
   ],
 }
 ```
-
-**Deprecation Notice**
-
-The special `{{fields._slug | localize}}` slug template tag has been deprecated in favor of the configuration above, and will be removed in Sveltia CMS v1.0.0.
 
 ### Using Random UUIDs for Slugs
 

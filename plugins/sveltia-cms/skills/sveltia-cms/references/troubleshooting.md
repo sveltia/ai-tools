@@ -475,29 +475,17 @@ Our biggest expense is the monthly US$100 Claude subscription. We are grateful f
 
 #### Can I use Sveltia CMS for commercial projects?
 
-Of course! Sveltia CMS is released under the MIT License, which allows you to use it for both personal and commercial projects without any restrictions.
+Of course! Sveltia CMS is released under the open-source MIT License, which allows you to use it for both personal and commercial projects without any restrictions.
 
 However, it’s not suitable for large enterprises that require advanced features, dedicated support or compliance certifications. In those cases, consider commercial CMS solutions designed specifically for enterprise needs.
 
 ### Project Status & Reliability
 
-#### Can I use Sveltia CMS even though it’s still in beta?
-
-Although it’s still in beta, [many users](https://sveltiacms.app/showcase) are already using our product for their projects. We can confidently say that Sveltia CMS is [much more stable and reliable than Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms), which has been widely used in production for years despite its numerous bugs and inactive development.
-
-We’ll be releasing version 1.0 soon. We don’t expect any more breaking changes to be introduced in minor releases.
-
-#### When will Sveltia CMS reach version 1.0 (GA)?
-
-Version 1.0 will be released in late 2026. We’ll keep you updated on our progress through our [release notes](https://sveltiacms.app/docs/releases#release-information) and other channels.
-
-As [mentioned above](#can-i-use-sveltia-cms-even-though-it-s-still-in-beta), being in beta doesn’t mean the product is unreliable. We have already implemented many features and improvements, and we are implementing the rest of the features planned for 1.0 in the current beta releases. We encourage you to try it out and provide feedback to help us improve the product.
-
 #### Is Sveltia CMS suitable for large-scale projects?
 
 No. Sveltia CMS is primarily designed for small to medium-sized projects, such as personal blogs, portfolios and small business websites. For large-scale projects with complex requirements, you might want to consider more robust, commercial CMS solutions.
 
-#### Why is Sveltia CMS popular even during its early development stage?
+#### Why was Sveltia CMS popular even during its early development stage?
 
 Sveltia CMS has quickly gained traction due to its focus on solving the pain points of Netlify/Decap CMS users, its framework-agnostic design and its commitment to providing a high-quality user experience. The [Jamstack](https://jamstack.org/) community has been eagerly awaiting a modern, actively maintained alternative to Netlify/Decap CMS, and Sveltia CMS has effectively filled that void.
 
@@ -506,6 +494,16 @@ Another contributing factor is the limited number of free, Git-based headless CM
 The popularity of Sveltia CMS coincides with the [rise of Astro](https://blog.cloudflare.com/astro-joins-cloudflare/), a popular choice for building static sites. Its [compatibility with Astro](https://sveltiacms.app/docs/frameworks/astro) makes Sveltia CMS an attractive option for developers looking for a CMS that works well with their chosen framework.
 
 Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify/Decap CMS, which has further boosted its visibility and adoption.
+
+#### What happened to Sveltia CMS versions 1.x through 4.x?
+
+We chose to release version 5.0 as General Availability (GA) and skip the previous versions to reflect the project’s [succession](#project-succession) and maturity.
+
+Our predecessor, Netlify CMS, was abandoned in the 2.x series. Its official successor, Decap CMS, continues the 3.x series, with a proposed 4.0 release. We thought 5.0 would be a good version number because Sveltia CMS is the successor to these legacy platforms, offering [significant enhancements](https://sveltiacms.app/docs/successor-to-netlify-cms) in every single area.
+
+Additionally, we remained in the 0.x range for far too long even though we knew it did not accurately reflect reality. Despite the beta label, thousands of sites had started using our modern, powerful CMS. Releasing version 1.0 would imply that it is a new project, so we avoided that. Our product had been under active development for four years. Had we shipped 1.0 earlier, we would already have had a couple of major releases.
+
+After all, software versioning is quite arbitrary. [Hugo](https://gohugo.io/news/) is still in the 0.x range after a decade of development, while [Gitea](https://blog.gitea.com/release-of-28.0.0/) recently bumped from 1.27 to 28.0. Versioning is also less important for Sveltia CMS users due to its [CDN-served SPA](https://sveltiacms.app/docs/architecture#how-sveltia-cms-works) nature.
 
 ### Project Background
 
@@ -537,11 +535,11 @@ Sveltia CMS itself is [framework-agnostic](https://sveltiacms.app/docs/framework
 
 No. Although we did not receive an endorsement from Netlify nor take over the ownership, Sveltia CMS stands strong as the de facto successor to Netlify CMS. It continues to address issues reported to the predecessor’s repository while maintaining high compatibility.
 
-In contrast, the official successor, Decap CMS, has been incredibly neglected, leaving most issues unresolved. Not only does it fail to provide a migration guide for Netlify CMS users, it doesn’t even acknowledge Netlify CMS on its [About page](https://decapcms.org/about/).
+In contrast, the official successor, Decap CMS, has been [incredibly neglected](https://sveltiacms.app/docs/successor-to-netlify-cms#what-about-decap-cms), leaving most issues unresolved. Not only does it fail to provide a migration guide for Netlify CMS users, it doesn’t even acknowledge Netlify CMS on its [About page](https://decapcms.org/about/).
 
 You wouldn’t call LibreOffice a spiritual [successor to OpenOffice.org](https://www.libreoffice.org/libreoffice-vs-openoffice/); it’s the de facto successor. The official successor, Apache OpenOffice, is effectively defunct. Similarly, Sveltia CMS is the de facto successor to Netlify CMS, not a spiritual one.
 
-The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained and reliable, is highly compatible with its predecessor, and deals with issues continuously, whereas Decap CMS has been stagnant for years. See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed explanation.
+The official designation doesn’t matter. What matters is that Sveltia CMS is actively maintained and reliable, is highly compatible with its predecessor, and deals with issues continuously, whereas Decap CMS has been stagnant for years. See the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed explanation.
 
 Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be considered a spiritual successor. Inspired by Netlify CMS, it has a similar YAML configuration format but a different architecture. We could have taken the same approach, but we deliberately chose a more difficult path by voluntarily carrying over hundreds of issues from Netlify CMS.
 
@@ -551,7 +549,7 @@ Sveltia CMS was created before Decap CMS and was never intended to replace or co
 
 In fact, as our [showcase](https://sveltiacms.app/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
 
-See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
+See the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
 
 #### Is Sveltia CMS a Svelte port of React-based Netlify CMS?
 
@@ -561,7 +559,7 @@ We don’t use the predecessor’s codebase at all. We rarely reference it. This
 
 #### What are the main differences between Sveltia CMS and Netlify/Decap CMS?
 
-Sveltia CMS is a complete rewrite of Netlify CMS with a focus on addressing its shortcomings and providing a better user experience. It’s not a fork of Netlify/Decap CMS, but a new project built from the ground up using [Svelte](https://svelte.dev/) instead of React. Literally everything has been improved, from the architecture and design to the feature set and performance. See the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison.
+Sveltia CMS is a complete rewrite of Netlify CMS with a focus on addressing its shortcomings and providing a better user experience. It’s not a fork of Netlify/Decap CMS, but a new project built from the ground up using [Svelte](https://svelte.dev/) instead of React. Literally everything has been improved, from the architecture and design to the feature set and performance. See the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison.
 
 #### Are you going to solve all the remaining Netlify/Decap CMS issues?
 
@@ -636,7 +634,7 @@ See the [Contributing page](https://github.com/sveltia/sveltia-cms/blob/main/CON
 
 We don’t directly compare our product with other CMS solutions because they each try to solve different problems for different target audiences. Furthermore, it would be unfair to compare community-driven projects like Sveltia CMS with company-owned offerings, which typically have greater resources available for development, support, and marketing.
 
-The only comparable product is our predecessor, Netlify/Decap CMS, which is the very particular reason why Sveltia CMS exists in the first place. We have a detailed comparison of the two products on the [Successor to Netlify CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page.
+The only comparable product is our predecessor, Netlify/Decap CMS, which is the very particular reason why Sveltia CMS exists in the first place. We have a detailed comparison of the two products on the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page.
 
 To decide which CMS solution is right for your project, we recommend evaluating your specific needs and requirements, and comparing the features, pricing and support options of different solutions to find the best fit for you.
 
@@ -691,7 +689,7 @@ Yes. The maintainer offers professional support services for users who need more
 
 [Svelte](https://svelte.dev/) offers several advantages that make it an excellent choice for building Sveltia CMS, including its performance, simplicity and ease of use. Svelte compiles components into highly efficient vanilla JavaScript code, resulting in faster load times and better overall performance compared to traditional frameworks that rely on runtime libraries.
 
-At this point, Sveltia CMS is probably one of the world’s most widely used standalone Svelte applications, demonstrating the capabilities of the modern UI framework. It’s not a SvelteKit application, as we need to maintain its [architecture](https://sveltiacms.app/docs/architecture) as a single-file JavaScript bundle to ensure compatibility with Netlify/Decap CMS.
+Sveltia CMS is not a SvelteKit application, as we need to maintain its [architecture](https://sveltiacms.app/docs/architecture) as a single-file JavaScript bundle to ensure compatibility with Netlify/Decap CMS.
 
 We plan to explore other frameworks in the future, but Svelte is our primary choice for now due to its benefits.
 

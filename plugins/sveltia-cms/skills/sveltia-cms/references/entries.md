@@ -261,10 +261,6 @@ The following file formats are supported for entry collections. You can specify 
 
 The JSON and YAML formats can be customized via the [global `output` option](https://sveltiacms.app/docs/data-output#controlling-data-output).
 
-**Deprecation Notice**
-
-The collection-level `yaml_quote` option has been deprecated in favor of the `quote` option in the [global `output` option](https://sveltiacms.app/docs/data-output#controlling-data-output). The `yaml_quote` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly. `yaml_quote: true` is equivalent to `output.yaml.quote: double`.
-
 If you want to use a different file format, register a custom format using the [Custom File Formats API](https://sveltiacms.app/docs/api/file-formats) and specify its name in the `format` option.
 
 ### Extension
@@ -642,10 +638,6 @@ The available options are:
 - `trim`: A boolean value indicating whether to trim leading and trailing `sanitize_replacement` characters from the slug. The default value is `true`. Leading and trailing dots are always removed, whatever this option is set to: a leading dot would make a hidden file, and a Git branch name can’t end with a dot.
 - `lowercase`: A boolean value indicating whether to convert the slug to lowercase. The default value is `true`. Changing this to `false` will preserve the original casing of the title or identifier field.
 - `timezone`: A string specifying the timezone to use when generating date-based slugs with [template tags](#slug-template-tags) like `{{day}}` and `{{hour}}`. The default value is `utc`. You can set this to `local` to use the local timezone of the user. It applies to the [entry date](#slug-template-tags) taken from a DateTime field as well, unless the field stores a date only.
-
-**Deprecation Notice**
-
-The collection-level `slug_length` option has been deprecated in favor of the `maxlength` global slug option described above. The `slug_length` option will be removed in Sveltia CMS v1.0.0. If you are upgrading from an older version, update your configuration accordingly.
 
 #### How Slugs Are Generated
 
@@ -1089,11 +1081,9 @@ As with the Number field option, Sveltia CMS doesn’t keep a counter. The next 
 
 The option is ignored in a collection that stores all its entries in a [single file](https://sveltiacms.app/docs/collections/entries/single-file), whose entries have no slugs.
 
-**Deprecation Notice**
+**Breaking Change**
 
-The special `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags have been deprecated in favor of the `editable` and `i18n` options described above, and will be removed in Sveltia CMS v1.0.0. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
-
-Also, in earlier versions, setting the collection’s `delete` option to `false` prevented a saved entry’s slug from being edited. This is no longer the case; use `editable: [create]` or `editable: false` instead.
+In earlier versions, setting the collection’s `delete` option to `false` prevented a saved entry’s slug from being edited. This is no longer the case; use `editable: [create]` or `editable: false` instead.
 
 ### File Paths
 

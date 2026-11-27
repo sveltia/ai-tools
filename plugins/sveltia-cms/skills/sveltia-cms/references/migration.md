@@ -91,29 +91,21 @@ Source: https://sveltiacms.app/docs/migration
 
 This page documents the key changes and deprecations when upgrading from earlier versions of Sveltia CMS.
 
-### Breaking Changes
+### Version 0.x to 5.0
 
-Check the [release notes](https://github.com/sveltia/sveltia-cms/releases?q=breaking+change&expanded=true) for changes that may affect your project during the beta period.
+These options were deprecated during the 0.x period and have been removed in Sveltia CMS 5.0 (versions 1.x to 4.x were skipped). A configuration that still uses any of them now fails to load, with an error that names the replacement, so update it as follows:
 
-### Version 0.x to 1.0
-
-We’ll update this section with specific migration steps when we release version 1.0. For now, please refer to the deprecations listed below.
+- The `automatic_deployments` backend option: Use the [`skip_ci` option](https://sveltiacms.app/docs/deployments#disabling-automatic-deployments) instead. `automatic_deployments: false` is equivalent to `skip_ci: true`, and `automatic_deployments: true` is equivalent to `skip_ci: false`.
+- The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/docs/i18n/options#disabling-non-default-locale-content) instead. `save_all_locales: false` is equivalent to `initial_locales: all`, and `save_all_locales: true` is equivalent to leaving `initial_locales` out.
+- The `omit_default_locale_from_filename` i18n option: Use the [`omit_default_locale_from_file_path` option](https://sveltiacms.app/docs/i18n/options#top-level-configuration) instead, which applies to all multiple files/folders structures, not just `multiple_files`.
+- The `multiple_folders_i18n_root` i18n structure: Use the [`multiple_root_folders` structure](https://sveltiacms.app/docs/i18n/structures) instead, which has the same file structure.
+- The `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags: Use the [`editable` and `i18n` slug options](https://sveltiacms.app/docs/collections/entries/slugs#making-slugs-editable) instead. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
+- The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options) instead.
+- The `yaml_quote` collection option: Use the `quote` option in the [global YAML format options](https://sveltiacms.app/docs/data-output#controlling-data-output) instead. `yaml_quote: true` is equivalent to `quote: double`.
 
 ### Deprecations
 
-These options were added to Sveltia CMS 0.x but are now deprecated and will be removed in version 1.0:
-
-- The `automatic_deployments` backend option: Use the new [`skip_ci` option](https://sveltiacms.app/docs/deployments#disabling-automatic-deployments) instead, which is more intuitive. `automatic_deployments: false` is equivalent to `skip_ci: true`, and `automatic_deployments: true` is equivalent to `skip_ci: false`.
-- The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/docs/i18n/options#disabling-non-default-locale-content) instead, which provides more flexibility. `save_all_locales: false` is equivalent to `initial_locales: all`.
-- The `omit_default_locale_from_filename` i18n option: Use the new `omit_default_locale_from_file_path` i18n option instead, which applies to all multiple files/folders structures, not just `multiple_files`.
-- The `multiple_folders_i18n_root` i18n structure: Use the new `multiple_root_folders` i18n structure instead, which has a more intuitive name and the same file structure.
-- The `{{fields._slug}}` and `{{fields._slug | localize}}` slug template tags: Use the [`editable` and `i18n` slug options](https://sveltiacms.app/docs/collections/entries/slugs#making-slugs-editable) instead. `slug: '{{fields._slug}}'` is equivalent to `slug: { editable: true }`, and `slug: '{{fields._slug | localize}}'` is equivalent to `slug: { editable: true, i18n: true }`.
-- The `slug_length` collection option: Use the `maxlength` option in the [global slug options](https://sveltiacms.app/docs/collections/entries/slugs#global-slug-options) instead.
-- The `yaml_quote` collection option: `yaml_quote: true` is equivalent to `quote: double` in the [new YAML format options](https://sveltiacms.app/docs/data-output#controlling-data-output).
-
-#### Future Plans
-
-These features and options will be removed in a future release:
+These features and options are deprecated and will be removed in a future release:
 
 - The `logo_url` option: Use the [new `logo.src` option](https://sveltiacms.app/docs/customization#custom-logo) instead.
 - The flat keys of the [`fieldsMetaData` prop](https://sveltiacms.app/docs/api/preview-templates): Use the nested path instead: `fieldsMetaData.getIn(['books', 'author'])` rather than `fieldsMetaData.get('books.0.author')`, and `fieldsMetaData.getIn(['tags', 'tag'])` rather than `fieldsMetaData.get('tags')` for the single `field` of a List field.

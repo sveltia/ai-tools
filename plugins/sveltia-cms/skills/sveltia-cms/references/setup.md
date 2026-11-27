@@ -453,7 +453,7 @@ Here are some ways to stay informed about new releases:
 
 We follow [semantic versioning](https://semver.org/) for our releases. We don’t typically maintain multiple release lines, but we may do so for critical security fixes if necessary. We don’t offer long-term support (LTS) versions.
 
-Breaking changes are only introduced in major version updates (e.g. from 1.x.x to 2.0.0). Minor and patch releases (e.g. from 1.0.0 to 1.1.0 or 1.0.1) are backward-compatible, though unintended issues may occasionally arise.
+Breaking changes are only introduced in major version updates (e.g. from 5.x.x to 6.0.0). Minor and patch releases (e.g. from 5.0.0 to 5.1.0 or 5.0.1) are backward-compatible, though unintended issues may occasionally arise.
 
 ### CDN or npm Package
 
@@ -533,19 +533,15 @@ The CMS also periodically checks for updates and notifies users when a new versi
 To avoid major version updates that may include breaking changes, you can pin to a specific major version using the caret symbol (`^`) followed by the major version number:
 
 ```html
-<script src="https://unpkg.com/@sveltia/cms@^1/dist/sveltia-cms.js"></script>
+<script src="https://unpkg.com/@sveltia/cms@^5/dist/sveltia-cms.js"></script>
 ```
 
 With such a version range, the notification appears for a new version within the range, which a reload picks up. A release outside the range, or any release when you pin to an exact version, only logs a warning in the browser console, because reloading wouldn’t load it.
 
-**Stable Version Not Yet Available**
-
-Sveltia CMS has yet not reached 1.0.0. Pinning to a specific major version is more relevant once we start releasing stable versions (1.0.0 and above).
-
 You can also pin to an exact version, but this is not recommended unless you have a specific reason, like debugging or temporarily avoiding a problematic release:
 
 ```html
-<script src="https://unpkg.com/@sveltia/cms@1.2.3/dist/sveltia-cms.js"></script>
+<script src="https://unpkg.com/@sveltia/cms@5.0.2/dist/sveltia-cms.js"></script>
 ```
 
 Please [report any regressions](https://sveltiacms.app/feedback#bug-reports) you encounter to us. Keep in mind that pinning is only a temporary solution and that unreported bugs may be overlooked forever. Reported bugs are usually solved within 8 hours.
@@ -567,19 +563,19 @@ We update our dependencies using `ncu -u && pnpm up` at least once a week.
 The pinning methods described in the CDN section above also apply to npm package versions. For example, to pin to a specific major version, you can run:
 
 ```bash npm
-npm install @sveltia/cms@^1
+npm install @sveltia/cms@^5
 ```
 
 ```bash yarn
-yarn add @sveltia/cms@^1
+yarn add @sveltia/cms@^5
 ```
 
 ```bash pnpm
-pnpm add @sveltia/cms@^1
+pnpm add @sveltia/cms@^5
 ```
 
 ```bash bun
-bun add @sveltia/cms@^1
+bun add @sveltia/cms@^5
 ```
 
 See the [npm semantic versioning documentation](https://docs.npmjs.com/about-semantic-versioning) for more details on version ranges.
@@ -629,16 +625,16 @@ If you build your site with your own tooling, such as a Vite app or a hand-writt
 
 The chart below shows the distribution of frameworks used by sites in our [showcase](https://sveltiacms.app/showcase). This data reflects real-world adoption patterns and can help you understand which frameworks are currently popular in the Sveltia CMS community and, by extension, the broader Jamstack ecosystem.
 
-Framework distribution across 827 sites in the showcase, sorted by popularity:
+Framework distribution across 835 sites in the showcase, sorted by popularity:
 
 | Framework | Sites | Share |
 | --- | ---: | ---: |
-| Astro | 307 | 37.1% |
-| Vanilla JavaScript | 126 | 15.2% |
-| Eleventy | 96 | 11.6% |
-| Custom Tooling | 75 | 9.1% |
-| Hugo | 70 | 8.5% |
-| Jekyll | 41 | 5.0% |
+| Astro | 309 | 37.0% |
+| Vanilla JavaScript | 129 | 15.4% |
+| Eleventy | 97 | 11.6% |
+| Custom Tooling | 77 | 9.2% |
+| Hugo | 70 | 8.4% |
+| Jekyll | 41 | 4.9% |
 | Next.js | 39 | 4.7% |
 | SvelteKit | 19 | 2.3% |
 | React Router | 11 | 1.3% |

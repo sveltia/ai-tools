@@ -337,15 +337,6 @@ Here are the steps to use this feature:
 
 If you set `skip_ci` to `false`, the behavior is reversed. CI/CD is triggered by default, and a **Save without Publishing** option adds `[skip ci]` to that one commit only.
 
-**Deprecation Notice**
-
-The `automatic_deployments` option has been deprecated in favor of the more intuitive `skip_ci` option. It will be removed in Sveltia CMS v1.0.0.
-
-If you are upgrading from an older version, update your configuration:
-
-- `automatic_deployments: false` is equivalent to `skip_ci: true`.
-- `automatic_deployments: true` is equivalent to `skip_ci: false`.
-
 **Unpublished vs. Drafts**
 
 Unpublished entries and assets are not drafts. Once committed to your repository, those changes can be deployed any time another commit is pushed without `[skip ci]`, or when a manual deployment is triggered.
