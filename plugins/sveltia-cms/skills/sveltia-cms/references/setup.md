@@ -45,6 +45,7 @@ While we don’t have official starter templates yet, the community has created 
 ##### Jekyll
 
 - [Jekyll Blades](https://github.com/anyblades/jekyll-blades) by [anyblades](https://github.com/anyblades)
+- [Alcor](https://github.com/Tortoiz-Themes/alcor-jekyll) by [Tortoiz](https://github.com/Tortoiz)
 
 ##### Zola
 

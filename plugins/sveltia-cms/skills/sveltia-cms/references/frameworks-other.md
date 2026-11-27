@@ -88,6 +88,7 @@ This guide provides resources and information for integrating Sveltia CMS with [
 Here are some starter templates built by the community using Jekyll:
 
 - [Jekyll Blades](https://github.com/anyblades/jekyll-blades) by [anyblades](https://github.com/anyblades)
+- [Alcor](https://github.com/Tortoiz-Themes/alcor-jekyll) by [Tortoiz](https://github.com/Tortoiz)
 
 **Disclaimer**
 

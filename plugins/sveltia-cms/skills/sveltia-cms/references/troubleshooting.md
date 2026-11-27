@@ -501,7 +501,7 @@ We chose to release version 5.0 as General Availability (GA) and skip the previo
 
 Our predecessor, Netlify CMS, was abandoned in the 2.x series. Its official successor, Decap CMS, continues the 3.x series, with a proposed 4.0 release. We thought 5.0 would be a good version number because Sveltia CMS is the successor to these legacy platforms, offering [significant enhancements](https://sveltiacms.app/docs/successor-to-netlify-cms) in every single area.
 
-Additionally, we remained in the 0.x range for far too long even though we knew it did not accurately reflect reality. Despite the beta label, thousands of sites had started using our modern, powerful CMS. Releasing version 1.0 would imply that it is a new project, so we avoided that. Our product had been under active development for four years. Had we shipped 1.0 earlier, we would already have had a couple of major releases.
+Additionally, we remained in the 0.x range for far too long even though we knew it did not accurately reflect reality. Despite the beta label, thousands of sites had started using our modern, powerful, robust CMS. Releasing version 1.0 would imply that it is a new project, so we avoided that. Our product had been under active development for four years. Had we shipped 1.0 earlier, we would already have had a couple of major releases.
 
 After all, software versioning is quite arbitrary. [Hugo](https://gohugo.io/news/) is still in the 0.x range after a decade of development, while [Gitea](https://blog.gitea.com/release-of-28.0.0/) recently bumped from 1.27 to 28.0. Versioning is also less important for Sveltia CMS users due to its [CDN-served SPA](https://sveltiacms.app/docs/architecture#how-sveltia-cms-works) nature.
 
