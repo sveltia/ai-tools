@@ -93,7 +93,7 @@ This page documents the key changes and deprecations when upgrading from earlier
 
 ### Version 0.x to 5.0
 
-These options were deprecated during the 0.x period and have been removed in Sveltia CMS 5.0 (versions 1.x to 4.x were skipped). A configuration that still uses any of them now fails to load, with an error that names the replacement, so update it as follows:
+These options were deprecated during the 0.x period and have been removed in Sveltia CMS 5.0 (versions 1.x to 4.x were skipped for a [couple of reasons](https://sveltiacms.app/docs/faq#what-happened-to-sveltia-cms-versions-1x-through-4x)). A configuration that still uses any of them now fails to load, with an error that names the replacement, so update it as follows:
 
 - The `automatic_deployments` backend option: Use the [`skip_ci` option](https://sveltiacms.app/docs/deployments#disabling-automatic-deployments) instead. `automatic_deployments: false` is equivalent to `skip_ci: true`, and `automatic_deployments: true` is equivalent to `skip_ci: false`.
 - The `save_all_locales` i18n option: Use the [`initial_locales` option](https://sveltiacms.app/docs/i18n/options#disabling-non-default-locale-content) instead. `save_all_locales: false` is equivalent to `initial_locales: all`, and `save_all_locales: true` is equivalent to leaving `initial_locales` out.

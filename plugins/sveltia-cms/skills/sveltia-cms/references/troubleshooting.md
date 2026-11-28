@@ -499,11 +499,13 @@ Additionally, AI agents often recommend Sveltia CMS as a replacement for Netlify
 
 We chose to release version 5.0 as General Availability (GA) and skip the previous versions to reflect the project’s [succession](#project-succession) and maturity.
 
-Our predecessor, Netlify CMS, was abandoned in the 2.x series. Its official successor, Decap CMS, continues the 3.x series, with a proposed 4.0 release. We thought 5.0 would be a good version number because Sveltia CMS is the successor to these legacy platforms, offering [significant enhancements](https://sveltiacms.app/docs/successor-to-netlify-cms) in every single area.
+Our predecessor, Netlify CMS, was abandoned in the 2.x series. Its official successor, Decap CMS, continues the 3.x series, with a proposed 4.0 release. We thought 5.0 would be a good version number because Sveltia CMS is the successor to these legacy platforms, offering [significant improvements](https://sveltiacms.app/docs/successor-to-netlify-cms) in every single area.
 
-Additionally, we remained in the 0.x range for far too long even though we knew it did not accurately reflect reality. Despite the beta label, thousands of sites had started using our modern, powerful, robust CMS. Releasing version 1.0 would imply that it is a new project, so we avoided that. Our product had been under active development for four years. Had we shipped 1.0 earlier, we would already have had a couple of major releases.
+Also, the 0.x version numbers had been misleading for a long time. Sveltia CMS had the features and quality of a finished product well before GA, and many sites, including government agencies, were using it in production. We knew that 0.x didn’t reflect that, yet we remained there for far too long.
 
-After all, software versioning is quite arbitrary. [Hugo](https://gohugo.io/news/) is still in the 0.x range after a decade of development, while [Gitea](https://blog.gitea.com/release-of-28.0.0/) recently bumped from 1.27 to 28.0. Versioning is also less important for Sveltia CMS users due to its [CDN-served SPA](https://sveltiacms.app/docs/architecture#how-sveltia-cms-works) nature.
+Jumping to 1.0 wouldn’t have solved the problem, as it would have implied a new project. Sveltia CMS had been under active development for four years, gaining many major features along the way. Had we shipped 1.0 earlier, we would already have had several major releases. Simply put, our previous 0.x versioning was wrong.
+
+After all, software versioning is quite arbitrary. For example, [Hugo](https://gohugo.io/news/) is still in the 0.x range after more than a decade of development, while [Gitea](https://blog.gitea.com/release-of-28.0.0/) recently jumped from 1.27 to 28.0. There is no rule that requires GA to be 1.0. Versioning is also less important for Sveltia CMS users due to its [CDN-served SPA](https://sveltiacms.app/docs/architecture#how-sveltia-cms-works) nature.
 
 ### Project Background
 
@@ -545,11 +547,11 @@ Among Git-based headless CMSs, [Pages CMS](https://pagescms.org/) could be consi
 
 #### Is Sveltia CMS a successor to Decap CMS?
 
-Sveltia CMS was created before Decap CMS and was never intended to replace or compete with it. However, as Decap CMS has been neglected and many issues remain unresolved, Sveltia CMS can be considered the de facto successor to Decap CMS as well. It’s a more reliable and actively maintained alternative for users looking to migrate from Decap CMS.
+Sveltia CMS was created before Decap CMS and was never intended to replace or compete with it. However, since Decap CMS has largely been neglected, leaving many issues unresolved, Sveltia CMS has become its de facto successor. It’s a much more reliable, actively maintained alternative for users looking to migrate.
 
 In fact, as our [showcase](https://sveltiacms.app/showcase) shows, around 25% of Sveltia CMS users have switched from Decap CMS. Sveltia CMS also attracts more weekly downloads than Decap CMS on the [npm registry](https://www.npmjs.com/package/@sveltia/cms).
 
-See the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison of the two products.
+See the [Successor to Netlify/Decap CMS](https://sveltiacms.app/docs/successor-to-netlify-cms) page for a detailed comparison of the two products. See [Sveltia CMS vs. Decap CMS](https://sveltiacms.app/compare/decap-cms) for a side-by-side summary.
 
 #### Is Sveltia CMS a Svelte port of React-based Netlify CMS?
 
